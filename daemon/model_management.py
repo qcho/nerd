@@ -20,6 +20,7 @@ class ModelManager:
         if not path.is_dir():
             raise Exception(f"{model_directory} isn't a directory")
         self.model_path = path
+        self.__model_cache = {}
 
     def available_base_models(self):
         """List of available SpaCy models to use when creating a new model"""
@@ -34,12 +35,19 @@ class ModelManager:
         Returns:
             NerdModel: Loaded model
         """
+
+        if model_name in self.__model_cache:
+            return self.__model_cache[model_name]
+
         model_path = self.__model_path(model_name)
 
         if not model_path.exists():
             raise Exception(f"Model named {model_name} doesn't exist")
 
-        return NerdModel(spacy.load(model_path), model_path)
+        model = NerdModel(spacy.load(model_path), model_path)
+        self.__model_cache[model_name] = model
+
+        return model
 
     def create_model(self, model_name: str, base_model: str) -> NerdModel:
         """Creates a new SpaCy model.

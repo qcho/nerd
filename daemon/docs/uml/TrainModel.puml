@@ -1,0 +1,14 @@
+@startuml
+
+XDApi --> Trainer: Add news to train
+Trainer --> XDApi: News added
+== On user request ==
+loop n times
+UI --> Trainer: Show me news to correct
+Trainer --> UI: News + inferred tags
+UI --> UI: Correct tags\nwith fancy UX
+UI --> Trainer: Corrected tags
+Trainer --> Trainer: Queue model correction
+Trainer --> Trainer: Mark news as corrected
+end
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+
+TrainService --> Trainer: Get queued corrections
+Trainer --> TrainService: Queued corrections
+loop news batches
+TrainService --> TrainService: Train
+end
+TrainService --> TrainService: Save model
+
+@enduml
