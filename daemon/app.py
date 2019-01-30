@@ -7,6 +7,7 @@ import json
 
 app = Flask('NERd', static_folder=None)
 mm = ModelManager('./models/') # TODO: Extract location to config file
+# TODO: Do we want to preload models? Maybe we should specify this in a config file
 
 @app.route("/")
 def index():
@@ -40,32 +41,33 @@ def model_management(model_name):
             2.1 GET to return statistics for the given model
             2.2 DELETE to delete the model
     """
-    if request.method is 'GET':
+    if request.method == 'GET':
         if model_name is None:
             pass # TODO: List all created models
         else:
             pass # TODO: Get model information
         return
 
-    if request.method is 'DELETE':
+    if request.method == 'DELETE':
         if model_name is None:
             pass # TODO: Return error since model to delete wasn't specified
         else:
             pass # TODO: Delete model with specified name
         return
 
-    if request.method is 'POST':
+    if request.method == 'POST':
         if model_name is None:
             json_payload = request.get_json()
             if json_payload is None:
                 pass # TODO: Payload is empty or is an invalid JSON
             base_model, model_name = _parse_model_creation_json(json_payload)
             result = mm.create_model(model_name, base_model) # TODO: return result
+            return
         else:
             pass # TODO: Return error since we can't post with a model name
         return
 
-@app.route('/<string:model_name>/ner', methods=['GET', 'POST'])
+@app.route('/models/<string:model_name>/ner', methods=['GET', 'POST'])
 def named_entities_recognizer(model_name):
     """Everything related to NER goes here
     TODO: Correctly document this
@@ -73,7 +75,7 @@ def named_entities_recognizer(model_name):
     if not model_name:
         return # TODO: Return error
     nerd_model = mm.load_model(model_name)
-    if request.method is 'POST':
+    if request.method == 'POST':
         if not request.is_json():
             pass # TODO: POST wasn't a JSON, should error out
         json_payload = request.get_json()
@@ -83,7 +85,7 @@ def named_entities_recognizer(model_name):
         # TODO: Figure out what we need to return here
         return jsonify(train_result)
 
-    if request.method is 'GET':
+    if request.method == 'GET':
         result = parse_text(nerd_model, request.args['text'])
         # TODO: Figure out what we need to return here
         return jsonify(result)
