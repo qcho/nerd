@@ -11,6 +11,7 @@ mm = ModelManager('./models/') # TODO: Extract location to config file
 @app.route("/")
 def index():
     """Lists all of the available endpoints"""
+    # TODO: Check if this is working correctly
     import sys
     current_module = sys.modules[__name__]
     routes = []
