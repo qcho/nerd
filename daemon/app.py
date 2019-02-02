@@ -50,7 +50,7 @@ def model_management(model_name):
 
     if request.method == 'DELETE':
         if model_name is None:
-            pass # TODO: Return error since model to delete wasn't specified
+            raise InvalidUsage("Missing model to delete.")
         else:
             pass # TODO: Delete model with specified name
         return
