@@ -16,7 +16,12 @@ from entity_type_management import create_entity_type, types_for_model
 from invalid_usage import InvalidUsage
 
 app = Flask('NERd', static_folder=None)
-api = Api()
+api = Api(version='1.0', title='NER Daemon API',
+          description='A simple NER Daemon API',
+          )
+
+ns = api.namespace('ner', description='ner operations')
+
 api.init_app(app)
 
 DEBUG = os.environ.get('DEBUG', False)
@@ -50,29 +55,52 @@ def index():
     return jsonify(routes)
 
 
-@api.route('/base-models')
+@app.route('/postman.json')
+def postman():
+    return jsonify(api.as_postman(urlvars=False, swagger=True))
+
+
+# todo = api.model('Todo', {
+#     'id': fields.Integer(readOnly=True, description='The task unique identifier'),
+#     'task': fields.String(required=True, description='The task details')
+# })
+
+
+@ns.route('/base-models')
 class BaseModelResource(Resource):
+
+    # @ns.marshal_list_with(todo)
+    @ns.doc('list_base_models')
     def get(self):
         """API endpoint to list available spacy base models"""
         return jsonify(mm.available_base_models())
 
 
-@api.route()
+@ns.route()
 class ModelsResource(Resource):
+    @ns.doc('list_models')
     def get(self):
         return jsonify(mm.available_models())
 
 
-@api.route('/models/<string:model_name>')
+@ns.response(404, 'Model not found')
+@ns.param('model_name', 'The model name (unique identifier)')
+@ns.route('/models/<string:model_name>')
 class ModelResource(Resource):
-    def get(self, model_name=None):
-        pass  # TODO: Get model information
 
+    # @ns.expect(todo)
+    # @ns.marshal_with(todo, code=201)
+    @ns.doc('get_model')
+    def get(self, model_name=None):
+        return None, 404
+
+    @ns.doc('remove_model')
     def delete(self, model_name=None):
         result = mm.delete_model(model_name)
         if result == True:
             return
 
+    @ns.doc('upsert_model')
     def put(self, model_name=None):
         json_payload = request.get_json()
         if json_payload is None:
@@ -83,8 +111,9 @@ class ModelResource(Resource):
         return jsonify(True)
 
 
-@api.route('/models/<string:model_name>/ner')
+@ns.route('/models/<string:model_name>/ner')
 class NerDocumentResource(Resource):
+    @ns.doc('upsert_ner_document')
     def put(self, model_name=None):
         nerd_model = mm.load_model(model_name)
 
@@ -98,13 +127,15 @@ class NerDocumentResource(Resource):
         # TODO: Figure out what we need to return here
         return jsonify(train_result)
 
+    @ns.doc('get_ner_document')
     def get(self, model_name=None):
         result = parse_text(nerd_model, request.args['text'])
         return jsonify(result)  # TODO: Figure out what we need to return here
 
 
-@api.route('/models/<string:model_name>/entity_types')
+@ns.route('/models/<string:model_name>/entity_types')
 class EntityTypesResource(Resource):
+    @ns.doc('upsert_entity_types')
     def put(self, model_name):
         """NER entity type management
         TODO: Document this
@@ -121,6 +152,7 @@ class EntityTypesResource(Resource):
         # TODO: Figure out what we need to return here
         return jsonify(creation_result)
 
+    @ns.doc('get_entity_types')
     def get(self, model_name):
         model = mm.load_model(model_name)
         return jsonify(types_for_model(model))
