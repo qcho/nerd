@@ -43,7 +43,7 @@ def model_management(model_name):
     """
     if request.method == 'GET':
         if model_name is None:
-            pass # TODO: List all created models
+            return jsonify(mm.available_models())
         else:
             pass # TODO: Get model information
         return
