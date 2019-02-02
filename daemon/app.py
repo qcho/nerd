@@ -98,6 +98,10 @@ def _parse_model_creation_json(json_payload) -> Tuple[str, str]:
         - base model name
         - new model name
     """
+
+    if not 'base_model_name' in json_payload or not 'model_name' in json_payload:
+        raise InvalidUsage("Invalid API", payload={"required": {"model_name": "str", "base_model_name": "str"}})
+
     return json_payload['base_model_name'], json_payload['model_name']
 
 def _parse_training_json(json_payload) -> Tuple[str, List[NEREntity]]:
