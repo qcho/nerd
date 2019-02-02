@@ -88,6 +88,25 @@ def named_entities_recognizer(model_name):
         result = parse_text(nerd_model, request.args['text'])
         return jsonify(result) # TODO: Figure out what we need to return here
 
+@app.route('/models/<string:model_name>/entity_types', methods=['GET', 'POST'])
+def ner_entities(model_name):
+    """NER entity type management
+    TODO: Document this
+    """
+
+    model = mm.load_model(model_name)
+
+    if request.method == 'POST':
+        if not request.is_json():
+            pass # TODO: POST wasn't a JSON, should error out
+        json_payload = request.get_json()
+        if json_payload is None:
+            pass # TODO: Payload is empty or an invalid JSON
+        creation_result = create_entity_type(model, json_payload['name'], json_payload['code'])
+        return jsonify(creation_result) # TODO: Figure out what we need to return here
+
+    return jsonify(types_for_model(model))
+
 def _parse_model_creation_json(json_payload) -> Tuple[str, str]:
     """ Decodes the JSON for creating new models
 
