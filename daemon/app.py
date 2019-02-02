@@ -73,7 +73,7 @@ def model_management(model_name):
                 pass # TODO: Payload is empty or is an invalid JSON
             base_model, model_name = _parse_model_creation_json(json_payload)
             result = mm.create_model(model_name, base_model) # TODO: return result
-            return
+            return jsonify(True)
         else:
             pass # TODO: Return error since we can't post with a model name
         return
