@@ -9,6 +9,12 @@ app = Flask('NERd', static_folder=None)
 mm = ModelManager('./models/') # TODO: Extract location to config file
 # TODO: Do we want to preload models? Maybe we should specify this in a config file
 
+@app.errorhandler(InvalidUsage)
+def handle_invalid_api_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
 @app.route("/")
 def index():
     """Lists all of the available endpoints"""
