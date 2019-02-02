@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, url_for
 from atp import parse_text, train_model
 from model_management import ModelManager
-from nerd_types import NEREntity
+from nerd_type_aliases import NEREntity
 from typing import List, Tuple
 import json
 

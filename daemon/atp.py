@@ -1,6 +1,6 @@
 import spacy
 from nerd_model import NerdModel
-from nerd_types import NEREntity
+from nerd_type_aliases import NEREntity
 from typing import List, Tuple
 
 def parse_text(model: NerdModel, text: str):
