@@ -1,4 +1,5 @@
 import spacy
+from spacy.language import Language
 
 import subprocess
 import os
@@ -21,6 +22,7 @@ class ModelManager:
             raise Exception(f"{model_directory} isn't a directory")
         self.model_path = path
         self.__model_cache = {}
+        self.__base_model_cache = {}
 
     def available_base_models(self):
         """List of available SpaCy models to use when creating a new model"""
@@ -73,15 +75,13 @@ class ModelManager:
         if model_path.exists():
             raise Exception(f"Model named {base_model} already exists")
 
-        self.__download_base_model(base_model)
-
-        model = spacy.load(base_model) # TODO: Add a base_model cache
+        model = self.load_base_model(base_model) # TODO: Add a base_model cache
         nerd_model = NerdModel(model_name, model_path)
         nerd_model.save(model=model)
         nerd_model.load()
         return nerd_model
 
-    def delete_model(self, model_name):
+    def delete_model(self, model_name: str):
         """Deletes a model
 
         Args:
@@ -97,11 +97,21 @@ class ModelManager:
         rmtree(model_path)
         return True
 
-    def __model_path(self, model_name) -> Path:
+    def __model_path(self, model_name: str) -> Path:
         """Returns the full Path for a given named model"""
         return self.model_path / model_name
 
-    def __download_base_model(self, model_name):
+    def load_base_model(self, model_name: str) -> Language:
+        if model_name in self.__base_model_cache:
+            return self.__base_model_cache[model_name]
+
+        self.__download_base_model(model_name)
+        model = spacy.load(model_name)
+        self.__base_model_cache[model_name] = model
+        return model
+
+
+    def __download_base_model(self, model_name: str):
         """Downloads a model from spacy"""
         cmd = [sys.executable, '-m', 'spacy', 'download', model_name]
-        return subprocess.check_call(cmd, env=os.environ.copy())
+        subprocess.check_call(cmd, env=os.environ.copy())
