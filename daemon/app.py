@@ -109,10 +109,10 @@ def ner_entities(model_name):
 
     if request.method == 'POST':
         if not request.is_json():
-            pass # TODO: POST wasn't a JSON, should error out
+            raise InvalidUsage("Request should be a JSON.")
         json_payload = request.get_json()
         if json_payload is None:
-            pass # TODO: Payload is empty or an invalid JSON
+            raise InvalidUsage("Post body shouldn't be empty")
         creation_result = create_entity_type(model, json_payload['name'], json_payload['code'])
         return jsonify(creation_result) # TODO: Figure out what we need to return here
 
