@@ -1,13 +1,29 @@
+#!/bin/env python
+
+# -*- coding: utf-8 -*-
+
+import json
+import os
+from typing import List, Tuple
+
 from flask import Flask, request, jsonify, url_for
+from flask_restplus import Resource, Api
+
 from atp import parse_text, train_model
 from model_management import ModelManager
 from nerd_type_aliases import NEREntity
 from entity_type_management import create_entity_type, types_for_model
-from typing import List, Tuple
 from invalid_usage import InvalidUsage
-import json
 
 app = Flask('NERd', static_folder=None)
+api = Api()
+api.init_app(app)
+
+DEBUG = os.environ.get('DEBUG', False)
+BIND = os.environ.get('GUNICORN_BIND', '0.0.0.0:8000')
+(HOST, PORT, *_) = BIND.split(':')
+
+
 mm = ModelManager('./models/')  # TODO: Extract location to config file
 # TODO: Do we want to preload models? Maybe we should specify this in a config file
 
@@ -34,67 +50,47 @@ def index():
     return jsonify(routes)
 
 
-@app.route('/base_models', methods=['GET'])
-def base_model_list():
-    """API endpoint to list available spacy base models"""
-    return jsonify(mm.available_base_models())
+@api.route('/base-models')
+class BaseModelResource(Resource):
+    def get(self):
+        """API endpoint to list available spacy base models"""
+        return jsonify(mm.available_base_models())
 
 
-@app.route('/models', methods=['GET', 'POST'], defaults={'model_name': None})
-@app.route('/models/<string:model_name>', methods=['GET', 'DELETE'])
-def model_management(model_name):
-    """Manage everything related to model creation/deletion/querying.
-
-    There are various scenarios handled here:
-        1. Without providing a model name:
-            1.1 GET a list of all available models
-            1.2 POST to create new models
-        2. Providing a model name:
-            2.1 GET to return statistics for the given model
-            2.2 DELETE to delete the model
-    """
-    if request.method == 'GET':
-        if model_name is None:
-            return jsonify(mm.available_models())
-        else:
-            pass  # TODO: Get model information
-        return
-
-    if request.method == 'DELETE':
-        if model_name is None:
-            raise InvalidUsage("Missing model to delete.")
-        else:
-            result = mm.delete_model(model_name)
-            if result == True:
-                return
-
-        return
-
-    if request.method == 'POST':
-        if model_name is None:
-            json_payload = request.get_json()
-            if json_payload is None:
-                pass  # TODO: Payload is empty or is an invalid JSON
-            base_model, model_name = _parse_model_creation_json(json_payload)
-            result = mm.create_model(
-                model_name, base_model)  # TODO: return result
-            return jsonify(True)
-        else:
-            pass  # TODO: Return error since we can't post with a model name
-        return
+@api.route()
+class ModelsResource(Resource):
+    def get(self):
+        return jsonify(mm.available_models())
 
 
-@app.route('/models/<string:model_name>/ner', methods=['GET', 'POST'])
-def named_entities_recognizer(model_name):
-    """Everything related to NER goes here
-    TODO: Correctly document this
-    """
-    if not model_name:
-        return  # TODO: Return error
-    nerd_model = mm.load_model(model_name)
-    if request.method == 'POST':
+@api.route('/models/<string:model_name>')
+class ModelResource(Resource):
+    def get(self, model_name=None):
+        pass  # TODO: Get model information
+
+    def delete(self, model_name=None):
+        result = mm.delete_model(model_name)
+        if result == True:
+            return
+
+    def put(self, model_name=None):
+        json_payload = request.get_json()
+        if json_payload is None:
+            pass  # TODO: Payload is empty or is an invalid JSON
+        base_model, model_name = _parse_model_creation_json(json_payload)
+        result = mm.create_model(
+            model_name, base_model)  # TODO: return result
+        return jsonify(True)
+
+
+@api.route('/models/<string:model_name>/ner')
+class NerDocumentResource(Resource):
+    def put(self, model_name=None):
+        nerd_model = mm.load_model(model_name)
+
         if not request.is_json():
             pass  # TODO: POST wasn't a JSON, should error out
+
         json_payload = request.get_json()
         if json_payload is None:
             pass  # TODO: Payload is empty or is an invalid JSON
@@ -102,20 +98,19 @@ def named_entities_recognizer(model_name):
         # TODO: Figure out what we need to return here
         return jsonify(train_result)
 
-    if request.method == 'GET':
+    def get(self, model_name=None):
         result = parse_text(nerd_model, request.args['text'])
         return jsonify(result)  # TODO: Figure out what we need to return here
 
 
-@app.route('/models/<string:model_name>/entity_types', methods=['GET', 'POST'])
-def ner_entities(model_name):
-    """NER entity type management
-    TODO: Document this
-    """
+@api.route('/models/<string:model_name>/entity_types')
+class EntityTypesResource(Resource):
+    def put(self, model_name):
+        """NER entity type management
+        TODO: Document this
+        """
+        model = mm.load_model(model_name)
 
-    model = mm.load_model(model_name)
-
-    if request.method == 'POST':
         if not request.is_json():
             raise InvalidUsage("Request should be a JSON.")
         json_payload = request.get_json()
@@ -126,7 +121,9 @@ def ner_entities(model_name):
         # TODO: Figure out what we need to return here
         return jsonify(creation_result)
 
-    return jsonify(types_for_model(model))
+    def get(self, model_name):
+        model = mm.load_model(model_name)
+        return jsonify(types_for_model(model))
 
 
 def _parse_model_creation_json(json_payload) -> Tuple[str, str]:
@@ -161,3 +158,7 @@ def _parse_training_json(json_payload) -> Tuple[str, List[NEREntity]]:
     ents = [(it['start'], it['end'], it['label'])
             for it in json_payload['ents']]
     return text, ents
+
+
+if __name__ == '__main__':
+    app.run(debug=DEBUG, host=HOST, port=PORT)

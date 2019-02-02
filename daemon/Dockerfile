@@ -16,9 +16,6 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV ENVIRONMENT production
 ENV DEBUG False
-ENV GUNICORN_WORKERS 2
-ENV GUNICORN_BACKLOG 4096
-ENV GUNICORN_BIND 0.0.0.0:8000
 
 
 WORKDIR /code
@@ -46,6 +43,6 @@ RUN python -m spacy download es
 COPY . /code/
 
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
-EXPOSE 80
+EXPOSE 8000
 STOPSIGNAL SIGINT
-ENTRYPOINT ["bash", "/docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]

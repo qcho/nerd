@@ -6,7 +6,7 @@ services:
     volumes:
       - ./daemon:/code
     ports:
-      - 8000:80
+      - 8000:8000
     restart: on-failure
     command: run
     env_file: .env
