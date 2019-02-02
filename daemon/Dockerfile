@@ -1,14 +1,15 @@
-ARG PYTHON_VERSION=3
+ARG PYTHON_VERSION=3-alpine
 
 FROM python:${PYTHON_VERSION} as python-base
 
 WORKDIR /wheels
+RUN apk add --update python3 python3-dev py3-pip build-base
 COPY ./requirements.txt ./
 RUN pip install --upgrade pip gunicorn
 RUN pip wheel -r requirements.txt -f /wheels --wheel-dir=/wheels
 
 # Pull base image
-FROM python:${PYTHON_VERSION}-alpine as python-final
+FROM python:${PYTHON_VERSION} as python-final
 
 # Set environment varibles
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -26,7 +27,6 @@ RUN ls /wheels
 RUN pip install -U pip \
     && pip install \
     -f /wheels \
-    --wheel-dir /wheels \
     --no-index \
     -r /wheels/requirements.txt \
     && rm -rf /root/.cache/pip/*
