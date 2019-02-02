@@ -8,14 +8,16 @@ from invalid_usage import InvalidUsage
 import json
 
 app = Flask('NERd', static_folder=None)
-mm = ModelManager('./models/') # TODO: Extract location to config file
+mm = ModelManager('./models/')  # TODO: Extract location to config file
 # TODO: Do we want to preload models? Maybe we should specify this in a config file
+
 
 @app.errorhandler(InvalidUsage)
 def handle_invalid_api_usage(error):
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
+
 
 @app.route("/")
 def index():
@@ -31,10 +33,12 @@ def index():
         })
     return jsonify(routes)
 
+
 @app.route('/base_models', methods=['GET'])
 def base_model_list():
     """API endpoint to list available spacy base models"""
     return jsonify(mm.available_base_models())
+
 
 @app.route('/models', methods=['GET', 'POST'], defaults={'model_name': None})
 @app.route('/models/<string:model_name>', methods=['GET', 'DELETE'])
@@ -53,7 +57,7 @@ def model_management(model_name):
         if model_name is None:
             return jsonify(mm.available_models())
         else:
-            pass # TODO: Get model information
+            pass  # TODO: Get model information
         return
 
     if request.method == 'DELETE':
@@ -70,13 +74,15 @@ def model_management(model_name):
         if model_name is None:
             json_payload = request.get_json()
             if json_payload is None:
-                pass # TODO: Payload is empty or is an invalid JSON
+                pass  # TODO: Payload is empty or is an invalid JSON
             base_model, model_name = _parse_model_creation_json(json_payload)
-            result = mm.create_model(model_name, base_model) # TODO: return result
+            result = mm.create_model(
+                model_name, base_model)  # TODO: return result
             return jsonify(True)
         else:
-            pass # TODO: Return error since we can't post with a model name
+            pass  # TODO: Return error since we can't post with a model name
         return
+
 
 @app.route('/models/<string:model_name>/ner', methods=['GET', 'POST'])
 def named_entities_recognizer(model_name):
@@ -84,20 +90,22 @@ def named_entities_recognizer(model_name):
     TODO: Correctly document this
     """
     if not model_name:
-        return # TODO: Return error
+        return  # TODO: Return error
     nerd_model = mm.load_model(model_name)
     if request.method == 'POST':
         if not request.is_json():
-            pass # TODO: POST wasn't a JSON, should error out
+            pass  # TODO: POST wasn't a JSON, should error out
         json_payload = request.get_json()
         if json_payload is None:
-            pass # TODO: Payload is empty or is an invalid JSON
-        train_result = train_model(nerd_model, _parse_training_json(json_payload))
-        return jsonify(train_result) # TODO: Figure out what we need to return here
+            pass  # TODO: Payload is empty or is an invalid JSON
+        train_result = train_model(nerd_model, json_payload)
+        # TODO: Figure out what we need to return here
+        return jsonify(train_result)
 
     if request.method == 'GET':
         result = parse_text(nerd_model, request.args['text'])
-        return jsonify(result) # TODO: Figure out what we need to return here
+        return jsonify(result)  # TODO: Figure out what we need to return here
+
 
 @app.route('/models/<string:model_name>/entity_types', methods=['GET', 'POST'])
 def ner_entities(model_name):
@@ -113,10 +121,13 @@ def ner_entities(model_name):
         json_payload = request.get_json()
         if json_payload is None:
             raise InvalidUsage("Post body shouldn't be empty")
-        creation_result = create_entity_type(model, json_payload['name'], json_payload['code'])
-        return jsonify(creation_result) # TODO: Figure out what we need to return here
+        creation_result = create_entity_type(
+            model, json_payload['name'], json_payload['code'])
+        # TODO: Figure out what we need to return here
+        return jsonify(creation_result)
 
     return jsonify(types_for_model(model))
+
 
 def _parse_model_creation_json(json_payload) -> Tuple[str, str]:
     """ Decodes the JSON for creating new models
@@ -130,9 +141,11 @@ def _parse_model_creation_json(json_payload) -> Tuple[str, str]:
     """
 
     if not 'base_model_name' in json_payload or not 'model_name' in json_payload:
-        raise InvalidUsage("Invalid API", payload={"required": {"model_name": "str", "base_model_name": "str"}})
+        raise InvalidUsage("Invalid API", payload={"required": {
+                           "model_name": "str", "base_model_name": "str"}})
 
     return json_payload['base_model_name'], json_payload['model_name']
+
 
 def _parse_training_json(json_payload) -> Tuple[str, List[NEREntity]]:
     """Decodes the training JSON payload
@@ -145,5 +158,6 @@ def _parse_training_json(json_payload) -> Tuple[str, List[NEREntity]]:
         - a list of entities present in it
     """
     text = json_payload['text']
-    ents = [(it['start'], it['end'], it['label']) for it in json_payload['ents']]
+    ents = [(it['start'], it['end'], it['label'])
+            for it in json_payload['ents']]
     return text, ents

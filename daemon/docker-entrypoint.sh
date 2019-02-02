@@ -2,35 +2,31 @@
 
 set -e
 
-cd /code
 
-help_cmd () {
+function help_cmd {
     echo "Help"
 }
 
-init () {
-
-}
-
-run () {
+function run {
     echo "Running ${ENVIRONMENT}"
     case "${ENVIRONMENT}" in
         "production")
-        exec gunicorn --config /gunicorn/gunicorn.conf --log-config /gunicorn/logging.conf app:app
+        # exec gunicorn --config /gunicorn/gunicorn.conf --log-config /gunicorn/logging.conf app:app
+        exec gunicorn --config /gunicorn/gunicorn.conf app:app
         ;;
         *)
         echo "======== STARTING DEV SERVER ========"
-        exec python daemon.py
+        exec python app.py
         ;;
         esac
 }
 
-train () {
+function train {
     echo noop... yet.
 }
 
 
-main() {
+function main() {
     command="$1"
     shift;
 
@@ -38,9 +34,6 @@ main() {
     case "${command}" in
         "help")
             help_cmd "$@"
-            ;;
-        "init")
-            init "$@"
             ;;
         "run")
             run "$@"

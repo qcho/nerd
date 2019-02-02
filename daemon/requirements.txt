@@ -1,9 +1,11 @@
+aniso8601==4.1.0
 blis==0.2.2
 certifi==2018.11.29
 chardet==3.0.4
 Click==7.0
 cymem==2.0.2
 Flask==1.0.2
+flask-restplus==0.12.1
 idna==2.8
 itsdangerous==1.1.0
 Jinja2==2.10
@@ -13,6 +15,7 @@ murmurhash==1.0.1
 numpy==1.16.0
 plac==0.9.6
 preshed==2.0.1
+pytz==2018.9
 regex==2018.1.10
 requests==2.21.0
 six==1.12.0
