@@ -82,13 +82,11 @@ def named_entities_recognizer(model_name):
         if json_payload is None:
             pass # TODO: Payload is empty or is an invalid JSON
         train_result = train_model(nerd_model, _parse_training_json(json_payload))
-        # TODO: Figure out what we need to return here
-        return jsonify(train_result)
+        return jsonify(train_result) # TODO: Figure out what we need to return here
 
     if request.method == 'GET':
         result = parse_text(nerd_model, request.args['text'])
-        # TODO: Figure out what we need to return here
-        return jsonify(result)
+        return jsonify(result) # TODO: Figure out what we need to return here
 
 def _parse_model_creation_json(json_payload) -> Tuple[str, str]:
     """ Decodes the JSON for creating new models
