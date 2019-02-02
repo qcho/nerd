@@ -129,6 +129,7 @@ class NerDocumentResource(Resource):
 
     @ns.doc('get_ner_document')
     def get(self, model_name=None):
+        nerd_model = mm.load_model(model_name)
         result = parse_text(nerd_model, request.args['text'])
         return jsonify(result)  # TODO: Figure out what we need to return here
 
