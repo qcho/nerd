@@ -49,8 +49,8 @@ class ModelManager:
         if not model_path.exists():
             raise Exception(f"Model named {model_name} doesn't exist")
 
-        entity_types = ['PER', 'LOC', 'ORG'] # TODO: Load this from somewhere
-        model = NerdModel(spacy.load(model_path), model_path, entity_types)
+        model = NerdModel(model_name, model_path)
+        model.load()
         self.__model_cache[model_name] = model
 
         return model
@@ -76,8 +76,10 @@ class ModelManager:
         self.__download_base_model(base_model)
 
         model = spacy.load(base_model) # TODO: Add a base_model cache
-        model.to_disk(model_path)
-        return self.load_model(model_name)
+        nerd_model = NerdModel(model_name, model_path)
+        nerd_model.save(model=model)
+        nerd_model.load()
+        return nerd_model
 
     def delete_model(self, model_name):
         """Deletes a model

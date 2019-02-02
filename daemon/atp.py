@@ -13,7 +13,7 @@ def parse_text(model: NerdModel, text: str):
     Returns:
         JSON: NLP JSON representation of the given text
     """
-    doc = model.nlp(text)
+    doc = model.model(text)
     return doc.to_json()
 
 def train_model(model: NerdModel, train_data: Tuple[str, List[NEREntity]]):
