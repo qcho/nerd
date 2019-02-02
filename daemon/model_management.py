@@ -44,7 +44,8 @@ class ModelManager:
         if not model_path.exists():
             raise Exception(f"Model named {model_name} doesn't exist")
 
-        model = NerdModel(spacy.load(model_path), model_path)
+        entity_types = ['PER', 'LOC', 'ORG'] # TODO: Load this from somewhere
+        model = NerdModel(spacy.load(model_path), model_path, entity_types)
         self.__model_cache[model_name] = model
 
         return model
