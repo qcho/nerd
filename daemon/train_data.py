@@ -1,5 +1,6 @@
 from typing import List
-from nerd_types import NEREntity
+from nerd_type_aliases import NEREntity
 
 class TrainData():
-    def __init__(text: str, List[NEREntity])
+    def __init__(text: str, List[NEREntity]):
+        pass
