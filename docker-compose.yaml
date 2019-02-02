@@ -1,0 +1,22 @@
+version: "3.6"
+
+services:
+  api:
+    build: ./daemon
+    volumes:
+      - ./daemon:/code
+    ports:
+      - 8000:80
+    restart: on-failure
+    command: run
+    env_file: .env
+
+  web:
+    build: ./atp
+    volumes:
+      - ./atp/build:/usr/share/nginx/html
+    ports:
+      - 8080:80
+    restart: on-failure
+    command: run
+    env_file: .env
