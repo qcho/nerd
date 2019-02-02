@@ -3,10 +3,10 @@ import spacy
 import subprocess
 import os
 import sys
+from shutil import rmtree
+from pathlib import Path
 
 from nerd_model import NerdModel
-
-from pathlib import Path
 
 class ModelManager:
     """Handles NER models
@@ -25,6 +25,11 @@ class ModelManager:
     def available_base_models(self):
         """List of available SpaCy models to use when creating a new model"""
         return ['es']
+
+    def available_models(self):
+        """List of all available models"""
+        files = os.listdir(self.model_path)
+        return files
 
     def load_model(self, model_name: str) -> NerdModel:
         """Loads a stored SpaCy model
@@ -73,6 +78,22 @@ class ModelManager:
         model = spacy.load(base_model) # TODO: Add a base_model cache
         model.to_disk(model_path)
         return self.load_model(model_name)
+
+    def delete_model(self, model_name):
+        """Deletes a model
+
+        Args:
+            model_name (str): Model to delete
+
+        Returns:
+            True if model could be deleted
+        """
+
+        model_path = self.__model_path(model_name)
+        if not model_path.exists():
+            raise Exception(f"Model named {model_name} doesn't exist")
+        rmtree(model_path)
+        return True
 
     def __model_path(self, model_name) -> Path:
         """Returns the full Path for a given named model"""
