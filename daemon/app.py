@@ -2,7 +2,9 @@ from flask import Flask, request, jsonify, url_for
 from atp import parse_text, train_model
 from model_management import ModelManager
 from nerd_type_aliases import NEREntity
+from entity_type_management import create_entity_type, types_for_model
 from typing import List, Tuple
+from invalid_usage import InvalidUsage
 import json
 
 app = Flask('NERd', static_folder=None)
@@ -58,7 +60,10 @@ def model_management(model_name):
         if model_name is None:
             raise InvalidUsage("Missing model to delete.")
         else:
-            pass # TODO: Delete model with specified name
+            result = mm.delete_model(model_name)
+            if result == True:
+                return
+
         return
 
     if request.method == 'POST':
