@@ -71,7 +71,7 @@ class ModelManager:
 
         model = spacy.load(base_model) # TODO: Add a base_model cache
         model.to_disk(model_path)
-        return NerdModel(model, model_path)
+        return self.load_model(model_name)
 
     def __model_path(self, model_name) -> Path:
         """Returns the full Path for a given named model"""
