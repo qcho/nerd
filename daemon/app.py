@@ -15,15 +15,75 @@ from nerd_type_aliases import NEREntity
 from entity_type_management import create_entity_type, types_for_model
 from invalid_usage import InvalidUsage
 
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token, create_refresh_token,
+    get_jwt_identity, jwt_optional, jwt_refresh_token_required, get_jwt_claims,
+)
+
+
+authorizations = {
+    'apikey': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization'
+    }
+}
+
 app = Flask('NERd', static_folder=None)
 api = Api(version='1.0', title='NER Daemon API',
           description='A simple NER Daemon API',
-          validate=True
+          validate=True,
+          authorizations=authorizations,
+          security='apikey'
           )
+ns = api.namespace('', description='ner operations')
+auth_ns = api.namespace('auth', description='Authentication')
+api.init_app(app)
 
 ns = api.namespace('models', description='ner operations')
 
-api.init_app(app)
+# Setup the Flask-JWT-Extended extension
+app.config['JWT_TOKEN_LOCATION'] = ('headers', 'json')
+app.config['JWT_SECRET_KEY'] = os.environ.get(
+    'JWT_SECRET_KEY', 'zekrit dont tell plz')
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60
+app.config['JWT_IDENTITY_CLAIM'] = 'sub'
+
+app.config['SWAGGER_UI_JSONEDITOR'] = True
+jwt = JWTManager(app)
+
+test_user = {
+    'username': 'test',
+    'roles': ['admin']
+}
+
+users = {
+    'test': test_user
+}
+
+
+@app.before_first_request
+def init_app_context():
+    pass
+
+
+# Create a function that will be called whenever create_access_token
+# is used. It will take whatever object is passed into the
+# create_access_token method, and lets us define what custom claims
+# should be added to the access token.
+@jwt.user_claims_loader
+def add_claims_to_access_token(user):
+    return {'roles': user.get('roles', [])}
+
+
+# Create a function that will be called whenever create_access_token
+# is used. It will take whatever object is passed into the
+# create_access_token method, and lets us define what the identity
+# of the access token should be.
+@jwt.user_identity_loader
+def user_identity_lookup(user):
+    return user.get('username')
+
 
 DEBUG = os.environ.get('DEBUG', False)
 BIND = os.environ.get('GUNICORN_BIND', '0.0.0.0:8000')
@@ -40,21 +100,96 @@ def handle_invalid_api_usage(error):
     response.status_code = error.status_code
     return response
 
-@app.route('/postman.json')
-def postman():
-    return jsonify(api.as_postman(urlvars=False, swagger=True))
+
+@jwt_optional
+@app.route("/")
+def index():
+    """Lists all of the available endpoints"""
+    # TODO: Check if this is working correctly
+    import sys
+    current_module = sys.modules[__name__]
+    routes = []
+    for rule in app.url_map.iter_rules():
+        routes.append({
+            'url': rule.rule,
+            'doc': getattr(current_module, rule.endpoint).__doc__
+        })
+    return jsonify(routes)
 
 
-# todo = api.model('Todo', {
-#     'id': fields.Integer(readOnly=True, description='The task unique identifier'),
-#     'task': fields.String(required=True, description='The task details')
-# })
+# Provide a method to create access tokens. The create_access_token()
+# function is used to actually generate the token, and you can return
+# it to the caller however you choose.
+@auth_ns.route('/login', methods=['POST'])
+class LoginResource(Resource):
+
+    login_payload = api.model('LoginPayload', {
+        'username': fields.String(required=True, description='The username'),
+        'password': fields.String(required=True, description='The password')
+    })
+
+    login_tokens = api.model('LoginTokens', {
+        'access_token': fields.String(required=True, description='A temporary JWT'),
+        'refresh_token': fields.String(required=True, description='A refresh token'),
+        'username': fields.String(required=True, description='The username'),
+        'roles': fields.List(fields.String, required=True, description='A list of roles')
+    })
+
+    @auth_ns.doc(body=login_payload, security=None)
+    @auth_ns.marshal_with(login_tokens, code=200, description='Login OK')
+    def post(self):
+        username = request.json.get('username', None)
+        password = request.json.get('password', None)
+        if not username:
+            return ({"msg": "Missing username parameter"}), 400
+        if not password:
+            return ({"msg": "Missing password parameter"}), 400
+
+        if username != 'test' or password != 'test':
+            return ({"msg": "Bad username or password"}), 401
+
+        user = users.get(username)
+        ret = {
+            'access_token': create_access_token(identity=user),
+            'refresh_token': create_refresh_token(identity=user),
+            'username': user.get('username'),
+            'roles': user.get('roles')
+        }
+        return ret, 200
+
+
+# The jwt_refresh_token_required decorator insures a valid refresh
+# token is present in the request before calling this endpoint. We
+# can use the get_jwt_identity() function to get the identity of
+# the refresh token, and use the create_access_token() function again
+# to make a new access token for this identity.
+@auth_ns.route('/refresh', methods=['POST'])
+class RefreshResource(Resource):
+
+    refresh_payload = api.model('RefreshPayload', {
+        'refresh_token': fields.String(required=True, description='The refresh token'),
+    })
+
+    refreshed_tokens = api.model('RefreshedToken', {
+        'access_token': fields.String(description='A temporary JWT'),
+    })
+
+    @auth_ns.doc(body=refresh_payload, security=None)
+    @auth_ns.marshal_with(refreshed_tokens, code=200, description='Refresh OK')
+    @jwt_refresh_token_required
+    def post(self):
+        current_user = users.get(get_jwt_identity())
+        print
+        ret = {
+            'access_token': create_access_token(identity=current_user),
+        }
+        return (ret), 200
 
 
 @app.route('/base-models')
 class BaseModelResource(Resource):
-
     # @ns.marshal_list_with(todo)
+    @jwt_optional
     @ns.doc('list_base_models', model=[fields.String()])
     def get(self):
         """API endpoint to list available spacy base models"""
@@ -70,14 +205,17 @@ class ModelsResource(Resource):
     })
 
     @ns.doc('list_models', model=[fields.String()])
+    @jwt_required
     def get(self):
         return jsonify(mm.available_models())
 
     @ns.doc('upsert_model')
     @api.expect(model_creation_fields)
     def post(self):
-        mm.create_model(api.payload['model_name'], api.payload['base_model_name'])
+        mm.create_model(api.payload['model_name'],
+                        api.payload['base_model_name'])
         return '', 200
+
 
 @ns.response(404, 'Model not found')
 @ns.param('model_name', 'The model name (unique identifier)')
@@ -85,10 +223,14 @@ class ModelsResource(Resource):
 @api.doc(params={'model_name': 'Model to use'})
 class ModelResource(Resource):
 
+    # @ns.expect(todo)
+    # @ns.marshal_with(todo, code=201)
+    @jwt_required
     @ns.doc('get_model')
     def get(self, model_name=None):
-        return None, 404 # TODO: This should return model metadata
+        return None, 404  # TODO: This should return model metadata
 
+    @jwt_required
     @ns.doc('remove_model')
     def delete(self, model_name=None):
         if mm.delete_model(model_name):
@@ -96,10 +238,22 @@ class ModelResource(Resource):
         else:
             raise InvalidUsage(f"Couldn't delete model named {model_name}")
 
+    @jwt_required
+    @ns.doc('upsert_model')
+    def put(self, model_name=None):
+        json_payload = request.get_json()
+        if json_payload is None:
+            pass  # TODO: Payload is empty or is an invalid JSON
+        base_model, model_name = _parse_model_creation_json(json_payload)
+        result = mm.create_model(
+            model_name, base_model)  # TODO: return result
+        return jsonify(True)
+
 
 @ns.route('/<string:model_name>/ner')
 @api.doc(params={'model_name': 'Model to use'})
 class NerDocumentResource(Resource):
+    @jwt_required
     @ns.doc('upsert_ner_document')
     def put(self, model_name=None):
         nerd_model = mm.load_model(model_name)
@@ -114,6 +268,7 @@ class NerDocumentResource(Resource):
         # TODO: Figure out what we need to return here
         return jsonify(train_result)
 
+    @jwt_optional
     @ns.doc('get_ner_document')
     def get(self, model_name=None):
         nerd_model = mm.load_model(model_name)
@@ -129,6 +284,7 @@ class EntityTypesResource(Resource):
         'code': fields.String
     })
 
+    @jwt_required
     @ns.doc('upsert_entity_types')
     @ns.expect(entity_type_fields)
     def put(self, model_name):
@@ -146,6 +302,7 @@ class EntityTypesResource(Resource):
         # TODO: Figure out what we need to return here
         return '', 200
 
+    @jwt_optional
     @ns.doc('get_entity_types')
     @ns.marshal_list_with(entity_type_fields)
     def get(self, model_name):
