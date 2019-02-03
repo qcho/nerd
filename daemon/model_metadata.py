@@ -19,7 +19,8 @@ class ModelMetadata():
     @property
     def entity_types(self):
         """List of supported entity types"""
-        return self._entity_types
+        types = [{"code": code, "name": name} for code, name in self._entity_types.items()]
+        return types
 
     def upsert_entity_type(self, code: str, name: str = None):
         if name is None:
