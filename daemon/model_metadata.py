@@ -9,12 +9,12 @@ class ModelMetadata():
         return metadata
 
     def __init__(self):
-        self._entity_types = [
-            {"id": "PER", "label": "Person"},
-            {"id": "LOC", "label": "Location"},
-            {"id": "ORG", "label": "Organization"},
-            {"id": "MISC", "label": "Miscellaneous"}
-            ]
+        self._entity_types = {
+            'PER': 'Person',
+            'LOC': 'Location',
+            'ORG': 'Organization',
+            'MISC': 'Miscellaneous'
+        }
 
     @property
     def entity_types(self):
