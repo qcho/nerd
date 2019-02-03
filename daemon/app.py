@@ -54,7 +54,7 @@ def postman():
 class BaseModelResource(Resource):
 
     # @ns.marshal_list_with(todo)
-    @ns.doc('list_base_models')
+    @ns.doc('list_base_models', model=[fields.String()])
     def get(self):
         """API endpoint to list available spacy base models"""
         return jsonify(mm.available_base_models())
