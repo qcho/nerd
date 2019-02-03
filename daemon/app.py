@@ -87,7 +87,7 @@ class ModelResource(Resource):
 
     @ns.doc('get_model')
     def get(self, model_name=None):
-        return None, 404
+        return None, 404 # TODO: This should return model metadata
 
     @ns.doc('remove_model')
     def delete(self, model_name=None):
