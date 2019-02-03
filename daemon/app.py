@@ -39,22 +39,6 @@ def handle_invalid_api_usage(error):
     response.status_code = error.status_code
     return response
 
-
-@app.route("/")
-def index():
-    """Lists all of the available endpoints"""
-    # TODO: Check if this is working correctly
-    import sys
-    current_module = sys.modules[__name__]
-    routes = []
-    for rule in app.url_map.iter_rules():
-        routes.append({
-            'url': rule.rule,
-            'doc': getattr(current_module, rule.endpoint).__doc__
-        })
-    return jsonify(routes)
-
-
 @app.route('/postman.json')
 def postman():
     return jsonify(api.as_postman(urlvars=False, swagger=True))
