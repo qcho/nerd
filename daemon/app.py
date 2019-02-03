@@ -20,7 +20,7 @@ api = Api(version='1.0', title='NER Daemon API',
           description='A simple NER Daemon API',
           )
 
-ns = api.namespace('ner', description='ner operations')
+ns = api.namespace('models', description='ner operations')
 
 api.init_app(app)
 
