@@ -81,7 +81,7 @@ class ModelsResource(Resource):
 
 @ns.response(404, 'Model not found')
 @ns.param('model_name', 'The model name (unique identifier)')
-@ns.route('/models/<string:model_name>')
+@ns.route('/<string:model_name>')
 class ModelResource(Resource):
 
     # @ns.expect(todo)
@@ -98,7 +98,7 @@ class ModelResource(Resource):
 
 
 
-@ns.route('/models/<string:model_name>/ner')
+@ns.route('/<string:model_name>/ner')
 class NerDocumentResource(Resource):
     @ns.doc('upsert_ner_document')
     def put(self, model_name=None):
@@ -121,7 +121,7 @@ class NerDocumentResource(Resource):
         return jsonify(result)  # TODO: Figure out what we need to return here
 
 
-@ns.route('/models/<string:model_name>/entity_types')
+@ns.route('/<string:model_name>/entity_types')
 class EntityTypesResource(Resource):
     @ns.doc('upsert_entity_types')
     def put(self, model_name):
