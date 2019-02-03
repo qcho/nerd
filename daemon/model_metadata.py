@@ -21,6 +21,11 @@ class ModelMetadata():
         """List of supported entity types"""
         return self._entity_types
 
+    def upsert_entity_type(self, code: str, name: str = None):
+        if name is None:
+            name = code
+        self._entity_types[code] = name
+
     def to_dict(self):
         """Dictionary representation of the metadata"""
         return {

@@ -20,6 +20,10 @@ class NerdModel():
     def entity_types(self):
         return self.metadata.entity_types
 
+    def upsert_entity_type(self, code, name=None):
+        self.metadata.upsert_entity_type(code, name)
+        self._save_metadata()
+
     def load(self):
         self._load_metadata()
         self._load_model()
@@ -51,9 +55,11 @@ class NerdModel():
             return
         self.model = spacy.load(self.model_path())
 
-    def _save_model(self, model: Language):
+    def _save_model(self, model: Language = None):
         if model is not None:
             self.model = model
+        if self.model is None:
+            raise Exception("Saving a model requires having a model")
         os.makedirs(self.path)
         os.makedirs(self.data_path())
         self.model.to_disk(self.model_path())
