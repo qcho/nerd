@@ -91,10 +91,10 @@ class ModelResource(Resource):
 
     @ns.doc('remove_model')
     def delete(self, model_name=None):
-        result = mm.delete_model(model_name)
-        if result == True:
-            return
-
+        if mm.delete_model(model_name):
+            return '', 200
+        else:
+            raise InvalidUsage(f"Couldn't delete model named {model_name}")
 
 
 @ns.route('/<string:model_name>/ner')
