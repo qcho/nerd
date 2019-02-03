@@ -18,6 +18,7 @@ from invalid_usage import InvalidUsage
 app = Flask('NERd', static_folder=None)
 api = Api(version='1.0', title='NER Daemon API',
           description='A simple NER Daemon API',
+          validate=True
           )
 
 ns = api.namespace('models', description='ner operations')
