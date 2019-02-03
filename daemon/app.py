@@ -63,10 +63,21 @@ class BaseModelResource(Resource):
 
 @ns.route('')
 class ModelsResource(Resource):
-    @ns.doc('list_models')
+
+    model_creation_fields = api.model('ModelCreationData', {
+        'base_model_name': fields.String(enum=mm.available_base_models()),
+        'model_name': fields.String
+    })
+
+    @ns.doc('list_models', model=[fields.String()])
     def get(self):
         return jsonify(mm.available_models())
 
+    @ns.doc('upsert_model')
+    @api.expect(model_creation_fields)
+    def post(self):
+        mm.create_model(api.payload['model_name'], api.payload['base_model_name'])
+        return '', 200
 
 @ns.response(404, 'Model not found')
 @ns.param('model_name', 'The model name (unique identifier)')
@@ -85,15 +96,6 @@ class ModelResource(Resource):
         if result == True:
             return
 
-    @ns.doc('upsert_model')
-    def put(self, model_name=None):
-        json_payload = request.get_json()
-        if json_payload is None:
-            pass  # TODO: Payload is empty or is an invalid JSON
-        base_model, model_name = _parse_model_creation_json(json_payload)
-        result = mm.create_model(
-            model_name, base_model)  # TODO: return result
-        return jsonify(True)
 
 
 @ns.route('/models/<string:model_name>/ner')
@@ -142,24 +144,6 @@ class EntityTypesResource(Resource):
     def get(self, model_name):
         model = mm.load_model(model_name)
         return jsonify(types_for_model(model))
-
-
-def _parse_model_creation_json(json_payload) -> Tuple[str, str]:
-    """ Decodes the JSON for creating new models
-
-    Args:
-        json_payload (json): JSON payload containing model creation information
-
-    Returns:
-        - base model name
-        - new model name
-    """
-
-    if not 'base_model_name' in json_payload or not 'model_name' in json_payload:
-        raise InvalidUsage("Invalid API", payload={"required": {
-                           "model_name": "str", "base_model_name": "str"}})
-
-    return json_payload['base_model_name'], json_payload['model_name']
 
 
 def _parse_training_json(json_payload) -> Tuple[str, List[NEREntity]]:
