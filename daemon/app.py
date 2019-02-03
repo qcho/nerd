@@ -50,7 +50,7 @@ def postman():
 # })
 
 
-@ns.route('/base-models')
+@app.route('/base-models')
 class BaseModelResource(Resource):
 
     # @ns.marshal_list_with(todo)
