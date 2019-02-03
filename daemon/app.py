@@ -61,7 +61,7 @@ class BaseModelResource(Resource):
         return jsonify(mm.available_base_models())
 
 
-@ns.route()
+@ns.route('')
 class ModelsResource(Resource):
     @ns.doc('list_models')
     def get(self):
