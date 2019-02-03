@@ -7,7 +7,7 @@ import os
 from typing import List, Tuple
 
 from flask import Flask, request, jsonify, url_for
-from flask_restplus import Resource, Api
+from flask_restplus import Resource, Api, fields
 
 from atp import parse_text, train_model
 from model_management import ModelManager
@@ -82,10 +82,9 @@ class ModelsResource(Resource):
 @ns.response(404, 'Model not found')
 @ns.param('model_name', 'The model name (unique identifier)')
 @ns.route('/<string:model_name>')
+@api.doc(params={'model_name': 'Model to use'})
 class ModelResource(Resource):
 
-    # @ns.expect(todo)
-    # @ns.marshal_with(todo, code=201)
     @ns.doc('get_model')
     def get(self, model_name=None):
         return None, 404
@@ -99,6 +98,7 @@ class ModelResource(Resource):
 
 
 @ns.route('/<string:model_name>/ner')
+@api.doc(params={'model_name': 'Model to use'})
 class NerDocumentResource(Resource):
     @ns.doc('upsert_ner_document')
     def put(self, model_name=None):
@@ -123,7 +123,14 @@ class NerDocumentResource(Resource):
 
 @ns.route('/<string:model_name>/entity_types')
 class EntityTypesResource(Resource):
+
+    entity_type_fields = api.model('EntityType', {
+        'name': fields.String,
+        'code': fields.String
+    })
+
     @ns.doc('upsert_entity_types')
+    @ns.expect(entity_type_fields)
     def put(self, model_name):
         """NER entity type management
         TODO: Document this
@@ -135,12 +142,12 @@ class EntityTypesResource(Resource):
         json_payload = request.get_json()
         if json_payload is None:
             raise InvalidUsage("Post body shouldn't be empty")
-        creation_result = create_entity_type(
-            model, json_payload['name'], json_payload['code'])
+        create_entity_type(model, json_payload['name'], json_payload['code'])
         # TODO: Figure out what we need to return here
-        return jsonify(creation_result)
+        return '', 200
 
     @ns.doc('get_entity_types')
+    @ns.marshal_list_with(entity_type_fields)
     def get(self, model_name):
         model = mm.load_model(model_name)
         return jsonify(types_for_model(model))
