@@ -36,17 +36,15 @@ api = Api(version='1.0', title='NER Daemon API',
           authorizations=authorizations,
           security='apikey'
           )
-ns = api.namespace('', description='ner operations')
+ns = api.namespace('models', description='NER operations')
 auth_ns = api.namespace('auth', description='Authentication')
 api.init_app(app)
-
-ns = api.namespace('models', description='ner operations')
 
 # Setup the Flask-JWT-Extended extension
 app.config['JWT_TOKEN_LOCATION'] = ('headers', 'json')
 app.config['JWT_SECRET_KEY'] = os.environ.get(
     'JWT_SECRET_KEY', 'zekrit dont tell plz')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60 # Minutes
 app.config['JWT_IDENTITY_CLAIM'] = 'sub'
 
 app.config['SWAGGER_UI_JSONEDITOR'] = True
@@ -211,6 +209,7 @@ class ModelsResource(Resource):
 
     @ns.doc('upsert_model')
     @api.expect(model_creation_fields)
+    @jwt_required
     def post(self):
         mm.create_model(api.payload['model_name'],
                         api.payload['base_model_name'])
@@ -237,17 +236,6 @@ class ModelResource(Resource):
             return '', 200
         else:
             raise InvalidUsage(f"Couldn't delete model named {model_name}")
-
-    @jwt_required
-    @ns.doc('upsert_model')
-    def put(self, model_name=None):
-        json_payload = request.get_json()
-        if json_payload is None:
-            pass  # TODO: Payload is empty or is an invalid JSON
-        base_model, model_name = _parse_model_creation_json(json_payload)
-        result = mm.create_model(
-            model_name, base_model)  # TODO: return result
-        return jsonify(True)
 
 
 @ns.route('/<string:model_name>/ner')
