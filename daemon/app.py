@@ -37,7 +37,7 @@ api = Api(version='1.0', title='NER Daemon API',
           authorizations=authorizations,
           security='apikey'
           )
-ns = api.namespace('models', description='NER operations')
+model_ns = api.namespace('models', description='NER operations')
 auth_ns = api.namespace('auth', description='Authentication')
 api.init_app(app)
 
@@ -191,13 +191,13 @@ class RefreshResource(Resource):
 class BaseModelResource(Resource):
     # @ns.marshal_list_with(todo)
     @jwt_optional
-    @ns.doc('list_base_models', model=[fields.String()])
+    @model_ns.doc('list_base_models', model=[fields.String()])
     def get(self):
         """List available SpaCy base models"""
         return jsonify(mm.available_base_models())
 
 
-@ns.route('')
+@model_ns.route('')
 class ModelsResource(Resource):
 
     model_creation_fields = api.model('ModelCreationData', {
@@ -205,13 +205,13 @@ class ModelsResource(Resource):
         'model_name': fields.String
     })
 
-    @ns.doc('list_models', model=[fields.String()])
+    @model_ns.doc('list_models', model=[fields.String()])
     @jwt_required
     def get(self):
         """List available models"""
         return jsonify(mm.available_models())
 
-    @ns.doc('upsert_model')
+    @model_ns.doc('upsert_model')
     @api.expect(model_creation_fields)
     @jwt_required
     def post(self):
@@ -221,22 +221,22 @@ class ModelsResource(Resource):
         return '', 200
 
 
-@ns.response(404, 'Model not found')
-@ns.param('model_name', 'The model name (unique identifier)')
-@ns.route('/<string:model_name>')
+@model_ns.response(404, 'Model not found')
+@model_ns.param('model_name', 'The model name (unique identifier)')
+@model_ns.route('/<string:model_name>')
 @api.doc(params={'model_name': 'Model to use'})
 class ModelResource(Resource):
 
     # @ns.expect(todo)
     # @ns.marshal_with(todo, code=201)
     @jwt_required
-    @ns.doc('get_model')
+    @model_ns.doc('get_model')
     def get(self, model_name=None):
         """Returns metadata for a given model"""
         return None, 404  # TODO: This should return model metadata
 
     @jwt_required
-    @ns.doc('remove_model')
+    @model_ns.doc('remove_model')
     def delete(self, model_name=None):
         """Deletes a model"""
         if mm.delete_model(model_name):
@@ -245,11 +245,11 @@ class ModelResource(Resource):
             raise InvalidUsage(f"Couldn't delete model named {model_name}")
 
 
-@ns.route('/<string:model_name>/ner')
+@model_ns.route('/<string:model_name>/ner')
 @api.doc(params={'model_name': 'Model to use'})
 class NerDocumentResource(Resource):
     @jwt_required
-    @ns.doc('upsert_ner_document')
+    @model_ns.doc('upsert_ner_document')
     def put(self, model_name=None):
         """Model entity recognition correction
         TODO: Document this
@@ -267,8 +267,8 @@ class NerDocumentResource(Resource):
         return jsonify(train_result)
 
     @jwt_optional
-    @ns.doc('get_ner_document')
-    @ns.expect(request_parsers.ner_request_fields)
+    @model_ns.doc('get_ner_document')
+    @model_ns.expect(request_parsers.ner_request_fields)
     def get(self, model_name=None):
         """Infer entities for a given text"""
         nerd_model = mm.load_model(model_name)
@@ -276,7 +276,7 @@ class NerDocumentResource(Resource):
         return jsonify(result)  # TODO: Figure out what we need to return here
 
 
-@ns.route('/<string:model_name>/entity_types')
+@model_ns.route('/<string:model_name>/entity_types')
 class EntityTypesResource(Resource):
 
     entity_type_fields = api.model('EntityType', {
@@ -285,8 +285,8 @@ class EntityTypesResource(Resource):
     })
 
     @jwt_required
-    @ns.doc('upsert_entity_types')
-    @ns.expect(entity_type_fields)
+    @model_ns.doc('upsert_entity_types')
+    @model_ns.expect(entity_type_fields)
     def put(self, model_name):
         """Update or create entity types"""
         model = mm.load_model(model_name)
@@ -301,8 +301,8 @@ class EntityTypesResource(Resource):
         return '', 200
 
     @jwt_optional
-    @ns.doc('get_entity_types')
-    @ns.marshal_list_with(entity_type_fields)
+    @model_ns.doc('get_entity_types')
+    @model_ns.marshal_list_with(entity_type_fields)
     def get(self, model_name):
         """Returns the list of available entity types"""
         model = mm.load_model(model_name)
