@@ -14,6 +14,7 @@ from model_management import ModelManager
 from nerd_type_aliases import NEREntity
 from entity_type_management import create_entity_type, types_for_model
 from invalid_usage import InvalidUsage
+import request_parsers
 
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token, create_refresh_token,
@@ -258,6 +259,7 @@ class NerDocumentResource(Resource):
 
     @jwt_optional
     @ns.doc('get_ner_document')
+    @ns.expect(request_parsers.ner_request_fields)
     def get(self, model_name=None):
         nerd_model = mm.load_model(model_name)
         result = parse_text(nerd_model, request.args['text'])
