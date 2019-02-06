@@ -6,8 +6,13 @@ import os
 import sys
 from shutil import rmtree
 from pathlib import Path
+from invalid_usage import InvalidUsage
 
 from nerd_model import NerdModel
+
+class InvalidModelError(InvalidUsage):
+    def __init__(self, message):
+        super().__init__(message, 404)
 
 class ModelManager:
     """Handles NER models
@@ -49,7 +54,7 @@ class ModelManager:
         model_path = self.__model_path(model_name)
 
         if not model_path.exists():
-            raise Exception(f"Model named {model_name} doesn't exist")
+            raise InvalidModelError(f"Model named {model_name} doesn't exist")
 
         model = NerdModel(model_name, model_path)
         model.load()
