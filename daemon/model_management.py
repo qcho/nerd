@@ -35,8 +35,7 @@ class ModelManager:
 
     def available_models(self):
         """List of all available models"""
-        files = os.listdir(self.model_path)
-        return files
+        return [x.name for x in self.model_path.iterdir() if x.is_dir()]
 
     def load_model(self, model_name: str) -> NerdModel:
         """Loads a stored SpaCy model
