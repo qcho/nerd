@@ -149,7 +149,7 @@ class LoginResource(Resource):
         if not password:
             return ({"msg": "Missing password parameter"}), 400
 
-        if username != 'test' or password != 'test':
+        if username != 'test' or password != 'test': # TODO: Hard-coded username/password
             return ({"msg": "Bad username or password"}), 401
 
         user = users.get(username)
