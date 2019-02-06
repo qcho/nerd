@@ -35,3 +35,9 @@ def queue_text(model: NerdModel, text: str):
     parsed_text = parse_text(model, text)
     with open(file_path, 'w', encoding='utf8') as outf:
         json.dump(parsed_text, outf)
+
+def list_queued(model: NerdModel) -> List[Path]:
+    return list(model.directories.queue_path().glob('*.txt'))
+
+def list_trained(model: NerdModel) -> List[Path]:
+    return list(model.directories.trained_path().glob('*.txt'))
