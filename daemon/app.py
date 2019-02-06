@@ -9,7 +9,7 @@ from typing import List, Tuple
 from flask import Flask, request, jsonify, url_for
 from flask_restplus import Resource, Api, fields
 
-from atp import parse_text, train_model
+from atp import parse_text, train_model, queue_text
 from model_management import ModelManager
 from nerd_type_aliases import NEREntity
 from entity_type_management import create_entity_type, types_for_model
@@ -247,6 +247,26 @@ class ModelResource(Resource):
             return '', 200
         else:
             raise InvalidUsage(f"Couldn't delete model named {model_name}")
+
+
+@model_ns.route('/<string:model_name>/training')
+@model_ns.response(404, 'Model not found')
+@model_ns.param('model_name', 'The model name (unique identifier)')
+@api.doc(params={'model_name': 'Model to use'})
+class ModelTrainingResource(Resource):
+    new_text_fields = api.model('NewText', {
+        'text': fields.String(required=True)
+    })
+
+    @jwt_required
+    @model_ns.doc('queue_training_text', body=new_text_fields, expect=[auth_parser])
+    @api.expect(new_text_fields)
+    def post(self, model_name):
+        """Add a new text to used for training"""
+
+        nerd_model = mm.load_model(model_name)
+        text = api.payload["text"]
+        queue_text(nerd_model, text)
 
 
 @model_ns.route('/<string:model_name>/ner')
