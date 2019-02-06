@@ -178,7 +178,7 @@ class RefreshResource(Resource):
         'access_token': fields.String(description='A temporary JWT'),
     })
 
-    @auth_ns.doc(body=refresh_payload, security=None)
+    @auth_ns.doc(body=refresh_payload, security=None, expect=[auth_parser])
     @auth_ns.marshal_with(refreshed_tokens, code=200, description='Refresh OK')
     @jwt_refresh_token_required
     def post(self):
@@ -209,13 +209,13 @@ class ModelsResource(Resource):
         'model_name': fields.String
     })
 
-    @model_ns.doc('list_models', model=[fields.String()])
+    @model_ns.doc('list_models', model=[fields.String()], expect=[auth_parser])
     @jwt_required
     def get(self):
         """List available models"""
         return jsonify(mm.available_models())
 
-    @model_ns.doc('upsert_model')
+    @model_ns.doc('upsert_model', body=model_creation_fields, expect=[auth_parser])
     @api.expect(model_creation_fields)
     @jwt_required
     def post(self):
@@ -234,13 +234,13 @@ class ModelResource(Resource):
     # @ns.expect(todo)
     # @ns.marshal_with(todo, code=201)
     @jwt_required
-    @model_ns.doc('get_model')
-    def get(self, model_name=None):
+    @model_ns.doc('get_model', expect=[auth_parser])
+    def get(self, model_name):
         """Returns metadata for a given model"""
         return None, 404  # TODO: This should return model metadata
 
     @jwt_required
-    @model_ns.doc('remove_model')
+    @model_ns.doc('remove_model', expect=[auth_parser])
     def delete(self, model_name=None):
         """Deletes a model"""
         if mm.delete_model(model_name):
@@ -252,9 +252,15 @@ class ModelResource(Resource):
 @model_ns.route('/<string:model_name>/ner')
 @api.doc(params={'model_name': 'Model to use'})
 class NerDocumentResource(Resource):
+
+    document_model = api.model('DocumentModel', {
+        'TODO': fields.String # TODO: Map SpaCy document model
+    })
+
     @jwt_required
-    @model_ns.doc('upsert_ner_document')
-    def put(self, model_name=None):
+    @model_ns.doc('upsert_ner_document', body=document_model, expect=[auth_parser])
+    @api.expect(document_model)
+    def put(self, model_name):
         """Model entity recognition correction
         TODO: Document this
         """
@@ -271,9 +277,9 @@ class NerDocumentResource(Resource):
         return jsonify(train_result)
 
     @jwt_optional
-    @model_ns.doc('get_ner_document')
+    @model_ns.doc('get_ner_document', expect=[auth_parser, request_parsers.ner_request_fields])
     @model_ns.expect(request_parsers.ner_request_fields)
-    def get(self, model_name=None):
+    def get(self, model_name):
         """Infer entities for a given text"""
         nerd_model = mm.load_model(model_name)
         result = parse_text(nerd_model, request.args['text'])
@@ -289,7 +295,7 @@ class EntityTypesResource(Resource):
     })
 
     @jwt_required
-    @model_ns.doc('upsert_entity_types')
+    @model_ns.doc('upsert_entity_types', body=entity_type_fields, expect=[auth_parser])
     @model_ns.expect(entity_type_fields)
     def put(self, model_name):
         """Update or create entity types"""
@@ -305,7 +311,7 @@ class EntityTypesResource(Resource):
         return '', 200
 
     @jwt_optional
-    @model_ns.doc('get_entity_types')
+    @model_ns.doc('get_entity_types', expect=[auth_parser])
     @model_ns.marshal_list_with(entity_type_fields)
     def get(self, model_name):
         """Returns the list of available entity types"""
