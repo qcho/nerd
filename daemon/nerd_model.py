@@ -42,13 +42,10 @@ class NerdModel():
         self._save_model(model)
 
     def _load_metadata(self):
-        with open(self._metadata_path(), 'r', encoding='utf8') as inf:
-            raw_json = json.load(inf)
-            self.metadata = ModelMetadata.from_dict(raw_json)
+        self.metadata = ModelMetadata.from_path(self.directories.metadata_file())
 
     def _save_metadata(self):
-        with open(self._metadata_path(), 'w', encoding='utf8') as outf:
-            json.dump(self.metadata.to_dict(), outf, indent=True)
+        self.metadata.save(self.directories.metadata_file())
 
     def _load_model(self):
         if not self.model is None:
