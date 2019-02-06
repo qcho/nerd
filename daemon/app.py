@@ -274,7 +274,25 @@ class ModelTrainingResource(Resource):
 class NerDocumentResource(Resource):
 
     document_model = api.model('DocumentModel', {
-        'TODO': fields.String # TODO: Map SpaCy document model
+        'ents': fields.List(fields.Nested({
+            'start': fields.Integer,
+            'end': fields.Integer,
+            'label': fields.String
+        })),
+        'sents': fields.List(fields.Nested({
+            'start': fields.Integer,
+            'end': fields.Integer
+        })),
+        'text': fields.String,
+        'tokens': fields.List(fields.Nested({
+            "id": fields.Integer,
+            "start": fields.Integer,
+            "end": fields.Integer,
+            # "head": fields.Integer,
+            # "pos": fields.String,
+            # "dep": fields.String,
+            # "tag": fields.String
+        }))
     })
 
     @jwt_required
@@ -299,11 +317,11 @@ class NerDocumentResource(Resource):
     @jwt_optional
     @model_ns.doc('get_ner_document', expect=[auth_parser, request_parsers.ner_request_fields])
     @model_ns.expect(request_parsers.ner_request_fields)
+    @model_ns.marshal_with(document_model)
     def get(self, model_name):
         """Infer entities for a given text"""
         nerd_model = mm.load_model(model_name)
-        result = parse_text(nerd_model, request.args['text'])
-        return jsonify(result)  # TODO: Figure out what we need to return here
+        return parse_text(nerd_model, request.args['text'])
 
 
 @model_ns.route('/<string:model_name>/entity_types')
