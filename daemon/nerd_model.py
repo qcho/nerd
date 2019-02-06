@@ -30,6 +30,8 @@ class NerdModel():
         self._load_model()
 
     def save(self, model=None):
+        if self.model is None:
+            self.directories.initialize()
         self._save_metadata()
         self._save_model(model)
 
@@ -49,5 +51,4 @@ class NerdModel():
             self.model = model
         if self.model is None:
             raise Exception("Saving a model requires having a model")
-        self.directories.initialize()
         self.model.to_disk(self.directories.model_path())
