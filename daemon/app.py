@@ -222,7 +222,7 @@ class ModelsResource(Resource):
         """Creates a model from a given SpaCy model"""
         mm.create_model(api.payload['model_name'],
                         api.payload['base_model_name'])
-        return '', 200
+        return None, 200
 
 
 @model_ns.response(404, 'Model not found')
@@ -336,7 +336,7 @@ class EntityTypesResource(Resource):
     def get(self, model_name):
         """Returns the list of available entity types"""
         model = mm.load_model(model_name)
-        return jsonify(types_for_model(model))
+        return types_for_model(model)
 
 
 def _parse_training_json(json_payload) -> Tuple[str, List[NEREntity]]:
