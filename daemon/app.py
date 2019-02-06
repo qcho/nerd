@@ -47,6 +47,7 @@ app.config['JWT_SECRET_KEY'] = os.environ.get(
     'JWT_SECRET_KEY', 'zekrit dont tell plz')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60 # Minutes
 app.config['JWT_IDENTITY_CLAIM'] = 'sub'
+app.config['JWT_HEADER_TYPE'] = ''
 
 app.config['SWAGGER_UI_JSONEDITOR'] = True
 jwt = JWTManager(app)
