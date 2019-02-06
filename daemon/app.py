@@ -41,6 +41,9 @@ model_ns = api.namespace('models', description='NER operations')
 auth_ns = api.namespace('auth', description='Authentication')
 api.init_app(app)
 
+auth_parser = api.parser()
+auth_parser.add_argument('Authorization', location='headers')
+
 # Setup the Flask-JWT-Extended extension
 app.config['JWT_TOKEN_LOCATION'] = ('headers', 'json')
 app.config['JWT_SECRET_KEY'] = os.environ.get(
