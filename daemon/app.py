@@ -279,26 +279,32 @@ class ModelTrainingResource(Resource):
 @api.doc(params={'model_name': 'Model to use'})
 class NerDocumentResource(Resource):
 
+    entity_model = api.model('DocumentEntity', {
+        'start': fields.Integer,
+        'end': fields.Integer,
+        'label': fields.String
+    })
+
+    sentence_model = api.model('DocumentSentence', {
+        'start': fields.Integer,
+        'end': fields.Integer
+    })
+
+    token_model = api.model('DocumentToken', {
+        "id": fields.Integer,
+        "start": fields.Integer,
+        "end": fields.Integer,
+        # "head": fields.Integer,
+        # "pos": fields.String,
+        # "dep": fields.String,
+        # "tag": fields.String
+    })
+
     document_model = api.model('DocumentModel', {
-        'ents': fields.List(fields.Nested({
-            'start': fields.Integer,
-            'end': fields.Integer,
-            'label': fields.String
-        })),
-        'sents': fields.List(fields.Nested({
-            'start': fields.Integer,
-            'end': fields.Integer
-        })),
+        'ents': fields.List(fields.Nested(entity_model)),
+        'sents': fields.List(fields.Nested(sentence_model)),
         'text': fields.String,
-        'tokens': fields.List(fields.Nested({
-            "id": fields.Integer,
-            "start": fields.Integer,
-            "end": fields.Integer,
-            # "head": fields.Integer,
-            # "pos": fields.String,
-            # "dep": fields.String,
-            # "tag": fields.String
-        }))
+        'tokens': fields.List(fields.Nested(token_model))
     })
 
     @jwt_required
