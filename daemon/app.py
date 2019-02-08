@@ -69,6 +69,12 @@ users = {
 def init_app_context():
     pass
 
+@app.after_request
+def after_request(response):
+    # TODO: Remove when done since having CORS is not a good idea.
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
 
 # Create a function that will be called whenever create_access_token
 # is used. It will take whatever object is passed into the
