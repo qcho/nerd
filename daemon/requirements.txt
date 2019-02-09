@@ -19,6 +19,7 @@ murmurhash==1.0.1
 numpy==1.16.0
 plac==0.9.6
 preshed==2.0.1
+ptvsd==4.2.3
 pycparser==2.19
 PyJWT==1.7.1
 pytz==2018.9
