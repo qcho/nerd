@@ -341,7 +341,8 @@ class EntityTypesResource(Resource):
 
     entity_type_fields = api.model('EntityType', {
         'name': fields.String,
-        'code': fields.String
+        'code': fields.String,
+        'color': fields.String
     })
 
     @jwt_required
@@ -356,7 +357,7 @@ class EntityTypesResource(Resource):
         json_payload = request.get_json()
         if json_payload is None:
             raise InvalidUsage("Post body shouldn't be empty")
-        create_entity_type(model, json_payload['name'], json_payload['code'])
+        create_entity_type(model, json_payload['name'], json_payload['code'], json_payload['color'])
         # TODO: Figure out what we need to return here
         return '', 200
 

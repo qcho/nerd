@@ -19,10 +19,22 @@ class ModelMetadata():
 
     def __init__(self):
         self._entity_types = {
-            'PER': 'Person',
-            'LOC': 'Location',
-            'ORG': 'Organization',
-            'MISC': 'Miscellaneous'
+            "PER": {
+                "label": "Person",
+                "color": "#903d3d"
+            },
+            "LOC": {
+                "label": "Location",
+                "color": "#b83ca6"
+            },
+            "ORG": {
+                "label": "Organization",
+                "color": "#e1d458"
+            },
+            "MISC": {
+                "label": "Miscellaneous",
+                "color": "#38dd9e"
+            }
         }
 
     def save(self, to: Path):
@@ -32,7 +44,7 @@ class ModelMetadata():
     @property
     def entity_types(self):
         """List of supported entity types"""
-        types = [{"code": code, "name": name} for code, name in self._entity_types.items()]
+        types = [{"code": code, "name": data["label"], "color": data["color"]} for code, data in self._entity_types.items()]
         return types
 
     def upsert_entity_type(self, code: str, name: str = None):
