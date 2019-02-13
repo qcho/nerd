@@ -137,12 +137,12 @@ class UntokenizedEditor extends Component<Props, State> {
       }
     }
 
-    // TODO: Check that range doesn't contain an EntityNode
     document.ents.push({
       start: startPosition,
       end: endPosition,
       label: "MISC"
     });
+    window.getSelection().removeAllRanges();
     this.props.onUpdate(document);
   }
 
