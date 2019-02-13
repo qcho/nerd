@@ -10,8 +10,8 @@ const TextNode = (props: TextNodeProps) => {
       style={{
         height: 32,
         display: "inline-block",
-        marginLeft: 2,
-        marginRight: 2
+        marginLeft: 1,
+        marginRight: 1
       }}
     >
       {props.text}

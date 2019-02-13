@@ -77,32 +77,36 @@ class App extends Component<Props, State> {
         </AppBar>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Grid container direction="column"
-            justify="space-around"
-           >
+          <Grid container direction="column" justify="space-around">
             <Grid item>
-              <TextField
-                label="Text"
-                type="search"
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                value={this.state.text}
-                onChange={event => {
-                  let text = event.target.value;
-                  if (!text || !text.length) {
-                    return;
-                  }
-                  this.setState({ text });
-                }}
-              />
-              <Button
-                fullWidth
-                color="primary"
-                onClick={this.onParseClick.bind(this)}
-              >
-                Parse
-              </Button>
+              <Grid container direction="row" spacing={24} alignItems="center">
+                <Grid item xs={10}>
+                  <TextField
+                    label="Text"
+                    type="search"
+                    margin="normal"
+                    variant="outlined"
+                    fullWidth
+                    value={this.state.text}
+                    onChange={event => {
+                      let text = event.target.value;
+                      if (!text || !text.length) {
+                        return;
+                      }
+                      this.setState({ text });
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button
+                    fullWidth
+                    color="primary"
+                    onClick={this.onParseClick.bind(this)}
+                  >
+                    Parse
+                  </Button>
+                </Grid>
+              </Grid>
               <Divider style={{ marginTop: 10, marginBottom: 10 }} />
             </Grid>
           </Grid>
@@ -110,16 +114,33 @@ class App extends Component<Props, State> {
             {this.state.document == null ? (
               <div />
             ) : (
-              <div>
-                <NerEditor
-                  document={this.state.document!}
-                  onUpdate={this.onDocumentUpdate.bind(this)}
-                  nodeProvider={dummyNodeProvider}
-                />
-                <Button variant="contained" fullWidth color="primary">
-                  Save
-                </Button>
-              </div>
+              <Grid
+                container
+                direction="row"
+                spacing={24}
+                justify="space-between"
+              >
+                <Grid item xs={10}>
+                  <NerEditor
+                    document={this.state.document!}
+                    onUpdate={this.onDocumentUpdate.bind(this)}
+                    nodeProvider={dummyNodeProvider}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={2}
+                  style={{
+                    marginTop: 2,
+                    borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                    padding: "0.5em"
+                  }}
+                >
+                  <Button variant="contained" fullWidth color="primary">
+                    Save
+                  </Button>
+                </Grid>
+              </Grid>
             )}
           </Grid>
         </main>
