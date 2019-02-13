@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { EntityType } from "../types/EntityType";
 import EntityNode from "../widgets/EntityNode";
 import TextNode from "../widgets/TextNode";
@@ -17,7 +17,7 @@ function textNodeProvider(
   let nodeIndex = 0;
 
   let textNodeBuilder = (index: number, text: string) => {
-    return <TextNode key={`ner-${index}`} text={text} />;
+    return <TextNode key={`ner-${index}`} text={text == "" ? " " : text} />;
   };
 
   function entityFor(index: number) {
@@ -40,15 +40,20 @@ function textNodeProvider(
     return null;
   }
 
+  function buildTextNodes(text: string) {
+    let textParts = text
+      .split(" ")
+      .flatMap((value, index, array) =>
+        array.length - 1 !== index ? [value, " "] : value
+      );
+    return textParts.map(text => textNodeBuilder(nodeIndex++, text));
+  }
+
   for (let idx = 0; idx < text.length; ++idx) {
     let entityForIndex = entityFor(idx);
     if (entityForIndex != null) {
       if (accumulatedText.length > 0) {
-        let trimmedAndSplit = accumulatedText.trim().split(" ");
-        let textNodes = trimmedAndSplit.map(text =>
-          textNodeBuilder(nodeIndex++, text)
-        );
-        out.push(...textNodes);
+        out.push(...buildTextNodes(accumulatedText));
 
         accumulatedText = "";
       }
@@ -71,11 +76,7 @@ function textNodeProvider(
     }
   }
   if (accumulatedText.length > 0) {
-    let textNodes = accumulatedText
-      .trim()
-      .split(" ")
-      .map(text => textNodeBuilder(nodeIndex++, text));
-    out.push(...textNodes);
+    out.push(...buildTextNodes(accumulatedText));
   }
   return out;
 }
