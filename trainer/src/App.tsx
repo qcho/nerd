@@ -86,6 +86,7 @@ class App extends Component<Props, State> {
                     type="search"
                     margin="normal"
                     variant="outlined"
+                    multiline
                     fullWidth
                     value={this.state.text}
                     onChange={event => {
