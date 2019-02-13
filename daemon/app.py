@@ -294,10 +294,10 @@ class NerDocumentResource(Resource):
         "id": fields.Integer,
         "start": fields.Integer,
         "end": fields.Integer,
-        # "head": fields.Integer,
-        # "pos": fields.String,
-        # "dep": fields.String,
-        # "tag": fields.String
+        "head": fields.Integer,
+        "pos": fields.String,
+        "dep": fields.String,
+        "tag": fields.String
     })
 
     document_model = api.model('DocumentModel', {
