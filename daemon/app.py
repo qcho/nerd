@@ -322,9 +322,8 @@ class NerDocumentResource(Resource):
         json_payload = request.get_json()
         if json_payload is None:
             pass  # TODO: Payload is empty or is an invalid JSON
-        train_result = train_model(nerd_model, json_payload)
-        # TODO: Figure out what we need to return here
-        return jsonify(train_result)
+        train_model(nerd_model, json_payload)
+        return '', 200
 
     @jwt_optional
     @model_ns.doc('get_ner_document', expect=[auth_parser, request_parsers.ner_request_fields])
