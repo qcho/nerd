@@ -24,7 +24,7 @@ const EntityNode = (props: EntityNodeProps) => {
       <span onClick={(event: any) => onClick(event.currentTarget, entity)}>
         <Chip
           variant="outlined"
-          label={<b style={{ color: entityType.color }}>{text}</b>}
+          label={<div><b style={{ color: entityType.color }}>{text}</b> <b>{entity.label}</b></div>}
           onDelete={() => onDelete(entity)}
         />
       </span>
