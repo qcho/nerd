@@ -10,7 +10,8 @@ import {
   TextField,
   Divider,
   Button,
-  Grid
+  Grid,
+  Typography
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import NerEditor from "./trainer/widgets/NerEditor";
@@ -20,7 +21,9 @@ import { textNodeProvider as dummyNodeProvider } from "./trainer/helpers/nodepro
 let styles = (theme: Theme) =>
   createStyles({
     root: {
-      display: "flex",
+      flexGrow: 1
+    },
+    grow: {
       flexGrow: 1
     },
     appBar: {
@@ -59,7 +62,7 @@ class App extends Component<Props, State> {
     return (
       <div className={classes.root}>
         <CssBaseline />
-        <AppBar position="absolute" className={classes.appBar}>
+        <AppBar position="static">
           <Toolbar>
             <IconButton
               className={classes.menuButton}
@@ -68,6 +71,9 @@ class App extends Component<Props, State> {
             >
               <MenuIcon />
             </IconButton>
+            <Typography variant="h6" color="inherit" className={classes.grow}>
+              NER Trainer
+            </Typography>
             {/* <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
@@ -76,7 +82,6 @@ class App extends Component<Props, State> {
           </Toolbar>
         </AppBar>
         <main className={classes.content}>
-          <div className={classes.toolbar} />
           <Grid container direction="column" justify="space-around">
             <Grid item>
               <Grid container direction="row" spacing={24} alignItems="center">
