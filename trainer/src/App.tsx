@@ -113,41 +113,41 @@ class App extends Component<Props, State> {
                   </Button>
                 </Grid>
               </Grid>
-              <Divider style={{ marginTop: 10, marginBottom: 10 }} />
             </Grid>
-          </Grid>
-          <Grid item>
-            {this.state.document == null ? (
-              <div />
-            ) : (
-              <Grid
-                container
-                direction="row"
-                spacing={24}
-                justify="space-between"
-              >
-                <Grid item xs={10}>
-                  <NerEditor
-                    document={this.state.document!}
-                    onUpdate={this.onDocumentUpdate.bind(this)}
-                    nodeProvider={dummyNodeProvider}
-                  />
-                </Grid>
+            <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+            <Grid item>
+              {this.state.document == null ? (
+                <div />
+              ) : (
                 <Grid
-                  item
-                  xs={2}
-                  style={{
-                    marginTop: 2,
-                    borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                    padding: "0.5em"
-                  }}
+                  container
+                  direction="row"
+                  spacing={24}
+                  justify="space-between"
                 >
-                  <Button variant="contained" fullWidth color="primary">
-                    Save
-                  </Button>
+                  <Grid item xs={10}>
+                    <NerEditor
+                      document={this.state.document!}
+                      onUpdate={this.onDocumentUpdate.bind(this)}
+                      nodeProvider={dummyNodeProvider}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={2}
+                    style={{
+                      marginTop: 2,
+                      borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                      padding: "0.5em"
+                    }}
+                  >
+                    <Button variant="contained" fullWidth color="primary">
+                      Save
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
-            )}
+              )}
+            </Grid>
           </Grid>
         </main>
       </div>
