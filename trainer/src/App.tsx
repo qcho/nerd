@@ -16,7 +16,7 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import NerEditor from "./trainer/widgets/NerEditor";
 import { NerDocument } from "./trainer/types/NerDocument";
-import { textNodeProvider as dummyNodeProvider } from "./trainer/helpers/nodeproviders";
+import { dummyNodeProvider } from "./trainer/helpers/nodeproviders";
 
 let styles = (theme: Theme) =>
   createStyles({

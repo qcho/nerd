@@ -4,7 +4,7 @@ import EntityNode from "../widgets/EntityNode";
 import TextNode from "../widgets/TextNode";
 import { NerDocument } from "../types/NerDocument";
 
-function textNodeProvider(
+function dummyNodeProvider(
   document: NerDocument,
   entityTypes: EntityType[],
   onEntityClick: any,
@@ -81,4 +81,4 @@ function textNodeProvider(
   return out;
 }
 
-export { textNodeProvider };
+export { dummyNodeProvider };
