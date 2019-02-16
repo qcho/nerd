@@ -74,6 +74,7 @@ class App extends Component<Props, State> {
             <Typography variant="h6" color="inherit" className={classes.grow}>
               NER Trainer
             </Typography>
+            <Button color="inherit">Login</Button>
             {/* <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
