@@ -7,8 +7,8 @@ type EntityNodeProps = {
   text: string;
   entity: Entity;
   entityType: EntityType;
-  onClick: any;
-  onDelete: any;
+  onClick: (htmlTarget: HTMLElement, entity: Entity) => void;
+  onDelete: (entity: Entity) => void;
 };
 
 const EntityNode = (props: EntityNodeProps) => {
