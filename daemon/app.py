@@ -65,11 +65,6 @@ users = {
 }
 
 
-@app.before_first_request
-def init_app_context():
-    pass
-
-
 @app.after_request
 def after_request(response):
     # TODO: Remove when done since having CORS is not a good idea.
@@ -77,6 +72,14 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     return response
 
+@app.before_request
+def before_request():
+    if request.method == "OPTIONS":
+        return '', 200
+
+@app.before_first_request
+def init_app_context():
+    pass
 
 # Create a function that will be called whenever create_access_token
 # is used. It will take whatever object is passed into the
