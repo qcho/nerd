@@ -13,7 +13,7 @@ function useAuthentication() {
   ) {
     const loginResult = await Auth.doLogin(username, password, rememberMe);
     if (loginResult.success) {
-      updateCredentials(loginResult.message, rememberMe);
+      updateCredentials(loginResult.message, !rememberMe);
     }
     return loginResult;
   }
