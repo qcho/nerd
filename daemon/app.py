@@ -81,6 +81,10 @@ def before_request():
 def init_app_context():
     pass
 
+mm = ModelManager('./models/')  # TODO: Extract location to config file
+# TODO: Do we want to preload models? Maybe we should specify this in a config file
+
+
 # Create a function that will be called whenever create_access_token
 # is used. It will take whatever object is passed into the
 # create_access_token method, and lets us define what custom claims
@@ -102,10 +106,6 @@ def user_identity_lookup(user):
 DEBUG = os.environ.get('DEBUG', False)
 BIND = os.environ.get('GUNICORN_BIND', '0.0.0.0:8000')
 (HOST, PORT, *_) = BIND.split(':')
-
-
-mm = ModelManager('./models/')  # TODO: Extract location to config file
-# TODO: Do we want to preload models? Maybe we should specify this in a config file
 
 
 @app.errorhandler(InvalidUsage)
