@@ -40,13 +40,13 @@ const PreviewLayout = (props: Props) => {
   const [entityTypes, setEntityTypes] = useState<EntityType[]>([]);
   const [document, setDocument] = useState<MaybeNerDocument>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const {loggedIn} = useAuthentication();
+  const { loggedIn } = useAuthentication();
   const nerApi = new NerApi(nerModel);
 
   async function onParseClick() {
     setLoading(true);
     try {
-      const doc = await nerApi.parseText(text)
+      const doc = await nerApi.parseText(text);
       setDocument(doc as NerDocument);
     } catch (e) {
       console.log("Fuuu", e);
@@ -133,18 +133,23 @@ const PreviewLayout = (props: Props) => {
               <div>
                 {loggedIn ? (
                   <Grid
-                  item
-                  xs={2}
-                  style={{
-                    marginTop: 2,
-                    borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                    padding: "0.5em"
-                  }}
-                >
-                  <Button variant="contained" fullWidth color="primary" onClick={onSaveClick}>
-                    Save
-                  </Button>
-                </Grid>
+                    item
+                    xs={2}
+                    style={{
+                      marginTop: 2,
+                      borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                      padding: "0.5em"
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      color="primary"
+                      onClick={onSaveClick}
+                    >
+                      Save
+                    </Button>
+                  </Grid>
                 ) : null}
               </div>
             </Grid>
