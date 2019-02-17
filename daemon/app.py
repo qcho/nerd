@@ -48,7 +48,7 @@ auth_parser.add_argument('Authorization', location='headers')
 app.config['JWT_TOKEN_LOCATION'] = ('headers', 'json')
 app.config['JWT_SECRET_KEY'] = os.environ.get(
     'JWT_SECRET_KEY', 'zekrit dont tell plz')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60 # Minutes
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60  # Minutes
 app.config['JWT_IDENTITY_CLAIM'] = 'sub'
 app.config['JWT_HEADER_TYPE'] = ''
 
@@ -68,6 +68,7 @@ users = {
 @app.before_first_request
 def init_app_context():
     pass
+
 
 @app.after_request
 def after_request(response):
@@ -155,7 +156,7 @@ class LoginResource(Resource):
         if not password:
             return ({"msg": "Missing password parameter"}), 400
 
-        if username != 'test' or password != 'test': # TODO: Hard-coded username/password
+        if username != 'test' or password != 'test':  # TODO: Hard-coded username/password
             return ({"msg": "Bad username or password"}), 401
 
         user = users.get(username)
@@ -356,7 +357,8 @@ class EntityTypesResource(Resource):
         json_payload = request.get_json()
         if json_payload is None:
             raise InvalidUsage("Post body shouldn't be empty")
-        create_entity_type(model, json_payload['name'], json_payload['code'], json_payload['color'])
+        create_entity_type(
+            model, json_payload['name'], json_payload['code'], json_payload['color'])
         # TODO: Figure out what we need to return here
         return '', 200
 
