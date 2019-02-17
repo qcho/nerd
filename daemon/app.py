@@ -128,6 +128,27 @@ def index():
     return jsonify(routes)
 
 
+user_credentials = api.model('UserCredentials', {
+    'access_token': fields.String(required=True, description='A temporary JWT'),
+    'refresh_token': fields.String(required=True, description='A refresh token'),
+    'username': fields.String(required=True, description='The username'),
+    'roles': fields.List(fields.String, required=True, description='A list of roles')
+})
+
+
+@auth_ns.route('/register', methods=['POST'])
+class RegisterResource(Resource):
+
+    register_payload = api.model('RegisterPayload', {
+        'username': fields.String(required=True, description='The username'),
+        'password': fields.String(required=True, description='The password'),
+    })
+
+    @auth_ns.doc(body=register_payload, security=None)
+    @auth_ns.marshal_with(user_credentials, code=200, description='Successful registration')
+    def post(self):
+        pass
+
 # Provide a method to create access tokens. The create_access_token()
 # function is used to actually generate the token, and you can return
 # it to the caller however you choose.
@@ -139,15 +160,8 @@ class LoginResource(Resource):
         'password': fields.String(required=True, description='The password')
     })
 
-    login_tokens = api.model('LoginTokens', {
-        'access_token': fields.String(required=True, description='A temporary JWT'),
-        'refresh_token': fields.String(required=True, description='A refresh token'),
-        'username': fields.String(required=True, description='The username'),
-        'roles': fields.List(fields.String, required=True, description='A list of roles')
-    })
-
     @auth_ns.doc(body=login_payload, security=None)
-    @auth_ns.marshal_with(login_tokens, code=200, description='Login OK')
+    @auth_ns.marshal_with(user_credentials, code=200, description='Login OK')
     def post(self):
         """Perform a login to access restricted API endpoints"""
         username = request.json.get('username', None)
