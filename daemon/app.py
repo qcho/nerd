@@ -354,7 +354,7 @@ class NerDocumentResource(Resource):
         return parse_text(nerd_model, request.args['text'])
 
 
-@model_ns.route('/<string:model_name>/entity_types')
+@model_ns.route('/<string:model_name>/entity-types')
 class EntityTypesResource(Resource):
 
     entity_type_fields = api.model('EntityType', {
