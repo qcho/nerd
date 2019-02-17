@@ -15,6 +15,9 @@ from nerd_type_aliases import NEREntity
 from entity_type_management import create_entity_type, types_for_model
 from invalid_usage import InvalidUsage
 import request_parsers
+from authentication import UserManager
+from user_storage import FileUserStorage
+from pathlib import Path
 
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token, create_refresh_token,
@@ -83,6 +86,8 @@ def init_app_context():
 
 mm = ModelManager('./models/')  # TODO: Extract location to config file
 # TODO: Do we want to preload models? Maybe we should specify this in a config file
+
+user_manager = UserManager(FileUserStorage(Path("./users.json")))
 
 
 # Create a function that will be called whenever create_access_token
