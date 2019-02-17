@@ -12,6 +12,7 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import { withRouter, Link } from "react-router-dom";
 import useRouteTitle from "./hooks/useRouteTitle";
+import useAuthentication from "./hooks/useAuthentication";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -24,12 +25,13 @@ const styles = (theme: Theme) =>
     }
   });
 
-const LoginLink = (props: any) => <Link to="/login" {...props} />
+const LoginLink = (props: any) => <Link to="/login" {...props} />;
+const RegisterLink = (props: any) => <Link to="/register" {...props} />;
 
 const NavigationBar = (props: any) => {
-  let { classes, location } = props;
-
-  let title = useRouteTitle(location);
+  const { classes, location } = props;
+  const title = useRouteTitle(location);
+  const {loggedIn, logout} = useAuthentication();
 
   return (
     <AppBar position="static">
@@ -44,7 +46,20 @@ const NavigationBar = (props: any) => {
         <Typography variant="h6" color="inherit" className={classes.grow}>
           {title}
         </Typography>
-        <Button color="inherit" component={LoginLink}>Login</Button>
+        {loggedIn ? (
+          <Button color="inherit" onClick={logout}>
+          Logout
+        </Button>
+        ): (
+          <Button color="inherit" component={LoginLink}>
+          Login
+        </Button>
+        )}
+        {!loggedIn ? (
+          <Button color="inherit" component={RegisterLink}>
+            Register
+          </Button>
+        ) : null}
       </Toolbar>
     </AppBar>
   );

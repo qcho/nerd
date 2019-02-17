@@ -1,19 +1,16 @@
 import React, { useState } from "react";
 import {
+  Theme,
   createStyles,
   withStyles,
   Paper,
-  Theme,
   Typography,
-  Button,
   FormControl,
-  FormControlLabel,
-  Checkbox,
   InputLabel,
-  Input
+  Input,
+  Button
 } from "@material-ui/core";
-import useAuthentication from "../hooks/useAuthentication";
-import { Redirect } from "react-router-dom";
+import { Auth } from "../helpers/auth";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -39,6 +36,9 @@ const styles = (theme: Theme) =>
       width: "100%",
       marginTop: theme.spacing.unit
     },
+    submit: {
+      marginTop: theme.spacing.unit * 3
+    },
     errorMessageContainer: {
       width: "100%",
       marginTop: theme.spacing.unit * 2
@@ -47,17 +47,13 @@ const styles = (theme: Theme) =>
       color: theme.palette.error.main,
       textAlign: "center"
     },
-    submit: {
-      marginTop: theme.spacing.unit * 3
-    }
   });
 
-const Login = ({ classes }: { classes: any }) => {
+const Register = ({ classes }: { classes: any }) => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
-  const { login, loggedIn } = useAuthentication();
 
   const onInputChange = (setter: any) => (
     event: React.ChangeEvent<HTMLInputElement>
@@ -65,30 +61,20 @@ const Login = ({ classes }: { classes: any }) => {
     setter(event.target.value);
   };
 
-  const onCheckboxChange = (setter: any) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setter(event.target.checked);
-  };
-
   const onFormSubmit = (event: React.FormEvent) => {
+    setErrorMessage("");
     event.preventDefault();
-    login(username, password, rememberMe).then(result => {
-      const { success, message } = result;
-      if (!success) {
-        setErrorMessage(message);
-      }
-    });
+    if (password != confirmPassword) {
+      setErrorMessage("Passwords should match");
+      return;
+    }
+    Auth.register(username, password);
   };
-
-  return loggedIn ? (
-    //   <div/>
-    <Redirect to="/" >Home</Redirect>
-  ) : (
+  return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <Typography component="h1" variant="h3">
-          Login
+          Register
         </Typography>
         <form className={classes.form} onSubmit={onFormSubmit}>
           <FormControl margin="normal" required fullWidth>
@@ -111,16 +97,16 @@ const Login = ({ classes }: { classes: any }) => {
               onChange={onInputChange(setPassword)}
             />
           </FormControl>
-          <FormControlLabel
-            control={
-              <Checkbox
-                value="remember"
-                color="primary"
-                onChange={onCheckboxChange(setRememberMe)}
-              />
-            }
-            label="Remember me"
-          />
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="password">Confirm password</InputLabel>
+            <Input
+              name="confirmPassword"
+              type="password"
+              id="confirmPassword"
+              autoComplete="current-password"
+              onChange={onInputChange(setConfirmPassword)}
+            />
+          </FormControl>
           <Button
             type="submit"
             fullWidth
@@ -128,7 +114,7 @@ const Login = ({ classes }: { classes: any }) => {
             color="primary"
             className={classes.submit}
           >
-            Login
+            Register
           </Button>
         </form>
         {errorMessage.length > 0 ? (
@@ -143,5 +129,4 @@ const Login = ({ classes }: { classes: any }) => {
   );
 };
 
-// @ts-ignore
-export default withStyles(styles)(Login);
+export default withStyles(styles)(Register);
