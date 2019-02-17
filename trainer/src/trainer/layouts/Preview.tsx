@@ -65,7 +65,9 @@ const PreviewLayout = (props: Props) => {
   }, [nerModel]);
 
   function onDocumentUpdate(document: NerDocument) {
-    setDocument(document);
+    setDocument(prevState => {
+      return { ...prevState, ...document };
+    });
   }
 
   function onSaveClick() {

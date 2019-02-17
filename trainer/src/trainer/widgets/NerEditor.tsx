@@ -57,7 +57,7 @@ function UntokenizedEditor({
       return; // Shouldn't happen
     }
     entities.splice(index, 1);
-    setCurrentEntity(null);
+    onUpdate(document);
   }
 
   function onEntityClick(element: any, entity: Entity) {
