@@ -74,6 +74,7 @@ def init_app_context():
 def after_request(response):
     # TODO: Remove when done since having CORS is not a good idea.
     response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     return response
 
 
