@@ -1,44 +1,16 @@
 import { EntityType, MaybeEntityType } from "../types/EntityType";
+import { Http } from "../helpers/http";
 
 class EntityTypeApi {
-  availableTypes(): EntityType[] {
-    return [
-      {
-        name: "Person",
-        code: "PER",
-        color: "#903d3d"
-      },
-      {
-        name: "Location",
-        code: "LOC",
-        color: "#b83ca6"
-      },
-      {
-        name: "Organization",
-        code: "ORG",
-        color: "#e1d458"
-      },
-      {
-        name: "Miscellaneous",
-        code: "MISC",
-        color: "#38dd9e"
-      }
-    ];
-  }
-
-  refresh() {
-
-  }
-
-  typeFor(code: string): MaybeEntityType {
-      let entityTypes = this.availableTypes();
-      for (let i = 0; i < entityTypes.length; ++i) {
-          let entityType = entityTypes[i];
-          if (entityType.code == code) {
-              return entityType;
-          }
-      }
-      return null;
+  async availableTypes(modelName: string): Promise<EntityType[]> {
+    const request = Http.anonymousRequest();
+    const response = await request.get(`/models/${modelName}/entity-types`);
+    if (response.status == 200) {
+      return response.data;
+    } else {
+      // TODO: This should correctly handle status != 200
+      throw Error("There was an error retrieving entity types");
+    }
   }
 }
 

@@ -69,6 +69,10 @@ export class Auth {
         username: username,
         password: password
       });
+      // TODO: Correctly handle this
+      if (registerResult.status == 200) {
+        return Auth.loginResult(true, registerResult.data);
+      }
     } catch (e) {
 
     }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   withStyles,
   Theme,
@@ -14,6 +14,10 @@ import { dummyNodeProvider } from "../helpers/nodeproviders";
 import { MaybeNerDocument, NerDocument } from "../types/NerDocument";
 import NavigationBar from "../NavigationBar";
 import classNames from "classnames";
+import useAuthentication from "../hooks/useAuthentication";
+import EntityTypeApi from "../api/EntityTypeApi";
+import { EntityType } from "../types/EntityType";
+import NerApi from "../api/NerApi";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -32,17 +36,18 @@ type Props = {
 const PreviewLayout = (props: Props) => {
   let { classes } = props;
   const [text, setText] = useState<string>("");
+  const [nerModel, setNerModel] = useState<string>("noticias");
+  const [entityTypes, setEntityTypes] = useState<EntityType[]>([]);
   const [document, setDocument] = useState<MaybeNerDocument>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const {loggedIn} = useAuthentication();
+  const nerApi = new NerApi(nerModel);
 
   async function onParseClick() {
     setLoading(true);
     try {
-      const response: Response = await fetch(
-        `http://localhost:5000/models/noticias/ner?text=${text}`
-      );
-      const data = await response.json();
-      setDocument(data);
+      const doc = await nerApi.parseText(text)
+      setDocument(doc as NerDocument);
     } catch (e) {
       console.log("Fuuu", e);
     } finally {
@@ -50,8 +55,21 @@ const PreviewLayout = (props: Props) => {
     }
   }
 
+  useEffect(() => {
+    async function fetchTypes() {
+      const entityTypeApi = new EntityTypeApi();
+      const availableTypes = await entityTypeApi.availableTypes(nerModel);
+      setEntityTypes(availableTypes);
+    }
+    fetchTypes();
+  }, [nerModel]);
+
   function onDocumentUpdate(document: NerDocument) {
     setDocument(document);
+  }
+
+  function onSaveClick() {
+    // TODO: save document
   }
 
   return (
@@ -109,21 +127,26 @@ const PreviewLayout = (props: Props) => {
                   document={document!}
                   onUpdate={onDocumentUpdate}
                   nodeProvider={dummyNodeProvider}
+                  entityTypes={entityTypes}
                 />
               </Grid>
-              <Grid
-                item
-                xs={2}
-                style={{
-                  marginTop: 2,
-                  borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                  padding: "0.5em"
-                }}
-              >
-                <Button variant="contained" fullWidth color="primary">
-                  Save
-                </Button>
-              </Grid>
+              <div>
+                {loggedIn ? (
+                  <Grid
+                  item
+                  xs={2}
+                  style={{
+                    marginTop: 2,
+                    borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                    padding: "0.5em"
+                  }}
+                >
+                  <Button variant="contained" fullWidth color="primary" onClick={onSaveClick}>
+                    Save
+                  </Button>
+                </Grid>
+                ) : null}
+              </div>
             </Grid>
           )}
         </Grid>

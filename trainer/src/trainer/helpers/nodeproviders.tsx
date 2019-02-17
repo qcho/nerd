@@ -8,7 +8,8 @@ function dummyNodeProvider(
   document: NerDocument,
   entityTypes: EntityType[],
   onEntityClick: any,
-  onEntityDelete: any
+  onEntityDelete: any,
+  editable: boolean
 ) {
   let out: any[] = [];
   let text = document.text;
@@ -67,6 +68,7 @@ function dummyNodeProvider(
           entityType={entityType}
           onDelete={onEntityDelete}
           onClick={onEntityClick}
+          editable={editable}
         />
       );
       idx = entityForIndex.end;

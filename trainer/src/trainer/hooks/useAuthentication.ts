@@ -18,6 +18,11 @@ function useAuthentication() {
     return loginResult;
   }
 
+  async function register(username: string, password: string) {
+    // TODO:
+    // const registerResult = await Auth.register(username, password);
+  }
+
   useEffect(() => {
     setLoggedIn(credentials != null);
   }, [credentials]);
@@ -29,6 +34,7 @@ function useAuthentication() {
   return {
     login,
     logout,
+    register,
     loggedIn,
     credentials
   };
