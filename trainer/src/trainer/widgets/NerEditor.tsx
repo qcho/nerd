@@ -1,6 +1,6 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { NerDocument } from "../types/NerDocument";
-import { Entity, MaybeEntity } from "../types/Entity";
+import { Entity } from "../types/Entity";
 import { Popover, Theme, withStyles, Snackbar } from "@material-ui/core";
 import EntityDialog from "./EntityDialog";
 import useAuthentication from "../hooks/useAuthentication";
@@ -39,6 +39,7 @@ function UntokenizedEditor({
   nodeProvider,
   entityTypes
 }: Props) {
+
   const [currentEntity, setCurrentEntity] = useState<MaybeCurrentEntity>(null);
   const [error, setError] = useState<MaybeString>(null);
   const entities = document.ents;
