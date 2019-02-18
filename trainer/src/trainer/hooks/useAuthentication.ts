@@ -4,7 +4,7 @@ import useAuthStorage from "./useAuthStorage";
 
 function useAuthentication() {
   const { credentials, updateCredentials, clearCredentials } = useAuthStorage();
-  const [loggedIn, setLoggedIn] = useState<boolean>(credentials != null);
+  let [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   async function login(
     username: string,
@@ -18,14 +18,14 @@ function useAuthentication() {
     return loginResult;
   }
 
+  useEffect(() => {
+    setLoggedIn(credentials != null);
+  }, [credentials]);
+
   async function register(username: string, password: string) {
     // TODO:
     // const registerResult = await Auth.register(username, password);
   }
-
-  useEffect(() => {
-    setLoggedIn(credentials != null);
-  }, [credentials]);
 
   function logout() {
     clearCredentials();
@@ -34,8 +34,8 @@ function useAuthentication() {
   return {
     login,
     logout,
-    register,
     loggedIn,
+    register,
     credentials
   };
 }

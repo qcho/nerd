@@ -1,24 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MaybeCredentials, Credentials } from "../types/Credentials";
 import CredentialsStorage from "../helpers/CredentialsStorage";
 
 export default function useAuthStorage() {
-  let storedCredentials = CredentialsStorage.getStored();
   const [credentials, setCredentials] = useState<MaybeCredentials>(
-    storedCredentials
+    CredentialsStorage.getStored()
   );
+
+  useEffect(() => {
+    const onStorageUpdate = () =>
+      setCredentials(CredentialsStorage.getStored());
+    CredentialsStorage.registerChangeListener(onStorageUpdate);
+    return () => {
+      CredentialsStorage.removeChangeListener(onStorageUpdate);
+    };
+  }, []);
 
   function updateCredentials(
     authCredentials: Credentials,
     sessionOnly: boolean = true
   ) {
     CredentialsStorage.save(authCredentials, sessionOnly);
-    setCredentials(authCredentials);
   }
-
   function clearCredentials() {
     CredentialsStorage.clear();
-    setCredentials(null);
   }
 
   return {
