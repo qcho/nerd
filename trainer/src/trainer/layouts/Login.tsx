@@ -83,7 +83,7 @@ const Login = ({ classes }: { classes: any }) => {
 
   return loggedIn ? (
     //   <div/>
-    <Redirect to="/" >Home</Redirect>
+    <Redirect to="/">Home</Redirect>
   ) : (
     <div className={classes.root}>
       <Paper className={classes.paper}>
