@@ -36,13 +36,13 @@ const NavigationBar = (props: any) => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <IconButton
+        {/* <IconButton
           className={classes.menuButton}
           color="inherit"
           aria-label="Menu"
         >
           <MenuIcon />
-        </IconButton>
+        </IconButton> */}
         <Typography variant="h6" color="inherit" className={classes.grow}>
           {title}
         </Typography>
