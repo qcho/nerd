@@ -56,11 +56,11 @@ const PreviewLayout = (props: Props) => {
   }
 
   useEffect(() => {
-    async function fetchTypes() {
+    const fetchTypes = async () => {
       const entityTypeApi = new EntityTypeApi();
       const availableTypes = await entityTypeApi.availableTypes(nerModel);
       setEntityTypes(availableTypes);
-    }
+    };
     fetchTypes();
   }, [nerModel]);
 
