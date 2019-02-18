@@ -19,11 +19,6 @@ type MaybeCurrentEntity = {
   element: any;
 } | null;
 
-type State = {
-  currentEntity?: MaybeCurrentEntity;
-  error?: string | null;
-};
-
 type MaybeString = string | null;
 
 const styles = (theme: Theme) => ({
