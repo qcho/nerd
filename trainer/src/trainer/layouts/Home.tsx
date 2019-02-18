@@ -2,6 +2,7 @@ import React from "react";
 import NavigationBar from "../NavigationBar";
 import { Theme, createStyles, withStyles } from "@material-ui/core";
 import classNames from "classnames";
+import { Link } from "react-router-dom";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -18,7 +19,7 @@ const Home = ({ classes }: { classes: any }) => {
     <div className={classes.grow}>
       <NavigationBar />
       <main className={classNames(classes.content, classes.grow)}>
-        <span>Hello World!</span>
+        <Link to="/preview">Find entities</Link>
       </main>
     </div>
   );
