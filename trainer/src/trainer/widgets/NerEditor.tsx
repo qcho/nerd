@@ -34,7 +34,6 @@ function UntokenizedEditor({
   nodeProvider,
   entityTypes
 }: Props) {
-
   const [currentEntity, setCurrentEntity] = useState<MaybeCurrentEntity>(null);
   const [error, setError] = useState<MaybeString>(null);
   const entities = document.ents;
@@ -110,7 +109,7 @@ function UntokenizedEditor({
 
   let popoverOpen = currentEntity != null;
   let anchorElement = popoverOpen ? currentEntity!.element : null;
-  let { loggedIn } = useAuthentication();
+  let {loggedIn} = useAuthentication();
   let popoverContents = popoverOpen ? (
     <EntityDialog
       value={currentEntity!.entity.label}
