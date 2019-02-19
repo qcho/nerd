@@ -8,9 +8,11 @@ import {
   FormControl,
   InputLabel,
   Input,
-  Button
+  Button,
+  Checkbox,
+  FormControlLabel
 } from "@material-ui/core";
-import { Auth } from "../helpers/auth";
+import useAuthentication from "../hooks/useAuthentication";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -36,9 +38,6 @@ const styles = (theme: Theme) =>
       width: "100%",
       marginTop: theme.spacing.unit
     },
-    submit: {
-      marginTop: theme.spacing.unit * 3
-    },
     errorMessageContainer: {
       width: "100%",
       marginTop: theme.spacing.unit * 2
@@ -46,14 +45,17 @@ const styles = (theme: Theme) =>
     errorMessage: {
       color: theme.palette.error.main,
       textAlign: "center"
-    },
+    }
   });
 
 const Register = ({ classes }: { classes: any }) => {
-  const [username, setUsername] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const {register} = useAuthentication();
 
   const onInputChange = (setter: any) => (
     event: React.ChangeEvent<HTMLInputElement>
@@ -68,7 +70,7 @@ const Register = ({ classes }: { classes: any }) => {
       setErrorMessage("Passwords should match");
       return;
     }
-    Auth.register(username, password);
+    register(name, email, password, rememberMe);
   };
   return (
     <div className={classes.root}>
@@ -77,14 +79,23 @@ const Register = ({ classes }: { classes: any }) => {
           Register
         </Typography>
         <form className={classes.form} onSubmit={onFormSubmit}>
+        <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="name">Full Name</InputLabel>
+            <Input
+              id="name"
+              name="name"
+              autoComplete="name"
+              autoFocus
+              onChange={onInputChange(setName)}
+            />
+          </FormControl>
           <FormControl margin="normal" required fullWidth>
             <InputLabel htmlFor="email">Email Address</InputLabel>
             <Input
               id="email"
               name="email"
               autoComplete="email"
-              autoFocus
-              onChange={onInputChange(setUsername)}
+              onChange={onInputChange(setEmail)}
             />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
@@ -98,7 +109,7 @@ const Register = ({ classes }: { classes: any }) => {
             />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">Confirm password</InputLabel>
+            <InputLabel htmlFor="password">Confirm Password</InputLabel>
             <Input
               name="confirmPassword"
               type="password"
@@ -107,12 +118,21 @@ const Register = ({ classes }: { classes: any }) => {
               onChange={onInputChange(setConfirmPassword)}
             />
           </FormControl>
+          <FormControlLabel
+            control={
+              <Checkbox
+                value="remember"
+                color="primary"
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setRememberMe(event.target.checked)}
+              />
+            }
+            label="Remember me"
+          />
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
           >
             Register
           </Button>

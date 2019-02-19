@@ -63,18 +63,24 @@ export class Auth {
     return Auth.loginResult(false, "Impossible situation");
   }
 
-  static async register(username: string, password: string) {
+  static async register(name: string, email: string, password: string) {
     try {
       let registerResult = await Axios.post(Http.urlFor("/auth/register"), {
-        username: username,
-        password: password
+        name,
+        email,
+        password
       });
       // TODO: Correctly handle this
       if (registerResult.status == 200) {
+        console.log(registerResult.data);
         return Auth.loginResult(true, registerResult.data);
+      } else {
+        console.log("Registration error");
+        console.log(registerResult);
       }
     } catch (e) {
-
+      console.log("Registration error");
+      console.log(e);
     }
   }
 
