@@ -38,7 +38,7 @@ type Props = {
 const PreviewLayout = (props: Props) => {
   let { classes } = props;
   const [text, setText] = useState<string>("");
-  const [nerModel, setNerModel] = useState<string>("noticias");
+  const [nerModel, setNerModel] = useState<string>("noticias"); // TODO: Hardcoded model
   const [entityTypes, setEntityTypes] = useState<EntityType[]>([]);
   const [document, setDocument] = useState<MaybeNerDocument>(null);
   const [loading, setLoading] = useState<boolean>(false);
