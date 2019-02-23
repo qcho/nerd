@@ -25,8 +25,8 @@ export class Auth {
       let loginResult = await Http.anonymousRequest().post(
         "/auth/login",
         {
-        username: username,
-        password: password
+          username: username,
+          password: password
         }
       );
       if (loginResult.status == 200) {
