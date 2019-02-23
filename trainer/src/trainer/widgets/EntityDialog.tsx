@@ -18,13 +18,13 @@ const EntityDialog = (props: EntityDialogProps) => {
     return <MenuItem key={option.code} value={option.code}>{option.name}</MenuItem>;
   });
   return (
-    <div>
+    <>
       <DialogContent>
         <Select value={value} onChange={onTypeChange}>
           {optionWidgets}
         </Select>
       </DialogContent>
-    </div>
+    </>
   );
 };
 
