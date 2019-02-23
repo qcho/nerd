@@ -1,15 +1,17 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { NerDocument } from "../types/NerDocument";
-import { Entity, MaybeEntity } from "../types/Entity";
+import { Entity } from "../types/Entity";
 import { Popover, Theme, withStyles, Snackbar } from "@material-ui/core";
 import EntityDialog from "./EntityDialog";
-import EntityTypeApi from "../api/EntityTypeApi";
+import useAuthentication from "../hooks/useAuthentication";
+import { EntityType } from "../types/EntityType";
 
 type Props = {
   classes: any;
   document: NerDocument;
   onUpdate: any;
   nodeProvider: any;
+  entityTypes: EntityType[];
 };
 
 type MaybeCurrentEntity = {
@@ -17,10 +19,7 @@ type MaybeCurrentEntity = {
   element: any;
 } | null;
 
-type State = {
-  currentEntity?: MaybeCurrentEntity;
-  error?: string | null;
-};
+type MaybeString = string | null;
 
 const styles = (theme: Theme) => ({
   paper: {
@@ -28,83 +27,47 @@ const styles = (theme: Theme) => ({
   }
 });
 
-class UntokenizedEditor extends Component<Props, State> {
-  entityTypeApi: EntityTypeApi;
+function UntokenizedEditor({
+  classes,
+  document,
+  onUpdate,
+  nodeProvider,
+  entityTypes
+}: Props) {
+  const [currentEntity, setCurrentEntity] = useState<MaybeCurrentEntity>(null);
+  const [error, setError] = useState<MaybeString>(null);
+  const entities = document.ents;
 
-  constructor(props: Props) {
-    super(props);
-    this.state = {};
-    this.entityTypeApi = new EntityTypeApi();
+  function onEntityTypeChange(value: string) {
+    currentEntity!.entity.label = value;
+    setCurrentEntity(null);
   }
 
-  render() {
-    let { classes } = this.props;
-    let popoverOpen = this.state.currentEntity != null;
-    let anchorElement = popoverOpen ? this.state.currentEntity!.element : null;
-    let currentEntity = this.state.currentEntity;
-    let popoverContents = popoverOpen ? (
-      <EntityDialog
-        value={currentEntity!.entity.label}
-        onTypeChange={(event: any) =>
-          this._onEntityTypeChange(event.target.value)
-        }
-        options={this.entityTypeApi.availableTypes()}
-      />
-    ) : (
-      <div />
+  function deleteEntity(entity: Entity) {
+    let index = entities.findIndex(
+      search => search.start == entity.start && search.end == entity.end
     );
-    return (
-      <div>
-        <div
-          style={{ verticalAlign: "top" }}
-          onMouseUp={() => this._onMouseUp()}
-        >
-          {this._mapTextToNodes()}
-        </div>
-        <Popover
-          id="entity-popover"
-          open={popoverOpen}
-          onClose={() => this._onPopoverClose()}
-          anchorEl={anchorElement}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center"
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center"
-          }}
-        >
-          {popoverContents}
-        </Popover>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "left"
-          }}
-          open={this.state.error != null}
-          autoHideDuration={1000}
-          onClose={this._snackbarClose.bind(this)}
-          message={<span>{this.state.error}</span>}
-        />
-      </div>
-    );
+    if (index < 0) {
+      return; // Shouldn't happen
+    }
+    entities.splice(index, 1);
+    onUpdate(document);
   }
 
-  _snackbarClose() {
-    this.setState({
-      error: null
+  function onEntityClick(element: any, entity: Entity) {
+    setCurrentEntity({
+      element: element,
+      entity: entity
     });
   }
 
-  _onMouseUp() {
+  function onMouseUp() {
     var selection = window.getSelection();
     let text = selection.toString();
     if (!text || !text.length) {
       return;
     }
 
-    let document: NerDocument = this.props.document!;
     let startPosition = document.text.indexOf(text);
     let endPosition = startPosition + text.length;
 
@@ -130,9 +93,7 @@ class UntokenizedEditor extends Component<Props, State> {
 
       if (containsAnyEntity || isContainedInEntity) {
         window.getSelection().removeAllRanges();
-        this.setState({
-          error: "Selection can't contain other entities"
-        });
+        setError("Selection can't contain other entities");
         return;
       }
     }
@@ -143,66 +104,61 @@ class UntokenizedEditor extends Component<Props, State> {
       label: "MISC"
     });
     window.getSelection().removeAllRanges();
-    this.props.onUpdate(document);
+    onUpdate(document);
   }
 
-  _onEntityTypeChange(value: string) {
-    this.state.currentEntity!.entity.label = value;
-    this.setState({
-      currentEntity: null
-    });
-  }
+  let popoverOpen = currentEntity != null;
+  let anchorElement = popoverOpen ? currentEntity!.element : null;
+  let {loggedIn} = useAuthentication();
+  let popoverContents = popoverOpen ? (
+    <EntityDialog
+      value={currentEntity!.entity.label}
+      onTypeChange={(event: any) => onEntityTypeChange(event.target.value)}
+      options={entityTypes}
+    />
+  ) : (
+    <div />
+  );
 
-  _deleteEntity(entity: Entity) {
-    let index = this._entities().findIndex(
-      search => search.start == entity.start && search.end == entity.end
-    );
-    if (index < 0) {
-      return; // Shouldn't happen
-    }
-    this._entities().splice(index, 1);
-    this.setState({
-      currentEntity: null
-    });
-  }
-
-  _onEntityClick(element: any, entity: Entity) {
-    this.setState({
-      currentEntity: {
-        element: element,
-        entity: entity
-      }
-    });
-  }
-
-  _onPopoverClose() {
-    this.setState({
-      currentEntity: null
-    });
-  }
-
-  _entities() {
-    return this.props.document.ents;
-  }
-
-  _entityFor(index: number): MaybeEntity {
-    let entities = this._entities();
-    for (let idx = 0; idx < entities.length; ++idx) {
-      let entity = entities[idx];
-      if (entity.start <= index && entity.end >= index) {
-        return entity;
-      }
-    }
-    return null;
-  }
-
-  _mapTextToNodes() {
-
-    return this.props.nodeProvider(this.props.document,
-      this.entityTypeApi.availableTypes(),
-      this._onEntityClick.bind(this),
-      this._deleteEntity.bind(this))
-  }
+  return (
+    <div>
+      <div style={{ verticalAlign: "top" }} onMouseUp={onMouseUp}>
+        {nodeProvider(
+          document,
+          entityTypes,
+          onEntityClick,
+          deleteEntity,
+          loggedIn
+        )}
+      </div>
+      <Popover
+        id="entity-popover"
+        open={popoverOpen}
+        onClose={() => setCurrentEntity(null)}
+        anchorEl={anchorElement}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center"
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center"
+        }}
+      >
+        {popoverContents}
+      </Popover>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left"
+        }}
+        open={error != null}
+        autoHideDuration={1000}
+        onClose={() => setError(null)}
+        message={<span>{error}</span>}
+      />
+    </div>
+  );
 }
 
 export default withStyles(styles)(UntokenizedEditor);

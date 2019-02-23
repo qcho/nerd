@@ -8,3 +8,5 @@ export type NerDocument = {
     sents: Range[];
     tokens: Token[];
 };
+
+export type MaybeNerDocument = null | NerDocument;

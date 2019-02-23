@@ -15,6 +15,10 @@ from nerd_type_aliases import NEREntity
 from entity_type_management import create_entity_type, types_for_model
 from invalid_usage import InvalidUsage
 import request_parsers
+from authentication import UserManager
+from user_storage import FileUserStorage
+from pathlib import Path
+from user import User
 
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token, create_refresh_token,
@@ -48,32 +52,38 @@ auth_parser.add_argument('Authorization', location='headers')
 app.config['JWT_TOKEN_LOCATION'] = ('headers', 'json')
 app.config['JWT_SECRET_KEY'] = os.environ.get(
     'JWT_SECRET_KEY', 'zekrit dont tell plz')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60 # Minutes
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60  # Minutes
 app.config['JWT_IDENTITY_CLAIM'] = 'sub'
 app.config['JWT_HEADER_TYPE'] = ''
 
 app.config['SWAGGER_UI_JSONEDITOR'] = True
 jwt = JWTManager(app)
 
-test_user = {
-    'username': 'test',
-    'roles': ['admin']
-}
 
-users = {
-    'test': test_user
-}
+@app.after_request
+def after_request(response):
+    # TODO: Remove when done since having CORS is not a good idea.
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers',
+                         'Content-Type, Authorization')
+    return response
+
+
+@app.before_request
+def before_request():
+    if request.method == "OPTIONS":
+        return '', 200
 
 
 @app.before_first_request
 def init_app_context():
     pass
 
-@app.after_request
-def after_request(response):
-    # TODO: Remove when done since having CORS is not a good idea.
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
+
+mm = ModelManager('./models/')  # TODO: Extract location to config file
+# TODO: Do we want to preload models? Maybe we should specify this in a config file
+
+user_manager = UserManager(FileUserStorage(Path("./users.json")))
 
 
 # Create a function that will be called whenever create_access_token
@@ -81,8 +91,8 @@ def after_request(response):
 # create_access_token method, and lets us define what custom claims
 # should be added to the access token.
 @jwt.user_claims_loader
-def add_claims_to_access_token(user):
-    return {'roles': user.get('roles', [])}
+def add_claims_to_access_token(user: User):
+    return {'roles': user.roles}
 
 
 # Create a function that will be called whenever create_access_token
@@ -90,17 +100,13 @@ def add_claims_to_access_token(user):
 # create_access_token method, and lets us define what the identity
 # of the access token should be.
 @jwt.user_identity_loader
-def user_identity_lookup(user):
-    return user.get('username')
+def user_identity_lookup(user: User):
+    return user.email
 
 
 DEBUG = os.environ.get('DEBUG', False)
 BIND = os.environ.get('GUNICORN_BIND', '0.0.0.0:8000')
 (HOST, PORT, *_) = BIND.split(':')
-
-
-mm = ModelManager('./models/')  # TODO: Extract location to config file
-# TODO: Do we want to preload models? Maybe we should specify this in a config file
 
 
 @app.errorhandler(InvalidUsage)
@@ -126,6 +132,54 @@ def index():
     return jsonify(routes)
 
 
+user_credentials = api.model('UserCredentials', {
+    'access_token': fields.String(required=True, description='A temporary JWT'),
+    'refresh_token': fields.String(required=True, description='A refresh token'),
+    'email': fields.String(required=True, description='The email'),
+    'name': fields.String(required=True, description='The name'),
+    'roles': fields.List(fields.String, required=True, description='A list of roles')
+})
+
+
+def generate_login_response(user: User):
+    return {
+        'access_token': create_access_token(identity=user),
+        'refresh_token': create_refresh_token(identity=user),
+        'email': user.email,
+        'name': user.name,
+        'roles': user.roles
+    }
+
+
+@auth_ns.route('/register', methods=['POST'])
+class RegisterResource(Resource):
+
+    register_payload = api.model('RegisterPayload', {
+        'name': fields.String(required=True, description='The user\'s name'),
+        'email': fields.String(required=True, description='The email'),
+        'password': fields.String(required=True, description='The password'),
+    })
+
+    @auth_ns.doc(body=register_payload, security=None)
+    @auth_ns.marshal_with(user_credentials, code=200, description='Successful registration')
+    @api.expect(register_payload)
+    def post(self):
+        name = api.payload.get('name', '').strip()
+        email = api.payload.get('email', '').strip().lower()
+        password = api.payload.get('password', '').strip()
+
+        for value, valueName in [[name, 'name'], [email, 'email'], [password, 'password']]:
+            if not value:
+                return ({"msg": f"Missing {valueName}"}), 400
+
+        user = user_manager.get(email)
+        if user:
+            return ({"msg": "emailExists"}), 400
+
+        user = user_manager.register(name, email, password)
+        return generate_login_response(user), 200
+
+
 # Provide a method to create access tokens. The create_access_token()
 # function is used to actually generate the token, and you can return
 # it to the caller however you choose.
@@ -133,38 +187,25 @@ def index():
 class LoginResource(Resource):
 
     login_payload = api.model('LoginPayload', {
-        'username': fields.String(required=True, description='The username'),
+        'email': fields.String(required=True, description='The email'),
         'password': fields.String(required=True, description='The password')
     })
 
-    login_tokens = api.model('LoginTokens', {
-        'access_token': fields.String(required=True, description='A temporary JWT'),
-        'refresh_token': fields.String(required=True, description='A refresh token'),
-        'username': fields.String(required=True, description='The username'),
-        'roles': fields.List(fields.String, required=True, description='A list of roles')
-    })
-
     @auth_ns.doc(body=login_payload, security=None)
-    @auth_ns.marshal_with(login_tokens, code=200, description='Login OK')
+    @auth_ns.marshal_with(user_credentials, code=200, description='Login OK')
     def post(self):
         """Perform a login to access restricted API endpoints"""
-        username = request.json.get('username', None)
+        email = request.json.get('email', None)
         password = request.json.get('password', None)
-        if not username:
-            return ({"msg": "Missing username parameter"}), 400
+        if not email:
+            return ({"msg": "Missing email parameter"}), 400
         if not password:
             return ({"msg": "Missing password parameter"}), 400
 
-        if username != 'test' or password != 'test': # TODO: Hard-coded username/password
+        if user_manager.check_login(email, password):
             return ({"msg": "Bad username or password"}), 401
 
-        user = users.get(username)
-        ret = {
-            'access_token': create_access_token(identity=user),
-            'refresh_token': create_refresh_token(identity=user),
-            'username': user.get('username'),
-            'roles': user.get('roles')
-        }
+        ret = generate_login_response(user_manager.get(email))
         return ret, 200
 
 
@@ -189,8 +230,9 @@ class RefreshResource(Resource):
     @jwt_refresh_token_required
     def post(self):
         """Refresh access token"""
-        current_user = users.get(get_jwt_identity())
-        print
+        current_user = user_manager.get(get_jwt_identity())
+        if not current_user:
+            return "Illegal "
         ret = {
             'access_token': create_access_token(identity=current_user),
         }
@@ -335,7 +377,7 @@ class NerDocumentResource(Resource):
         return parse_text(nerd_model, request.args['text'])
 
 
-@model_ns.route('/<string:model_name>/entity_types')
+@model_ns.route('/<string:model_name>/entity-types')
 class EntityTypesResource(Resource):
 
     entity_type_fields = api.model('EntityType', {
@@ -356,7 +398,8 @@ class EntityTypesResource(Resource):
         json_payload = request.get_json()
         if json_payload is None:
             raise InvalidUsage("Post body shouldn't be empty")
-        create_entity_type(model, json_payload['name'], json_payload['code'], json_payload['color'])
+        create_entity_type(
+            model, json_payload['name'], json_payload['code'], json_payload['color'])
         # TODO: Figure out what we need to return here
         return '', 200
 

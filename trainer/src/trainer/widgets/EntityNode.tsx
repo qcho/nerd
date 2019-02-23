@@ -7,12 +7,13 @@ type EntityNodeProps = {
   text: string;
   entity: Entity;
   entityType: EntityType;
-  onClick: any;
-  onDelete: any;
+  editable: boolean;
+  onClick: (htmlTarget: HTMLElement, entity: Entity) => void;
+  onDelete: (entity: Entity) => void;
 };
 
 const EntityNode = (props: EntityNodeProps) => {
-  let { text, entity, entityType, onClick, onDelete } = props;
+  let { text, entity, entityType, onClick, onDelete, editable } = props;
   return (
     <Tooltip
       title={entityType.name}
@@ -21,11 +22,11 @@ const EntityNode = (props: EntityNodeProps) => {
         marginRight: 2
       }}
     >
-      <span onClick={(event: any) => onClick(event.currentTarget, entity)}>
+      <span onClick={editable ? (event: any) => onClick(event.currentTarget, entity) : undefined}>
         <Chip
           variant="outlined"
-          label={<div><b style={{ color: entityType.color }}>{text}</b> <b>{entity.label}</b></div>}
-          onDelete={() => onDelete(entity)}
+          label={<b><span style={{ color: entityType.color }}>{text}</span> <span>{entityType.code}</span></b>}
+          onDelete={editable ? () => onDelete(entity) : undefined}
         />
       </span>
     </Tooltip>

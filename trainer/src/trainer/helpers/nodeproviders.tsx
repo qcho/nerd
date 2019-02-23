@@ -4,11 +4,12 @@ import EntityNode from "../widgets/EntityNode";
 import TextNode from "../widgets/TextNode";
 import { NerDocument } from "../types/NerDocument";
 
-function textNodeProvider(
+function dummyNodeProvider(
   document: NerDocument,
   entityTypes: EntityType[],
   onEntityClick: any,
-  onEntityDelete: any
+  onEntityDelete: any,
+  editable: boolean
 ) {
   let out: any[] = [];
   let text = document.text;
@@ -67,6 +68,7 @@ function textNodeProvider(
           entityType={entityType}
           onDelete={onEntityDelete}
           onClick={onEntityClick}
+          editable={editable}
         />
       );
       idx = entityForIndex.end;
@@ -81,4 +83,4 @@ function textNodeProvider(
   return out;
 }
 
-export { textNodeProvider };
+export { dummyNodeProvider };
