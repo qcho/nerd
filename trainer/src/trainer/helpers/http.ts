@@ -3,7 +3,9 @@ import CredentialsStorage from "./CredentialsStorage";
 import Config from "../config";
 
 function addInterceptors(instance: AxiosInstance) {
-  instance.interceptors.response.use(undefined, (error: any) => {});
+  // instance.interceptors.response.use(undefined, (error: any) => {
+
+  // });
   return instance;
 }
 
