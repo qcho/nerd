@@ -14,6 +14,8 @@ import {
 } from "@material-ui/core";
 import useAuthentication from "../hooks/useAuthentication";
 import { Redirect } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import nsps from "../helpers/i18n-namespaces";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -57,6 +59,7 @@ const Login = ({ classes }: { classes: any }) => {
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const [t] = useTranslation(nsps.authentication);
   const { login, loggedIn } = useAuthentication();
 
   const onInputChange = (setter: any) => (
@@ -82,17 +85,16 @@ const Login = ({ classes }: { classes: any }) => {
   };
 
   return loggedIn ? (
-    //   <div/>
-    <Redirect to="/">Home</Redirect>
+    <Redirect to="/" />
   ) : (
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <Typography component="h1" variant="h3">
-          Login
+          {t("Login")}
         </Typography>
         <form className={classes.form} onSubmit={onFormSubmit}>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">Email Address</InputLabel>
+            <InputLabel htmlFor="email">{t("Email Address")}</InputLabel>
             <Input
               id="email"
               name="email"
@@ -102,7 +104,7 @@ const Login = ({ classes }: { classes: any }) => {
             />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">Password</InputLabel>
+            <InputLabel htmlFor="password">{t("Password")}</InputLabel>
             <Input
               name="password"
               type="password"
@@ -119,7 +121,7 @@ const Login = ({ classes }: { classes: any }) => {
                 onChange={onCheckboxChange(setRememberMe)}
               />
             }
-            label="Remember me"
+            label={t("Remember me")}
           />
           <Button
             type="submit"

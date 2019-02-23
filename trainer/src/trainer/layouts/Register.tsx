@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import {
   Theme,
   createStyles,
@@ -13,6 +13,8 @@ import {
   FormControlLabel
 } from "@material-ui/core";
 import useAuthentication from "../hooks/useAuthentication";
+import { useTranslation } from "react-i18next";
+import nsps from "../helpers/i18n-namespaces";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -55,7 +57,8 @@ const Register = ({ classes }: { classes: any }) => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
-  const {register} = useAuthentication();
+  const [t] = useTranslation(nsps.authentication);
+  const { register } = useAuthentication();
 
   const onInputChange = (setter: any) => (
     event: React.ChangeEvent<HTMLInputElement>
@@ -67,7 +70,7 @@ const Register = ({ classes }: { classes: any }) => {
     setErrorMessage("");
     event.preventDefault();
     if (password != confirmPassword) {
-      setErrorMessage("Passwords should match");
+      setErrorMessage(t("Passwords should match"));
       return;
     }
     register(name, email, password, rememberMe);
@@ -76,11 +79,11 @@ const Register = ({ classes }: { classes: any }) => {
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <Typography component="h1" variant="h3">
-          Register
+          {t("Register")}
         </Typography>
         <form className={classes.form} onSubmit={onFormSubmit}>
-        <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="name">Full Name</InputLabel>
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="name">{t("Full Name")}</InputLabel>
             <Input
               id="name"
               name="name"
@@ -90,7 +93,7 @@ const Register = ({ classes }: { classes: any }) => {
             />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">Email Address</InputLabel>
+            <InputLabel htmlFor="email">{t("Email Address")}</InputLabel>
             <Input
               id="email"
               name="email"
@@ -99,7 +102,7 @@ const Register = ({ classes }: { classes: any }) => {
             />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">Password</InputLabel>
+            <InputLabel htmlFor="password">{t("Password")}</InputLabel>
             <Input
               name="password"
               type="password"
@@ -109,7 +112,7 @@ const Register = ({ classes }: { classes: any }) => {
             />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">Confirm Password</InputLabel>
+            <InputLabel htmlFor="password">{t("Confirm Password")}</InputLabel>
             <Input
               name="confirmPassword"
               type="password"
@@ -123,18 +126,15 @@ const Register = ({ classes }: { classes: any }) => {
               <Checkbox
                 value="remember"
                 color="primary"
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setRememberMe(event.target.checked)}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  setRememberMe(event.target.checked)
+                }
               />
             }
-            label="Remember me"
+            label={t("Remember me")}
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-          >
-            Register
+          <Button type="submit" fullWidth variant="contained" color="primary">
+            {t("Register")}
           </Button>
         </form>
         {errorMessage.length > 0 ? (

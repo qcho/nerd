@@ -18,6 +18,8 @@ import useAuthentication from "../hooks/useAuthentication";
 import EntityTypeApi from "../api/EntityTypeApi";
 import { EntityType } from "../types/EntityType";
 import NerApi from "../api/NerApi";
+import { useTranslation } from "react-i18next";
+import nsps from "../helpers/i18n-namespaces";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -40,6 +42,7 @@ const PreviewLayout = (props: Props) => {
   const [entityTypes, setEntityTypes] = useState<EntityType[]>([]);
   const [document, setDocument] = useState<MaybeNerDocument>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [t] = useTranslation(nsps.ner);
   const { loggedIn } = useAuthentication();
   const nerApi = new NerApi(nerModel);
 
@@ -87,7 +90,7 @@ const PreviewLayout = (props: Props) => {
           <Grid container direction="row" spacing={24} alignItems="center">
             <Grid item xs={10}>
               <TextField
-                label="Text"
+                label={t("Text")}
                 type="search"
                 margin="normal"
                 variant="outlined"
@@ -105,7 +108,7 @@ const PreviewLayout = (props: Props) => {
             </Grid>
             <Grid item xs={2}>
               <Button fullWidth color="primary" onClick={onParseClick}>
-                Parse
+                {t("Parse")}
               </Button>
             </Grid>
           </Grid>
@@ -149,7 +152,7 @@ const PreviewLayout = (props: Props) => {
                       color="primary"
                       onClick={onSaveClick}
                     >
-                      Save
+                      {t("Save")}
                     </Button>
                   </Grid>
                 ) : null}
