@@ -1,18 +1,11 @@
 import Axios, { AxiosInstance } from "axios";
 import CredentialsStorage from "./CredentialsStorage";
+import Config from "../config";
 
-export class Http {
-  static baseURL = "http://localhost:5000";
-
-  static urlFor(path: string): string {
-    let trimmedPath = path.trim();
-    if (trimmedPath.length == 0) {
-      trimmedPath = "/";
-    } else if (trimmedPath[0] != "/") {
-      trimmedPath = "/" + trimmedPath;
-    }
-    return Http.baseURL + trimmedPath;
-  }
+function addInterceptors(instance: AxiosInstance) {
+  instance.interceptors.response.use(undefined, (error: any) => {});
+  return instance;
+}
 
 class Http {
   static authenticatedRequest(): AxiosInstance {
@@ -20,8 +13,7 @@ class Http {
     if (credentials == null) {
       throw new Error("Credentials can't be null");
     }
-    return Axios.create({
-      baseURL: Http.baseURL,
+    return this.createInstance({
       headers: {
         Authorization: credentials.access_token
       }
@@ -29,9 +21,16 @@ class Http {
   }
 
   static anonymousRequest(): AxiosInstance {
-      return Axios.create({
-          baseURL: Http.baseURL
-      });
+    return this.createInstance();
+  }
+
+  private static createInstance(extraSettings: any = {}) {
+    const defaultConfig = {
+      baseURL: Config.serverURL
+    };
+    return addInterceptors(
+      Axios.create({ ...defaultConfig, ...extraSettings })
+    );
   }
 }
 
