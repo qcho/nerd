@@ -53,7 +53,7 @@ const PreviewLayout = (props: Props) => {
       const doc = await nerApi.parseText(text);
       setDocument(doc as NerDocument);
     } catch (e) {
-      console.log("Fuuu", e);
+      console.log("Fuuu", [e]);
     } finally {
       setLoading(false);
     }
@@ -61,9 +61,13 @@ const PreviewLayout = (props: Props) => {
 
   useEffect(() => {
     const fetchTypes = async () => {
-      const entityTypeApi = new EntityTypeApi();
-      const availableTypes = await entityTypeApi.availableTypes(nerModel);
-      setEntityTypes(availableTypes);
+      try {
+        const entityTypeApi = new EntityTypeApi();
+        const availableTypes = await entityTypeApi.availableTypes(nerModel);
+        setEntityTypes(availableTypes);
+      } catch (e) {
+        console.log([e]);
+      }
     };
     fetchTypes();
   }, [nerModel]);
