@@ -7,6 +7,7 @@ import Preview from "./layouts/Preview";
 import Login from "./layouts/Login";
 import Register from "./layouts/Register";
 import Loading from "./widgets/Loading";
+import FourOhFour from "./layouts/FourOhFour";
 
 const theme = createMuiTheme({
   typography: {
@@ -25,6 +26,7 @@ const App = () => {
             <Route exact path="/preview" component={Preview} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
+            <Route component={FourOhFour} />
           </Switch>
         </Suspense>
       </MuiThemeProvider>
