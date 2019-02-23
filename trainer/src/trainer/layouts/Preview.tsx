@@ -7,7 +7,8 @@ import {
   TextField,
   Button,
   Divider,
-  Typography
+  Typography,
+  LinearProgress
 } from "@material-ui/core";
 import NerEditor from "../widgets/NerEditor";
 import { dummyNodeProvider } from "../helpers/nodeproviders";
@@ -77,9 +78,12 @@ const PreviewLayout = (props: Props) => {
     // TODO: save document
   }
 
+  const loadingComponent = !loading ? null : <LinearProgress />;
+
   return (
     <div>
       <NavigationBar />
+      {loadingComponent}
       <Grid
         container
         className={classNames(classes.content, classes.root)}
@@ -113,14 +117,9 @@ const PreviewLayout = (props: Props) => {
             </Grid>
           </Grid>
         </Grid>
-        <Divider style={{ marginTop: 10, marginBottom: 10 }} />
-        <Grid item>
-          {document == null || loading ? (
-            loading ? (
-              // TODO: Style the loading indicator
-              <Typography align="center">Loading...</Typography>
-            ) : null
-          ) : (
+        {document == null || loading ? null : (
+          <Grid item>
+            <Divider style={{ marginTop: 10, marginBottom: 10 }} />
             <Grid
               container
               direction="row"
@@ -158,8 +157,8 @@ const PreviewLayout = (props: Props) => {
                 ) : null}
               </div>
             </Grid>
-          )}
-        </Grid>
+          </Grid>
+        )}
       </Grid>
     </div>
   );
