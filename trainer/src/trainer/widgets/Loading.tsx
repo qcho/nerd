@@ -1,16 +1,24 @@
 import React from "react";
 import {
-  LinearProgress,
   Paper,
   Theme,
   createStyles,
-  withStyles
+  withStyles,
+  CircularProgress,
+  Typography
 } from "@material-ui/core";
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      height: "100vh"
+    },
+    text: {
+      paddingTop: theme.spacing.unit
     }
   });
 
@@ -20,9 +28,10 @@ type Props = {
 
 const Loading = ({ classes }: Props) => {
   return (
-    <Paper className={classes.root}>
-      <LinearProgress />
-    </Paper>
+    <div className={classes.root}>
+      <CircularProgress />
+      <Typography className={classes.text}>Loading</Typography>
+    </div>
   );
 };
 
