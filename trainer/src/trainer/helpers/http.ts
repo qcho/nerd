@@ -14,6 +14,7 @@ export class Http {
     return Http.baseURL + trimmedPath;
   }
 
+class Http {
   static authenticatedRequest(): AxiosInstance {
     const credentials = CredentialsStorage.getStored();
     if (credentials == null) {
@@ -33,3 +34,5 @@ export class Http {
       });
   }
 }
+
+export default Http;

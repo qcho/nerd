@@ -1,4 +1,4 @@
-import { Http } from "../helpers/http";
+import Http from "../helpers/http";
 import { NerDocument } from "../types/NerDocument";
 
 export default class NerApi {

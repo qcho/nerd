@@ -1,5 +1,5 @@
 import { EntityType, MaybeEntityType } from "../types/EntityType";
-import { Http } from "../helpers/http";
+import Http from "../helpers/http";
 
 class EntityTypeApi {
   async availableTypes(modelName: string): Promise<EntityType[]> {

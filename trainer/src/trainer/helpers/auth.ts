@@ -1,6 +1,4 @@
-import "axios";
-import Axios from "axios";
-import { Http } from "./http";
+import Http from "./http";
 
 export class Auth {
   static isLoggedIn() {}
@@ -9,7 +7,7 @@ export class Auth {
     // TODO: Get refresh token from local storage
     let refreshToken = "";
     return new Promise((resolve, reject) => {
-      Axios.post(Http.urlFor("/auth/refresh"), {
+      Http.anonymousRequest().post("/auth/refresh", {
         refresh_token: refreshToken
       });
     });
@@ -24,10 +22,13 @@ export class Auth {
     message: any;
   }> {
     try {
-      let loginResult = await Axios.post(Http.urlFor("/auth/login"), {
+      let loginResult = await Http.anonymousRequest().post(
+        "/auth/login",
+        {
         username: username,
         password: password
-      });
+        }
+      );
       if (loginResult.status == 200) {
         const data = loginResult.data;
         return Auth.loginResult(true, data);
@@ -65,7 +66,7 @@ export class Auth {
 
   static async register(name: string, email: string, password: string) {
     try {
-      let registerResult = await Axios.post(Http.urlFor("/auth/register"), {
+      let registerResult = await Http.anonymousRequest().post("/auth/register", {
         name,
         email,
         password
