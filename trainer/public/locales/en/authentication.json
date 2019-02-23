@@ -1,0 +1,11 @@
+{
+    "Register": "Register",
+    "Login": "Login",
+    "Logout": "Logout",
+    "Full Name": "Full Name",
+    "Email Address": "Email Address",
+    "Password": "Password",
+    "Confirm Password": "Confirm Password",
+    "Remember me": "Remember me",
+    "Passwords should match": "Passwords should match"
+}
