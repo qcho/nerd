@@ -18,7 +18,7 @@ const theme = createMuiTheme({
 });
 
 const App = () => {
-  const { loggedIn, isAdmin } = useAuthentication();
+  const { isAdmin } = useAuthentication();
   return (
     <BrowserRouter>
       <MuiThemeProvider theme={theme}>
@@ -27,8 +27,8 @@ const App = () => {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/preview" component={Preview} />
-            {!loggedIn && <Route exact path="/login" component={Login} />}
-            {!loggedIn && <Route exact path="/register" component={Register} />}
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
             {isAdmin && (
               <Route exact path="/models" component={ModelManagement} />
             )}
