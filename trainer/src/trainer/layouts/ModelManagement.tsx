@@ -93,6 +93,7 @@ const ModelManagement = ({ classes }: { classes: any }) => {
   async function deleteModel(modelName: string) {
     try {
       await ModelApi.delete(modelName);
+      reloadModels();
     } catch (error) {
       console.log("Couldn't delete model", [error]);
     }
