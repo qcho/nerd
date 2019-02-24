@@ -285,8 +285,11 @@ class ModelsResource(Resource):
     def post(self):
         """Creates a model from a given SpaCy model"""
         assert_admin()
-        mm.create_model(api.payload['model_name'],
-                        api.payload['base_model_name'])
+        try:
+            mm.create_model(api.payload['model_name'],
+                            api.payload['base_model_name'])
+        except:
+            errors.abort(409, "Model exists with that name")
         return None, 200
 
 
@@ -302,16 +305,18 @@ class ModelResource(Resource):
     @model_ns.doc('get_model', expect=[auth_parser])
     def get(self, model_name):
         """Returns metadata for a given model"""
-        return None, 404  # TODO: This should return model metadata
+        errors.abort(404)  # TODO: This should return model metadata
 
     @jwt_required
     @model_ns.doc('remove_model', expect=[auth_parser])
     def delete(self, model_name=None):
         """Deletes a model"""
-        if mm.delete_model(model_name):
-            return '', 200
-        else:
-            raise InvalidUsage(f"Couldn't delete model named {model_name}")
+        assert_admin()
+        try:
+           mm.delete_model(model_name)
+           return '', 200
+        except:
+            errors.abort(409, "There was a problem deleting the model")
 
 
 @model_ns.route('/<string:model_name>/training')
