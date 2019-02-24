@@ -1,11 +1,9 @@
 import Http from "./http";
-import { AxiosResponse, AxiosError } from "axios";
 
 export class Auth {
   static async doLogin(
     email: string,
-    password: string,
-    rememberMe: boolean
+    password: string
   ): Promise<{
     success: boolean;
     message: any;
