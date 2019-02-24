@@ -63,6 +63,12 @@ jwt = JWTManager(app)
 jwt._set_error_handler_callbacks(api)
 
 
+def assert_admin():
+    current_user = user_manager.get(get_jwt_identity())
+    if not current_user or not "admin" in current_user.roles:
+        errors.abort(401, "Access denied")
+
+
 @app.after_request
 def after_request(response):
     # TODO: Remove when done since having CORS is not a good idea.
@@ -270,6 +276,7 @@ class ModelsResource(Resource):
     @jwt_required
     def get(self):
         """List available models"""
+        assert_admin()
         return jsonify(mm.available_models())
 
     @model_ns.doc('upsert_model', body=model_creation_fields, expect=[auth_parser])
@@ -277,6 +284,7 @@ class ModelsResource(Resource):
     @jwt_required
     def post(self):
         """Creates a model from a given SpaCy model"""
+        assert_admin()
         mm.create_model(api.payload['model_name'],
                         api.payload['base_model_name'])
         return None, 200
