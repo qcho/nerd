@@ -8,6 +8,8 @@ import {
   Button
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import nsps from "../helpers/i18n-namespaces";
 
 type Props = {
   classes: any;
@@ -27,11 +29,12 @@ const styles = (theme: Theme) =>
 const HomeLink = (props: any) => <Link to="/" {...props} />;
 
 const FourOhFour = ({ classes }: Props) => {
+  const [t] = useTranslation(nsps.fourOhFour);
   return (
     <Paper className={classes.root}>
-      <Typography>Are you lost?</Typography>
-      <Button color="inherit" component={HomeLink}>
-        Go home
+      <Typography variant="h5">{t("Lost?")}</Typography>
+      <Button color="primary" variant="outlined" component={HomeLink}>
+        {t("Go home")}
       </Button>
     </Paper>
   );
