@@ -286,6 +286,8 @@ class ModelsResource(Resource):
         """Creates a model from a given SpaCy model"""
         assert_admin()
         try:
+            # TODO: We may be able to thread the model creation (inside the create_model method)
+            #       with threading.
             mm.create_model(api.payload['model_name'],
                             api.payload['base_model_name'])
         except:
