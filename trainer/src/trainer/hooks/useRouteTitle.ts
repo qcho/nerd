@@ -10,5 +10,8 @@ export default function useRouteTitle(location: any) {
     if (pathname == "/preview") {
         return t("NER preview")
     }
+    if (pathname == "/models") {
+        return t("Model Management");
+    }
     return "";
 }

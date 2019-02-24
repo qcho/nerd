@@ -8,6 +8,7 @@ import Login from "./layouts/Login";
 import Register from "./layouts/Register";
 import Loading from "./widgets/Loading";
 import FourOhFour from "./layouts/FourOhFour";
+import ModelManagement from "./layouts/ModelManagement";
 import useAuthentication from "./hooks/useAuthentication";
 
 const theme = createMuiTheme({
@@ -17,7 +18,7 @@ const theme = createMuiTheme({
 });
 
 const App = () => {
-  const { loggedIn } = useAuthentication();
+  const { loggedIn, isAdmin } = useAuthentication();
   return (
     <BrowserRouter>
       <MuiThemeProvider theme={theme}>
@@ -28,6 +29,9 @@ const App = () => {
             <Route exact path="/preview" component={Preview} />
             {!loggedIn && <Route exact path="/login" component={Login} />}
             {!loggedIn && <Route exact path="/register" component={Register} />}
+            {isAdmin && (
+              <Route exact path="/models" component={ModelManagement} />
+            )}
             <Route component={FourOhFour} />
           </Switch>
         </Suspense>
