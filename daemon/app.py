@@ -7,7 +7,7 @@ import os
 from typing import List, Tuple
 
 from flask import Flask, request, jsonify, url_for
-from flask_restplus import Resource, Api, fields
+from flask_restplus import Resource, Api, fields, errors
 
 from atp import parse_text, train_model, queue_text
 from model_management import ModelManager
@@ -19,6 +19,7 @@ from authentication import UserManager
 from user_storage import FileUserStorage
 from pathlib import Path
 from user import User
+from werkzeug import exceptions
 
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token, create_refresh_token,
@@ -52,17 +53,29 @@ auth_parser.add_argument('Authorization', location='headers')
 app.config['JWT_TOKEN_LOCATION'] = ('headers', 'json')
 app.config['JWT_SECRET_KEY'] = os.environ.get(
     'JWT_SECRET_KEY', 'zekrit dont tell plz')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60  # Minutes
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 15  # Minutes
 app.config['JWT_IDENTITY_CLAIM'] = 'sub'
 app.config['JWT_HEADER_TYPE'] = ''
 
+app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['SWAGGER_UI_JSONEDITOR'] = True
 jwt = JWTManager(app)
+jwt._set_error_handler_callbacks(api)
 
 
 @app.after_request
 def after_request(response):
     # TODO: Remove when done since having CORS is not a good idea.
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers',
+                         'Content-Type, Authorization')
+    return response
+
+
+@app.errorhandler(exceptions.HTTPException)
+def on_http_exception(error):
+    # TODO: Remove when done since having CORS is not a good idea.
+    response = error.response
     response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Headers',
                          'Content-Type, Authorization')
@@ -78,6 +91,18 @@ def before_request():
 @app.before_first_request
 def init_app_context():
     pass
+
+
+@jwt.expired_token_loader
+def my_expired_token_callback(expired_token=None):
+    # return errors.abort(401, "Access token expired")
+    # TODO: Remove when done since having CORS is not a good idea.
+    response = jsonify({"message": "Access token expired"})
+    response.status_code = 401
+    # response.headers.add('Access-Control-Allow-Origin', '*')
+    # response.headers.add('Access-Control-Allow-Headers',
+    #                      'Content-Type, Authorization')
+    return response
 
 
 mm = ModelManager('./models/')  # TODO: Extract location to config file
@@ -114,22 +139,6 @@ def handle_invalid_api_usage(error):
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
-
-
-@jwt_optional
-@app.route("/")
-def index():
-    """Lists all of the available endpoints"""
-    # TODO: Check if this is working correctly
-    import sys
-    current_module = sys.modules[__name__]
-    routes = []
-    for rule in app.url_map.iter_rules():
-        routes.append({
-            'url': rule.rule,
-            'doc': getattr(current_module, rule.endpoint).__doc__
-        })
-    return jsonify(routes)
 
 
 user_credentials = api.model('UserCredentials', {
@@ -174,7 +183,7 @@ class RegisterResource(Resource):
 
         user = user_manager.get(email)
         if user:
-            return ({"msg": "emailExists"}), 400
+            return errors.abort(400, "Email exists")
 
         user = user_manager.register(name, email, password)
         return generate_login_response(user), 200
@@ -232,7 +241,7 @@ class RefreshResource(Resource):
         """Refresh access token"""
         current_user = user_manager.get(get_jwt_identity())
         if not current_user:
-            return "Illegal "
+            errors.abort(401, "Invalid user")
         ret = {
             'access_token': create_access_token(identity=current_user),
         }

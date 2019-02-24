@@ -133,13 +133,13 @@ const Login = ({ classes }: { classes: any }) => {
             Login
           </Button>
         </form>
-        {errorMessage.length > 0 ? (
+        {errorMessage && errorMessage.length > 0 && (
           <div className={classes.errorMessageContainer}>
             <Typography variant="subtitle2" className={classes.errorMessage}>
               {errorMessage}
             </Typography>
           </div>
-        ) : null}
+        )}
       </Paper>
     </div>
   );

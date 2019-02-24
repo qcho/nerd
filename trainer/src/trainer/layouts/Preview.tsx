@@ -82,12 +82,10 @@ const PreviewLayout = (props: Props) => {
     // TODO: save document
   }
 
-  const loadingComponent = !loading ? null : <LinearProgress />;
-
   return (
     <div>
       <NavigationBar />
-      {loadingComponent}
+      {loading && <LinearProgress />}
       <Grid
         container
         className={classNames(classes.content, classes.root)}

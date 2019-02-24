@@ -6,15 +6,14 @@ class EntityTypeApi {
     const request = Http.anonymousRequest();
     try {
       const response = await request.get(`/models/${modelName}/entity-types`);
-      if (response.status == 200) {
-        return response.data;
-      } else {
-        // TODO: This should correctly handle status != 200
-        throw Error("There was an error retrieving entity types (status != 200)");
-      }
+      return response.data;
     } catch (e) {
-      console.log([e]);
-      throw Error("There was an error retrieving entity types");
+      throw Error(
+        Http.handleRequestError(
+          e,
+          () => "There was an error retrieving entity types"
+        )
+      );
     }
   }
 }

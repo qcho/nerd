@@ -33,7 +33,7 @@ const NavigationBar = (props: any) => {
   const { classes, location } = props;
   const title = useRouteTitle(location);
   const [t] = useTranslation(nsps.authentication);
-  const {loggedIn, logout} = useAuthentication();
+  const { loggedIn, logout } = useAuthentication();
 
   return (
     <AppBar position="static">
@@ -43,18 +43,18 @@ const NavigationBar = (props: any) => {
         </Typography>
         {loggedIn ? (
           <Button color="inherit" onClick={logout}>
-          {t("Logout")}
-        </Button>
-        ): (
+            {t("Logout")}
+          </Button>
+        ) : (
           <Button color="inherit" component={LoginLink}>
-          {t("Login")}
-        </Button>
+            {t("Login")}
+          </Button>
         )}
-        {!loggedIn ? (
+        {!loggedIn && (
           <Button color="inherit" component={RegisterLink}>
             {t("Register")}
           </Button>
-        ) : null}
+        )}
       </Toolbar>
     </AppBar>
   );

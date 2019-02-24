@@ -9,25 +9,32 @@ export default class NerApi {
   }
 
   async parseText(text: string) {
-    const request = Http.anonymousRequest();
-    const response = await request.get(`/models/${this.modelName}/ner`, {
-      params: { text }
-    });
+    try {
+      const response = await Http.anonymousRequest().get(
+        `/models/${this.modelName}/ner`,
+        {
+          params: { text }
+        }
+      );
 
-    if (response.status == 200) {
       return response.data;
-    } else {
-        // TODO: Handle error
+    } catch (error) {
+      // TODO: We could differenciate errors from the backend
+      throw Error(Http.handleRequestError(error, () => "Couldn't parse text"));
     }
   }
 
   async saveDocument(document: NerDocument) {
-    const request = Http.authenticatedRequest();
-    const response = await request.post(`/models/${this.modelName}/ner`, document);
-    if (response.status == 200) {
-        return;
-    } else {
-        // TODO: Handle error
+    try {
+      await Http.authenticatedRequest().post(
+        `/models/${this.modelName}/ner`,
+        document
+      );
+    } catch (error) {
+      // TODO: We could differenciate errors from the backend
+      throw Error(
+        Http.handleRequestError(error, () => "Couldn't save updated entities")
+      );
     }
   }
 }

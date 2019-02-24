@@ -23,15 +23,11 @@ function useAuthentication() {
   }, [credentials]);
 
   async function register(name: string, username: string, password: string, rememberMe: boolean) {
-    // TODO:
     const registerResult = await Auth.register(name, username, password);
-    if (registerResult === undefined) {
-      // TODO
-      return;
-    }
     if (registerResult.success) {
       updateCredentials(registerResult.message, !rememberMe)
     }
+    return registerResult;
   }
 
   function logout() {

@@ -15,6 +15,7 @@ import {
 import useAuthentication from "../hooks/useAuthentication";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
+import { Redirect } from "react-router-dom";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -58,7 +59,7 @@ const Register = ({ classes }: { classes: any }) => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [t] = useTranslation(nsps.authentication);
-  const { register } = useAuthentication();
+  const { register, loggedIn } = useAuthentication();
 
   const onInputChange = (setter: any) => (
     event: React.ChangeEvent<HTMLInputElement>
@@ -73,8 +74,19 @@ const Register = ({ classes }: { classes: any }) => {
       setErrorMessage(t("Passwords should match"));
       return;
     }
-    register(name, email, password, rememberMe);
+    register(name, email, password, rememberMe).then((result) => {
+      if (!result) {
+        return;
+      }
+      const {success, message} = result;
+      if (!success) {
+        setErrorMessage(t(message));
+      }
+    })
   };
+  if (loggedIn) {
+    return <Redirect to="/" />;
+  }
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>

@@ -6,7 +6,7 @@ export default class CredentialsStorage {
   private static listeners: any[] = [];
 
   static getStored(): MaybeCredentials {
-    const stored = localStorage[authKey] || sessionStorage[authKey];
+    const stored = this.getStorage()[authKey];
     return stored == null ? null : JSON.parse(stored);
   }
 
@@ -29,8 +29,23 @@ export default class CredentialsStorage {
   static save(credentials: Credentials, sessionOnly: boolean) {
     CredentialsStorage.doClear();
     const storage = sessionOnly ? sessionStorage : localStorage;
-    storage[authKey] = JSON.stringify(credentials);
+    this.store(credentials, storage);
     CredentialsStorage.notifyListeners();
+  }
+
+  static update(credentials: Credentials) {
+    this.store(credentials, this.getStorage());
+  }
+
+  private static getStorage() {
+    if (localStorage[authKey]) {
+      return localStorage;
+    }
+    return sessionStorage;
+  }
+
+  private static store(credentials: Credentials, storage: Storage) {
+    storage[authKey] = JSON.stringify(credentials);
   }
 
   private static doClear() {
