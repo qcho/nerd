@@ -5,6 +5,7 @@ import useAuthStorage from "./useAuthStorage";
 function useAuthentication() {
   const { credentials, updateCredentials, clearCredentials } = useAuthStorage();
   let [loggedIn, setLoggedIn] = useState<boolean>(false);
+  let [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   async function login(
     username: string,
@@ -19,7 +20,9 @@ function useAuthentication() {
   }
 
   useEffect(() => {
-    setLoggedIn(credentials != null);
+    const hasCredentials = credentials != null;
+    setLoggedIn(hasCredentials);
+    setIsAdmin(hasCredentials && credentials!.roles.includes("admin"))
   }, [credentials]);
 
   async function register(name: string, username: string, password: string, rememberMe: boolean) {
@@ -38,6 +41,7 @@ function useAuthentication() {
     login,
     logout,
     loggedIn,
+    isAdmin,
     register,
     credentials
   };
