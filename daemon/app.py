@@ -248,7 +248,7 @@ class RefreshResource(Resource):
         return (ret), 200
 
 
-@app.route('/base-models')
+@api.route('/base-models')
 class BaseModelResource(Resource):
     # @ns.marshal_list_with(todo)
     @jwt_optional
