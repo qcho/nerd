@@ -53,6 +53,7 @@ const PreviewLayout = (props: Props) => {
       const doc = await nerApi.parseText(text);
       setDocument(doc as NerDocument);
     } catch (e) {
+      // TODO: correctly handle this
       console.log("Fuuu", [e]);
     } finally {
       setLoading(false);
