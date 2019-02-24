@@ -313,8 +313,8 @@ class ModelResource(Resource):
         """Deletes a model"""
         assert_admin()
         try:
-           mm.delete_model(model_name)
-           return '', 200
+            mm.delete_model(model_name)
+            return '', 200
         except:
             errors.abort(409, "There was a problem deleting the model")
 
