@@ -63,12 +63,20 @@ jwt = JWTManager(app)
 jwt._set_error_handler_callbacks(api)
 
 
+def assert_admin():
+    current_user = user_manager.get(get_jwt_identity())
+    if not current_user or not "admin" in current_user.roles:
+        errors.abort(401, "Access denied")
+
+
 @app.after_request
 def after_request(response):
     # TODO: Remove when done since having CORS is not a good idea.
     response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Headers',
                          'Content-Type, Authorization')
+    response.headers.add('Access-Control-Allow-Methods',
+                         'GET, PUT, POST, DELETE, HEAD')
     return response
 
 
@@ -79,6 +87,8 @@ def on_http_exception(error):
     response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Headers',
                          'Content-Type, Authorization')
+    response.headers.add('Access-Control-Allow-Methods',
+                         'GET, PUT, POST, DELETE, HEAD')
     return response
 
 
@@ -248,7 +258,7 @@ class RefreshResource(Resource):
         return (ret), 200
 
 
-@app.route('/base-models')
+@api.route('/base-models')
 class BaseModelResource(Resource):
     # @ns.marshal_list_with(todo)
     @jwt_optional
@@ -270,6 +280,7 @@ class ModelsResource(Resource):
     @jwt_required
     def get(self):
         """List available models"""
+        assert_admin()
         return jsonify(mm.available_models())
 
     @model_ns.doc('upsert_model', body=model_creation_fields, expect=[auth_parser])
@@ -277,8 +288,14 @@ class ModelsResource(Resource):
     @jwt_required
     def post(self):
         """Creates a model from a given SpaCy model"""
-        mm.create_model(api.payload['model_name'],
-                        api.payload['base_model_name'])
+        assert_admin()
+        try:
+            # TODO: We may be able to thread the model creation (inside the create_model method)
+            #       with threading.
+            mm.create_model(api.payload['model_name'],
+                            api.payload['base_model_name'])
+        except:
+            errors.abort(409, "Model exists with that name")
         return None, 200
 
 
@@ -294,16 +311,18 @@ class ModelResource(Resource):
     @model_ns.doc('get_model', expect=[auth_parser])
     def get(self, model_name):
         """Returns metadata for a given model"""
-        return None, 404  # TODO: This should return model metadata
+        errors.abort(404)  # TODO: This should return model metadata
 
     @jwt_required
     @model_ns.doc('remove_model', expect=[auth_parser])
     def delete(self, model_name=None):
         """Deletes a model"""
-        if mm.delete_model(model_name):
+        assert_admin()
+        try:
+            mm.delete_model(model_name)
             return '', 200
-        else:
-            raise InvalidUsage(f"Couldn't delete model named {model_name}")
+        except:
+            errors.abort(409, "There was a problem deleting the model")
 
 
 @model_ns.route('/<string:model_name>/training')

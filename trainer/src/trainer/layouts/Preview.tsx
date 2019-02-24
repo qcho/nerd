@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
       flexGrow: 1
     },
     content: {
-      padding: theme.spacing.unit * 3
+      padding: theme.spacing.unit * 2
     }
   });
 
@@ -53,6 +53,7 @@ const PreviewLayout = (props: Props) => {
       const doc = await nerApi.parseText(text);
       setDocument(doc as NerDocument);
     } catch (e) {
+      // TODO: correctly handle this
       console.log("Fuuu", [e]);
     } finally {
       setLoading(false);
