@@ -12,7 +12,7 @@ from user import User
 from werkzeug import exceptions
 
 import request_parsers
-from atp import parse_text, queue_text, train_model
+from atp import parse_text, train_model, queue_text, list_queued, list_trained
 from authentication import UserManager
 from bad_credentials import BadCredentials
 from entity_type_management import create_entity_type, types_for_model
@@ -350,6 +350,14 @@ class ModelResource(Resource):
     @jwt_required
     @model_ns.doc('get_model', expect=[auth_parser])
     def get(self, model_name):
+        assert_admin()
+        model = mm.load_model(model_name)
+        queued = len(list_queued(model))
+        trained = len(list_trained(model))
+        return jsonify({
+            "queued": queued,
+            "trained": trained
+        })
         """Returns metadata for a given model"""
         errors.abort(404)  # TODO: This should return model metadata
 
