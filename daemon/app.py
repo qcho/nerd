@@ -426,10 +426,7 @@ class NerDocumentResource(Resource):
         """
         nerd_model = mm.load_model(model_name)
 
-        if not request.is_json():
-            pass  # TODO: POST wasn't a JSON, should error out
-
-        json_payload = request.get_json()
+        json_payload = api.payload
         if json_payload is None:
             pass  # TODO: Payload is empty or is an invalid JSON
         train_model(nerd_model, json_payload)
