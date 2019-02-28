@@ -485,20 +485,8 @@ class EntityTypesResource(Resource):
         return types_for_model(model)
 
 
-def _parse_training_json(json_payload) -> Tuple[str, List[NEREntity]]:
-    """Decodes the training JSON payload
 
-    Args:
-        json_payload (json): JSON payload containing training information
 
-    Returns:
-        - the training text
-        - a list of entities present in it
-    """
-    text = json_payload['text']
-    ents = [(it['start'], it['end'], it['label'])
-            for it in json_payload['ents']]
-    return text, ents
 
 
 def run():
