@@ -24,7 +24,7 @@ export default class NerApi {
     }
   }
 
-  async saveDocument(document: NerDocument) {
+  async save(document: NerDocument) {
     try {
       await Http.authenticatedRequest().put(
         `/models/${this.modelName}/ner`,
