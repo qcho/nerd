@@ -2,46 +2,33 @@
 
 # -*- coding: utf-8 -*-
 
-import sys
-import os
 import argparse
-import typing
-import logging
 import json
+import logging
+import os
 import random
+import sys
+import typing
 
 import ptvsd
 import request_parsers
-
-from atp import parse_text, train_model, queue_text
-from model_management import ModelManager, InvalidModelError, InvalidUsage, NerdModel
-from nerd_type_aliases import NEREntity
+from atp import parse_text, queue_text, train_model
 from entity_type_management import create_entity_type, types_for_model
 from invalid_usage import InvalidUsage
-from spacy.gold import json_to_tuple, GoldParse
-
+from logit import get_logger
+from model_management import (InvalidModelError, InvalidUsage, ModelManager,
+                              NerdModel)
+from nerd_type_aliases import NEREntity
+from spacy.gold import GoldParse, json_to_tuple
 
 DEFAULT_VERBOSITY = 1
-mm = ModelManager('./models/')  # TODO: Extract location to config file
+DEFAULT_DROP_RATE = 0.35
+# TODO: Extract location to config file
+mm = ModelManager(os.environ.get('MODELS_DIR', './models/'))
 # TODO: Do we want to preload models? Maybe we should specify this in a config file
 
 
-def __create_logger() -> logging.Logger:
-    logger = logging.Logger(__file__)
-    # create console handler and set level to debug
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
-    # create formatter
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    # add formatter to ch
-    ch.setFormatter(formatter)
-    # add ch to logger
-    logger.addHandler(ch)
-    return logger
-
-
-logger = __create_logger()
+logger = get_logger(__name__)
 
 
 def __build_parser() -> argparse.ArgumentParser:
@@ -97,8 +84,8 @@ def train(model, training_data, n_iter=10):
             losses = {}
             for text, annotations in training_data:
                 model.update([text], [annotations], sgd=optimizer,
-                             drop=0.35,  losses=losses)
-            print(losses)
+                             drop=DEFAULT_DROP_RATE, losses=losses)
+            logger.info('Losses: {}', losses)
 
     return model
 
