@@ -1,6 +1,6 @@
-from werkzeug.security import check_password_hash, generate_password_hash
-
 from user_storage import User, UserStorage
+from typing import List
+from werkzeug.security import check_password_hash, generate_password_hash
 
 
 class EmailAlreadyRegisteredException(Exception):
@@ -19,6 +19,10 @@ class UserManager:
         user = User(name, email, generate_password_hash(password), ["user"])
         self.user_storage.save(user)
         return user
+
+    def all(self) -> List[User]:
+        """Returns a list of all registered users"""
+        return self.user_storage.all()
 
     def check_login(self, email: str, password: str):
         user = self.get(email)

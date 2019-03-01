@@ -49,6 +49,7 @@ api = Api(version='1.0', title='NER Daemon API',
           )
 model_ns = api.namespace('models', description='NER operations')
 auth_ns = api.namespace('auth', description='Authentication')
+user_ns = api.namespace('users', description='User management')
 api.init_app(app)
 
 auth_parser = api.parser()
@@ -485,9 +486,32 @@ class EntityTypesResource(Resource):
         return types_for_model(model)
 
 
+@user_ns.route('')
+class UsersManagement(Resource):
+
+    user_fields = api.model("User", {
+        'name': fields.String,
+        'email': fields.String,
+        'roles': fields.List(fields.String)
+    })
+
+    @jwt_required
+    @user_ns.marshal_list_with(user_fields)
+    def get(self):
+        """Returns a list of existing users"""
+        assert_admin()
+        return [u.to_json() for u in user_manager.all()]
 
 
+@user_ns.route('/<string:user_email>')
+@user_ns.response(404, 'User not found')
+@user_ns.param('user_email', 'The user\'s email (unique identifier)')
+@api.doc(params={'user_email': 'User to work with'})
+class UserManagement(Resource):
 
+    def get(self):
+        """Returns details for specific user"""
+        pass
 
 def run():
     import os
