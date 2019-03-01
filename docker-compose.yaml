@@ -4,7 +4,8 @@ services:
   api:
     build: ./daemon
     volumes:
-      - ./daemon:/code
+      - ./daemon:/daemon
+      - ./daemon/models:/models
     ports:
       - 8000:8000
     restart: on-failure

@@ -1,8 +1,11 @@
-from user_storage import UserStorage, User
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from user_storage import User, UserStorage
+
 
 class EmailAlreadyRegisteredException(Exception):
     pass
+
 
 class UserManager:
 
@@ -21,7 +24,6 @@ class UserManager:
         user = self.get(email)
         if user is None:
             return False
-
         return check_password_hash(user.password, password)
 
     def get(self, email: str):

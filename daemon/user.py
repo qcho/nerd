@@ -1,5 +1,6 @@
 from typing import List
 
+
 class User():
 
     def __init__(self, name: str, email: str, password: str, roles: List[str]):
@@ -19,3 +20,7 @@ class User():
             'password': self.password,
             'roles': self.roles
         }
+
+    def __str__(self):
+        rank = '⭐️ ' if 'admin' in self.roles else ''
+        return '{0} <{1}>'.format(self.name, self.email, rank)
