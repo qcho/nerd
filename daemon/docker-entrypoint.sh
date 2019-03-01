@@ -16,13 +16,13 @@ function run {
         ;;
         *)
         echo "======== STARTING DEV SERVER ========"
-        exec python app.py
+        exec python app.py "$@"
         ;;
         esac
 }
 
-function train {
-    echo noop... yet.
+function worker {
+    exec python worker.py "$@"
 }
 
 
@@ -37,6 +37,9 @@ function main() {
             ;;
         "run")
             run "$@"
+            ;;
+        "worker")
+            worker "$@"
             ;;
         *)
             echo "Didn't get that... $@"

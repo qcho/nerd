@@ -16,9 +16,10 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV ENVIRONMENT production
 ENV DEBUG False
+ENV MODELS_DIR /models
 
 
-WORKDIR /code
+WORKDIR /daemon
 
 COPY gunicorn /gunicorn
 
@@ -39,8 +40,10 @@ RUN pip install -U pip gunicorn \
 
 RUN python -m spacy download es
 
+RUN mkdir /models
 # Copy project
-COPY . /code/
+COPY . /daemon/
+VOLUME [ "/models" ]
 
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 EXPOSE 8000

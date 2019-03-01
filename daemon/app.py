@@ -3,29 +3,32 @@
 # -*- coding: utf-8 -*-
 
 import json
+import logging
 import os
-from typing import List, Tuple
-
-from flask import Flask, request, jsonify, url_for
-from flask_restplus import Resource, Api, fields, errors
-
-from atp import parse_text, train_model, queue_text
-from model_management import ModelManager
-from nerd_type_aliases import NEREntity
-from entity_type_management import create_entity_type, types_for_model
-from invalid_usage import InvalidUsage
-import request_parsers
-from authentication import UserManager
-from user_storage import FileUserStorage
 from pathlib import Path
+from typing import List, Tuple
 from user import User
+
 from werkzeug import exceptions
 
-from flask_jwt_extended import (
-    JWTManager, jwt_required, create_access_token, create_refresh_token,
-    get_jwt_identity, jwt_optional, jwt_refresh_token_required, get_jwt_claims,
-)
-
+import request_parsers
+from atp import parse_text, queue_text, train_model
+from authentication import UserManager
+from bad_credentials import BadCredentials
+from entity_type_management import create_entity_type, types_for_model
+from flask import Flask, jsonify, request, url_for
+from flask_cors import CORS as FlaskCors
+from flask_jwt_extended import (JWTManager, create_access_token,
+                                create_refresh_token, get_jwt_claims,
+                                get_jwt_identity, jwt_optional,
+                                jwt_refresh_token_required, jwt_required)
+from flask_restplus import Api, Resource, abort, errors, fields
+from invalid_usage import InvalidUsage
+from logit import get_logger
+from missing_parameters import MissingParameters
+from model_management import ModelManager
+from nerd_type_aliases import NEREntity
+from user_storage import FileUserStorage
 
 authorizations = {
     'apikey': {
@@ -34,6 +37,8 @@ authorizations = {
         'name': 'Authorization'
     }
 }
+
+logger = get_logger(__name__)
 
 app = Flask('NERd', static_folder=None)
 api = Api(version='1.0', title='NER Daemon API',
@@ -92,6 +97,9 @@ def on_http_exception(error):
     return response
 
 
+cors = FlaskCors(app)
+
+
 @app.before_request
 def before_request():
     if request.method == "OPTIONS":
@@ -115,16 +123,32 @@ def my_expired_token_callback(expired_token=None):
     return response
 
 
-mm = ModelManager('./models/')  # TODO: Extract location to config file
-# TODO: Do we want to preload models? Maybe we should specify this in a config file
+# TODO: Extract location to config file
+mm = ModelManager(os.environ.get('MODELS_DIR', './models/'))
 
+# TODO: Do we want to preload models? Maybe we should specify this in a config file
 user_manager = UserManager(FileUserStorage(Path("./users.json")))
+
+
+user_credentials = api.model('UserCredentials', {
+    'access_token': fields.String(required=True, description='A temporary JWT'),
+    'refresh_token': fields.String(required=True, description='A refresh token'),
+    'email': fields.String(required=True, description='The email'),
+    'name': fields.String(required=True, description='The name'),
+    'roles': fields.List(fields.String, required=True, description='A list of roles')
+})
+
+generic_error = api.model('GenericError', {
+    'msg': fields.String(required=True, description='A description of the error')
+})
 
 
 # Create a function that will be called whenever create_access_token
 # is used. It will take whatever object is passed into the
 # create_access_token method, and lets us define what custom claims
 # should be added to the access token.
+
+
 @jwt.user_claims_loader
 def add_claims_to_access_token(user: User):
     return {'roles': user.roles}
@@ -139,13 +163,27 @@ def user_identity_lookup(user: User):
     return user.email
 
 
-DEBUG = os.environ.get('DEBUG', False)
-BIND = os.environ.get('GUNICORN_BIND', '0.0.0.0:8000')
-(HOST, PORT, *_) = BIND.split(':')
-
-
-@app.errorhandler(InvalidUsage)
+@api.errorhandler(InvalidUsage)
 def handle_invalid_api_usage(error):
+    """Response on invalid API usage (a 500)"""
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
+
+@api.errorhandler(BadCredentials)
+@api.marshal_with(generic_error, code=401, description='Bad credentials')
+def handle_bad_credentials(error):
+    """Response on bad credentials (user or password are invalid)"""
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
+
+@api.errorhandler(MissingParameters)
+@api.marshal_with(generic_error, code=400, description='Missing required parameter')
+def handle_missing_params(error):
+    """Response on missing parameters."""
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
@@ -160,7 +198,25 @@ user_credentials = api.model('UserCredentials', {
 })
 
 
+@jwt_optional
+@app.route("/")
+def index():
+    """Lists all of the available endpoints"""
+    # TODO: Check if this is working correctly
+    import sys
+    current_module = sys.modules[__name__]
+    routes = []
+    for rule in app.url_map.iter_rules():
+        routes.append({
+            'url': rule.rule,
+            'doc': getattr(current_module, rule.endpoint).__doc__
+        })
+    return jsonify(routes)
+
+
 def generate_login_response(user: User):
+    if not user:
+        return None
     return {
         'access_token': create_access_token(identity=user),
         'refresh_token': create_refresh_token(identity=user),
@@ -181,7 +237,7 @@ class RegisterResource(Resource):
 
     @auth_ns.doc(body=register_payload, security=None)
     @auth_ns.marshal_with(user_credentials, code=200, description='Successful registration')
-    @api.expect(register_payload)
+    @auth_ns.expect(register_payload)
     def post(self):
         name = api.payload.get('name', '').strip()
         email = api.payload.get('email', '').strip().lower()
@@ -189,7 +245,7 @@ class RegisterResource(Resource):
 
         for value, valueName in [[name, 'name'], [email, 'email'], [password, 'password']]:
             if not value:
-                return ({"msg": f"Missing {valueName}"}), 400
+                raise MissingParameters.param_check_failed(valueName, value)
 
         user = user_manager.get(email)
         if user:
@@ -213,18 +269,25 @@ class LoginResource(Resource):
     @auth_ns.doc(body=login_payload, security=None)
     @auth_ns.marshal_with(user_credentials, code=200, description='Login OK')
     def post(self):
-        """Perform a login to access restricted API endpoints"""
+        """
+        Perform a login to access restricted API endpoints.
+
+        :raises BadCredentials: In case of invalid credentials.
+
+        :raises MissingParameters: If the request is missing either email or password.
+        """
         email = request.json.get('email', None)
         password = request.json.get('password', None)
         if not email:
-            return ({"msg": "Missing email parameter"}), 400
+            raise MissingParameters.param_check_failed('email', email)
         if not password:
-            return ({"msg": "Missing password parameter"}), 400
+            raise MissingParameters.param_check_failed('password', email)
 
-        if user_manager.check_login(email, password):
-            return ({"msg": "Bad username or password"}), 401
+        if not user_manager.check_login(email, password):
+            raise BadCredentials.invalid_credentials()
 
-        ret = generate_login_response(user_manager.get(email))
+        user = user_manager.get(email)
+        ret = generate_login_response(user)
         return ret, 200
 
 
@@ -456,5 +519,15 @@ def _parse_training_json(json_payload) -> Tuple[str, List[NEREntity]]:
     return text, ents
 
 
-if __name__ == '__main__':
+def run():
+    import os
+
+    DEBUG = os.environ.get('DEBUG', False)
+    BIND = os.environ.get('GUNICORN_BIND', '0.0.0.0:8000')
+    (HOST, PORT, *_) = BIND.split(':')
+
     app.run(debug=DEBUG, host=HOST, port=PORT)
+
+
+if __name__ == '__main__':
+    run()
