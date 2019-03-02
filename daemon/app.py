@@ -72,7 +72,7 @@ jwt._set_error_handler_callbacks(api)
 def assert_admin():
     current_user = user_manager.get(get_jwt_identity())
     if not current_user or not "admin" in current_user.roles:
-        errors.abort(401, "Access denied")
+        api.abort(401, "Access denied")
 
 
 cors = FlaskCors(app)
@@ -91,7 +91,7 @@ def init_app_context():
 
 @jwt.expired_token_loader
 def my_expired_token_callback(expired_token=None):
-    # return errors.abort(401, "Access token expired")
+    # return api.abort(401, "Access token expired")
     # TODO: Remove when done since having CORS is not a good idea.
     response = jsonify({"message": "Access token expired"})
     response.status_code = 401
@@ -227,7 +227,7 @@ class RegisterResource(Resource):
 
         user = user_manager.get(email)
         if user:
-            return errors.abort(400, "Email exists")
+            return api.abort(400, "Email exists")
 
         user = user_manager.register(name, email, password)
         return generate_login_response(user), 200
@@ -292,7 +292,7 @@ class RefreshResource(Resource):
         """Refresh access token"""
         current_user = user_manager.get(get_jwt_identity())
         if not current_user:
-            errors.abort(401, "Invalid user")
+            api.abort(401, "Invalid user")
         ret = {
             'access_token': create_access_token(identity=current_user),
         }
@@ -336,7 +336,7 @@ class ModelsResource(Resource):
             mm.create_model(api.payload['model_name'],
                             api.payload['base_model_name'])
         except:
-            errors.abort(409, "Model exists with that name")
+            api.abort(409, "Model exists with that name")
         return None, 200
 
 
@@ -360,7 +360,7 @@ class ModelResource(Resource):
             "trained": trained
         })
         """Returns metadata for a given model"""
-        errors.abort(404)  # TODO: This should return model metadata
+        api.abort(404)  # TODO: This should return model metadata
 
     @jwt_required
     @model_ns.doc('remove_model', expect=[auth_parser])
@@ -371,7 +371,7 @@ class ModelResource(Resource):
             mm.delete_model(model_name)
             return '', 200
         except:
-            errors.abort(409, "There was a problem deleting the model")
+            api.abort(409, "There was a problem deleting the model")
 
 
 @model_ns.route('/<string:model_name>/training')
@@ -531,7 +531,7 @@ class AdminManagement(Resource):
         email = api.payload["email"]
         user = user_manager.get(email)
         if not user:
-            errors.abort(404, "No user exists with that email")
+            api.abort(404, "No user exists with that email")
         return user
 
 
