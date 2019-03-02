@@ -308,8 +308,8 @@ class BaseModelResource(Resource):
 class ModelsResource(Resource):
 
     model_creation_fields = api.model('ModelCreationData', {
-        'base_model_name': fields.String(enum=mm.available_base_models()),
-        'model_name': fields.String
+        'base_model_name': fields.String(enum=mm.available_base_models(), required=True),
+        'model_name': fields.String(required=True)
     })
 
     model_fields = api.model('NerModel', {
