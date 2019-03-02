@@ -20,8 +20,9 @@ from model_management import (InvalidModelError, InvalidUsage, ModelManager,
                               NerdModel)
 from nerd_type_aliases import NEREntity
 from spacy.gold import GoldParse, json_to_tuple
+from spacy.util import compounding, minibatch
 
-DEFAULT_VERBOSITY = 1
+DEFAULT_VERBOSITY = 0
 DEFAULT_DROP_RATE = 0.35
 # TODO: Extract location to config file
 mm = ModelManager(os.environ.get('MODELS_DIR', './models/'))
@@ -42,9 +43,9 @@ def __build_parser() -> argparse.ArgumentParser:
 
 
 def __set_log_level(verbosity=DEFAULT_VERBOSITY) -> None:
-    choices = ['', 'WARNING', 'INFO', 'DEBUG']
+    choices = ['ERROR', 'WARNING', 'INFO', 'DEBUG']
     log_level = choices[verbosity] if verbosity in range(
-        1, len(choices)) else choices[DEFAULT_VERBOSITY]
+        0, len(choices)) else choices[DEFAULT_VERBOSITY]
     logger.setLevel(log_level)
     logger.debug('Set log level to %s', log_level)
 
@@ -54,10 +55,14 @@ def _files_to_training_data(*filenames, base_path='./') -> typing.Generator[obje
         path = os.path.join(base_path, filename)
         with open(path, 'r') as training_file:
             logger.debug("Loading json training file %s", path)
-            yield json_to_tuple(json.load(training_file))
+            payload = json.load(training_file)
+            text = payload['text']
+            ents = [(it['start'], it['end'], it['label'])
+                    for it in payload['ents']]
+            yield (text, {"entities": ents})
 
 
-def _load_model(model_name) -> NerdModel:
+def _load_model(model_name: str) -> NerdModel:
     try:
         logger.info("Loading model %s", model_name)
         model = mm.load_model(model_name)
@@ -68,6 +73,10 @@ def _load_model(model_name) -> NerdModel:
         exit(1)
 
 
+def _save_model(nerd_model: NerdModel, spacy_model) -> bool:
+    return nerd_model.save(spacy_model)
+
+
 # REVIEW THIS
 def train(model, training_data, n_iter=10):
     optimizer = model.begin_training()
@@ -76,25 +85,33 @@ def train(model, training_data, n_iter=10):
     if len(training_data) == 0:
         logger.warning('Empty training set')
         return model
+    if (len(training_data) < 10):
+        logger.warning('Training with less than ten documents. This is bad.')
+
     # get names of other pipes to disable them during training
     other_pipes = [pipe for pipe in model.pipe_names if pipe != 'ner']
     with model.disable_pipes(*other_pipes):  # only train NER
         for itn in range(n_iter):
+            logger.info('Iteration %d', itn + 1)
             random.shuffle(training_data)
             losses = {}
-            for text, annotations in training_data:
-                model.update([text], [annotations], sgd=optimizer,
-                             drop=DEFAULT_DROP_RATE, losses=losses)
-            logger.info('Losses: {}', losses)
-
+            batches = minibatch(
+                training_data, size=compounding(4.0, 32.0, 1.001))
+            for batch_number, batch in enumerate(batches):
+                logger.info('Batch %d', batch_number + 1)
+                for text, annotations in batch:
+                    model.update([text], [annotations], drop=DEFAULT_DROP_RATE,
+                                 sgd=optimizer, losses=losses)
+            logger.info('Losses %s', losses)
     return model
 
 
 def main(model_name, filenames) -> None:
     model = _load_model(model_name)
-    base_path = model.directories.queue_path()
+    base_path = model.directories.trained_path()
     training_data = _files_to_training_data(*filenames, base_path=base_path)
-    spacy_model = train(model.model, training_data)
+    trained_model = train(model.model, training_data)
+    save_status = _save_model(model, trained_model)
 
 
 if __name__ == '__main__':

@@ -74,29 +74,6 @@ def assert_admin():
         errors.abort(401, "Access denied")
 
 
-@app.after_request
-def after_request(response):
-    # TODO: Remove when done since having CORS is not a good idea.
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers',
-                         'Content-Type, Authorization')
-    response.headers.add('Access-Control-Allow-Methods',
-                         'GET, PUT, POST, DELETE, HEAD')
-    return response
-
-
-@app.errorhandler(exceptions.HTTPException)
-def on_http_exception(error):
-    # TODO: Remove when done since having CORS is not a good idea.
-    response = error.response
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers',
-                         'Content-Type, Authorization')
-    response.headers.add('Access-Control-Allow-Methods',
-                         'GET, PUT, POST, DELETE, HEAD')
-    return response
-
-
 cors = FlaskCors(app)
 
 
