@@ -10,6 +10,7 @@ import Loading from "./widgets/Loading";
 import FourOhFour from "./layouts/FourOhFour";
 import ModelManagement from "./layouts/ModelManagement";
 import useAuthentication from "./hooks/useAuthentication";
+import UserManagement from "./layouts/UserManagement";
 
 const theme = createMuiTheme({
   typography: {
@@ -31,6 +32,9 @@ const App = () => {
             <Route exact path="/register" component={Register} />
             {isAdmin && (
               <Route exact path="/models" component={ModelManagement} />
+            )}
+            {isAdmin && (
+              <Route exact path="/users" component={UserManagement} />
             )}
             <Route component={FourOhFour} />
           </Switch>

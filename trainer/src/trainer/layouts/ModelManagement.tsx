@@ -55,6 +55,35 @@ const styles = (theme: Theme) =>
     }
   });
 
+const ModelDetails = ({ modelName }: { modelName: string }) => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [details, setDetails] = useState<any>({});
+  const [t] = useTranslation(nsps.modelManagement)
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      ModelApi.details(modelName)
+        .then(data => {
+          setDetails(data);
+        })
+        .catch(error => {
+          console.log([error]);
+        })
+        .finally(() => setLoading(false));
+    };
+    setLoading(true);
+    fetchDetails();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  return (<div>
+    <Typography>{t('Queued', {amount: details.queued})}</Typography>
+    <Typography>{t('Trained', {amount: details.trained})}</Typography>
+  </div>);
+};
+
 const ModelManagement = ({ classes }: { classes: any }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [creatingModel, setCreatingModel] = useState<boolean>(false);
@@ -206,11 +235,11 @@ const ModelManagement = ({ classes }: { classes: any }) => {
                 <ExpansionPanelDetails>
                   <Grid container direction="column">
                     <Grid item>
-                      <Typography>Model info goes here</Typography>
+                      <ModelDetails modelName={model} />
                     </Grid>
                   </Grid>
                 </ExpansionPanelDetails>
-                <Divider/>
+                <Divider />
                 <ExpansionPanelActions>
                   <Button color="secondary" onClick={() => deleteModel(model)}>
                     {t("Delete")}

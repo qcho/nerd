@@ -8,7 +8,8 @@ import {
   Button,
   Divider,
   Typography,
-  LinearProgress
+  LinearProgress,
+  Snackbar
 } from "@material-ui/core";
 import NerEditor from "../widgets/NerEditor";
 import { dummyNodeProvider } from "../helpers/nodeproviders";
@@ -36,13 +37,13 @@ type Props = {
   classes: any;
 };
 
-const PreviewLayout = (props: Props) => {
-  let { classes } = props;
+const PreviewLayout = ({ classes }: Props) => {
   const [text, setText] = useState<string>("");
   const [nerModel, setNerModel] = useState<string>("noticias"); // TODO: Hardcoded model
   const [entityTypes, setEntityTypes] = useState<EntityType[]>([]);
   const [document, setDocument] = useState<MaybeNerDocument>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [t] = useTranslation(nsps.ner);
   const { loggedIn } = useAuthentication();
   const nerApi = new NerApi(nerModel);
@@ -80,8 +81,18 @@ const PreviewLayout = (props: Props) => {
   }
 
   function onSaveClick() {
-    // TODO: save document
+    if (!document) {
+      return; // TODO: Handle this
+    }
+
+    nerApi.save(document!).then(() => {
+      setSnackbarMessage(t("Saved"));
+    }).catch((error) => {
+      // TODO: Handle this.
+    });
   }
+
+
 
   return (
     <div>
@@ -163,6 +174,16 @@ const PreviewLayout = (props: Props) => {
           </Grid>
         )}
       </Grid>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left"
+        }}
+        open={snackbarMessage != ""}
+        autoHideDuration={1000}
+        onClose={() => setSnackbarMessage("")}
+        message={<span>{snackbarMessage}</span>}
+      />
     </div>
   );
 };

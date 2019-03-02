@@ -14,6 +14,7 @@ import useRouteTitle from "./hooks/useRouteTitle";
 import useAuthentication from "./hooks/useAuthentication";
 import { useTranslation } from "react-i18next";
 import nsps from "./helpers/i18n-namespaces";
+import Home from "@material-ui/icons/Home";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -23,11 +24,16 @@ const styles = (theme: Theme) =>
     },
     grow: {
       flexGrow: 1
+    },
+    homeButton: {
+      marginLeft: -12,
+      marginRight: 20
     }
   });
 
 const LoginLink = (props: any) => <Link to="/login" {...props} />;
 const RegisterLink = (props: any) => <Link to="/register" {...props} />;
+const HomeLink = (props: any) => <Link to="/" {...props} />;
 
 const NavigationBar = (props: any) => {
   const { classes, location } = props;
@@ -38,6 +44,15 @@ const NavigationBar = (props: any) => {
   return (
     <AppBar position="static">
       <Toolbar>
+        {location.pathname != "/" && (
+          <IconButton
+            component={HomeLink}
+            className={classes.homeButton}
+            color="inherit"
+          >
+            <Home />
+          </IconButton>
+        )}
         <Typography variant="h6" color="inherit" className={classes.grow}>
           {title}
         </Typography>

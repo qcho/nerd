@@ -25,6 +25,7 @@ const Home = ({ classes }: { classes: any }) => {
       <div className={classNames(classes.content, classes.grow)}>
         <Link to="/preview">Find entities</Link>
         {isAdmin && <Link to="/models">Manage models</Link>}
+        {isAdmin && <Link to="/users">Manage users</Link>}
       </div>
     </div>
   );

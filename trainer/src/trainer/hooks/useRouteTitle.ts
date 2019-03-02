@@ -13,5 +13,8 @@ export default function useRouteTitle(location: any) {
     if (pathname == "/models") {
         return t("Model Management");
     }
+    if (pathname == "/users") {
+        return t("User Management");
+    }
     return "";
 }

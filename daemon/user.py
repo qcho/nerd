@@ -13,6 +13,14 @@ class User():
     def from_json(data):
         return User(data['name'], data['email'], data['password'], data['roles'])
 
+    def update(data):
+        if "email" in data:
+            self.email = data["email"]
+        if "name" in data:
+            self.name = data["name"]
+        if "roles" in data:
+            self.roles = data["roles"]
+
     def to_json(self):
         return {
             'name': self.name,
