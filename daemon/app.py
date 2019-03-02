@@ -465,6 +465,7 @@ class EntityTypesResource(Resource):
     @model_ns.expect(entity_type_fields)
     def put(self, model_name):
         """Update or create entity types"""
+        assert_admin()
         model = mm.load_model(model_name)
 
         if not request.is_json():
