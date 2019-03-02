@@ -35,8 +35,6 @@ logger = get_logger(__name__)
 def __build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description='Train the model')
     parser.add_argument('model', type=str, help='model to train')
-    parser.add_argument('--files', type=str, nargs='*', default=[],
-                        help='filenames to use in training')
     parser.add_argument('--verbose', '-v', action='count',
                         dest='log_level', help='debug level')
     return parser
@@ -50,16 +48,19 @@ def __set_log_level(verbosity=DEFAULT_VERBOSITY) -> None:
     logger.debug('Set log level to %s', log_level)
 
 
-def _files_to_training_data(*filenames, base_path='./') -> typing.Generator[object, None, None]:
-    for filename in filenames:
+def _files_to_training_data(base_path='./') -> typing.Generator[object, None, None]:
+    for filename in os.listdir(base_path):
         path = os.path.join(base_path, filename)
         with open(path, 'r') as training_file:
-            logger.debug("Loading json training file %s", path)
-            payload = json.load(training_file)
-            text = payload['text']
-            ents = [(it['start'], it['end'], it['label'])
-                    for it in payload['ents']]
-            yield (text, {"entities": ents})
+            try:
+                logger.debug("Loading json training file %s", path)
+                payload = json.load(training_file)
+                text = payload['text']
+                ents = [(it['start'], it['end'], it['label'])
+                        for it in payload['ents']]
+                yield (text, {"entities": ents})
+            except:
+                pass
 
 
 def _load_model(model_name: str) -> NerdModel:
@@ -106,10 +107,10 @@ def train(model, training_data, n_iter=10):
     return model
 
 
-def main(model_name, filenames) -> None:
+def main(model_name) -> None:
     model = _load_model(model_name)
     base_path = model.directories.trained_path()
-    training_data = _files_to_training_data(*filenames, base_path=base_path)
+    training_data = _files_to_training_data(base_path=base_path)
     trained_model = train(model.model, training_data)
     save_status = _save_model(model, trained_model)
 
@@ -118,4 +119,4 @@ if __name__ == '__main__':
     parser = __build_parser()
     args = parser.parse_args()
     __set_log_level(args.log_level)
-    main(model_name=args.model, filenames=args.files)
+    main(model_name=args.model)
