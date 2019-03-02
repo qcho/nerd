@@ -14,6 +14,19 @@ export default class ModelApi {
     }
   }
 
+  static async details(modelName: string) {
+    try {
+      const { data } = await Http.authenticatedRequest().get(`/models/${modelName}`)
+      return data;
+    } catch (error) {
+      throw new Error(
+        Http.handleRequestError(error, (status, data) => {
+          return "Couldn't load details";
+        })
+      );
+    }
+  }
+
   static async listBase() {
     try {
       const { data } = await Http.authenticatedRequest().get("/base-models");

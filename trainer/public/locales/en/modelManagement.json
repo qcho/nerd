@@ -4,5 +4,7 @@
     "Create": "Create",
     "There was a problem deleting the model": "There was a problem deleting the model",
     "Model exists with that name": "Model exists with that name",
-    "Please fill the required fields": "Please fill the required fields"
+    "Please fill the required fields": "Please fill the required fields",
+    "Queued": "Queued: {{amount}}",
+    "Trained": "Trained: {{amount}}"
 }

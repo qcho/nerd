@@ -11,6 +11,9 @@ class UserStorage(abc.ABC):
     def find_with_email(self, email: str) -> User:
         pass
 
+    def all(self) -> List[User]:
+        pass
+
     @abc.abstractmethod
     def save(self, user: User):
         pass
@@ -24,6 +27,9 @@ class FileUserStorage(UserStorage):
         if not user_file_path.exists():
             self.persist()
         self.load_from_disk()
+
+    def all(self) -> List[User]:
+        return [User.from_json(u) for u in self._user_data.values()]
 
     def find_with_email(self, email: str) -> User:
         if email in self._user_data:

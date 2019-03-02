@@ -12,7 +12,7 @@ from user import User
 from werkzeug import exceptions
 
 import request_parsers
-from atp import parse_text, queue_text, train_model
+from atp import parse_text, train_model, queue_text, list_queued, list_trained
 from authentication import UserManager
 from bad_credentials import BadCredentials
 from entity_type_management import create_entity_type, types_for_model
@@ -49,6 +49,7 @@ api = Api(version='1.0', title='NER Daemon API',
           )
 model_ns = api.namespace('models', description='NER operations')
 auth_ns = api.namespace('auth', description='Authentication')
+user_ns = api.namespace('users', description='User management')
 api.init_app(app)
 
 auth_parser = api.parser()
@@ -350,6 +351,14 @@ class ModelResource(Resource):
     @jwt_required
     @model_ns.doc('get_model', expect=[auth_parser])
     def get(self, model_name):
+        assert_admin()
+        model = mm.load_model(model_name)
+        queued = len(list_queued(model))
+        trained = len(list_trained(model))
+        return jsonify({
+            "queued": queued,
+            "trained": trained
+        })
         """Returns metadata for a given model"""
         errors.abort(404)  # TODO: This should return model metadata
 
@@ -426,10 +435,7 @@ class NerDocumentResource(Resource):
         """
         nerd_model = mm.load_model(model_name)
 
-        if not request.is_json():
-            pass  # TODO: POST wasn't a JSON, should error out
-
-        json_payload = request.get_json()
+        json_payload = api.payload
         if json_payload is None:
             pass  # TODO: Payload is empty or is an invalid JSON
         train_model(nerd_model, json_payload)
@@ -480,21 +486,64 @@ class EntityTypesResource(Resource):
         return types_for_model(model)
 
 
-def _parse_training_json(json_payload) -> Tuple[str, List[NEREntity]]:
-    """Decodes the training JSON payload
+@user_ns.route('')
+class UsersManagement(Resource):
 
-    Args:
-        json_payload (json): JSON payload containing training information
+    user_fields = api.model("User", {
+        'name': fields.String,
+        'email': fields.String,
+        'roles': fields.List(fields.String)
+    })
 
-    Returns:
-        - the training text
-        - a list of entities present in it
-    """
-    text = json_payload['text']
-    ents = [(it['start'], it['end'], it['label'])
-            for it in json_payload['ents']]
-    return text, ents
+    @jwt_required
+    @user_ns.marshal_list_with(user_fields)
+    def get(self):
+        """Returns a list of existing users"""
+        assert_admin()
+        return [u.to_json() for u in user_manager.all()]
 
+
+@user_ns.route('/toggle_admin')
+class AdminManagement(Resource):
+
+    admin_toggle_fields = api.model("AdminToggle", {
+        'email': fields.String,
+        'value': fields.Boolean
+    })
+
+    @jwt_required
+    @api.expect(admin_toggle_fields)
+    def put(self):
+        """Toggles a specific user's 'admin' role"""
+        user = self._fetch_user()
+        isAdmin = api.payload["value"]
+        if isAdmin and not "admin" in user.roles:
+            user.roles.append("admin")
+
+        if not isAdmin:
+            user.roles.remove("admin")
+
+        user_manager.update(user)
+        return '', 200
+
+    def _fetch_user(self) -> User:
+        assert_admin()
+        email = api.payload["email"]
+        user = user_manager.get(email)
+        if not user:
+            errors.abort(404, "No user exists with that email")
+        return user
+
+
+@user_ns.route('/<string:user_email>')
+@user_ns.response(404, 'User not found')
+@user_ns.param('user_email', 'The user\'s email (unique identifier)')
+@api.doc(params={'user_email': 'User to work with'})
+class UserManagement(Resource):
+
+    def get(self):
+        """Returns details for specific user"""
+        pass
 
 def run():
     import os
