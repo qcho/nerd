@@ -15,6 +15,9 @@ import {
 } from "@material-ui/core";
 import NavigationBar from "../NavigationBar";
 import UserApi from "../api/UserApi";
+import { useTranslation } from "react-i18next";
+import nsps from "../helpers/i18n-namespaces";
+import { User } from "../types/User";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -26,25 +29,33 @@ const styles = (theme: Theme) =>
     }
   });
 
-type User = {
-  email: string;
-  roles: string[];
-  name: string;
-};
-
 const UserManagement = ({ classes }: { classes: any }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [t] = useTranslation(nsps.userManagement);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const userList = await UserApi.list();
-      setUsers(userList);
+  function fetchUsers() {
+    const doFetch = async () => {
+      setLoading(true);
+      setUsers(await UserApi.list());
     };
-    fetchUsers().finally(() => {
+    doFetch().finally(() => {
       setLoading(false);
     });
+  }
+
+  useEffect(() => {
+    fetchUsers();
   }, []);
+
+  function onMakeAdmin(user: User) {
+    setLoading(true);
+    UserApi.toggleAdmin(user, true)
+      .then(() => {
+        fetchUsers();
+      })
+      .finally(() => setLoading(false));
+  }
 
   return (
     <div className={classes.grow}>
@@ -54,10 +65,10 @@ const UserManagement = ({ classes }: { classes: any }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Roles</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableCell>{t("Name")}</TableCell>
+              <TableCell>{t("Email")}</TableCell>
+              <TableCell>{t("Roles")}</TableCell>
+              <TableCell align="center">{t("Actions")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -68,15 +79,16 @@ const UserManagement = ({ classes }: { classes: any }) => {
                 <TableCell>{user.roles.join(", ")}</TableCell>
                 <TableCell align="center">
                   <Button variant="outlined" color="secondary" size="small">
-                    Delete
+                    {t("Delete")}
                   </Button>
                   {!user.roles.includes("admin") && (
                     <Button
+                      onClick={() => onMakeAdmin(user)}
                       style={{ marginLeft: 10 }}
                       variant="outlined"
                       size="small"
                     >
-                      Make Admin
+                      {t("Make Admin")}
                     </Button>
                   )}
                 </TableCell>

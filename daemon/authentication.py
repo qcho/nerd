@@ -20,6 +20,12 @@ class UserManager:
         self.user_storage.save(user)
         return user
 
+    def update(self, user: User, password: str = None):
+        if password:
+            user.password = generate_password_hash(password)
+        self.user_storage.save(user)
+
+
     def all(self) -> List[User]:
         """Returns a list of all registered users"""
         return self.user_storage.all()

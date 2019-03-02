@@ -503,6 +503,38 @@ class UsersManagement(Resource):
         return [u.to_json() for u in user_manager.all()]
 
 
+@user_ns.route('/toggle_admin')
+class AdminManagement(Resource):
+
+    admin_toggle_fields = api.model("AdminToggle", {
+        'email': fields.String,
+        'value': fields.Boolean
+    })
+
+    @jwt_required
+    @api.expect(admin_toggle_fields)
+    def put(self):
+        """Toggles a specific user's 'admin' role"""
+        user = self._fetch_user()
+        isAdmin = api.payload["value"]
+        if isAdmin and not "admin" in user.roles:
+            user.roles.append("admin")
+
+        if not isAdmin:
+            user.roles.remove("admin")
+
+        user_manager.update(user)
+        return '', 200
+
+    def _fetch_user(self) -> User:
+        assert_admin()
+        email = api.payload["email"]
+        user = user_manager.get(email)
+        if not user:
+            errors.abort(404, "No user exists with that email")
+        return user
+
+
 @user_ns.route('/<string:user_email>')
 @user_ns.response(404, 'User not found')
 @user_ns.param('user_email', 'The user\'s email (unique identifier)')

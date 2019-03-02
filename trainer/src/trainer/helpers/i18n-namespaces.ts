@@ -3,7 +3,8 @@ const nsps = {
     routeTitles: "routeTitles",
     ner: "ner",
     fourOhFour: "forOhFour",
-    modelManagement: "modelManagement"
+    modelManagement: "modelManagement",
+    userManagement: "userManagement"
 }
 
 export default nsps;
