@@ -546,6 +546,7 @@ class UserManagement(Resource):
         """Returns details for specific user"""
         pass
 
+
 def run():
     import os
 
