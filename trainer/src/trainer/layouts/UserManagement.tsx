@@ -48,9 +48,9 @@ const UserManagement = ({ classes }: { classes: any }) => {
     fetchUsers();
   }, []);
 
-  function onMakeAdmin(user: User) {
+  function onToggleAdmin(user: User, value: boolean) {
     setLoading(true);
-    UserApi.toggleAdmin(user, true)
+    UserApi.toggleAdmin(user, value)
       .then(() => {
         fetchUsers();
       })
@@ -60,7 +60,6 @@ const UserManagement = ({ classes }: { classes: any }) => {
   return (
     <div className={classes.grow}>
       <NavigationBar />
-      {loading && <LinearProgress />}
       <Grid container className={classes.content}>
         <Table>
           <TableHead>
@@ -81,16 +80,16 @@ const UserManagement = ({ classes }: { classes: any }) => {
                   <Button variant="outlined" color="secondary" size="small">
                     {t("Delete")}
                   </Button>
-                  {!user.roles.includes("admin") && (
-                    <Button
-                      onClick={() => onMakeAdmin(user)}
-                      style={{ marginLeft: 10 }}
-                      variant="outlined"
-                      size="small"
-                    >
-                      {t("Make Admin")}
-                    </Button>
-                  )}
+                  <Button
+                    onClick={() =>
+                      onToggleAdmin(user, !user.roles.includes("admin"))
+                    }
+                    style={{ marginLeft: 10 }}
+                    variant="outlined"
+                    size="small"
+                  >
+                    {t("Toggle Admin")}
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
