@@ -317,12 +317,17 @@ class ModelsResource(Resource):
         'model_name': fields.String
     })
 
-    @model_ns.doc('list_models', model=[fields.String()], expect=[auth_parser])
+    model_fields = api.model('NerModel', {
+        'name': fields.String
+    })
+
+    @model_ns.doc('list_models', expect=[auth_parser])
+    @model_ns.marshal_list_with(model_fields, code=200, description="Model list")
     @jwt_required
     def get(self):
         """List available models"""
         assert_admin()
-        return jsonify(mm.available_models())
+        return mm.available_models()
 
     @model_ns.doc('upsert_model', body=model_creation_fields, expect=[auth_parser])
     @api.expect(model_creation_fields)
