@@ -245,28 +245,23 @@ class LoginResource(Resource):
     })
 
     @auth_ns.doc(body=login_payload, security=None)
-    @auth_ns.marshal_with(user_credentials, code=200, description='Login OK')
+    @auth_ns.marshal_with(user_credentials, description='Login OK')
+    @api.expect(login_payload)
     def post(self):
         """
         Perform a login to access restricted API endpoints.
 
         :raises BadCredentials: In case of invalid credentials.
-
-        :raises MissingParameters: If the request is missing either email or password.
         """
-        email = request.json.get('email', None)
-        password = request.json.get('password', None)
-        if not email:
-            raise MissingParameters.param_check_failed('email', email)
-        if not password:
-            raise MissingParameters.param_check_failed('password', email)
+
+        email = api.payload["email"]
+        password = api.payload["password"]
 
         if not user_manager.check_login(email, password):
             raise BadCredentials.invalid_credentials()
 
         user = user_manager.get(email)
-        ret = generate_login_response(user)
-        return ret, 200
+        return generate_login_response(user)
 
 
 # The jwt_refresh_token_required decorator insures a valid refresh
