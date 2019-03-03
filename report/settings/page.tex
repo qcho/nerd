@@ -1,0 +1,80 @@
+\sloppy
+\fancyhf{}
+\rfoot{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+%Special cells with linebreaks possible
+\newcommand{\specialcell}[2][c]{%
+	\begin{tabular}[#1]{@{}t@{}}#2\end{tabular}}
+%define blockquote-quotation environment
+\renewenvironment{quotation}{
+	\leftskip1cm
+	\rightskip1cm
+	\noindent
+	\setstretch{1}
+	\small
+}
+
+% define Footnote
+\renewcommand\footnoterule{\kern-3pt \hrule width 3in height 0.7pt \hskip3pt \kern 2.6pt}
+\let\oldfootnote\footnote
+\renewcommand\footnote[1]{%
+	\oldfootnote{\hspace{2mm}#1}}
+%%%%%
+
+% define Dedication
+\newenvironment{dedication}
+     {\vspace{6ex}\begin{quotation}\begin{center}\begin{em}}
+     {\par\end{em}\end{center}\end{quotation}}
+
+% microtyping around some characters
+
+%Extra-spacing around dash, and quotation-marks, and parentheses
+\SetExtraKerning[unit=space]
+	{
+		encoding={*}, family={qhv}, series={b}, size={normalsize,large,Large}
+	}
+	{
+		\textendash={400,400}, % for double-dash
+		\textquotedblleft={ ,120}, % for left quotation-mark
+		\textquotedblright={170, }, % for right quotation-mark
+		"28={ ,250}, % left bracket, add space from right
+		"29={300, } % right bracket, add space from left
+	}
+
+%%%%%
+
+
+\makeatletter
+\newcommand{\MSonehalfspacing}{%
+  \setstretch{1.44}%  default
+  \ifcase \@ptsize \relax % 10pt
+    \setstretch {1.448}%
+  \or % 11pt
+    \setstretch {1.399}%
+  \or % 12pt
+    \setstretch {1.433}%
+  \fi
+}
+\newcommand{\MSdoublespacing}{%
+  \setstretch {1.92}%  default
+  \ifcase \@ptsize \relax % 10pt
+    \setstretch {1.936}%
+  \or % 11pt
+    \setstretch {1.866}%
+  \or % 12pt
+    \setstretch {1.902}%
+  \fi
+}
+\newcommand{\MSverbatimspacing}{%
+  \setstretch{1.44}%  default
+  \ifcase \@ptsize \relax % 10pt
+    \setstretch {1}%
+  \or % 11pt
+    \setstretch {1}%
+  \or % 12pt
+    \setstretch {1}%
+  \fi
+}
+\makeatother
+%\date{\today\\\currenttime}
+\date{\today}
