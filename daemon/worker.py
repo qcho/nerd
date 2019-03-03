@@ -14,10 +14,9 @@ import ptvsd
 import request_parsers
 from atp import parse_text, queue_text, train_model
 from entity_type_management import create_entity_type, types_for_model
-from invalid_usage import InvalidUsage
 from logit import get_logger
-from model_management import (InvalidModelError, InvalidUsage, ModelManager,
-                              NerdModel)
+from model_management import InvalidModelError, ModelManager, NerdModel
+from exceptions import InvalidModelError
 from nerd_type_aliases import NEREntity
 from spacy.gold import GoldParse, json_to_tuple
 from spacy.util import compounding, minibatch
@@ -69,7 +68,7 @@ def _load_model(model_name: str) -> NerdModel:
         model = mm.load_model(model_name)
         logger.debug("Loaded model %s (%s)", model_name, model)
         return model
-    except InvalidModelError or InvalidUsage:
+    except InvalidModelError:
         logger.error('Model "%s" not found', model_name)
         exit(1)
 
