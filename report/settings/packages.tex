@@ -1,0 +1,42 @@
+\usepackage[utf8]{inputenc} % Kodierung
+\usepackage[T1]{fontenc} % Explizite Nennung des Fonts
+\usepackage[spanish]{babel} % Sprache
+\usepackage{verbatim}
+\usepackage{float} % here for H placement parameter
+\usepackage{listings} % for code quotes
+\usepackage{graphicx} % immer benötigt für das Einbinden von Graphiken
+\usepackage{blindtext} % Wenn man das Layout prüfen will, kann hier mit \blindtext Text eingfügt werden.
+\usepackage{parskip} % Für den Abstand zwischen 2 Absätzen.
+\setlength{\parskip}{12pt plus80pt minus10pt} % Genaue Einstellung von parskip
+\usepackage{bbm} % blackboard bold
+\usepackage{easy-todo} % Mit \todo{} Todos einfügen
+\usepackage{csquotes} % Für ordentlichen Anführungszeichen
+% \usepackage[iso, spanish]{isodate} % Für eine deutsche Formatierung des Abgabedatums / Eidesstattlicher Erkärung
+\usepackage[style=alphabetic, backend=bibtex, sorting=ynt]{biblatex} % Biber backend für Literaturverzeichnis
+\addbibresource{literature/bibliography.bib} % Einbinden der Literatur.
+\DeclareLanguageMapping{spanish}{spanish-apa} % Anpassen Spracheinstellungen im Literaturverzeichnis.
+\usepackage[activate={true,nocompatibility},
+	final,
+	tracking=true,
+	kerning=true,
+	expansion=true,
+	spacing=true,
+	factor=1050,
+	stretch=25,
+	shrink=10]{microtype} % Für die Feineinstellung der Zeichensetzung.
+\usepackage{booktabs}
+\usepackage{appendix}
+
+\usepackage[caption=false]{subfig}
+
+\usepackage[rflt]{floatflt}
+\usepackage{fancyvrb}
+\usepackage[hidelinks]{hyperref} % Klickbare aber nicht markierte Links im PDF
+\usepackage{setspace}
+\usepackage{fancyhdr} % Für schönere Kopf-/Fußzeilen und Fußnoten.
+\usepackage[right=4 cm, left=2.5 cm, top=2.5 cm, bottom=3 cm]{geometry} % Seitenränder
+\usepackage{pbox}
+\usepackage{tabulary}
+\usepackage{glossaries}
+\makeglossaries
+\loadglsentries{literature/glossary.tex}
