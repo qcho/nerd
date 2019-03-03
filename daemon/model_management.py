@@ -6,13 +6,9 @@ import os
 import sys
 from shutil import rmtree
 from pathlib import Path
-from invalid_usage import InvalidUsage
 
 from nerd_model import NerdModel
-
-class InvalidModelError(InvalidUsage):
-    def __init__(self, message):
-        super().__init__(message, 404)
+from exceptions import ModelNotFound, InvalidBaseModel, ModelExists
 
 class ModelManager:
     """Handles NER models
@@ -53,7 +49,7 @@ class ModelManager:
         model_path = self.__model_path(model_name)
 
         if not model_path.exists():
-            raise InvalidModelError(f"Model named {model_name} doesn't exist")
+            raise ModelNotFound()
 
         model = NerdModel(model_name, model_path)
         model.load()
@@ -70,14 +66,18 @@ class ModelManager:
 
         Returns:
             NerdModel: Created model
+
+        Raises:
+            ModelExists: When a model exists with given name
+            InvalidBaseModel: When specified base model is invialid
         """
         if not base_model in self.available_base_models():
-            raise Exception(f"Invalid base model: {base_model}")
+            raise InvalidBaseModel()
 
         model_path = self.__model_path(model_name)
 
         if model_path.exists():
-            raise Exception(f"Model named {base_model} already exists")
+            raise ModelExists()
 
         model = self.load_base_model(base_model) # TODO: Add a base_model cache
         nerd_model = NerdModel(model_name, model_path)
@@ -93,11 +93,14 @@ class ModelManager:
 
         Returns:
             True if model could be deleted
+
+        Raises:
+            ModelNotFound: When given model doesn't exist
         """
 
         model_path = self.__model_path(model_name)
         if not model_path.exists():
-            raise Exception(f"Model named {model_name} doesn't exist")
+            raise ModelNotFound()
         rmtree(model_path)
         return True
 
