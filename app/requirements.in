@@ -1,0 +1,12 @@
+flask
+
+flask-rest-api
+marshmallow-mongoengine
+marshmallow_enum
+
+flask-mongoengine
+blinker # for mongoengine signals
+
+spacy-nightly==2.1.0a6
+
+flask_jwt_extended
