@@ -1,5 +1,6 @@
 import os
 
+import mongoengine
 from flask import Flask
 
 from core.document.user import Role
@@ -12,6 +13,14 @@ from apis.users import blp as users
 
 
 app = Flask('NERd')
+
+mongoengine.connect(
+    db=os.environ.get('NERD_MONGO_DB_NAME', 'nerd'),
+    host=os.environ.get('NERD_MONGO_DB_HOST', None),
+    port=os.environ.get('NERD_MONGO_DB_PORT', None),
+    username=os.environ.get('NERD_MONGO_DB_USER', None),
+    password=os.environ.get('NERD_MONGO_DB_PASSWORD', None)
+)
 
 app.config['JWT_TOKEN_LOCATION'] = ('headers', 'json')
 app.config['JWT_ERROR_MESSAGE_KEY'] = "message"
