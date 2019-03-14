@@ -16,7 +16,7 @@ class UserSchema(ModelSchema):
         exclude = ['password', 'plain_password']
 
 
-class UserPayloadSchema(UserSchema):
+class UserPayloadSchema(ModelSchema):
     class Meta:
         model = User
         exclude = ['password']
@@ -40,6 +40,8 @@ class UserView(MethodView):
     @response_error(NotFound('User does not exist'))
     @blp.response(UserSchema)
     def get(self, user_email: str):
+        """Gets user entity by email
+        """
         try:
             return User.objects.get(email=user_email)
         except DoesNotExist:
