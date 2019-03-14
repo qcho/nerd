@@ -58,7 +58,7 @@ class RegisterResource(MethodView):
 class TokenResource(MethodView):
 
     class TokenSchema(BaseSchema):
-        grant_type = fields.Constant('password')
+        grant_type = fields.Constant('password', example='password')
         username = fields.Email()
         password = fields.String()
 
@@ -86,7 +86,7 @@ class TokenResource(MethodView):
 class RefreshResource(MethodView):
 
     class RefreshTokenSchema(BaseSchema):
-        grant_type = fields.Constant('refresh_token')
+        grant_type = fields.Constant('refresh_token', example='refresh_token')
 
     @jwt_refresh_token_required
     @response_error(Unauthorized("Invalid user"))
