@@ -1,6 +1,8 @@
 import os
 
 from flask import Flask
+
+from core.document.user import Role
 from core.security import jwt
 from core.cli import setup_cli
 from apis import api
@@ -34,7 +36,11 @@ app.config['API_SPEC_OPTIONS'] = {
                 'flows': {
                     'password': {
                         'tokenUrl': '/api/auth/token',
-                        'refreshUrl': '/api/auth/refresh'
+                        'refreshUrl': '/api/auth/refresh',
+                        'scopes': {
+                            Role.USER.value: 'User can perform queries and training',
+                            Role.ADMIN.value: 'Admin user'
+                        }
                     }
                 }
             }

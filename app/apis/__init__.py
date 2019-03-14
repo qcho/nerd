@@ -31,7 +31,7 @@ def jwt_and_role_required(role: Role = Role.USER):
     def decorator(fn):
         doc = {
             'security': [
-                {'oAuth2Password': []}
+                {'oAuth2Password': [role.value]}
             ],
             'responses': {
                 str(code): {'schema': HttpErrorSchema(), 'description': HTTP_STATUS_CODES[code]}
