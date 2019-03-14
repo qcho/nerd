@@ -11,8 +11,9 @@ from apis.auth import blp as auth
 from apis.corpora import blp as corpora
 from apis.users import blp as users
 
-
 app = Flask('NERd')
+app.config['PREFERRED_URL_SCHEME'] = os.environ.get('NERD_URL_SCHEME', 'http')
+app.config['SERVER_NAME'] = os.environ.get('NERD_SERVER_NAME', '127.0.0.1:5000')
 
 mongoengine.connect(
     db=os.environ.get('NERD_MONGO_DB_NAME', 'nerd'),
@@ -37,6 +38,13 @@ app.config['OPENAPI_SWAGGER_UI_PATH'] = '/doc'
 app.config['OPENAPI_SWAGGER_UI_VERSION'] = '3.21.0'
 app.config['API_VERSION'] = '1.0.0'
 app.config['API_SPEC_OPTIONS'] = {
+    'servers': [{
+        'url': '{}://{}'.format(
+            app.config['PREFERRED_URL_SCHEME'],
+            app.config['SERVER_NAME']
+        ),
+        'description': 'Default api endpoint'
+    }],
     'components': {
         'securitySchemes': {
             'oAuth2Password': {
