@@ -28,7 +28,7 @@ class UserListView(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.response(UserSchema(many=True))
     @blp.doc(operationId="listUsers")
-    def get(self):
+    def get(self):  # TODO: Paginate
         """Returns a list of existing users
         """
         return User.objects
