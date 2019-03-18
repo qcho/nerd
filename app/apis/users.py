@@ -27,6 +27,7 @@ class UserListView(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.response(UserSchema(many=True))
+    @blp.doc(operationId="listUsers")
     def get(self):
         """Returns a list of existing users
         """
@@ -39,6 +40,7 @@ class UserView(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @response_error(NotFound('User does not exist'))
     @blp.response(UserSchema)
+    @blp.doc(operationId="userDetails")
     def get(self, user_email: str):
         """Gets user entity by email
         """
@@ -51,6 +53,7 @@ class UserView(MethodView):
     @blp.arguments(UserPayloadSchema)
     @response_error(NotFound('User does not exist'))
     @blp.response(UserSchema)
+    @blp.doc(operationId="updateUser")
     def patch(self, user_payload: User, user_email: str):
         """Patches the user entity
         """

@@ -43,6 +43,7 @@ class RegisterResource(MethodView):
     @blp.arguments(RegisterSchema)
     @response_error(Conflict('Email exists'))
     @blp.response(UserCredentialsSchema, code=200, description='Registration successful')
+    @blp.doc(operationId="registerUser")
     def post(self, register_payload: User):
         """Register a new user
 
@@ -73,6 +74,7 @@ class TokenResource(MethodView):
     @blp.arguments(TokenSchema, location='json')
     @response_error(Unauthorized('Invalid credentials'))
     @blp.response(UserCredentialsSchema)
+    @blp.doc(operationId="createAccessToken")
     def post(self, login_payload):
         """Generate new access and refresh tokens with password grant_type"""
         try:
@@ -95,6 +97,7 @@ class RefreshResource(MethodView):
     @response_error(Unauthorized("Invalid user"))
     @blp.arguments(RefreshTokenSchema, location='query')
     @blp.response(UserCredentialsSchema, code=200, description='Refresh OK')
+    @blp.doc(operationId="refreshAccessToken")
     def post(self):
         """Refresh access token
         """

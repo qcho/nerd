@@ -18,6 +18,7 @@ class SystemCorpusSchema(ModelSchema):
 class SystemCorporaResource(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.response(SystemCorpusSchema(many=True))
+    @blp.doc(operationId="listSystemCorpora")
     def get(self):
         """List available SpaCy base corpus
         """
@@ -45,6 +46,7 @@ class CorporaResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.response(NERdCorpusSchema(many=True))
+    @blp.doc(operationId="listCorpora")
     def get(self):
         """List available corpus
         """
