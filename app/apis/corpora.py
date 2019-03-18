@@ -48,7 +48,7 @@ class CorporaResource(MethodView):
     @blp.response(NERdCorpusSchema(many=True))
     @blp.doc(operationId="listCorpora")
     def get(self):
-        """List available corpus
+        """List available corpora
         """
         return Corpus.objects
 
