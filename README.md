@@ -8,3 +8,6 @@ See related [README](app/README.md)
 
 See related [README](ui/README.md)
 
+## Auto-generated API lib
+
+See related [README](apilib/README.md)
