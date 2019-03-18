@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+flask-rest-api = "*"
+marshmallow-mongoengine = "*"
+marshmallow-enum = "*"
+flask-mongoengine = "*"
+blinker = "*"
+flask-jwt-extended = "*"
+spacy-nightly = "==2.1.0a6"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"
