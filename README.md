@@ -1,3 +1,6 @@
-# Named Entity Recognition daemon
+# Named entity recognition as a service
 
-TODO
+## Service
+
+See related [README](app/README.md)
+
