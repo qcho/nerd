@@ -38,13 +38,22 @@ app.config['OPENAPI_SWAGGER_UI_PATH'] = '/doc'
 app.config['OPENAPI_SWAGGER_UI_VERSION'] = '3.21.0'
 app.config['API_VERSION'] = '1.0.0'
 app.config['API_SPEC_OPTIONS'] = {
-    'servers': [{
-        'url': '{}://{}'.format(
-            app.config['PREFERRED_URL_SCHEME'],
-            app.config['SERVER_NAME']
-        ),
-        'description': 'Default api endpoint'
-    }],
+    'servers': [
+        {
+            'url': '{}://{}'.format(
+                app.config['PREFERRED_URL_SCHEME'],
+                'localhost:3000'
+            ),
+            'description': 'UI endpoint'
+        },
+        {
+            'url': '{}://{}'.format(
+                app.config['PREFERRED_URL_SCHEME'],
+                app.config['SERVER_NAME']
+            ),
+            'description': 'Default api endpoint'
+        }
+    ],
     'components': {
         'securitySchemes': {
             'oAuth2Password': {
