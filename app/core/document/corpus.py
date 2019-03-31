@@ -20,7 +20,7 @@ class TrainingEntry(me.EmbeddedDocument):
 
 
 class Corpus(me.Document):
-    name = me.StringField()
+    name = me.StringField(required=True)
     types = me.MapField(me.EmbeddedDocumentField(NERType))
 
     meta = {'allow_inheritance': True}
