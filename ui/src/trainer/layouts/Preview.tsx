@@ -19,7 +19,7 @@ import classNames from "classnames";
 import useAuthentication from "../hooks/useAuthentication";
 import EntityTypeApi from "../api/EntityTypeApi";
 import { EntityType } from "../types/EntityType";
-import NerApi from "../api/NerApi";
+// import NerApi from "../api/NerApi";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
 
@@ -46,13 +46,15 @@ const PreviewLayout = ({ classes }: Props) => {
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [t] = useTranslation(nsps.ner);
   const { loggedIn } = useAuthentication();
-  const nerApi = new NerApi(nerModel);
+  // TODO(jpo): Use new API.
+  // const nerApi = new NerApi(nerModel);
 
   async function onParseClick() {
     setLoading(true);
     try {
-      const doc = await nerApi.parseText(text);
-      setDocument(doc as NerDocument);
+      // TODO(jpo): Use new API.
+      // const doc = await nerApi.parseText(text);
+      // setDocument(doc as NerDocument);
     } catch (e) {
       // TODO: correctly handle this
       console.log("Fuuu", [e]);
@@ -64,6 +66,7 @@ const PreviewLayout = ({ classes }: Props) => {
   useEffect(() => {
     const fetchTypes = async () => {
       try {
+        // TODO(jpo): Use new API.
         const entityTypeApi = new EntityTypeApi();
         const availableTypes = await entityTypeApi.availableTypes(nerModel);
         setEntityTypes(availableTypes);
@@ -85,11 +88,12 @@ const PreviewLayout = ({ classes }: Props) => {
       return; // TODO: Handle this
     }
 
-    nerApi.save(document!).then(() => {
-      setSnackbarMessage(t("Saved"));
-    }).catch((error) => {
-      // TODO: Handle this.
-    });
+    // TODO(jpo): Use new API.
+    // nerApi.save(document!).then(() => {
+    //   setSnackbarMessage(t("Saved"));
+    // }).catch((error) => {
+    //   // TODO: Handle this.
+    // });
   }
 
 

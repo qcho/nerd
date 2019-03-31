@@ -10,14 +10,14 @@ export default class NerApi {
 
   async parseText(text: string) {
     try {
-      const response = await Http.anonymousRequest().get(
-        `/models/${this.modelName}/ner`,
-        {
-          params: { text }
-        }
-      );
+      // const response = await Http.anonymousRequest().get(
+      //   `/models/${this.modelName}/ner`,
+      //   {
+      //     params: { text }
+      //   }
+      // );
 
-      return response.data;
+      return {};
     } catch (error) {
       // TODO: We could differenciate errors from the backend
       throw Error(Http.handleRequestError(error, () => "Couldn't parse text"));
@@ -26,10 +26,10 @@ export default class NerApi {
 
   async save(document: NerDocument) {
     try {
-      await Http.authenticatedRequest().put(
-        `/models/${this.modelName}/ner`,
-        document
-      );
+      // await Http.authenticatedRequest().put(
+      //   `/models/${this.modelName}/ner`,
+      //   document
+      // );
     } catch (error) {
       // TODO: We could differenciate errors from the backend
       throw Error(

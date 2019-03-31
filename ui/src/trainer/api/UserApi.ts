@@ -4,8 +4,8 @@ import { User } from "../types/User";
 export default class UserApi {
   static async list() {
     try {
-      const { data } = await Http.authenticatedRequest().get("/users");
-      return data;
+      // const { data } = await Http.authenticatedRequest().get("/users");
+      return [];
     } catch (error) {
       throw new Error(
         Http.handleRequestError(error, (status, data) => {
@@ -17,13 +17,13 @@ export default class UserApi {
 
   static async toggleAdmin(user: User, isAdmin: boolean) {
     try {
-      const { status } = await Http.authenticatedRequest().put(
-        "/users/toggle_admin",
-        {
-          email: user.email,
-          value: isAdmin
-        }
-      );
+      // const { status } = await Http.authenticatedRequest().put(
+      //   "/users/toggle_admin",
+      //   {
+      //     email: user.email,
+      //     value: isAdmin
+      //   }
+      // );
       return;
     } catch (error) {
       throw new Error(
