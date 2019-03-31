@@ -74,14 +74,8 @@ const Register = ({ classes }: { classes: any }) => {
       setErrorMessage(t("Passwords should match"));
       return;
     }
-    register(name, email, password, rememberMe).then(result => {
-      if (!result) {
-        return;
-      }
-      const { success, message } = result;
-      if (!success) {
-        setErrorMessage(t(message));
-      }
+    register(name, email, password, rememberMe).catch((e: Error) => {
+      setErrorMessage(e.message);
     });
   };
   if (loggedIn) {

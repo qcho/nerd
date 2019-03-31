@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Auth } from "../helpers/auth";
-import { Token, AuthApi } from "../apigen/api";
+import { AuthApi } from "../apigen/api";
 import useAuthStorage from "./useAuthStorage";
 import Http from "../helpers/http";
+import nsps from "../helpers/i18n-namespaces";
+import { useTranslation } from "react-i18next";
 
 function useAuthentication() {
   const { credentials, updateCredentials, clearCredentials } = useAuthStorage();
   let [loggedIn, setLoggedIn] = useState<boolean>(false);
   let [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [t] = useTranslation(nsps.authentication);
   const api = new AuthApi();
 
   async function login(
@@ -25,7 +27,6 @@ function useAuthentication() {
       updateCredentials(loginResult.data, !rememberMe);
       return { success: true, message: "" };
     } catch (e) {
-      var errors = {};
       const errorMessage = Http.handleRequestError(e, (status, data) => {
         if (status == 422) {
           const { errors } = data;
@@ -37,9 +38,9 @@ function useAuthentication() {
           }
         }
         if (status == 401) {
-          return "Invalid credentials";
+          return t("Invalid credentials");
         }
-        return "Can't login";
+        return t("Can't login");
       });
       return { success: false, message: errorMessage };
     }
@@ -48,10 +49,11 @@ function useAuthentication() {
   useEffect(() => {
     const hasCredentials = credentials != null;
     setLoggedIn(hasCredentials);
-    // TODO
     if (hasCredentials) {
       const roles = credentials!.roles || [];
       setIsAdmin(roles.includes("admin"));
+    } else {
+      setIsAdmin(false);
     }
   }, [credentials]);
 
@@ -61,17 +63,23 @@ function useAuthentication() {
     password: string,
     rememberMe: boolean
   ) {
-    let result = {success: false, message: ""};
     try {
-      const registerResult = await api.registerUser({name, email: username, plain_password: password})
-      updateCredentials(registerResult.data, !rememberMe);
-      result.success = true;
-    } catch (e) {
-      result.message = Http.handleRequestError(e, (status, data) => {
-        // TODO: Find out what data has. Unknown after qcho's refactor
-        return "TODO";
+      const registerResult = await api.registerUser({
+        name,
+        email: username,
+        plain_password: password
       });
-      return result;
+      updateCredentials(registerResult.data, !rememberMe);
+      return;
+    } catch (e) {
+      const errorMessage = Http.handleRequestError(e, (status, data) => {
+        if (status === 422) {
+          const { errors } = data;
+          if (errors.email) return t(errors.email);
+        }
+        return t("Couldn't create user");
+      });
+      throw new Error(errorMessage);
     }
   }
 
