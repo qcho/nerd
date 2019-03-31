@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { MaybeCredentials, Credentials } from "../types/Credentials";
 import CredentialsStorage from "../helpers/CredentialsStorage";
+import { UserCredentials } from "../apigen";
+import { MaybeUserCredentials } from "../types/optionals";
 
 export default function useAuthStorage() {
-  const [credentials, setCredentials] = useState<MaybeCredentials>(
+  const [credentials, setCredentials] = useState<MaybeUserCredentials>(
     CredentialsStorage.getStored()
   );
 
@@ -17,7 +18,7 @@ export default function useAuthStorage() {
   }, []);
 
   function updateCredentials(
-    authCredentials: Credentials,
+    authCredentials: UserCredentials,
     sessionOnly: boolean = true
   ) {
     CredentialsStorage.save(authCredentials, sessionOnly);
