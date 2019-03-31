@@ -3,10 +3,9 @@ import Http from "../helpers/http";
 
 class EntityTypeApi {
   async availableTypes(modelName: string): Promise<EntityType[]> {
-    const request = Http.anonymousRequest();
     try {
-      const response = await request.get(`/models/${modelName}/entity-types`);
-      return response.data;
+      // const response = await Http.anonymousRequest().get(`/models/${modelName}/entity-types`);
+      return [];
     } catch (e) {
       throw Error(
         Http.handleRequestError(

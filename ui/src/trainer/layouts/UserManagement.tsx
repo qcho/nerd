@@ -37,6 +37,7 @@ const UserManagement = ({ classes }: { classes: any }) => {
   function fetchUsers() {
     const doFetch = async () => {
       setLoading(true);
+      // TODO(jpo): Use new API.
       setUsers(await UserApi.list());
     };
     doFetch().finally(() => {
@@ -50,6 +51,7 @@ const UserManagement = ({ classes }: { classes: any }) => {
 
   function onToggleAdmin(user: User, value: boolean) {
     setLoading(true);
+    // TODO(jpo): Use new API.
     UserApi.toggleAdmin(user, value)
       .then(() => {
         fetchUsers();
