@@ -6,9 +6,9 @@ import LanguageDetector from "i18next-browser-languagedetector";
 
 i18n
   .use(Backend)
-  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    lng: "en",
     fallbackLng: "en",
     // debug: true
   });
