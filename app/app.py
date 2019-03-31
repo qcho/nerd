@@ -25,7 +25,7 @@ mongoengine.connect(
 
 app.config['JWT_TOKEN_LOCATION'] = ('headers', 'json')
 app.config['JWT_ERROR_MESSAGE_KEY'] = "message"
-app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'zekrit dont tell plz')
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'zekrit dont tell plz')  # TODO: Change secret key
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 15 * 60
 app.config['JWT_IDENTITY_CLAIM'] = 'sub'
 jwt.init_app(app)
