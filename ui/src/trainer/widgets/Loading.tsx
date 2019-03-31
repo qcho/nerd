@@ -1,11 +1,9 @@
 import React from "react";
 import {
-  Paper,
   Theme,
   createStyles,
   withStyles,
-  CircularProgress,
-  Typography
+  CircularProgress
 } from "@material-ui/core";
 
 const styles = (theme: Theme) =>
@@ -16,9 +14,6 @@ const styles = (theme: Theme) =>
       alignItems: "center",
       justifyContent: "center",
       height: "100vh"
-    },
-    text: {
-      paddingTop: theme.spacing.unit
     }
   });
 
@@ -30,7 +25,6 @@ const Loading = ({ classes }: Props) => {
   return (
     <div className={classes.root}>
       <CircularProgress />
-      <Typography className={classes.text}>Loading</Typography>
     </div>
   );
 };
