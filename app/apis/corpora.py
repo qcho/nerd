@@ -1,10 +1,11 @@
+from apis import BaseSchema, jwt_and_role_required, response_error
+from core.document.corpus import Corpus, NERdCorpus, SystemCorpus
+from core.document.user import Role
 from flask.views import MethodView
 from flask_rest_api import Blueprint
+from marshmallow import fields
 from marshmallow_mongoengine import ModelSchema
-
-from apis import jwt_and_role_required
-from core.document.corpus import SystemCorpus, Corpus, NERdCorpus
-from core.document.user import Role
+from werkzeug.exceptions import BadRequest, Conflict, NotFound, Unauthorized
 
 blp = Blueprint('corpora', 'corpora', description='NER Corpora operations')
 
@@ -12,6 +13,16 @@ blp = Blueprint('corpora', 'corpora', description='NER Corpora operations')
 class SystemCorpusSchema(ModelSchema):
     class Meta:
         model = SystemCorpus
+
+
+
+class NERdCorpusSchema(ModelSchema):
+    class Meta:
+        model = NERdCorpus
+
+class MetadataFieldsSchema(BaseSchema):
+    queued = fields.Integer(required=True)
+    trained = fields.Integer(required=True)
 
 
 @blp.route('/system')
@@ -28,10 +39,6 @@ class SystemCorporaResource(MethodView):
 @blp.route('')
 class CorporaResource(MethodView):
 
-    class NERdCorpusSchema(ModelSchema):
-        class Meta:
-            model = NERdCorpus
-
     # corpus_creation_fields = api.model('CorpusCreationData', {
     #     'base_corpus_name': fields.String(
     #         enum=list(map(lambda sc: sc.name, SystemCorpus.objects)),
@@ -44,6 +51,11 @@ class CorporaResource(MethodView):
     #     'name': fields.String
     # })
 
+    class CreateNERdCorpusSchema(BaseSchema):
+        base_corpus_name = fields.String(required=True)
+        corpus_name = fields.String(required=True)
+
+
     @jwt_and_role_required(Role.ADMIN)
     @blp.response(NERdCorpusSchema(many=True))
     @blp.doc(operationId="listCorpora")
@@ -52,80 +64,63 @@ class CorporaResource(MethodView):
         """
         return Corpus.objects
 
-    # @api.doc('upsert_corpus', body=corpus_creation_fields, security='api-key')
-    # @api.expect(corpus_creation_fields)
-    # @api.response(200, "Success")
-    # @api.response(409, "Corpus exists", generic_error)
-    # @api.response(401, "Access denied", generic_error)
-    # @api.response(400, "Missing parameters or Invalid system corpus", generic_error)
-    # @jwt_required
-    # def post(self):
-    #     """
-    #     Creates a corpus from a given SpaCy corpus
-    #
-    #     :raises Conflict: When a corpus exists already
-    #     :raises Unauthorized: When current user has insufficient permissions
-    #     """
-    #     assert_admin()
-    #     try:
-    #         # TODO: We may be able to make the corpus creation threaded (inside the create_model method)
-    #         Corpus(
-    #             name=api.payload['corpus_name'],
-    #             base=SystemCorpus.objects(name=api.payload['base_corpus_name'])
-    #         ).save()
-    #     except:
-    #         raise Conflict("Corpus exists with that name")
-    #     return None, 200
+    #@jwt_and_role_required(Role.ADMIN)
+    @blp.doc(operationId='upsert_corpus')
+    @blp.arguments(CreateNERdCorpusSchema)
+    @response_error(Conflict("Corpus exists with that name"))
+    @blp.response(NERdCorpusSchema, code=200, description='Model created')
+    def post(self, payload):
+        """
+        Creates a corpus from a given SpaCy corpus
+        """
+        try:
+            # TODO: We may be able to make the corpus creation threaded (inside the create_model method)
+            Corpus(
+                name=payload['corpus_name'],
+                base=SystemCorpus.objects(name=payload['base_corpus_name'])
+            ).save()
+        except:
+            raise Conflict("Corpus exists with that name")
+        return None, 200
 
-#
-# @api.param('corpus_name', 'The corpus name (unique identifier)')
-# @api.route('/<string:corpus_name>')
-# @api.response(404, "Corpus not found", generic_error)
-# @api.doc(params={'corpus_name': 'Corpus to use'})
-# class CorpusResource(Resource):
-#
-#     metadata_fields = api.model('MetadataFields', {
-#         'queued': fields.Integer,
-#         'trained': fields.Integer
-#     })
-#
-#     @jwt_required
-#     @api.doc('get_corpus', security='api-key')
-#     @api.marshal_with(metadata_fields, code=200, description="Returns corpus metadata")
-#     @api.response(401, "Access denied", generic_error)
-#     def get(self, corpus_name):
-#         """
-#         Returns metadata for a given corpus
-#
-#         :raises Unauthorized: When current user has insufficient permissions
-#         """
-#         assert_admin()
-#         corpus = Corpus.objects.get(name=corpus_name)
-#         queued = len(list_queued(corpus))
-#         trained = len(list_trained(corpus))
-#         return {
-#             "queued": queued,
-#             "trained": trained
-#         }
-#
-#     @jwt_required
-#     @api.doc('remove_corpus', security='api-key')
-#     @api.response(401, "Access denied", generic_error)
-#     def delete(self, corpus_name=None):
-#         """
-#         Deletes a corpus
-#
-#         :raises Unauthorized: When current user has insufficient permissions
-#         :raises BadRequest: When couldn't delete the corpus
-#         """
-#         assert_admin()
-#         try:
-#             Corpus.objects(name=corpus_name).delete()
-#             return '', 200
-#         except:
-#             raise BadRequest("There was a problem deleting the corpus")
-#
-#
+
+@blp.route('/<string:corpus_name>')
+class CorpusResource(MethodView):
+
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.doc(operationId='get_corpus')
+    @response_error(NotFound("Corpus does not exist"))
+    @blp.response(MetadataFieldsSchema, code=200, description='Model')
+    def get(self, corpus_name):
+        """
+        Returns metadata for a given corpus
+        """
+        corpus = Corpus.objects.get(name=corpus_name)
+        queued = len(list_queued(corpus))
+        trained = len(list_trained(corpus))
+        return {
+            "queued": queued,
+            "trained": trained
+        }
+
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.doc(operationId='remove_corpus')
+    @response_error(BadRequest("There was a problem deleting the corpus"))
+    def delete(self, corpus_name=None):
+        """
+        Deletes a corpus
+
+        :raises Unauthorized: When current user has insufficient permissions
+        :raises BadRequest: When couldn't delete the corpus
+        """
+        assert_admin()
+        try:
+            Corpus.objects(name=corpus_name).delete()
+            return '', 200
+        except:
+            raise BadRequest("There was a problem deleting the corpus")
+
+
 # @api.route('/<string:corpus_name>/training')
 # @api.param('corpus_name', 'The corpus name (unique identifier)')
 # @api.doc(params={'corpus_name': 'Corpus to use'})
