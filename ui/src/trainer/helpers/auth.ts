@@ -1,4 +1,14 @@
 import Http from "./http";
+import CredentialsStorage from "./CredentialsStorage";
+import { Configuration } from "../apigen";
+
+export function loggedConfig(): Configuration {
+  const credentials = CredentialsStorage.getStored();
+  if (credentials == null) {
+    return {};
+  }
+  return { accessToken: credentials.access_token };
+}
 
 export class Auth {
   static async doLogin(
