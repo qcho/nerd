@@ -10,5 +10,6 @@
     "Passwords should match": "Passwords should match",
     "Couldn't reach the server": "Couldn't reach the server",
     "There was an error setting up the request": "There was an error setting up the request",
-    "Invalid credentials": "Invalid credentials"
+    "Invalid credentials": "Invalid credentials",
+    "Not a valid email address.": "Not a valid email address"
 }
