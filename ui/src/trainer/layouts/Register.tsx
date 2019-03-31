@@ -74,15 +74,15 @@ const Register = ({ classes }: { classes: any }) => {
       setErrorMessage(t("Passwords should match"));
       return;
     }
-    register(name, email, password, rememberMe).then((result) => {
+    register(name, email, password, rememberMe).then(result => {
       if (!result) {
         return;
       }
-      const {success, message} = result;
+      const { success, message } = result;
       if (!success) {
         setErrorMessage(t(message));
       }
-    })
+    });
   };
   if (loggedIn) {
     return <Redirect to="/" />;
