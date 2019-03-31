@@ -15,6 +15,7 @@ blp = Blueprint('auth', 'auth', description='Authentication')
 
 class RegisterSchema(ModelSchema):
     class Meta:
+        strict = True
         model = User
         exclude = ['roles', 'password']
 
