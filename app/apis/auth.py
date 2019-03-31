@@ -94,13 +94,16 @@ class RefreshResource(MethodView):
 
     class RefreshTokenSchema(BaseSchema):
         grant_type = fields.Constant('refresh_token', example='refresh_token')
+        refresh_token = fields.String(required=True)
 
     @jwt_refresh_token_required
     @response_error(Unauthorized("Invalid user"))
-    @blp.arguments(RefreshTokenSchema, location='query')
+    # TODO: Can't make this work when in location='query'.
+    #       Should we accept the JWT refresh token in the query string?
+    @blp.arguments(RefreshTokenSchema, location='json')
     @blp.response(UserCredentialsSchema, code=200, description='Refresh OK')
     @blp.doc(operationId="refreshAccessToken")
-    def post(self):
+    def post(self, refresh_token):
         """Refresh access token
         """
         user = User.objects.get(email=get_jwt_identity())
