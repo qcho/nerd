@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./trainer/App";
 import * as serviceWorker from "./serviceWorker";
 import './trainer/i18n';
+import './trainer/helpers/configureGlobalAxios'
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
