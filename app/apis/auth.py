@@ -1,14 +1,14 @@
-from flask.views import MethodView
-from flask_jwt_extended import jwt_refresh_token_required, get_jwt_identity, create_access_token, jwt_required, \
-    create_refresh_token
-from flask_rest_api import Blueprint
-from marshmallow_mongoengine import ModelSchema
-from mongoengine import DoesNotExist
-from werkzeug.exceptions import Unauthorized, Conflict
-
 from apis import BaseSchema, response_error
 from core.document.user import User
+from flask.views import MethodView
+from flask_jwt_extended import (create_access_token, create_refresh_token,
+                                get_jwt_identity, jwt_refresh_token_required,
+                                jwt_required)
+from flask_rest_api import Blueprint
 from marshmallow import fields, post_load
+from marshmallow_mongoengine import ModelSchema
+from mongoengine import DoesNotExist
+from werkzeug.exceptions import Conflict, Unauthorized
 
 blp = Blueprint('auth', 'auth', description='Authentication')
 
