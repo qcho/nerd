@@ -28,12 +28,14 @@ class RegisterSchema(ModelSchema):
 class UserCredentialsSchema(BaseSchema):
     access_token = fields.String(required=True, description='A temporary JWT')
     refresh_token = fields.String(required=True, description='A refresh token')
+    roles = fields.List(fields.String())
 
     @staticmethod
     def create(user: User):
         return {
             'access_token': create_access_token(identity=user),
             'refresh_token': create_refresh_token(identity=user),
+            'roles': user.roles
         }
 
 
