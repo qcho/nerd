@@ -18,26 +18,28 @@ const theme = createMuiTheme({
   }
 });
 
-const App = () => {
+const Navigation = () => {
   const { isAdmin } = useAuthentication();
+  return (
+    <Switch>
+      <Route exact path="/" component={Home} />
+      <Route exact path="/preview" component={Preview} />
+      <Route exact path="/login" component={Login} />
+      <Route exact path="/register" component={Register} />
+      {isAdmin && <Route exact path="/models" component={ModelManagement} />}
+      {isAdmin && <Route exact path="/users" component={UserManagement} />}
+      <Route component={FourOhFour} />
+    </Switch>
+  );
+};
+
+const App = () => {
   return (
     <BrowserRouter>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
         <Suspense fallback={<Loading />}>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/preview" component={Preview} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-            {isAdmin && (
-              <Route exact path="/models" component={ModelManagement} />
-            )}
-            {isAdmin && (
-              <Route exact path="/users" component={UserManagement} />
-            )}
-            <Route component={FourOhFour} />
-          </Switch>
+          <Navigation />
         </Suspense>
       </MuiThemeProvider>
     </BrowserRouter>
