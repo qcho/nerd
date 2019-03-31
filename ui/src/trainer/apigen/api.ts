@@ -94,13 +94,7 @@ export interface NERdCorpus {
      * @type {string}
      * @memberof NERdCorpus
      */
-    _cls?: string;
-    /**
-     *
-     * @type {Array<Nested>}
-     * @memberof NERdCorpus
-     */
-    dataset?: Array<Nested>;
+    types?: string;
     /**
      *
      * @type {string}
@@ -112,7 +106,7 @@ export interface NERdCorpus {
      * @type {string}
      * @memberof NERdCorpus
      */
-    types?: string;
+    _cls?: string;
     /**
      *
      * @type {string}
@@ -125,6 +119,12 @@ export interface NERdCorpus {
      * @memberof NERdCorpus
      */
     id?: string;
+    /**
+     *
+     * @type {Array<Nested>}
+     * @memberof NERdCorpus
+     */
+    dataset?: Array<Nested>;
 }
 
 /**
@@ -150,26 +150,6 @@ export interface Nested {
 /**
  *
  * @export
- * @interface RefreshToken
- */
-export interface RefreshToken {
-    /**
-     *
-     * @type {string}
-     * @memberof RefreshToken
-     */
-    grant_type?: string;
-    /**
-     *
-     * @type {string}
-     * @memberof RefreshToken
-     */
-    refresh_token?: string;
-}
-
-/**
- *
- * @export
  * @interface Register
  */
 export interface Register {
@@ -178,7 +158,7 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    email: string;
+    plain_password?: string;
     /**
      *
      * @type {string}
@@ -190,7 +170,7 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    plain_password?: string;
+    email: string;
 }
 
 /**
@@ -204,13 +184,13 @@ export interface SystemCorpus {
      * @type {string}
      * @memberof SystemCorpus
      */
-    spacy_model?: string;
+    types?: string;
     /**
      *
      * @type {string}
      * @memberof SystemCorpus
      */
-    _cls?: string;
+    spacy_model?: string;
     /**
      *
      * @type {string}
@@ -222,7 +202,7 @@ export interface SystemCorpus {
      * @type {string}
      * @memberof SystemCorpus
      */
-    types?: string;
+    _cls?: string;
     /**
      *
      * @type {string}
@@ -265,10 +245,10 @@ export interface Token {
 export interface User {
     /**
      *
-     * @type {string}
+     * @type {Array<string>}
      * @memberof User
      */
-    email: string;
+    roles?: Array<string>;
     /**
      *
      * @type {string}
@@ -277,10 +257,10 @@ export interface User {
     name?: string;
     /**
      *
-     * @type {Array<string>}
+     * @type {string}
      * @memberof User
      */
-    roles?: Array<string>;
+    email: string;
 }
 
 /**
@@ -317,18 +297,6 @@ export interface UserCredentials {
 export interface UserPayload {
     /**
      *
-     * @type {string}
-     * @memberof UserPayload
-     */
-    email: string;
-    /**
-     *
-     * @type {string}
-     * @memberof UserPayload
-     */
-    name?: string;
-    /**
-     *
      * @type {Array<string>}
      * @memberof UserPayload
      */
@@ -339,6 +307,18 @@ export interface UserPayload {
      * @memberof UserPayload
      */
     plain_password?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof UserPayload
+     */
+    name?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof UserPayload
+     */
+    email: string;
 }
 
 
@@ -387,15 +367,11 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          *
          * @summary Refresh access token
-         * @param {RefreshToken} refresh_token
+         * @param {string} [grant_type]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        refreshAccessToken(refresh_token: RefreshToken, options: any = {}): RequestArgs {
-            // verify required parameter 'refresh_token' is not null or undefined
-            if (refresh_token === null || refresh_token === undefined) {
-                throw new RequiredError('refresh_token','Required parameter refresh_token was null or undefined when calling refreshAccessToken.');
-            }
+        refreshAccessToken(grant_type?: string, options: any = {}): RequestArgs {
             const localVarPath = `/api/auth/refresh`;
             const localVarUrlObj = url.parse(localVarPath, true);
             let baseOptions;
@@ -406,14 +382,14 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            if (grant_type !== undefined) {
+                localVarQueryParameter['grant_type'] = grant_type;
+            }
 
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"RefreshToken" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(refresh_token || {}) : (refresh_token || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -482,12 +458,12 @@ export const AuthApiFp = function(configuration?: Configuration) {
         /**
          *
          * @summary Refresh access token
-         * @param {RefreshToken} refresh_token
+         * @param {string} [grant_type]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        refreshAccessToken(refresh_token: RefreshToken, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserCredentials> {
-            const localVarAxiosArgs = AuthApiAxiosParamCreator(configuration).refreshAccessToken(refresh_token, options);
+        refreshAccessToken(grant_type?: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserCredentials> {
+            const localVarAxiosArgs = AuthApiAxiosParamCreator(configuration).refreshAccessToken(grant_type, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = Object.assign(localVarAxiosArgs.options, {url: basePath + localVarAxiosArgs.url})
                 return axios.request(axiosRequestArgs);
@@ -529,12 +505,12 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         /**
          *
          * @summary Refresh access token
-         * @param {RefreshToken} refresh_token
+         * @param {string} [grant_type]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        refreshAccessToken(refresh_token: RefreshToken, options?: any) {
-            return AuthApiFp(configuration).refreshAccessToken(refresh_token, options)(axios, basePath);
+        refreshAccessToken(grant_type?: string, options?: any) {
+            return AuthApiFp(configuration).refreshAccessToken(grant_type, options)(axios, basePath);
         },
         /**
          * Returns user credentials to skip login on register
@@ -571,13 +547,13 @@ export class AuthApi extends BaseAPI {
     /**
      *
      * @summary Refresh access token
-     * @param {RefreshToken} refresh_token
+     * @param {string} [grant_type]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public refreshAccessToken(refresh_token: RefreshToken, options?: any) {
-        return AuthApiFp(this.configuration).refreshAccessToken(refresh_token, options)(this.axios, this.basePath);
+    public refreshAccessToken(grant_type?: string, options?: any) {
+        return AuthApiFp(this.configuration).refreshAccessToken(grant_type, options)(this.axios, this.basePath);
     }
 
     /**
