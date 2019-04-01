@@ -70,7 +70,7 @@ const CreateModelDialog = ({
 
   async function createModel() {
     setErrorMessage("");
-    if ((baseModel && baseModel!.name.length == 0) || modelName.length == 0) {
+    if ((baseModel != undefined && baseModel!.name!.length == 0) || modelName.length == 0) {
       setErrorMessage(t("Please fill the required fields"));
       return;
     }
