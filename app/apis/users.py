@@ -50,6 +50,19 @@ class UserView(MethodView):
             raise NotFound('User {} does not exist'.format(user_email))
 
     @jwt_and_role_required(Role.ADMIN)
+    @response_error(NotFound('User does not exist'))
+    @blp.response(UserSchema)
+    @blp.doc(operationId="deleteUser")
+    def delete(self, user_email: str):
+        """Delete user by email"""
+        try:
+            user = User.objects.get(email=user_email)
+            user.delete()
+            return user
+        except DoesNotExist:
+            raise NotFound('User {} does not exist'.format(user_email))
+
+    @jwt_and_role_required(Role.ADMIN)
     @blp.arguments(UserPayloadSchema)
     @response_error(NotFound('User does not exist'))
     @blp.response(UserSchema)
