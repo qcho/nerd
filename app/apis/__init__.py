@@ -1,13 +1,12 @@
 from functools import wraps
 
 from apispec.utils import deepupdate
-from flask_jwt_extended import verify_jwt_in_request, get_jwt_claims
+from core.document.user import Role
+from flask_jwt_extended import get_jwt_claims, jwt_optional, verify_jwt_in_request
 from flask_rest_api import Api, abort
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, post_dump, post_load, pre_load
 from werkzeug.exceptions import HTTPException, Unauthorized
 from werkzeug.http import HTTP_STATUS_CODES
-
-from core.document.user import Role
 
 api = Api()
 
@@ -28,33 +27,37 @@ def jwt_and_role_required(role: Role = Role.USER):
     - Document both auth and possible auth errors
     Won't check the freshness of the access token.
     """
+
     def decorator(fn):
         doc = {
-            'security': [
-                {'oAuth2Password': [role.value]}
-            ],
-            'responses': {
-                str(code): {'schema': HttpErrorSchema(), 'description': HTTP_STATUS_CODES[code]}
+            "security": [{"oAuth2Password": [role.value]}],
+            "responses": {
+                str(code): {
+                    "schema": HttpErrorSchema(),
+                    "description": HTTP_STATUS_CODES[code],
+                }
                 for code in [401, 422]
-            }
+            },
         }
 
-        fn._apidoc = deepupdate(getattr(fn, '_apidoc', {}), doc)
+        fn._apidoc = deepupdate(getattr(fn, "_apidoc", {}), doc)
 
         @wraps(fn)
         def wrapper(*args, **kwargs):
 
             verify_jwt_in_request()
-            if role.value not in get_jwt_claims()['roles']:
-                raise Unauthorized('{} is required'.format(role))
+            if role.value not in get_jwt_claims()["roles"]:
+                raise Unauthorized("{} is required".format(role))
 
             return fn(*args, **kwargs)
+
         return wrapper
+
     return decorator
 
 
 class HttpErrorSchema(BaseSchema):
-    status = fields.String(required=True, description='A description of the error')
+    status = fields.String(required=True, description="A description of the error")
 
 
 def response_error(error: HTTPException):
@@ -63,16 +66,22 @@ def response_error(error: HTTPException):
 
     If you decorate an endpoint with this it documents http-exception
     """
+
     def decorator(fn):
         doc = {
-            'responses': {
-                str(error.code): {'schema': HttpErrorSchema(), 'description': error.description}
+            "responses": {
+                str(error.code): {
+                    "schema": HttpErrorSchema(),
+                    "description": error.description,
+                }
             }
         }
-        fn._apidoc = deepupdate(getattr(fn, '_apidoc', {}), doc)
+        fn._apidoc = deepupdate(getattr(fn, "_apidoc", {}), doc)
 
         @wraps(fn)
         def wrapper(*args, **kwargs):
             return fn(*args, **kwargs)
+
         return wrapper
+
     return decorator

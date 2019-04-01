@@ -1,6 +1,33 @@
 import mongoengine as me
-
 from core.document.user import User
+
+
+class DocumentEntity(me.EmbeddedDocument):
+    start = me.IntField()
+    end = me.IntField()
+    label = me.StringField()
+
+
+class DocumentSentence(me.EmbeddedDocument):
+    start = me.IntField()
+    end = me.IntField()
+
+
+class DocumentToken(me.EmbeddedDocument):
+    id = me.IntField()
+    start = me.IntField()
+    end = me.IntField()
+    head = me.IntField()
+    pos = me.StringField()
+    dep = me.StringField()
+    tag = me.StringField()
+
+
+class DocumentModel(me.EmbeddedDocument):
+    ents = me.ListField(me.EmbeddedDocumentField(DocumentEntity))
+    sents = me.ListField(me.EmbeddedDocumentField(DocumentSentence))
+    text = me.StringField()
+    tokens = me.ListField(me.EmbeddedDocumentField(DocumentToken))
 
 
 class NERType(me.EmbeddedDocument):
@@ -23,7 +50,7 @@ class Corpus(me.Document):
     name = me.StringField()
     types = me.MapField(me.EmbeddedDocumentField(NERType))
 
-    meta = {'allow_inheritance': True}
+    meta = {"allow_inheritance": True}
 
 
 class SystemCorpus(Corpus):
