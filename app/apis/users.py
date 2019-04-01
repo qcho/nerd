@@ -1,5 +1,6 @@
 from flask.views import MethodView
 from flask_rest_api import Blueprint
+from flask_rest_api.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
 from werkzeug.exceptions import NotFound
@@ -28,10 +29,13 @@ class UserListView(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.response(UserSchema(many=True))
     @blp.doc(operationId="listUsers")
-    def get(self):  # TODO: Paginate
+    @blp.paginate()
+    def get(self, pagination_parameters: PaginationParameters):
         """Returns a list of existing users
         """
-        return User.objects
+        pagination_parameters.item_count = User.objects.count()
+        skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
+        return User.objects.skip(skip_elements).limit(pagination_parameters.page_size)
 
 
 @blp.route('/<string:user_email>')
