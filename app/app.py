@@ -10,6 +10,7 @@ from apis import api
 from apis.auth import blp as auth
 from apis.corpora import blp as corpora
 from apis.users import blp as users
+from apis.roles import blp as roles
 
 app = Flask('NERd')
 app.config['PREFERRED_URL_SCHEME'] = os.environ.get('NERD_URL_SCHEME', 'http')
@@ -77,6 +78,7 @@ api.init_app(app)
 api.register_blueprint(auth, url_prefix='/api/auth')
 api.register_blueprint(corpora, url_prefix='/api/corpora')
 api.register_blueprint(users, url_prefix='/api/users')
+api.register_blueprint(roles, url_prefix='/api/roles')
 
 setup_cli(app)
 
