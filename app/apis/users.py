@@ -1,3 +1,5 @@
+import json
+
 from flask.views import MethodView
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
@@ -78,7 +80,8 @@ class UserView(MethodView):
         try:
             result = UserPayloadSchema().update(
                 User.objects.get(email=user_email),
-                user_payload.to_json()
+                json.loads(user_payload.to_json())  # TODO: update only accepts JSON objects and doesn't accept
+                                                    #       Documents
             )
             if result.errors:
                 raise UnprocessableEntity("There was an error processing the payload")
