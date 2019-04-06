@@ -10,3 +10,8 @@ def setup_cli(app: Flask):
     @click.option('--drop/--no-drop', help='Drop old database information before setup', default=False)
     def setup(drop):
         NERdSetup.setup(drop)
+
+    @app.cli.command()
+    @click.option('--drop/--no-drop', help='Drop old database information before setup', default=False)
+    def dev_setup(drop):
+        NERdSetup.dev_setup(drop)

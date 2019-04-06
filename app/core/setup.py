@@ -1,4 +1,4 @@
-from core.document.corpus import SystemCorpus, NERType
+from core.document.corpus import SystemCorpus, NERType, NERdCorpus
 from core.document.user import User
 
 
@@ -8,9 +8,9 @@ class NERdSetup:
         if drop:
             User.drop_collection()
         User(
-            name='Qcho',
-            email='qcho86@gmail.com',
-            plain_password='1234',
+            name='Admin',
+            email='admin@nerd.com',
+            plain_password='1',
             roles=['user', 'admin']
         ).save()
 
@@ -26,3 +26,23 @@ class NERdSetup:
                 'MISC': NERType(label='Miscellaneous', color='#38dd9e')
             }
         ).save()
+
+    @staticmethod
+    def dev_setup(drop: bool):
+        from faker import Faker
+        from faker.providers import internet
+
+        fake = Faker()
+        fake.add_provider(internet)
+
+        NERdSetup.setup(drop)
+
+        for i in range(100):
+            User(
+                name=fake.name(),
+                email=fake.safe_email(),
+                plain_password='1',
+                roles=['user']
+            ).save()
+
+        # TODO: Create a base corpus

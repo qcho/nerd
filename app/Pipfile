@@ -12,6 +12,7 @@ flask-jwt-extended = "*"
 spacy-nightly = "==2.1.0a6"
 
 [dev-packages]
+faker = "*"
 
 [requires]
 python_version = "3.7"
