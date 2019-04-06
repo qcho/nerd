@@ -20,7 +20,7 @@ class UserSchema(ModelSchema):
 class UserPayloadSchema(ModelSchema):
     class Meta:
         model = User
-        exclude = ['password']
+        exclude = ['password', 'email']
 
 
 @blp.route('/')
@@ -67,7 +67,7 @@ class UserView(MethodView):
             raise NotFound('User {} does not exist'.format(user_email))
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.arguments(UserPayloadSchema)
+    @blp.arguments(UserPayloadSchema(partial=True))
     @response_error(NotFound('User does not exist'))
     @blp.response(UserSchema)
     @blp.doc(operationId="updateUser")
