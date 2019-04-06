@@ -16,7 +16,6 @@
     "@types/react-router-dom": "^4.3.1",
     "axios": "^0.18.0",
     "i18next": "^15.0.4",
-    "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^2.0.1",
     "prop-types": "^15.7.2",
     "query-string": "^6.4.2",
