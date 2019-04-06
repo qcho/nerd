@@ -1,17 +1,14 @@
-from apis import BaseSchema, jwt_and_role_required, jwt_optional, response_error
-from core.document.corpus import (
-    Corpus,
-    DocumentModel,
-    NERdCorpus,
-    NERType,
-    SystemCorpus,
-)
+from werkzeug.exceptions import BadRequest, Conflict, NotFound, Unauthorized
+
+from apis import (BaseSchema, jwt_and_role_required, jwt_optional,
+                  response_error)
+from core.document.corpus import (Corpus, DocumentModel, NERdCorpus, NERType,
+                                  SystemCorpus)
 from core.document.user import Role
 from flask.views import MethodView
 from flask_rest_api import Blueprint
 from marshmallow import fields
 from marshmallow_mongoengine import ModelSchema
-from werkzeug.exceptions import BadRequest, Conflict, NotFound, Unauthorized
 
 blp = Blueprint("corpora", "corpora", description="NER Corpora operations")
 
@@ -52,7 +49,7 @@ class CreateNERdCorpusSchema(BaseSchema):
 
 @blp.route("/system")
 class SystemCorporaResource(MethodView):
-    @jwt_and_role_required(Role.ADMIN)  ## TODO: review permission levels
+    @jwt_and_role_required(Role.ADMIN)  # TODO: review permission levels
     @blp.response(SystemCorpusSchema(many=True))
     @blp.doc(operationId="listSystemCorpora")
     def get(self):
@@ -63,7 +60,7 @@ class SystemCorporaResource(MethodView):
 
 @blp.route("")
 class CorporaResource(MethodView):
-    @jwt_and_role_required(Role.ADMIN)  ## TODO: review permission levels
+    @jwt_and_role_required(Role.ADMIN)  # TODO: review permission levels
     @blp.response(NERdCorpusSchema(many=True))
     @blp.doc(operationId="listCorpora")
     def get(self):
@@ -71,7 +68,7 @@ class CorporaResource(MethodView):
         """
         return Corpus.objects
 
-    @jwt_and_role_required(Role.ADMIN)  ## TODO: review permission levels
+    @jwt_and_role_required(Role.ADMIN)  # TODO: review permission levels
     @blp.doc(operationId="upsert_corpus")
     @blp.arguments(CreateNERdCorpusSchema)
     @response_error(Conflict("Corpus exists with that name"))
@@ -82,18 +79,20 @@ class CorporaResource(MethodView):
         """
         try:
             # TODO: We may be able to make the corpus creation threaded (inside the create_model method)
-            Corpus(
+            base_corpus = SystemCorpus.objects(
+                name=payload["base_corpus_name"]).get()
+            corpus = NERdCorpus(
                 name=payload["corpus_name"],
-                base=SystemCorpus.objects(name=payload["base_corpus_name"]),
+                parent=base_corpus
             ).save()
+            return corpus
         except:
             raise Conflict("Corpus exists with that name")
-        return None, 200
 
 
 @blp.route("/<string:corpus_name>")
 class CorpusResource(MethodView):
-    @jwt_and_role_required(Role.ADMIN)  ## TODO: review permission levels
+    @jwt_and_role_required(Role.ADMIN)  # TODO: review permission levels
     @blp.doc(operationId="get_corpus")
     @response_error(NotFound("Corpus does not exist"))
     @blp.response(MetadataFieldsSchema, code=200, description="Model")
@@ -106,7 +105,7 @@ class CorpusResource(MethodView):
         trained = len(list_trained(corpus))
         return {"queued": queued, "trained": trained}
 
-    @jwt_and_role_required(Role.ADMIN)  ## TODO: review permission levels
+    @jwt_and_role_required(Role.ADMIN)  # TODO: review permission levels
     @blp.doc(operationId="remove_corpus")
     @response_error(BadRequest("There was a problem deleting the corpus"))
     def delete(self, corpus_name=None):
@@ -117,7 +116,7 @@ class CorpusResource(MethodView):
         :raises BadRequest: When couldn't delete the corpus
         """
         try:
-            Corpus.objects(name=corpus_name).delete()
+            NERdCorpus.objects(name=corpus_name).get().delete()
             return "", 200
         except:
             raise BadRequest("There was a problem deleting the corpus")
@@ -125,7 +124,7 @@ class CorpusResource(MethodView):
 
 @blp.route("/<string:corpus_name>/training")
 class CorpusTrainingResource(MethodView):
-    @jwt_and_role_required(Role.ADMIN)  ## TODO: check permission level
+    @jwt_and_role_required(Role.ADMIN)  # TODO: check permission level
     @blp.arguments(NewTextSchema)
     @blp.doc(operationId="queue_training_text")
     @blp.response(None, code=204)
@@ -141,7 +140,7 @@ class CorpusTrainingResource(MethodView):
 
 @blp.route("/<string:corpus_name>/ner")
 class NerDocumentResource(MethodView):
-    @jwt_and_role_required(Role.ADMIN)  ## TODO: check permission level
+    @jwt_and_role_required(Role.ADMIN)  # TODO: check permission level
     @blp.doc(operationId="upsert_ner_document")
     @blp.arguments(DocumentModelSchema)
     def put(self, payload, model_name):
@@ -154,7 +153,7 @@ class NerDocumentResource(MethodView):
         # train_model(nerd_model, payload)
         return None, 204
 
-    @jwt_and_role_required(Role.ADMIN)  ## TODO: check permission level
+    @jwt_and_role_required(Role.ADMIN)  # TODO: check permission level
     @blp.doc(operationId="get_ner_document")
     @blp.response(DocumentModelSchema, code=200)
     def get(self, model_name):
@@ -167,7 +166,7 @@ class NerDocumentResource(MethodView):
 
 @blp.route("/<string:corpus_name>/entity-types")
 class EntityTypesResource(MethodView):
-    @jwt_and_role_required(Role.ADMIN)  ## TODO: check permission level
+    @jwt_and_role_required(Role.ADMIN)  # TODO: check permission level
     @blp.doc(operationId="upsert_entity_types")
     @blp.arguments(NERTypeSchema)
     def put(self, corpus_name):

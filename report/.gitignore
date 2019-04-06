@@ -16,3 +16,5 @@ main.pdf
 main-blx.bib
 .ds_store
 .DS_Store
+
+venv/
