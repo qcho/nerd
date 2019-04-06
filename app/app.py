@@ -59,7 +59,7 @@ app.config['API_SPEC_OPTIONS'] = {
         'securitySchemes': {
             'oAuth2Password': {
                 'type': 'oauth2',
-                'description': 'Some documentation',
+                'description': 'Some documentation',  # TODO: Complete this
                 'flows': {
                     'password': {
                         'tokenUrl': '/api/auth/token',
