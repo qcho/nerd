@@ -7,7 +7,9 @@ import {
   MenuItem,
   Button,
   Theme,
-  Chip
+  Chip,
+  OutlinedInput,
+  InputBase
 } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
@@ -22,6 +24,11 @@ const useStyles = makeStyles(
       },
       chip: {
         margin: theme.spacing.unit / 4
+      },
+      dropDown: {
+        position: "relative",
+        width: "auto",
+        paddingLeft: "5px",
       }
     };
   },
@@ -46,6 +53,9 @@ const UserRow = ({ user, roles, onSave, onDelete }: Props) => {
 
   function renderRoles(value: any) {
     const roles: string[] = value as string[];
+    if (roles.length == 0) {
+      return <em>{t("None")}</em>;
+    }
     return (
       <div className={classes.chips}>
         {roles.map((value: string) => (
@@ -63,13 +73,17 @@ const UserRow = ({ user, roles, onSave, onDelete }: Props) => {
         {roles.roles !== undefined && (
           <Select
             multiple
+            displayEmpty
             value={userRoles}
+            input={<InputBase className={classes.dropDown}/>}
             onChange={event => {
-              console.log([event]);
               onRoleChange((event.target.value as unknown) as string[]);
             }}
             renderValue={selected => renderRoles(selected)}
           >
+            <MenuItem disabled value="">
+              <em>{t("Roles")}</em>
+            </MenuItem>
             {roles.roles!.map(name => (
               <MenuItem key={name} value={name}>
                 {name}
