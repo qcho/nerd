@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { User, RoleList } from "../apigen";
+import { User, RoleList, UsersApi } from "../apigen";
 import {
   TableRow,
   TableCell,
@@ -14,6 +14,7 @@ import {
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
 import { makeStyles } from "@material-ui/styles";
+import { apiConfig } from "../helpers/api-config";
 
 const useStyles = makeStyles(
   (theme: Theme) => {
@@ -28,7 +29,7 @@ const useStyles = makeStyles(
       dropDown: {
         position: "relative",
         width: "auto",
-        paddingLeft: "5px",
+        paddingLeft: "5px"
       }
     };
   },
@@ -38,17 +39,30 @@ const useStyles = makeStyles(
 type Props = {
   user: User;
   roles: RoleList;
-  onSave: any;
   onDelete: any;
 };
 
-const UserRow = ({ user, roles, onSave, onDelete }: Props) => {
+const UserRow = ({ user, roles, onDelete }: Props) => {
   const [t] = useTranslation(nsps.userManagement);
   const classes = useStyles();
   const [userRoles, setUserRoles] = useState<string[]>(user.roles || []);
-  function onRoleChange(values: string[]) {
+  const [loading, setLoading] = useState<boolean>(false);
+  const userApi = new UsersApi(apiConfig());
+  async function onRoleChange(values: string[]) {
     user.roles = values;
     setUserRoles(values);
+    setLoading(true);
+    try {
+      let result = await userApi.updateUser(user.email, {
+        email: user.email,
+        roles: values
+      });
+      setUserRoles(result.data.roles || []);
+    } catch (e) {
+      // TODO: Display error
+    } finally {
+      setLoading(false);
+    }
   }
 
   function renderRoles(value: any) {
@@ -75,7 +89,8 @@ const UserRow = ({ user, roles, onSave, onDelete }: Props) => {
             multiple
             displayEmpty
             value={userRoles}
-            input={<InputBase className={classes.dropDown}/>}
+            disabled={loading}
+            input={<InputBase className={classes.dropDown} />}
             onChange={event => {
               onRoleChange((event.target.value as unknown) as string[]);
             }}
@@ -100,15 +115,6 @@ const UserRow = ({ user, roles, onSave, onDelete }: Props) => {
           size="small"
         >
           {t("Delete")}
-        </Button>
-        <Button
-          onClick={() => onSave(user)}
-          style={{ marginLeft: 10 }}
-          variant="outlined"
-          color="primary"
-          size="small"
-        >
-          {t("Save")}
         </Button>
       </TableCell>
     </TableRow>
