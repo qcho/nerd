@@ -44,5 +44,8 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "proxy": "http://127.0.0.1:5000"
+  "devDependencies": {
+    "@types/http-proxy-middleware": "^0.19.2",
+    "http-proxy-middleware": "^0.19.1"
+  }
 }
