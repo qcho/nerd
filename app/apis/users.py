@@ -3,7 +3,7 @@ from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import NotFound, UnprocessableEntity
 
 from apis import jwt_and_role_required, response_error
 from core.document.user import User, Role
@@ -69,15 +69,19 @@ class UserView(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.arguments(UserPayloadSchema(partial=True))
     @response_error(NotFound('User does not exist'))
+    @response_error(UnprocessableEntity('There was an error processing the payload'))
     @blp.response(UserSchema)
     @blp.doc(operationId="updateUser")
     def patch(self, user_payload: User, user_email: str):
         """Patches the user entity
         """
         try:
-            return UserPayloadSchema().update(
+            result = UserPayloadSchema().update(
                 User.objects.get(email=user_email),
-                user_payload
-            ).data.save()
+                user_payload.to_json()
+            )
+            if result.errors:
+                raise UnprocessableEntity("There was an error processing the payload")
+            return result.data.save()
         except DoesNotExist:
             raise NotFound('User {} does not exist'.format(user_email))
