@@ -17,8 +17,6 @@ import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
 import { UsersApi, User, RoleList, RolesApi } from "../apigen";
 import { apiConfig } from "../helpers/api-config";
-import { Pagination } from "../types/Pagination";
-import { MaybePagination } from "../types/optionals";
 import Http from "../helpers/http";
 import UserRow from "../widgets/UserRow";
 import usePagination from "../hooks/usePagination";
@@ -88,13 +86,6 @@ const UserManagement = ({ classes }: { classes: any }) => {
     fetchUsers();
   }
 
-  async function onSave(user: User) {
-    console.log("Updating ", user);
-    userApi.updateUser(user.email, user).then(() => {
-      fetchUsers();
-    });
-  }
-
   return (
     <div className={classes.grow}>
       <NavigationBar />
@@ -115,7 +106,6 @@ const UserManagement = ({ classes }: { classes: any }) => {
                 user={user}
                 roles={roles}
                 onDelete={onDelete}
-                onSave={onSave}
               />
             ))}
           </TableBody>
