@@ -10,7 +10,7 @@ import {
   TableRow,
   TableBody,
   TablePagination,
-  TableFooter,
+  TableFooter
 } from "@material-ui/core";
 import NavigationBar from "../NavigationBar";
 import { useTranslation } from "react-i18next";
@@ -21,6 +21,7 @@ import { Pagination } from "../types/Pagination";
 import { MaybePagination } from "../types/optionals";
 import Http from "../helpers/http";
 import UserRow from "../widgets/UserRow";
+import usePagination from "../hooks/usePagination";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -35,9 +36,15 @@ const styles = (theme: Theme) =>
 const UserManagement = ({ classes }: { classes: any }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [pagination, setPagination] = useState<MaybePagination>(null);
-  const [usersPerPage, setUsersPerPage] = useState<number>(20);
-  const [page, setPage] = useState<number>(1);
+  const {
+    page,
+    total,
+    pageSize,
+    setPage,
+    setPageSize,
+    setFromHeaders,
+    shouldPaginate
+  } = usePagination();
   const [roles, setRoles] = useState<RoleList>({});
   const [t] = useTranslation(nsps.userManagement);
   const userApi = new UsersApi(apiConfig());
@@ -46,12 +53,9 @@ const UserManagement = ({ classes }: { classes: any }) => {
   async function fetchUsers() {
     setLoading(true);
     try {
-      const users = await userApi.listUsers(page, usersPerPage);
+      const users = await userApi.listUsers(page, pageSize);
       const rolesResponse = await roleApi.listRoles();
-      const paginationDetails: Pagination = JSON.parse(
-        users.headers["x-pagination"]
-      );
-      setPagination(paginationDetails);
+      setFromHeaders(users.headers);
       setUsers(users.data);
       setRoles(rolesResponse.data);
     } catch (e) {
@@ -67,7 +71,7 @@ const UserManagement = ({ classes }: { classes: any }) => {
 
   useEffect(() => {
     fetchUsers();
-  }, [page, usersPerPage]);
+  }, [page, pageSize]);
 
   function handleChangePage(event: any, page: number) {
     setPage(page + 1);
@@ -76,7 +80,7 @@ const UserManagement = ({ classes }: { classes: any }) => {
   function handleChangeUsersPerPage(
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) {
-    setUsersPerPage(+event.target.value);
+    setPageSize(+event.target.value);
   }
 
   async function onDelete(user: User) {
@@ -85,7 +89,10 @@ const UserManagement = ({ classes }: { classes: any }) => {
   }
 
   async function onSave(user: User) {
-    userApi.updateUser(user.email, user);
+    console.log("Updating ", user);
+    userApi.updateUser(user.email, user).then(() => {
+      fetchUsers();
+    });
   }
 
   return (
@@ -112,14 +119,14 @@ const UserManagement = ({ classes }: { classes: any }) => {
               />
             ))}
           </TableBody>
-          {pagination && pagination.total_pages > 1 && (
+          {shouldPaginate && (
             <TableFooter>
               <TableRow>
                 <TablePagination
-                  count={pagination.total}
-                  page={pagination.page - 1}
+                  count={total}
+                  page={page - 1}
                   rowsPerPageOptions={[20, 50, 100]}
-                  rowsPerPage={usersPerPage}
+                  rowsPerPage={pageSize}
                   onChangePage={handleChangePage}
                   onChangeRowsPerPage={handleChangeUsersPerPage}
                 />
