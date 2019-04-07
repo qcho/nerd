@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { MaybeSystemCorpus } from "../types/optionals";
-import { SystemCorpus, CorporaApi } from "../apigen";
+import { SystemCorpus } from "../apigen";
 import {
   Dialog,
   DialogTitle,
@@ -19,12 +19,11 @@ import {
 import nsps from "../helpers/i18n-namespaces";
 import { useTranslation } from "react-i18next";
 import { makeStyles } from "@material-ui/styles";
-import { apiConfig } from "../helpers/api-config";
 
-type CreateModelDialogProps = {
+type Props = {
   open: boolean;
   onClose: any;
-  onModelCreated: any;
+  onCorpusCreated: any;
   systemCorpora: SystemCorpus[];
 };
 
@@ -46,53 +45,52 @@ const useStyles = makeStyles(
   { withTheme: true }
 );
 
-const CreateModelDialog = ({
+const CreateCorpusDialog = ({
   open,
   onClose,
-  onModelCreated
-}: CreateModelDialogProps) => {
-  const [creatingModel, setCreatingModel] = useState<boolean>(false);
-  const [modelName, setModelName] = useState<string>("");
-  const [baseModel, setBaseModel] = useState<MaybeSystemCorpus>(null);
-  const [baseModels, setBaseModels] = useState<SystemCorpus[]>([]);
+  onCorpusCreated,
+  systemCorpora
+}: Props) => {
+  const [creating, setCreating] = useState<boolean>(false);
+  const [name, setName] = useState<string>("");
+  const [baseCorpus, setBaseCorpus] = useState<MaybeSystemCorpus>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const api = new CorporaApi(apiConfig());
   const classes = useStyles();
   const [t] = useTranslation(nsps.modelManagement);
 
-  function resetBaseModel(models: SystemCorpus[]) {
-    if (models.length > 0) {
-      setBaseModel(models[0]);
+  function resetBaseCorpus(corpora: SystemCorpus[]) {
+    if (corpora.length > 0) {
+      setBaseCorpus(corpora[0]);
     }
   }
 
-  async function createModel() {
+  async function createCorpus() {
     setErrorMessage("");
     if (
-      (baseModel != undefined && baseModel!.name!.length == 0) ||
-      modelName.length == 0
+      (baseCorpus != undefined && baseCorpus!.name!.length == 0) ||
+      name.length == 0
     ) {
       setErrorMessage(t("Please fill the required fields"));
       return;
     }
-    setCreatingModel(true);
+    setCreating(true);
     try {
       // TODO(jpo): Use new API
       // await ModelApi.create(modelName, baseModel);
-      setModelName("");
-      resetBaseModel(baseModels);
-      onModelCreated();
+      setName("");
+      resetBaseCorpus(systemCorpora);
+      onCorpusCreated();
     } catch (e) {
       setErrorMessage(e.message);
     } finally {
-      setCreatingModel(false);
+      setCreating(false);
     }
   }
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>New Model</DialogTitle>
-      {creatingModel && <LinearProgress />}
+      <DialogTitle>{t("Create Corpus")}</DialogTitle>
+      {creating && <LinearProgress />}
       <DialogContent>
         <form>
           <TextField
@@ -100,33 +98,33 @@ const CreateModelDialog = ({
             autoFocus
             margin="dense"
             id="name"
-            label="Model name"
+            label={t("Name")}
             fullWidth
             onChange={event => {
               let text = event.target.value;
               if (!text || !text.length) {
                 return;
               }
-              setModelName(text);
+              setName(text);
             }}
           />
           <FormControl className={classes.formControl}>
-            <InputLabel required htmlFor="baseModel">
-              Base model
+            <InputLabel required htmlFor="baseCorpus">
+              {t("Base corpus")}
             </InputLabel>
             <Select
               fullWidth
               inputProps={{
-                name: "baseModel",
-                id: "baseModel"
+                name: "baseCorpus",
+                id: "baseCorpus"
               }}
-              value={(baseModel && baseModel!.id) || 0}
-              onChange={event => setBaseModel({ name: event.target.value })}
+              value={(baseCorpus && baseCorpus!.id) || 0}
+              onChange={event => setBaseCorpus({ id: event.target.value })}
             >
-              {baseModels.map(model => {
+              {systemCorpora.map(corpus => {
                 return (
-                  <MenuItem key={model.id} value={model.name}>
-                    {model}
+                  <MenuItem key={corpus.id} value={corpus.id}>
+                    {corpus.name}
                   </MenuItem>
                 );
               })}
@@ -145,7 +143,7 @@ const CreateModelDialog = ({
         <Button onClick={onClose} color="secondary">
           {t("Cancel")}
         </Button>
-        <Button onClick={() => createModel()} color="primary">
+        <Button onClick={() => createCorpus()} color="primary">
           {t("Create")}
         </Button>
       </DialogActions>
@@ -153,4 +151,4 @@ const CreateModelDialog = ({
   );
 };
 
-export default CreateModelDialog;
+export default CreateCorpusDialog;

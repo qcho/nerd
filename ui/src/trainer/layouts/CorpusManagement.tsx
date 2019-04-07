@@ -7,21 +7,20 @@ import {
   withStyles,
   Grid,
   LinearProgress,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
   Button,
-  Typography,
-  Divider,
-  ExpansionPanelActions
+  TableHead,
+  TableRow,
+  Checkbox,
+  TableCell,
+  Table,
+  TableBody
 } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
 import Http from "../helpers/http";
-import CreateModelDialog from "../widgets/CreateModelDialog";
+import CreateCorpusDialog from "../widgets/CreateCorpusDialog";
 import { apiConfig } from "../helpers/api-config";
-import CorpusDetails from "../widgets/CorpusDetails";
+import moment from "moment";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -38,82 +37,100 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CorpusItemProps = {
-  corpus: NERdCorpus;
-  onDelete: any;
+type RichTableHeadProps = {
+  onSelectAll: any;
+  numSelected: number;
+  rowCount: number;
+  headers: any[];
 };
 
-const CorpusItem = ({ corpus, onDelete }: CorpusItemProps) => {
-  const [t] = useTranslation(nsps.modelManagement);
+const RichTableHead = ({
+  onSelectAll,
+  numSelected,
+  rowCount,
+  headers
+}: RichTableHeadProps) => {
   return (
-    <ExpansionPanel key={corpus.id} expanded>
-      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography variant="h6">{corpus.name}</Typography>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        <Grid container direction="column">
-          <Grid item>
-            <CorpusDetails model={corpus} />
-          </Grid>
-        </Grid>
-      </ExpansionPanelDetails>
-      <Divider />
-      <ExpansionPanelActions>
-        <Button color="secondary" onClick={() => onDelete(corpus)}>
-          {t("Delete")}
-        </Button>
-      </ExpansionPanelActions>
-    </ExpansionPanel>
+    <TableHead>
+      <TableRow>
+        <TableCell padding="checkbox">
+          <Checkbox
+            indeterminate={numSelected > 0 && numSelected < rowCount}
+            checked={numSelected === rowCount}
+            onChange={onSelectAll}
+          />
+        </TableCell>
+        {headers.map(col => (
+          <TableCell key={col.id} align={col.numeric ? "right" : "left"}>
+            {col.label}
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
   );
 };
 
 const CorpusManagement = ({ classes }: { classes: any }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [models, setModels] = useState<NERdCorpus[]>([]);
+  const [corpora, setCorpora] = useState<NERdCorpus[]>([]);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [selected, setSelected] = useState<string[]>([]);
   const [loadingErrorMessage, setLoadingErrorMessage] = useState<string>("");
-  const [baseModels, setBaseModels] = useState<SystemCorpus[]>([]);
+  const [systemCorpora, setSystemCorpora] = useState<SystemCorpus[]>([]);
   const [t] = useTranslation(nsps.modelManagement);
   const api = new CorporaApi(apiConfig());
 
-  function reloadModels() {
-    const fetchModels = async () => {
+  const headers = [
+    { id: "name", numeric: false, label: t("Name") },
+    { id: "status", numeric: false, label: t("Status") },
+    { id: "lastTrained", numeric: false, label: t("Last Trained") },
+    { id: "pendingDocuments", numeric: true, label: t("Pending documents") }
+  ];
+
+  function reloadCorpora() {
+    const fetchCorpora = async () => {
       setLoading(true);
       try {
-        const [models, baseModels] = await Promise.all([
+        const [corpora, systemCorpora] = await Promise.all([
           api.listCorpora(),
           api.listSystemCorpora()
         ]);
-        setModels(models.data);
-        setBaseModels(baseModels.data);
+        setCorpora(corpora.data);
+        setSystemCorpora(systemCorpora.data);
       } catch (e) {
         const errorMessage = Http.handleRequestError(e, (status, data) => {
-          return "Error loading models.";
+          return "Error loading corpora.";
         });
         setLoadingErrorMessage(errorMessage);
       }
     };
-    fetchModels().finally(() => setLoading(false));
+    fetchCorpora().finally(() => setLoading(false));
   }
 
   useEffect(() => {
-    reloadModels();
+    reloadCorpora();
   }, []);
 
-  async function deleteModel(model: NERdCorpus) {
+  async function deleteCorpus(model: NERdCorpus) {
     try {
       // TODO(jpo): Use new API
       // await ModelApi.delete(modelName);
-      reloadModels();
+      reloadCorpora();
     } catch (error) {
       console.log("Couldn't delete model", [error]);
     }
   }
 
-  async function onModelCreated() {
+  async function onCorpusCreated() {
     setDialogOpen(false);
-    reloadModels();
+    reloadCorpora();
   }
+
+  function handleRowClick(corpus: NERdCorpus) {}
+
+  function handleSelectAll() {}
+
+  const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   return (
     <div className={classes.grow}>
@@ -128,21 +145,49 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
           Create
         </Button>
         <div className={classes.modelList}>
-          <CreateModelDialog
+          <CreateCorpusDialog
             open={dialogOpen}
-            systemCorpora={baseModels}
+            systemCorpora={systemCorpora}
             onClose={() => setDialogOpen(false)}
-            onModelCreated={onModelCreated}
+            onCorpusCreated={onCorpusCreated}
           />
-          {models.map(model => {
-            return (
-              <CorpusItem
-                key={model.id}
-                corpus={model}
-                onDelete={deleteModel}
-              />
-            );
-          })}
+          <Table>
+            <RichTableHead
+              onSelectAll={handleSelectAll}
+              headers={headers}
+              numSelected={0} // TODO
+              rowCount={10} // TODO
+            />
+            <TableBody>
+              {corpora.map(corpus => {
+                const rowSelected = isSelected(corpus.id!);
+                return (
+                  <TableRow
+                    hover
+                    onClick={event => handleRowClick(corpus)}
+                    role="checkbox"
+                    selected={rowSelected}
+                    key={corpus.id}
+                    tabIndex={-1}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox checked={rowSelected} />
+                    </TableCell>
+                    <TableCell component="th" scope="row" padding="none">
+                      {corpus.name}
+                    </TableCell>
+                    <TableCell>{"creating"}</TableCell>
+                    <TableCell>
+                      {moment()
+                        .subtract(Math.floor(Math.random() * 11), "days")
+                        .fromNow()}
+                    </TableCell>
+                    <TableCell align="right">{Math.floor(Math.random() * 100)}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
         </div>
       </Grid>
     </div>
