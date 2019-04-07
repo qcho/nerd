@@ -105,7 +105,8 @@ class RefreshResource(MethodView):
     def post(self, schema):
         """Refresh access token
         """
-        user = User.objects.get(email=get_jwt_identity())
-        if not user:
+        try:
+            user = User.objects.get(email=get_jwt_identity())
+            return UserCredentialsSchema.create(user)
+        except DoesNotExist:
             raise Unauthorized("Invalid user")
-        return UserCredentialsSchema.create(user)
