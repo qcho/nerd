@@ -25,26 +25,24 @@ type CreateModelDialogProps = {
   open: boolean;
   onClose: any;
   onModelCreated: any;
-  systemCorpora: SystemCorpus[]
+  systemCorpora: SystemCorpus[];
 };
 
 const useStyles = makeStyles(
-  (theme: Theme) => {
-    return {
-      errorMessageContainer: {
-        width: "100%",
-        marginTop: theme.spacing.unit * 2
-      },
-      errorMessage: {
-        color: theme.palette.error.main,
-        textAlign: "center"
-      },
-      formControl: {
-        marginTop: theme.spacing.unit,
-        width: "100%"
-      }
-    };
-  },
+  (theme: Theme) => ({
+    errorMessageContainer: {
+      width: "100%",
+      marginTop: theme.spacing.unit * 2
+    },
+    errorMessage: {
+      color: theme.palette.error.main,
+      textAlign: "center"
+    },
+    formControl: {
+      marginTop: theme.spacing.unit,
+      width: "100%"
+    }
+  }),
   { withTheme: true }
 );
 
@@ -70,7 +68,10 @@ const CreateModelDialog = ({
 
   async function createModel() {
     setErrorMessage("");
-    if ((baseModel != undefined && baseModel!.name!.length == 0) || modelName.length == 0) {
+    if (
+      (baseModel != undefined && baseModel!.name!.length == 0) ||
+      modelName.length == 0
+    ) {
       setErrorMessage(t("Please fill the required fields"));
       return;
     }

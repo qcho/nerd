@@ -6,17 +6,15 @@ import { LinearProgress, Theme, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles(
-  (theme: Theme) => {
-    return {
-      root: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh"
-      }
-    };
-  },
+  (theme: Theme) => ({
+    root: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      height: "100vh"
+    }
+  }),
   { withTheme: true }
 );
 
@@ -30,9 +28,7 @@ const TrainChooseModel = () => {
       <NavigationBar />
       {loading && <LinearProgress />}
       <div className={classes.root}>
-          <div>
-
-          </div>
+        <div />
       </div>
     </div>
   );
