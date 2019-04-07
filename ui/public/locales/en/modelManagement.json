@@ -1,4 +1,12 @@
 {
+  "Create Corpus": "Create Corpus",
+  "New Corpus": "New Corpus",
+  "Base corpus": "Base corpus",
+  "Name": "Name",
+  "Pending documents": "Pending documents",
+  "Last Trained": "Last Trained",
+  "Status": "Status",
+  "Corpus": "Corpus",
   "Create": "Create",
   "Delete": "Delete",
   "Cancel": "Cancel",
