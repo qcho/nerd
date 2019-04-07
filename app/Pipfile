@@ -10,6 +10,9 @@ marshmallow-mongoengine = "*"
 blinker = "*"
 flask-jwt-extended = "*"
 spacy-nightly = "==2.1.0a6"
+celery = {extras = ["redis"],version = "*"}
+redis = "*"
+flower = "*"
 
 [dev-packages]
 faker = "*"

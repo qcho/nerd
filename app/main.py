@@ -11,10 +11,13 @@ from apis.auth import blp as auth
 from apis.corpora import blp as corpora
 from apis.users import blp as users
 from apis.roles import blp as roles
+from tasks import make_celery
 
 app = Flask('NERd')
 app.config['PREFERRED_URL_SCHEME'] = os.environ.get('NERD_URL_SCHEME', 'http')
-app.config['SERVER_NAME'] = os.environ.get('NERD_SERVER_NAME', '127.0.0.1:5000')
+# app.config['SERVER_NAME'] = os.environ.get('NERD_SERVER_NAME', '127.0.0.1:5000')
+
+app.config['broker_url'] = os.environ.get('BROKER_URL', 'redis://redis:6379/0')
 
 mongoengine.connect(
     db=os.environ.get('NERD_MONGO_DB_NAME', 'nerd'),
@@ -34,9 +37,9 @@ jwt.init_app(app)
 app.config['OPENAPI_URL_PREFIX'] = 'api'
 app.config['OPENAPI_VERSION'] = '3.0.2'
 app.config['OPENAPI_REDOC_PATH'] = '/redoc'
-app.config['OPENAPI_REDOC_VERSION'] = 'v2.0.0-rc.2'
+app.config['OPENAPI_REDOC_VERSION'] = 'v2.0.0-rc.4'
 app.config['OPENAPI_SWAGGER_UI_PATH'] = '/doc'
-app.config['OPENAPI_SWAGGER_UI_VERSION'] = '3.21.0'
+app.config['OPENAPI_SWAGGER_UI_VERSION'] = '3.22.0'
 app.config['API_VERSION'] = '1.0.0'
 app.config['API_SPEC_OPTIONS'] = {
     'servers': [
@@ -50,7 +53,7 @@ app.config['API_SPEC_OPTIONS'] = {
         {
             'url': '{}://{}'.format(
                 app.config['PREFERRED_URL_SCHEME'],
-                app.config['SERVER_NAME']
+                os.environ.get('NERD_SERVER_NAME', '0.0.0.0:80')
             ),
             'description': 'Default api endpoint'
         }
@@ -82,5 +85,10 @@ api.register_blueprint(roles, url_prefix='/api/roles')
 
 setup_cli(app)
 
+app.config['CELERY_RESULT_BACKEND'] = os.environ.get('CELERY_RESULT_BACKEND', 'redis')
+app.config['CELERY_BROKER_URL'] = os.environ.get('CELERY_BROKER_URL', 'redis://redis:6379')
+
+celery = make_celery(app)
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

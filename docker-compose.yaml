@@ -1,22 +1,65 @@
-version: "3.6"
+version: "3.7"
 
 services:
-  api:
-    build: ./daemon
-    volumes:
-      - ./daemon:/daemon
-      - ./daemon/models:/models
+  mongodb:
+    image: 'bitnami/mongodb:4.0'
     ports:
-      - 8000:8000
+      - "27017:27017"
     restart: on-failure
-    command: run
     env_file: .env
+    volumes:
+      - mongodb-data:/bitnami
 
-  web:
-    build: ./atp
-    volumes:
-      - ./atp/build:/usr/share/nginx/html
+  redis:
+    image: bitnami/redis:4.0
     ports:
-      - 8080:80
+      - "6379:6379"
     restart: on-failure
     env_file: .env
+    volumes:
+      - redis-data:/bitnami
+
+  app:
+    image: nerd/app:latest
+    build:
+      context: .
+    volumes:
+      - ./app:/app
+    ports:
+      - 80:80
+    restart: on-failure
+    init: true
+    env_file: .env
+    depends_on:
+      - mongodb
+      - redis
+  worker:
+    image: nerd/app:latest
+    build:
+      context: .
+    volumes:
+      - ./app:/app
+      - ./volumes/models:/app/models
+    restart: on-failure
+    init: true
+    env_file: .env
+    depends_on:
+      - app
+    command: ["celery", "worker", "-A", "main:celery"]
+
+  flower:
+    image: nerd/app:latest
+    build:
+      context: .
+    ports:
+      - 5555:5555
+    env_file: .env
+    restart: on-failure
+    init: true
+    depends_on:
+      - app
+    command: ["celery", "flower", "-A", "main:celery"]
+
+volumes:
+  mongodb-data:
+  redis-data:

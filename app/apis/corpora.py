@@ -16,7 +16,7 @@ from worker import add_correction, force_training, queue_text
 blp = Blueprint("corpora", "corpora", description="NER Corpora operations")
 
 
-@blp.route("/system")
+@blp.route('/system')
 class SystemCorporaResource(MethodView):
     @jwt_and_role_required(Role.ADMIN)  # TODO: review permission levels
     @blp.response(SystemCorpusSchema(many=True))
