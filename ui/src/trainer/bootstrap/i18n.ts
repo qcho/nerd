@@ -11,6 +11,7 @@ i18n
   .init({
     lng: "en",
     fallbackLng: "en",
+    saveMissing: isDev,
     debug: isDev
   });
 
