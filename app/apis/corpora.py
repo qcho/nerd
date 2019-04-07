@@ -9,6 +9,7 @@ from flask.views import MethodView
 from flask_rest_api import Blueprint
 from marshmallow import fields
 from marshmallow_mongoengine import ModelSchema
+from worker import force_training
 
 blp = Blueprint("corpora", "corpora", description="NER Corpora operations")
 
@@ -72,6 +73,7 @@ class CorporaResource(MethodView):
     @blp.doc(operationId="upsert_corpus")
     @blp.arguments(CreateNERdCorpusSchema)
     @response_error(Conflict("Corpus exists with that name"))
+    @response_error(Conflict("No such base model"))
     @blp.response(NERdCorpusSchema, code=200, description="Model created")
     def post(self, payload):
         """
@@ -81,6 +83,8 @@ class CorporaResource(MethodView):
             # TODO: We may be able to make the corpus creation threaded (inside the create_model method)
             base_corpus = SystemCorpus.objects(
                 name=payload["base_corpus_name"]).get()
+            if not base_corpus:
+                raise Conflict("No such base model")
             corpus = NERdCorpus(
                 name=payload["corpus_name"],
                 parent=base_corpus
@@ -96,11 +100,12 @@ class CorpusResource(MethodView):
     @blp.doc(operationId="get_corpus")
     @response_error(NotFound("Corpus does not exist"))
     @blp.response(MetadataFieldsSchema, code=200, description="Model")
-    def get(self, corpus_name):
+    def get(self, payload, corpus_name):
         """
         Returns metadata for a given corpus
         """
-        corpus = Corpus.objects.get(name=corpus_name)
+        corpus = NERdCorpus.objects.get(name=corpus_name)
+
         queued = len(list_queued(corpus))
         trained = len(list_trained(corpus))
         return {"queued": queued, "trained": trained}
@@ -135,6 +140,24 @@ class CorpusTrainingResource(MethodView):
         corpus = Corpus.objects.get(name=corpus_name)
         text = payload["text"]
         queue_text(corpus, text)
+        return None, 204
+
+
+@blp.route("/<string:corpus_name>/refresh")
+class CorpusRefreshResource(MethodView):
+    @jwt_and_role_required(Role.ADMIN)  # TODO: check permission level
+    @blp.doc(operationId="force_training")
+    @blp.response(None, code=204)
+    @response_error(NotFound("Corpus not found"))
+    def put(self, corpus_name):
+        """
+        Force a training event
+        """
+        try:
+            corpus = NERdCorpus.objects.get(name=corpus_name)
+            force_training(corpus.id)
+        except:
+            raise NotFound("Corpus not found")
         return None, 204
 
 
