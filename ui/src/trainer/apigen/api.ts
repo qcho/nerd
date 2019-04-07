@@ -13,60 +13,61 @@
  */
 
 
-import * as url from "url";
-import { Configuration } from "./configuration";
+import * as url from 'url';
+import { Configuration } from './configuration';
 import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
-
-const BASE_PATH = "http://localhost:3000".replace(/\/+$/, "");
-
-/**
- *
- * @export
- */
-export const COLLECTION_FORMATS = {
-    csv: ",",
-    ssv: " ",
-    tsv: "\t",
-    pipes: "|",
-};
+import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
 
 /**
- *  
+ * 
  * @export
- * @interface RequestArgs
+ * @interface CreateNERdCorpus
  */
-export interface RequestArgs {
-    url: string;
-    options: any;
+export interface CreateNERdCorpus {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateNERdCorpus
+     */
+    base_corpus_name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateNERdCorpus
+     */
+    corpus_name: string;
 }
 
 /**
  * 
  * @export
- * @class BaseAPI
+ * @interface DocumentModel
  */
-export class BaseAPI {
-    protected configuration: Configuration | undefined;
-
-    constructor(configuration?: Configuration, protected basePath: string = BASE_PATH, protected axios: AxiosInstance = globalAxios) {
-        if (configuration) {
-            this.configuration = configuration;
-            this.basePath = configuration.basePath || this.basePath;
-        }
-    }
-};
-
-/**
- * 
- * @export
- * @class RequiredError
- * @extends {Error}
- */
-export class RequiredError extends Error {
-    name: "RequiredError" = "RequiredError";
-    constructor(public field: string, msg?: string) {
-        super(msg);
-    }
+export interface DocumentModel {
+    /**
+     * 
+     * @type {Array<Nested1>}
+     * @memberof DocumentModel
+     */
+    ents?: Array<Nested1>;
+    /**
+     * 
+     * @type {Array<Nested2>}
+     * @memberof DocumentModel
+     */
+    sents?: Array<Nested2>;
+    /**
+     * 
+     * @type {string}
+     * @memberof DocumentModel
+     */
+    text?: string;
+    /**
+     * 
+     * @type {Array<Nested3>}
+     * @memberof DocumentModel
+     */
+    tokens?: Array<Nested3>;
 }
 
 /**
@@ -86,6 +87,52 @@ export interface HttpError {
 /**
  * 
  * @export
+ * @interface MetadataFields
+ */
+export interface MetadataFields {
+    /**
+     * 
+     * @type {number}
+     * @memberof MetadataFields
+     */
+    queued: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MetadataFields
+     */
+    trained: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface NERType
+ */
+export interface NERType {
+    /**
+     * 
+     * @type {string}
+     * @memberof NERType
+     */
+    label?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NERType
+     */
+    code?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NERType
+     */
+    color?: string;
+}
+
+/**
+ * 
+ * @export
  * @interface NERdCorpus
  */
 export interface NERdCorpus {
@@ -100,19 +147,13 @@ export interface NERdCorpus {
      * @type {string}
      * @memberof NERdCorpus
      */
-    _cls?: string;
-    /**
-     * 
-     * @type {Array<Nested>}
-     * @memberof NERdCorpus
-     */
-    dataset?: Array<Nested>;
+    types?: string;
     /**
      * 
      * @type {string}
      * @memberof NERdCorpus
      */
-    parent?: string;
+    _cls?: string;
     /**
      * 
      * @type {string}
@@ -124,7 +165,13 @@ export interface NERdCorpus {
      * @type {string}
      * @memberof NERdCorpus
      */
-    types?: string;
+    parent?: string;
+    /**
+     * 
+     * @type {Array<Nested>}
+     * @memberof NERdCorpus
+     */
+    dataset?: Array<Nested>;
 }
 
 /**
@@ -135,16 +182,126 @@ export interface NERdCorpus {
 export interface Nested {
     /**
      * 
-     * @type {Array<Nested>}
-     * @memberof Nested
-     */
-    trained?: Array<Nested>;
-    /**
-     * 
      * @type {string}
      * @memberof Nested
      */
     original_text?: string;
+    /**
+     * 
+     * @type {Array<Nested>}
+     * @memberof Nested
+     */
+    trained?: Array<Nested>;
+}
+
+/**
+ * 
+ * @export
+ * @interface Nested1
+ */
+export interface Nested1 {
+    /**
+     * 
+     * @type {number}
+     * @memberof Nested1
+     */
+    end?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Nested1
+     */
+    label?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Nested1
+     */
+    start?: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface Nested2
+ */
+export interface Nested2 {
+    /**
+     * 
+     * @type {number}
+     * @memberof Nested2
+     */
+    end?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Nested2
+     */
+    start?: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface Nested3
+ */
+export interface Nested3 {
+    /**
+     * 
+     * @type {number}
+     * @memberof Nested3
+     */
+    end?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Nested3
+     */
+    dep?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Nested3
+     */
+    id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Nested3
+     */
+    start?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Nested3
+     */
+    pos?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Nested3
+     */
+    tag?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Nested3
+     */
+    head?: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface NewText
+ */
+export interface NewText {
+    /**
+     * 
+     * @type {string}
+     * @memberof NewText
+     */
+    text: string;
 }
 
 /**
@@ -158,13 +315,13 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    plain_password?: string;
+    name?: string;
     /**
      * 
      * @type {string}
      * @memberof Register
      */
-    name?: string;
+    plain_password?: string;
     /**
      * 
      * @type {string}
@@ -204,13 +361,13 @@ export interface SystemCorpus {
      * @type {string}
      * @memberof SystemCorpus
      */
-    _cls?: string;
+    types?: string;
     /**
      * 
      * @type {string}
      * @memberof SystemCorpus
      */
-    spacy_model?: string;
+    _cls?: string;
     /**
      * 
      * @type {string}
@@ -222,7 +379,7 @@ export interface SystemCorpus {
      * @type {string}
      * @memberof SystemCorpus
      */
-    types?: string;
+    spacy_model?: string;
 }
 
 /**
@@ -259,12 +416,6 @@ export interface Token {
 export interface User {
     /**
      * 
-     * @type {Array<string>}
-     * @memberof User
-     */
-    roles?: Array<string>;
-    /**
-     * 
      * @type {string}
      * @memberof User
      */
@@ -275,6 +426,12 @@ export interface User {
      * @memberof User
      */
     email: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof User
+     */
+    roles?: Array<string>;
 }
 
 /**
@@ -314,6 +471,12 @@ export interface UserPayload {
      * @type {string}
      * @memberof UserPayload
      */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPayload
+     */
     plain_password?: string;
     /**
      * 
@@ -321,18 +484,6 @@ export interface UserPayload {
      * @memberof UserPayload
      */
     roles?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserPayload
-     */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserPayload
-     */
-    email: string;
 }
 
 
@@ -360,18 +511,19 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, baseOptions, options);
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
             const needsSerialization = (<any>"Token" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(token || {}) : (token || "");
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(token !== undefined ? token : {}) : (token || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -396,7 +548,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, baseOptions, options);
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -404,10 +556,11 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
                 localVarQueryParameter['grant_type'] = grant_type;
             }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
 
             return {
                 url: url.format(localVarUrlObj),
@@ -432,18 +585,19 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, baseOptions, options);
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
             const needsSerialization = (<any>"Register" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(register || {}) : (register || "");
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(register !== undefined ? register : {}) : (register || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -469,8 +623,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
         createAccessToken(token: Token, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserCredentials> {
             const localVarAxiosArgs = AuthApiAxiosParamCreator(configuration).createAccessToken(token, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = Object.assign(localVarAxiosArgs.options, {url: basePath + localVarAxiosArgs.url})
-                return axios.request(axiosRequestArgs);                
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
             };
         },
         /**
@@ -483,8 +637,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
         refreshAccessToken(grant_type: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserCredentials> {
             const localVarAxiosArgs = AuthApiAxiosParamCreator(configuration).refreshAccessToken(grant_type, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = Object.assign(localVarAxiosArgs.options, {url: basePath + localVarAxiosArgs.url})
-                return axios.request(axiosRequestArgs);                
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
             };
         },
         /**
@@ -497,8 +651,8 @@ export const AuthApiFp = function(configuration?: Configuration) {
         registerUser(register: Register, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserCredentials> {
             const localVarAxiosArgs = AuthApiAxiosParamCreator(configuration).registerUser(register, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = Object.assign(localVarAxiosArgs.options, {url: basePath + localVarAxiosArgs.url})
-                return axios.request(axiosRequestArgs);                
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
             };
         },
     }
@@ -588,12 +742,133 @@ export class AuthApi extends BaseAPI {
 
 }
 
+
 /**
  * CorporaApi - axios parameter creator
  * @export
  */
 export const CorporaApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @summary Returns metadata for a given corpus
+         * @param {string} corpus_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCorpus(corpus_name: string, options: any = {}): RequestArgs {
+            // verify required parameter 'corpus_name' is not null or undefined
+            if (corpus_name === null || corpus_name === undefined) {
+                throw new RequiredError('corpus_name','Required parameter corpus_name was null or undefined when calling getCorpus.');
+            }
+            const localVarPath = `/api/corpora/{corpus_name}`
+                .replace(`{${"corpus_name"}}`, encodeURIComponent(String(corpus_name)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Returns the list of available entity types
+         * @param {string} corpus_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEntityTypes(corpus_name: string, options: any = {}): RequestArgs {
+            // verify required parameter 'corpus_name' is not null or undefined
+            if (corpus_name === null || corpus_name === undefined) {
+                throw new RequiredError('corpus_name','Required parameter corpus_name was null or undefined when calling getEntityTypes.');
+            }
+            const localVarPath = `/api/corpora/{corpus_name}/entity-types`
+                .replace(`{${"corpus_name"}}`, encodeURIComponent(String(corpus_name)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Processes given text with SpaCy
+         * @param {string} corpus_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNerDocument(corpus_name: string, options: any = {}): RequestArgs {
+            // verify required parameter 'corpus_name' is not null or undefined
+            if (corpus_name === null || corpus_name === undefined) {
+                throw new RequiredError('corpus_name','Required parameter corpus_name was null or undefined when calling getNerDocument.');
+            }
+            const localVarPath = `/api/corpora/{corpus_name}/ner`
+                .replace(`{${"corpus_name"}}`, encodeURIComponent(String(corpus_name)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @summary List available corpora
@@ -607,23 +882,24 @@ export const CorporaApiAxiosParamCreator = function (configuration?: Configurati
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, baseOptions, options);
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
             // authentication oAuth2Password required
             // oauth required
             if (configuration && configuration.accessToken) {
-				const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-					? configuration.accessToken("oAuth2Password", ["user", "admin"])
-					: configuration.accessToken;
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
 
             return {
                 url: url.format(localVarUrlObj),
@@ -643,23 +919,269 @@ export const CorporaApiAxiosParamCreator = function (configuration?: Configurati
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, baseOptions, options);
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
             // authentication oAuth2Password required
             // oauth required
             if (configuration && configuration.accessToken) {
-				const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-					? configuration.accessToken("oAuth2Password", ["user", "admin"])
-					: configuration.accessToken;
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Add a new text to used for training
+         * @param {string} corpus_name 
+         * @param {NewText} new_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        queueTrainingText(corpus_name: string, new_text: NewText, options: any = {}): RequestArgs {
+            // verify required parameter 'corpus_name' is not null or undefined
+            if (corpus_name === null || corpus_name === undefined) {
+                throw new RequiredError('corpus_name','Required parameter corpus_name was null or undefined when calling queueTrainingText.');
+            }
+            // verify required parameter 'new_text' is not null or undefined
+            if (new_text === null || new_text === undefined) {
+                throw new RequiredError('new_text','Required parameter new_text was null or undefined when calling queueTrainingText.');
+            }
+            const localVarPath = `/api/corpora/{corpus_name}/training`
+                .replace(`{${"corpus_name"}}`, encodeURIComponent(String(corpus_name)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"NewText" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(new_text !== undefined ? new_text : {}) : (new_text || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * :raises Unauthorized: When current user has insufficient permissions :raises BadRequest: When couldn't delete the corpus
+         * @summary Deletes a corpus
+         * @param {string} corpus_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeCorpus(corpus_name: string, options: any = {}): RequestArgs {
+            // verify required parameter 'corpus_name' is not null or undefined
+            if (corpus_name === null || corpus_name === undefined) {
+                throw new RequiredError('corpus_name','Required parameter corpus_name was null or undefined when calling removeCorpus.');
+            }
+            const localVarPath = `/api/corpora/{corpus_name}`
+                .replace(`{${"corpus_name"}}`, encodeURIComponent(String(corpus_name)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Creates a corpus from a given SpaCy corpus
+         * @param {CreateNERdCorpus} create_ne_rd_corpus 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        upsertCorpus(create_ne_rd_corpus: CreateNERdCorpus, options: any = {}): RequestArgs {
+            // verify required parameter 'create_ne_rd_corpus' is not null or undefined
+            if (create_ne_rd_corpus === null || create_ne_rd_corpus === undefined) {
+                throw new RequiredError('create_ne_rd_corpus','Required parameter create_ne_rd_corpus was null or undefined when calling upsertCorpus.');
+            }
+            const localVarPath = `/api/corpora`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"CreateNERdCorpus" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(create_ne_rd_corpus !== undefined ? create_ne_rd_corpus : {}) : (create_ne_rd_corpus || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update or create entity types
+         * @param {string} corpus_name 
+         * @param {NERType} ner_type 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        upsertEntityTypes(corpus_name: string, ner_type: NERType, options: any = {}): RequestArgs {
+            // verify required parameter 'corpus_name' is not null or undefined
+            if (corpus_name === null || corpus_name === undefined) {
+                throw new RequiredError('corpus_name','Required parameter corpus_name was null or undefined when calling upsertEntityTypes.');
+            }
+            // verify required parameter 'ner_type' is not null or undefined
+            if (ner_type === null || ner_type === undefined) {
+                throw new RequiredError('ner_type','Required parameter ner_type was null or undefined when calling upsertEntityTypes.');
+            }
+            const localVarPath = `/api/corpora/{corpus_name}/entity-types`
+                .replace(`{${"corpus_name"}}`, encodeURIComponent(String(corpus_name)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"NERType" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(ner_type !== undefined ? ner_type : {}) : (ner_type || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Model entity recognition correction TODO: Document this
+         * @param {string} corpus_name 
+         * @param {DocumentModel} document_model 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        upsertNerDocument(corpus_name: string, document_model: DocumentModel, options: any = {}): RequestArgs {
+            // verify required parameter 'corpus_name' is not null or undefined
+            if (corpus_name === null || corpus_name === undefined) {
+                throw new RequiredError('corpus_name','Required parameter corpus_name was null or undefined when calling upsertNerDocument.');
+            }
+            // verify required parameter 'document_model' is not null or undefined
+            if (document_model === null || document_model === undefined) {
+                throw new RequiredError('document_model','Required parameter document_model was null or undefined when calling upsertNerDocument.');
+            }
+            const localVarPath = `/api/corpora/{corpus_name}/ner`
+                .replace(`{${"corpus_name"}}`, encodeURIComponent(String(corpus_name)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"DocumentModel" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(document_model !== undefined ? document_model : {}) : (document_model || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -677,6 +1199,48 @@ export const CorporaApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @summary Returns metadata for a given corpus
+         * @param {string} corpus_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCorpus(corpus_name: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<MetadataFields> {
+            const localVarAxiosArgs = CorporaApiAxiosParamCreator(configuration).getCorpus(corpus_name, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Returns the list of available entity types
+         * @param {string} corpus_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEntityTypes(corpus_name: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<NERType>> {
+            const localVarAxiosArgs = CorporaApiAxiosParamCreator(configuration).getEntityTypes(corpus_name, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Processes given text with SpaCy
+         * @param {string} corpus_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNerDocument(corpus_name: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<DocumentModel> {
+            const localVarAxiosArgs = CorporaApiAxiosParamCreator(configuration).getNerDocument(corpus_name, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @summary List available corpora
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -684,8 +1248,8 @@ export const CorporaApiFp = function(configuration?: Configuration) {
         listCorpora(options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<NERdCorpus>> {
             const localVarAxiosArgs = CorporaApiAxiosParamCreator(configuration).listCorpora(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = Object.assign(localVarAxiosArgs.options, {url: basePath + localVarAxiosArgs.url})
-                return axios.request(axiosRequestArgs);                
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
             };
         },
         /**
@@ -697,8 +1261,81 @@ export const CorporaApiFp = function(configuration?: Configuration) {
         listSystemCorpora(options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SystemCorpus>> {
             const localVarAxiosArgs = CorporaApiAxiosParamCreator(configuration).listSystemCorpora(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = Object.assign(localVarAxiosArgs.options, {url: basePath + localVarAxiosArgs.url})
-                return axios.request(axiosRequestArgs);                
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Add a new text to used for training
+         * @param {string} corpus_name 
+         * @param {NewText} new_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        queueTrainingText(corpus_name: string, new_text: NewText, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = CorporaApiAxiosParamCreator(configuration).queueTrainingText(corpus_name, new_text, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * :raises Unauthorized: When current user has insufficient permissions :raises BadRequest: When couldn't delete the corpus
+         * @summary Deletes a corpus
+         * @param {string} corpus_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeCorpus(corpus_name: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = CorporaApiAxiosParamCreator(configuration).removeCorpus(corpus_name, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Creates a corpus from a given SpaCy corpus
+         * @param {CreateNERdCorpus} create_ne_rd_corpus 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        upsertCorpus(create_ne_rd_corpus: CreateNERdCorpus, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<NERdCorpus> {
+            const localVarAxiosArgs = CorporaApiAxiosParamCreator(configuration).upsertCorpus(create_ne_rd_corpus, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Update or create entity types
+         * @param {string} corpus_name 
+         * @param {NERType} ner_type 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        upsertEntityTypes(corpus_name: string, ner_type: NERType, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = CorporaApiAxiosParamCreator(configuration).upsertEntityTypes(corpus_name, ner_type, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Model entity recognition correction TODO: Document this
+         * @param {string} corpus_name 
+         * @param {DocumentModel} document_model 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        upsertNerDocument(corpus_name: string, document_model: DocumentModel, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = CorporaApiAxiosParamCreator(configuration).upsertNerDocument(corpus_name, document_model, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
             };
         },
     }
@@ -710,6 +1347,36 @@ export const CorporaApiFp = function(configuration?: Configuration) {
  */
 export const CorporaApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
+        /**
+         * 
+         * @summary Returns metadata for a given corpus
+         * @param {string} corpus_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCorpus(corpus_name: string, options?: any) {
+            return CorporaApiFp(configuration).getCorpus(corpus_name, options)(axios, basePath);
+        },
+        /**
+         * 
+         * @summary Returns the list of available entity types
+         * @param {string} corpus_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEntityTypes(corpus_name: string, options?: any) {
+            return CorporaApiFp(configuration).getEntityTypes(corpus_name, options)(axios, basePath);
+        },
+        /**
+         * 
+         * @summary Processes given text with SpaCy
+         * @param {string} corpus_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNerDocument(corpus_name: string, options?: any) {
+            return CorporaApiFp(configuration).getNerDocument(corpus_name, options)(axios, basePath);
+        },
         /**
          * 
          * @summary List available corpora
@@ -728,6 +1395,59 @@ export const CorporaApiFactory = function (configuration?: Configuration, basePa
         listSystemCorpora(options?: any) {
             return CorporaApiFp(configuration).listSystemCorpora(options)(axios, basePath);
         },
+        /**
+         * 
+         * @summary Add a new text to used for training
+         * @param {string} corpus_name 
+         * @param {NewText} new_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        queueTrainingText(corpus_name: string, new_text: NewText, options?: any) {
+            return CorporaApiFp(configuration).queueTrainingText(corpus_name, new_text, options)(axios, basePath);
+        },
+        /**
+         * :raises Unauthorized: When current user has insufficient permissions :raises BadRequest: When couldn't delete the corpus
+         * @summary Deletes a corpus
+         * @param {string} corpus_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeCorpus(corpus_name: string, options?: any) {
+            return CorporaApiFp(configuration).removeCorpus(corpus_name, options)(axios, basePath);
+        },
+        /**
+         * 
+         * @summary Creates a corpus from a given SpaCy corpus
+         * @param {CreateNERdCorpus} create_ne_rd_corpus 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        upsertCorpus(create_ne_rd_corpus: CreateNERdCorpus, options?: any) {
+            return CorporaApiFp(configuration).upsertCorpus(create_ne_rd_corpus, options)(axios, basePath);
+        },
+        /**
+         * 
+         * @summary Update or create entity types
+         * @param {string} corpus_name 
+         * @param {NERType} ner_type 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        upsertEntityTypes(corpus_name: string, ner_type: NERType, options?: any) {
+            return CorporaApiFp(configuration).upsertEntityTypes(corpus_name, ner_type, options)(axios, basePath);
+        },
+        /**
+         * 
+         * @summary Model entity recognition correction TODO: Document this
+         * @param {string} corpus_name 
+         * @param {DocumentModel} document_model 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        upsertNerDocument(corpus_name: string, document_model: DocumentModel, options?: any) {
+            return CorporaApiFp(configuration).upsertNerDocument(corpus_name, document_model, options)(axios, basePath);
+        },
     };
 };
 
@@ -738,6 +1458,42 @@ export const CorporaApiFactory = function (configuration?: Configuration, basePa
  * @extends {BaseAPI}
  */
 export class CorporaApi extends BaseAPI {
+    /**
+     * 
+     * @summary Returns metadata for a given corpus
+     * @param {string} corpus_name 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorporaApi
+     */
+    public getCorpus(corpus_name: string, options?: any) {
+        return CorporaApiFp(this.configuration).getCorpus(corpus_name, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Returns the list of available entity types
+     * @param {string} corpus_name 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorporaApi
+     */
+    public getEntityTypes(corpus_name: string, options?: any) {
+        return CorporaApiFp(this.configuration).getEntityTypes(corpus_name, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Processes given text with SpaCy
+     * @param {string} corpus_name 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorporaApi
+     */
+    public getNerDocument(corpus_name: string, options?: any) {
+        return CorporaApiFp(this.configuration).getNerDocument(corpus_name, options)(this.axios, this.basePath);
+    }
+
     /**
      * 
      * @summary List available corpora
@@ -760,7 +1516,71 @@ export class CorporaApi extends BaseAPI {
         return CorporaApiFp(this.configuration).listSystemCorpora(options)(this.axios, this.basePath);
     }
 
+    /**
+     * 
+     * @summary Add a new text to used for training
+     * @param {string} corpus_name 
+     * @param {NewText} new_text 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorporaApi
+     */
+    public queueTrainingText(corpus_name: string, new_text: NewText, options?: any) {
+        return CorporaApiFp(this.configuration).queueTrainingText(corpus_name, new_text, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * :raises Unauthorized: When current user has insufficient permissions :raises BadRequest: When couldn't delete the corpus
+     * @summary Deletes a corpus
+     * @param {string} corpus_name 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorporaApi
+     */
+    public removeCorpus(corpus_name: string, options?: any) {
+        return CorporaApiFp(this.configuration).removeCorpus(corpus_name, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Creates a corpus from a given SpaCy corpus
+     * @param {CreateNERdCorpus} create_ne_rd_corpus 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorporaApi
+     */
+    public upsertCorpus(create_ne_rd_corpus: CreateNERdCorpus, options?: any) {
+        return CorporaApiFp(this.configuration).upsertCorpus(create_ne_rd_corpus, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Update or create entity types
+     * @param {string} corpus_name 
+     * @param {NERType} ner_type 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorporaApi
+     */
+    public upsertEntityTypes(corpus_name: string, ner_type: NERType, options?: any) {
+        return CorporaApiFp(this.configuration).upsertEntityTypes(corpus_name, ner_type, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Model entity recognition correction TODO: Document this
+     * @param {string} corpus_name 
+     * @param {DocumentModel} document_model 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorporaApi
+     */
+    public upsertNerDocument(corpus_name: string, document_model: DocumentModel, options?: any) {
+        return CorporaApiFp(this.configuration).upsertNerDocument(corpus_name, document_model, options)(this.axios, this.basePath);
+    }
+
 }
+
 
 /**
  * RolesApi - axios parameter creator
@@ -781,23 +1601,24 @@ export const RolesApiAxiosParamCreator = function (configuration?: Configuration
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, baseOptions, options);
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
             // authentication oAuth2Password required
             // oauth required
             if (configuration && configuration.accessToken) {
-				const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-					? configuration.accessToken("oAuth2Password", ["user", "admin"])
-					: configuration.accessToken;
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
 
             return {
                 url: url.format(localVarUrlObj),
@@ -822,8 +1643,8 @@ export const RolesApiFp = function(configuration?: Configuration) {
         listRoles(options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<RoleList> {
             const localVarAxiosArgs = RolesApiAxiosParamCreator(configuration).listRoles(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = Object.assign(localVarAxiosArgs.options, {url: basePath + localVarAxiosArgs.url})
-                return axios.request(axiosRequestArgs);                
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
             };
         },
     }
@@ -867,6 +1688,7 @@ export class RolesApi extends BaseAPI {
 
 }
 
+
 /**
  * UsersApi - axios parameter creator
  * @export
@@ -892,23 +1714,24 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, baseOptions, options);
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
             // authentication oAuth2Password required
             // oauth required
             if (configuration && configuration.accessToken) {
-				const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-					? configuration.accessToken("oAuth2Password", ["user", "admin"])
-					: configuration.accessToken;
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
 
             return {
                 url: url.format(localVarUrlObj),
@@ -930,16 +1753,16 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, baseOptions, options);
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
             // authentication oAuth2Password required
             // oauth required
             if (configuration && configuration.accessToken) {
-				const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-					? configuration.accessToken("oAuth2Password", ["user", "admin"])
-					: configuration.accessToken;
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
 
@@ -951,10 +1774,11 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['page_size'] = page_size;
             }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
 
             return {
                 url: url.format(localVarUrlObj),
@@ -985,27 +1809,28 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions = Object.assign({ method: 'PATCH' }, baseOptions, options);
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
             // authentication oAuth2Password required
             // oauth required
             if (configuration && configuration.accessToken) {
-				const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-					? configuration.accessToken("oAuth2Password", ["user", "admin"])
-					: configuration.accessToken;
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
             const needsSerialization = (<any>"UserPayload" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(user_payload || {}) : (user_payload || "");
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(user_payload !== undefined ? user_payload : {}) : (user_payload || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1031,23 +1856,24 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, baseOptions, options);
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
             // authentication oAuth2Password required
             // oauth required
             if (configuration && configuration.accessToken) {
-				const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-					? configuration.accessToken("oAuth2Password", ["user", "admin"])
-					: configuration.accessToken;
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1073,8 +1899,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
         deleteUser(user_email: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User> {
             const localVarAxiosArgs = UsersApiAxiosParamCreator(configuration).deleteUser(user_email, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = Object.assign(localVarAxiosArgs.options, {url: basePath + localVarAxiosArgs.url})
-                return axios.request(axiosRequestArgs);                
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
             };
         },
         /**
@@ -1088,8 +1914,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
         listUsers(page?: number, page_size?: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>> {
             const localVarAxiosArgs = UsersApiAxiosParamCreator(configuration).listUsers(page, page_size, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = Object.assign(localVarAxiosArgs.options, {url: basePath + localVarAxiosArgs.url})
-                return axios.request(axiosRequestArgs);                
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
             };
         },
         /**
@@ -1103,8 +1929,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
         updateUser(user_email: string, user_payload: UserPayload, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User> {
             const localVarAxiosArgs = UsersApiAxiosParamCreator(configuration).updateUser(user_email, user_payload, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = Object.assign(localVarAxiosArgs.options, {url: basePath + localVarAxiosArgs.url})
-                return axios.request(axiosRequestArgs);                
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
             };
         },
         /**
@@ -1117,8 +1943,8 @@ export const UsersApiFp = function(configuration?: Configuration) {
         userDetails(user_email: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User> {
             const localVarAxiosArgs = UsersApiAxiosParamCreator(configuration).userDetails(user_email, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = Object.assign(localVarAxiosArgs.options, {url: basePath + localVarAxiosArgs.url})
-                return axios.request(axiosRequestArgs);                
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
             };
         },
     }
@@ -1233,4 +2059,5 @@ export class UsersApi extends BaseAPI {
     }
 
 }
+
 
