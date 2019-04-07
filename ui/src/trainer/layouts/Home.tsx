@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { Link } from "react-router-dom";
 import useAuthentication from "../hooks/useAuthentication";
 import { useTranslation } from "react-i18next";
+import nsps from "../helpers/i18n-namespaces";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -20,7 +21,7 @@ const styles = (theme: Theme) =>
 
 const Home = ({ classes }: { classes: any }) => {
   const { isAdmin } = useAuthentication();
-  const [t] = useTranslation();
+  const [t] = useTranslation(nsps.home);
   return (
     <div className={classes.grow}>
       <NavigationBar />
