@@ -9,7 +9,7 @@ class NERdSetup:
             User.drop_collection()
         User(
             name='Admin',
-            email='admin@nerd.com',
+            email='admin@example.com',
             plain_password='1',
             roles=['user', 'admin']
         ).save()
