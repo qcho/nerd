@@ -1,16 +1,16 @@
-from werkzeug.exceptions import BadRequest, Conflict, NotFound, Unauthorized
+from flask.views import MethodView
+from flask_rest_api import Blueprint
+from werkzeug.exceptions import BadRequest, Conflict, NotFound
 
-from apis import (BaseSchema, get_current_user, jwt_and_role_required,
+from apis import (get_current_user, jwt_and_role_required,
                   jwt_optional, response_error)
-from core.document.corpus import (Corpus, DocumentModel, NERdCorpus, NERType,
+from core.document.corpus import (Corpus, NERdCorpus, NERType,
                                   SystemCorpus)
 from core.document.user import Role
 from core.schema.corpus import (CreateNERdCorpusSchema, DocumentModelSchema,
                                 MetadataFieldsSchema, NERdCorpusSchema,
                                 NERTypeSchema, NewTextSchema,
                                 SystemCorpusSchema)
-from flask.views import MethodView
-from flask_rest_api import Blueprint
 from worker import add_correction, force_training, queue_text
 
 blp = Blueprint("corpora", "corpora", description="NER Corpora operations")
