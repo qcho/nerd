@@ -64,8 +64,8 @@ const ModelDetails = ({ model }: { model: NERdCorpus }) => {
   }
   return (
     <div>
-      <Typography>{t("Queued", { amount: details.queued })}</Typography>
-      <Typography>{t("Trained", { amount: details.trained })}</Typography>
+      <Typography>{t("Queued: {{count}}", { count: details.queued })}</Typography>
+      <Typography>{t("Trained: {{count}}", { count: details.trained })}</Typography>
     </div>
   );
 };
