@@ -1,51 +1,19 @@
 from werkzeug.exceptions import BadRequest, Conflict, NotFound, Unauthorized
 
-from apis import (BaseSchema, jwt_and_role_required, jwt_optional,
-                  response_error)
+from apis import (BaseSchema, get_current_user, jwt_and_role_required,
+                  jwt_optional, response_error)
 from core.document.corpus import (Corpus, DocumentModel, NERdCorpus, NERType,
                                   SystemCorpus)
 from core.document.user import Role
+from core.schema.corpus import (CreateNERdCorpusSchema, DocumentModelSchema,
+                                MetadataFieldsSchema, NERdCorpusSchema,
+                                NERTypeSchema, NewTextSchema,
+                                SystemCorpusSchema)
 from flask.views import MethodView
 from flask_rest_api import Blueprint
-from marshmallow import fields
-from marshmallow_mongoengine import ModelSchema
-from worker import force_training
+from worker import add_correction, force_training, queue_text
 
 blp = Blueprint("corpora", "corpora", description="NER Corpora operations")
-
-
-class SystemCorpusSchema(BaseSchema, ModelSchema):
-    class Meta:
-        model = SystemCorpus
-
-
-class NERdCorpusSchema(BaseSchema, ModelSchema):
-    class Meta:
-        model = NERdCorpus
-
-
-class DocumentModelSchema(BaseSchema, ModelSchema):
-    class Meta:
-        model = DocumentModel
-
-
-class NERTypeSchema(BaseSchema, ModelSchema):
-    class Meta:
-        model = NERType
-
-
-class MetadataFieldsSchema(BaseSchema):
-    queued = fields.Integer(required=True)
-    trained = fields.Integer(required=True)
-
-
-class NewTextSchema(BaseSchema):
-    text = fields.String(required=True)
-
-
-class CreateNERdCorpusSchema(BaseSchema):
-    base_corpus_name = fields.String(required=True)
-    corpus_name = fields.String(required=True)
 
 
 @blp.route("/system")
@@ -137,7 +105,7 @@ class CorpusTrainingResource(MethodView):
         """
         Add a new text to used for training
         """
-        corpus = Corpus.objects.get(name=corpus_name)
+        corpus = NERdCorpus.objects.get(name=corpus_name)
         text = payload["text"]
         queue_text(corpus, text)
         return None, 204
@@ -155,7 +123,7 @@ class CorpusRefreshResource(MethodView):
         """
         try:
             corpus = NERdCorpus.objects.get(name=corpus_name)
-            force_training(corpus.id)
+            force_training(corpus)
         except:
             raise NotFound("Corpus not found")
         return None, 204
@@ -171,9 +139,9 @@ class NerDocumentResource(MethodView):
         Model entity recognition correction
         TODO: Document this
         """
-        corpus = Corpus.objects.get(name=model_name)
-
-        # train_model(nerd_model, payload)
+        corpus = NERdCorpus.objects.get(name=model_name)
+        user = get_current_user()
+        result = add_correction(corpus, user, payload)
         return None, 204
 
     @jwt_and_role_required(Role.ADMIN)  # TODO: check permission level

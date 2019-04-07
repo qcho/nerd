@@ -1,12 +1,14 @@
 from functools import wraps
 
-from apispec.utils import deepupdate
-from core.document.user import Role
-from flask_jwt_extended import get_jwt_claims, jwt_optional, verify_jwt_in_request
-from flask_rest_api import Api, abort
-from marshmallow import Schema, fields, post_dump, post_load, pre_load
 from werkzeug.exceptions import HTTPException, Unauthorized
 from werkzeug.http import HTTP_STATUS_CODES
+
+from apispec.utils import deepupdate
+from core.document.user import Role
+from flask_jwt_extended import (get_current_user, get_jwt_claims, jwt_optional,
+                                verify_jwt_in_request)
+from flask_rest_api import Api, abort
+from marshmallow import Schema, fields, post_dump, post_load, pre_load
 
 api = Api()
 
@@ -57,7 +59,8 @@ def jwt_and_role_required(role: Role = Role.USER):
 
 
 class HttpErrorSchema(BaseSchema):
-    status = fields.String(required=True, description="A description of the error")
+    status = fields.String(
+        required=True, description="A description of the error")
 
 
 def response_error(error: HTTPException):

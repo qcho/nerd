@@ -40,11 +40,11 @@ class NERType(me.EmbeddedDocument):
 
 class TrainedText(me.EmbeddedDocument):
     trained_by = me.ReferenceField(User)
-    text = me.DictField()
+    text = me.EmbeddedDocumentField(DocumentModel)
 
 
 class TrainingEntry(me.EmbeddedDocument):
-    original_text = me.DictField()
+    original = me.EmbeddedDocumentField(DocumentModel)
     trained = me.ListField(me.EmbeddedDocumentField(TrainedText))
 
 
@@ -71,8 +71,6 @@ class NERdCorpus(Corpus):
     @classmethod
     def post_delete(cls, sender, document, *args, **kwargs):
         delete_custom_model(document.name)
-
-
 
 
 signals.post_save.connect(NERdCorpus.post_save, sender=NERdCorpus)
