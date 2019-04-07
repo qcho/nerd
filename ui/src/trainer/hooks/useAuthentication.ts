@@ -9,6 +9,7 @@ function useAuthentication() {
   const { credentials, updateCredentials, clearCredentials } = useAuthStorage();
   let [loggedIn, setLoggedIn] = useState<boolean>(false);
   let [isAdmin, setIsAdmin] = useState<boolean>(false);
+  let [isUser, setIsUser] = useState<boolean>(false);
   const [t] = useTranslation(nsps.authentication);
   const api = new AuthApi();
 
@@ -52,8 +53,10 @@ function useAuthentication() {
     if (hasCredentials) {
       const roles = credentials!.roles || [];
       setIsAdmin(roles.includes("admin"));
+      setIsUser(roles.includes("user"));
     } else {
       setIsAdmin(false);
+      setIsUser(false);
     }
   }, [credentials]);
 
@@ -92,6 +95,7 @@ function useAuthentication() {
     logout,
     loggedIn,
     isAdmin,
+    isUser,
     register,
     credentials
   };

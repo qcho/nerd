@@ -19,9 +19,9 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
 import Http from "../helpers/http";
-import { MaybeSystemCorpus } from "../types/optionals";
 import CreateModelDialog from "../widgets/CreateModelDialog";
 import { apiConfig } from "../helpers/api-config";
+import CorpusDetails from "../widgets/CorpusDetails";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -38,39 +38,36 @@ const styles = (theme: Theme) =>
     }
   });
 
-const ModelDetails = ({ model }: { model: NERdCorpus }) => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [details, setDetails] = useState<any>({});
+type CorpusItemProps = {
+  corpus: NERdCorpus;
+  onDelete: any;
+};
+
+const CorpusItem = ({ corpus, onDelete }: CorpusItemProps) => {
   const [t] = useTranslation(nsps.modelManagement);
-
-  useEffect(() => {
-    const fetchDetails = async () => {
-      // TODO(jpo): We need this endpoint.
-      // ModelApi.details(modelName)
-      //   .then(data => {
-      //     setDetails(data);
-      //   })
-      //   .catch(error => {
-      //     console.log("Couldn't get model details", [error]);
-      //   })
-      //   .finally(() => setLoading(false));
-    };
-    setLoading(true);
-    fetchDetails();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
   return (
-    <div>
-      <Typography>{t("Queued: {{count}}", { count: details.queued })}</Typography>
-      <Typography>{t("Trained: {{count}}", { count: details.trained })}</Typography>
-    </div>
+    <ExpansionPanel key={corpus.id} expanded>
+      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant="h6">{corpus.name}</Typography>
+      </ExpansionPanelSummary>
+      <ExpansionPanelDetails>
+        <Grid container direction="column">
+          <Grid item>
+            <CorpusDetails model={corpus} />
+          </Grid>
+        </Grid>
+      </ExpansionPanelDetails>
+      <Divider />
+      <ExpansionPanelActions>
+        <Button color="secondary" onClick={() => onDelete(corpus)}>
+          {t("Delete")}
+        </Button>
+      </ExpansionPanelActions>
+    </ExpansionPanel>
   );
 };
 
-const ModelManagement = ({ classes }: { classes: any }) => {
+const CorpusManagement = ({ classes }: { classes: any }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [models, setModels] = useState<NERdCorpus[]>([]);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -139,24 +136,11 @@ const ModelManagement = ({ classes }: { classes: any }) => {
           />
           {models.map(model => {
             return (
-              <ExpansionPanel key={model.id}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h6">{model.name}</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                  <Grid container direction="column">
-                    <Grid item>
-                      <ModelDetails model={model} />
-                    </Grid>
-                  </Grid>
-                </ExpansionPanelDetails>
-                <Divider />
-                <ExpansionPanelActions>
-                  <Button color="secondary" onClick={() => deleteModel(model)}>
-                    {t("Delete")}
-                  </Button>
-                </ExpansionPanelActions>
-              </ExpansionPanel>
+              <CorpusItem
+                key={model.id}
+                corpus={model}
+                onDelete={deleteModel}
+              />
             );
           })}
         </div>
@@ -165,4 +149,4 @@ const ModelManagement = ({ classes }: { classes: any }) => {
   );
 };
 
-export default withStyles(styles)(ModelManagement);
+export default withStyles(styles)(CorpusManagement);

@@ -19,7 +19,6 @@ import classNames from "classnames";
 import useAuthentication from "../hooks/useAuthentication";
 import EntityTypeApi from "../api/EntityTypeApi";
 import { EntityType } from "../types/EntityType";
-// import NerApi from "../api/NerApi";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
 

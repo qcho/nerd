@@ -27,7 +27,7 @@ const Home = ({ classes }: { classes: any }) => {
       <NavigationBar />
       <div className={classNames(classes.content, classes.grow)}>
         <Link to="/preview">{t("Find entities")}</Link>
-        {isAdmin && <Link to="/models">{t("Manage models")}</Link>}
+        {isAdmin && <Link to="/corpora">{t("Manage models")}</Link>}
         {isAdmin && <Link to="/users">{t("Manage users")}</Link>}
       </div>
     </div>
