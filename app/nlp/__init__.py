@@ -12,13 +12,15 @@ from spacy.language import Language
 
 logger = get_logger(__name__)
 
-FS_PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__))) / '..' / 'models'
+FS_PATH = pathlib.Path(os.path.abspath(
+    os.path.dirname(__file__))) / '..' / 'models'
 MODEL_VERSION = 1
 DEFAULT_DROP_RATE = 0.35
 
 
 def __get_model_directory(name):
-    hashed_name = hashlib.sha256(f'nerd-{name}-v{MODEL_VERSION}'.encode('utf-8'))
+    hashed_name = hashlib.sha256(
+        f'nerd-{name}-v{MODEL_VERSION}'.encode('utf-8'))
     filename = f'spacy-{hashed_name.hexdigest()}'
     filepath = FS_PATH / filename
     filepath.mkdir(parents=True, exist_ok=True)
