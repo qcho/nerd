@@ -36,6 +36,13 @@ function addInterceptors(instance: AxiosInstance) {
       config.headers["X-Last-Retry"] = true;
       return Axios.request(config);
     } catch (e) {
+      let response = e.response;
+      if (e != undefined) {
+        let { status } = e.response;
+        if (status == 401) {
+          CredentialsStorage.clear();
+        }
+      }
       return Promise.reject(error);
     }
   });
