@@ -1,10 +1,6 @@
-import spacy
-from core.document.corpus import DocumentModel, NERdCorpus, TrainingEntry
+from core.document.corpus import DocumentModel, NERdCorpus, TrainingEntry, TrainedText
 from core.document.user import User
-from core.schema.corpus import (CreateNERdCorpusSchema, DocumentModelSchema,
-                                MetadataFieldsSchema, NERdCorpusSchema,
-                                NERTypeSchema, NewTextSchema,
-                                SystemCorpusSchema)
+from core.schema.corpus import (DocumentModelSchema)
 from nlp import load_custom_model, train_model
 
 
@@ -26,8 +22,9 @@ def queue_text(corpus: NERdCorpus, text: str):
     model = load_custom_model(corpus.name)
     doc = model(sanitize_text(text))
     spacy_trained = DocumentModelSchema().load(doc.to_json())
+    # TODO: check `spacy_trained.errors`
     training_entity = TrainingEntry(
-        original=spacy_trained,
+        original=spacy_trained.data,
         trained=[]
     )
     corpus.dataset.append(training_entity)
