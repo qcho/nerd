@@ -17,22 +17,20 @@ import { makeStyles } from "@material-ui/styles";
 import { apiConfig } from "../helpers/api-config";
 
 const useStyles = makeStyles(
-  (theme: Theme) => {
-    return {
-      chips: {
-        display: "flex",
-        flexWrap: "wrap"
-      },
-      chip: {
-        margin: theme.spacing.unit / 4
-      },
-      dropDown: {
-        position: "relative",
-        width: "auto",
-        paddingLeft: "5px"
-      }
-    };
-  },
+  (theme: Theme) => ({
+    chips: {
+      display: "flex",
+      flexWrap: "wrap"
+    },
+    chip: {
+      margin: theme.spacing.unit / 4
+    },
+    dropDown: {
+      position: "relative",
+      width: "auto",
+      paddingLeft: "5px"
+    }
+  }),
   { withTheme: true }
 );
 
