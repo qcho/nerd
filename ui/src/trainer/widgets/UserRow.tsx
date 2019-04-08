@@ -52,7 +52,6 @@ const UserRow = ({ user, roles, onDelete }: Props) => {
     setLoading(true);
     try {
       let result = await userApi.updateUser(user.email, {
-        email: user.email,
         roles: values
       });
       setUserRoles(result.data.roles || []);
