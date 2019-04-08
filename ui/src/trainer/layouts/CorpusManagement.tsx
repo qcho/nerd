@@ -64,7 +64,7 @@ const RichTableHead = ({
           />
         </TableCell>
         {headers.map(col => (
-          <TableCell key={col.id} align={col.numeric ? "right" : "left"}>
+          <TableCell key={col.id} align="left">
             {col.label}
           </TableCell>
         ))}
@@ -93,10 +93,10 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
   } = usePagination();
 
   const headers = [
-    { id: "name", numeric: false, label: t("Name") },
-    { id: "status", numeric: false, label: t("Status") },
-    { id: "lastTrained", numeric: false, label: t("Last Trained") },
-    { id: "pendingDocuments", numeric: true, label: t("Pending documents") }
+    { id: "name", label: t("Name") },
+    { id: "status", label: t("Status") },
+    { id: "lastTrained", label: t("Last Trained") },
+    { id: "pendingDocuments", label: t("Pending documents") }
   ];
 
   async function reloadCorpora(updatePagination: boolean = false) {
@@ -152,7 +152,9 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
 
   function handleRowClick(corpus: NERdCorpus) {}
 
-  function handleSelectAll() {}
+  function handleSelectAll() {
+    setSelected(corpora.map(corpus => corpus.id!));
+  }
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
@@ -175,59 +177,59 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
             onClose={() => setDialogOpen(false)}
             onCorpusCreated={onCorpusCreated}
           />
-          {!loading && <Table>
-            <RichTableHead
-              onSelectAll={handleSelectAll}
-              headers={headers}
-              numSelected={0} // TODO
-              rowCount={10} // TODO
-            />
-            <TableBody>
-              {corpora.map(corpus => {
-                const rowSelected = isSelected(corpus.id!);
-                return (
-                  <TableRow
-                    hover
-                    onClick={event => handleRowClick(corpus)}
-                    role="checkbox"
-                    selected={rowSelected}
-                    key={corpus.id}
-                    tabIndex={-1}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox checked={rowSelected} />
-                    </TableCell>
-                    <TableCell component="th" scope="row" padding="none">
-                      {corpus.name}
-                    </TableCell>
-                    <TableCell>{"creating"}</TableCell>
-                    <TableCell>
-                      {moment()
-                        .subtract(Math.floor(Math.random() * 11), "days")
-                        .fromNow()}
-                    </TableCell>
-                    <TableCell align="right">
-                      {Math.floor(Math.random() * 100)}
-                    </TableCell>
+          {!loading && (
+            <Table>
+              <RichTableHead
+                onSelectAll={handleSelectAll}
+                headers={headers}
+                numSelected={0} // TODO
+                rowCount={10} // TODO
+              />
+              <TableBody>
+                {corpora.map(corpus => {
+                  const rowSelected = isSelected(corpus.id!);
+                  return (
+                    <TableRow
+                      hover
+                      onClick={event => handleRowClick(corpus)}
+                      role="checkbox"
+                      selected={rowSelected}
+                      key={corpus.id}
+                      tabIndex={-1}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox checked={rowSelected} />
+                      </TableCell>
+                      <TableCell component="th" scope="row" padding="none">
+                        {corpus.name}
+                      </TableCell>
+                      <TableCell>{"creating"}</TableCell>
+                      <TableCell>
+                        {moment()
+                          .subtract(Math.floor(Math.random() * 11), "days")
+                          .fromNow()}
+                      </TableCell>
+                      <TableCell>{Math.floor(Math.random() * 100)}</TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+              {shouldPaginate && (
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      count={total}
+                      page={page - 1}
+                      rowsPerPageOptions={[10, 20, 50]}
+                      rowsPerPage={pageSize}
+                      onChangePage={handleChangePage}
+                      onChangeRowsPerPage={handleChangeUsersPerPage}
+                    />
                   </TableRow>
-                );
-              })}
-            </TableBody>
-            {shouldPaginate && (
-              <TableFooter>
-                <TableRow>
-                  <TablePagination
-                    count={total}
-                    page={page - 1}
-                    rowsPerPageOptions={[10, 20, 50]}
-                    rowsPerPage={pageSize}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeUsersPerPage}
-                  />
-                </TableRow>
-              </TableFooter>
-            )}
-          </Table>}
+                </TableFooter>
+              )}
+            </Table>
+          )}
         </div>
       </Grid>
     </div>
