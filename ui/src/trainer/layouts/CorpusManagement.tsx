@@ -13,7 +13,9 @@ import {
   Checkbox,
   TableCell,
   Table,
-  TableBody
+  TableBody,
+  TableFooter,
+  TablePagination
 } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
@@ -21,6 +23,7 @@ import Http from "../helpers/http";
 import CreateCorpusDialog from "../widgets/CreateCorpusDialog";
 import { apiConfig } from "../helpers/api-config";
 import moment from "moment";
+import usePagination from "../hooks/usePagination";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -79,6 +82,15 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
   const [systemCorpora, setSystemCorpora] = useState<SystemCorpus[]>([]);
   const [t] = useTranslation(nsps.modelManagement);
   const api = new CorporaApi(apiConfig());
+  const {
+    page,
+    total,
+    pageSize,
+    setPage,
+    setPageSize,
+    setFromHeaders,
+    shouldPaginate
+  } = usePagination();
 
   const headers = [
     { id: "name", numeric: false, label: t("Name") },
@@ -87,29 +99,41 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
     { id: "pendingDocuments", numeric: true, label: t("Pending documents") }
   ];
 
-  function reloadCorpora() {
-    const fetchCorpora = async () => {
-      setLoading(true);
-      try {
-        const [corpora, systemCorpora] = await Promise.all([
-          api.listCorpora(),
-          api.listSystemCorpora()
-        ]);
-        setCorpora(corpora.data);
-        setSystemCorpora(systemCorpora.data);
-      } catch (e) {
-        const errorMessage = Http.handleRequestError(e, (status, data) => {
-          return "Error loading corpora.";
-        });
-        setLoadingErrorMessage(errorMessage);
+  async function reloadCorpora(updatePagination: boolean = false) {
+    setLoading(true);
+    try {
+      const [corpora, systemCorpora] = await Promise.all([
+        api.listCorpora(page, pageSize),
+        api.listSystemCorpora()
+      ]);
+      setCorpora(corpora.data);
+      if (updatePagination) {
+        setFromHeaders(corpora.headers);
       }
-    };
-    fetchCorpora().finally(() => setLoading(false));
+      setSystemCorpora(systemCorpora.data);
+    } catch (e) {
+      const errorMessage = Http.handleRequestError(e, (status, data) => {
+        return "Error loading corpora.";
+      });
+      setLoadingErrorMessage(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleChangePage(event: any, page: number) {
+    setPage(page + 1);
+  }
+
+  function handleChangeUsersPerPage(
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) {
+    setPageSize(+event.target.value);
   }
 
   useEffect(() => {
-    reloadCorpora();
-  }, []);
+    reloadCorpora(true);
+  }, [page, pageSize]);
 
   async function deleteCorpus(model: NERdCorpus) {
     try {
@@ -151,7 +175,7 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
             onClose={() => setDialogOpen(false)}
             onCorpusCreated={onCorpusCreated}
           />
-          <Table>
+          {!loading && <Table>
             <RichTableHead
               onSelectAll={handleSelectAll}
               headers={headers}
@@ -182,12 +206,28 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
                         .subtract(Math.floor(Math.random() * 11), "days")
                         .fromNow()}
                     </TableCell>
-                    <TableCell align="right">{Math.floor(Math.random() * 100)}</TableCell>
+                    <TableCell align="right">
+                      {Math.floor(Math.random() * 100)}
+                    </TableCell>
                   </TableRow>
                 );
               })}
             </TableBody>
-          </Table>
+            {shouldPaginate && (
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    count={total}
+                    page={page - 1}
+                    rowsPerPageOptions={[10, 20, 50]}
+                    rowsPerPage={pageSize}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeUsersPerPage}
+                  />
+                </TableRow>
+              </TableFooter>
+            )}
+          </Table>}
         </div>
       </Grid>
     </div>
