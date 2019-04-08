@@ -1,5 +1,6 @@
 from flask.views import MethodView
 from flask_rest_api import Blueprint
+from flask_rest_api.pagination import PaginationParameters
 from werkzeug.exceptions import BadRequest, Conflict, NotFound
 
 from apis import (get_current_user, jwt_and_role_required,
@@ -32,10 +33,13 @@ class CorporaResource(MethodView):
     @jwt_and_role_required(Role.ADMIN)  # TODO: review permission levels
     @blp.response(NERdCorpusSchema(many=True))
     @blp.doc(operationId="listCorpora")
-    def get(self):
+    @blp.paginate()
+    def get(self, pagination_parameters: PaginationParameters):
         """List available corpora
         """
-        return Corpus.objects
+        pagination_parameters.item_count = Corpus.objects.count()
+        skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
+        return Corpus.objects.skip(skip_elements).limit(pagination_parameters.page_size)
 
     @jwt_and_role_required(Role.ADMIN)  # TODO: review permission levels
     @blp.doc(operationId="upsert_corpus")
