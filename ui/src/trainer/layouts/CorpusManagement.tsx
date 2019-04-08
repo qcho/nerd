@@ -15,15 +15,22 @@ import {
   Table,
   TableBody,
   TableFooter,
-  TablePagination
+  TablePagination,
+  Toolbar,
+  Tooltip,
+  IconButton,
+  Typography
 } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
 import Http from "../helpers/http";
 import CreateCorpusDialog from "../widgets/CreateCorpusDialog";
+import DeleteIcon from "@material-ui/icons/Delete";
 import { apiConfig } from "../helpers/api-config";
 import moment from "moment";
 import usePagination from "../hooks/usePagination";
+import { lighten } from "@material-ui/core/styles/colorManipulator";
+import classNames from "classnames";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -72,6 +79,70 @@ const RichTableHead = ({
     </TableHead>
   );
 };
+
+const toolbarStyles = (theme: Theme) => ({
+  root: {
+    paddingRight: theme.spacing.unit
+  },
+  highlight:
+    theme.palette.type === "light"
+      ? {
+          color: theme.palette.secondary.main,
+          backgroundColor: lighten(theme.palette.secondary.light, 0.85)
+        }
+      : {
+          color: theme.palette.text.primary,
+          backgroundColor: theme.palette.secondary.dark
+        },
+  spacer: {
+    flex: "1 1 100%"
+  },
+  actions: {
+    color: theme.palette.text.secondary
+  },
+  title: {
+    flex: "0 0 auto"
+  }
+});
+
+var TableToolbar = ({
+  numSelected,
+  classes,
+  onDelete
+}: {
+  numSelected: number;
+  classes: any;
+  onDelete: any;
+}) => {
+  const [t] = useTranslation(nsps.modelManagement);
+  return (
+    <Toolbar
+      className={classNames(classes.root, {
+        [classes.highlight]: numSelected > 0
+      })}
+    >
+      <div className={classes.title}>
+        {numSelected > 0 && (
+          <Typography color="inherit" variant="subtitle1">
+            {numSelected} selected
+          </Typography>
+        )}
+      </div>
+      <div className={classes.spacer} />
+      <div className={classes.actions}>
+        {numSelected > 0 && (
+          <Tooltip title="Delete">
+            <IconButton aria-label="Delete" onClick={onDelete}>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+      </div>
+    </Toolbar>
+  );
+};
+
+const StyledTableToolbar = withStyles(toolbarStyles)(TableToolbar);
 
 const CorpusManagement = ({ classes }: { classes: any }) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -150,10 +221,46 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
     reloadCorpora();
   }
 
-  function handleRowClick(corpus: NERdCorpus) {}
+  function handleRowClick(corpus: NERdCorpus) {
+    const selectedIndex = selected.indexOf(corpus.id!);
+    var newSelected: string[] = [];
 
-  function handleSelectAll() {
-    setSelected(corpora.map(corpus => corpus.id!));
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, corpus.id!);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+    setSelected(newSelected);
+  }
+
+  async function onDeleteClick() {
+    const toDelete = corpora.filter(
+      value => selected.indexOf(value.id!) !== -1
+    );
+    try {
+      setLoading(true);
+      await Promise.all(toDelete.map(corpus => api.removeCorpus(corpus.name!)));
+    } catch (e) {
+      // TODO: Handle errors
+    } finally {
+      setLoading(false);
+      reloadCorpora(true);
+    }
+  }
+
+  function handleSelectAll(event: any) {
+    if (event.target.checked) {
+      setSelected(corpora.map(corpus => corpus.id!));
+    } else {
+      setSelected([]);
+    }
   }
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
@@ -168,7 +275,7 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
           color="primary"
           onClick={() => setDialogOpen(true)}
         >
-          Create
+          {t("Create")}
         </Button>
         <div className={classes.modelList}>
           <CreateCorpusDialog
@@ -177,13 +284,19 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
             onClose={() => setDialogOpen(false)}
             onCorpusCreated={onCorpusCreated}
           />
+          {selected.length > 0 && (
+            <StyledTableToolbar
+              numSelected={selected.length}
+              onDelete={onDeleteClick}
+            />
+          )}
           {!loading && (
             <Table>
               <RichTableHead
                 onSelectAll={handleSelectAll}
                 headers={headers}
-                numSelected={0} // TODO
-                rowCount={10} // TODO
+                numSelected={selected.length}
+                rowCount={corpora.length}
               />
               <TableBody>
                 {corpora.map(corpus => {
@@ -206,7 +319,7 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
                       <TableCell>{"creating"}</TableCell>
                       <TableCell>
                         {moment()
-                          .subtract(Math.floor(Math.random() * 11), "days")
+                          .subtract(1, "days")
                           .fromNow()}
                       </TableCell>
                       <TableCell>{Math.floor(Math.random() * 100)}</TableCell>
