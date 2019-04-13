@@ -18,10 +18,7 @@ definitions:
         - sonar
       script:
         - pipe: sonarsource/sonarcloud-scan:0.1.5
-          variables:
-            SONAR_TOKEN: ${SONAR_TOKEN}
 
 pipelines:
-  branches:
-    '*':
-      - step: *sonarcloud
+  default:
+    - step: *sonarcloud
