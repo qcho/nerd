@@ -16,7 +16,6 @@ flower = "*"
 meinheld = "*"
 gunicorn = "*"
 marshmallow-enum = "*"
-me = "*"
 
 [dev-packages]
 faker = "*"
