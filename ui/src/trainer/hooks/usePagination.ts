@@ -20,7 +20,7 @@ export default function usePagination() {
     queryValues.page_size != undefined ? +queryValues.page_size : 20
   );
   const [total, setTotal] = useState<number>(0);
-  const [shouldPaginate, setShouldPaginate] = useState<boolean>(true);
+  const [shouldPaginate, setShouldPaginate] = useState<boolean>(false);
   const recordsPerPageOptions = [20, 50, 100];
 
   useEffect(() => {
@@ -33,12 +33,12 @@ export default function usePagination() {
     const newLocation = `${location.pathname}#${stringify(
       buildHash(page, pageSize)
     )}`;
-    if (location.hash.length == 0) {
+    if (location.hash.length == 0 && total > 0) {
       history.replace(newLocation);
     } else {
-      if (
-        queryValues.page != `${page}` ||
-        queryValues.page_size != `${pageSize}`
+      if (shouldPaginate &&
+        (queryValues.page != `${page}` ||
+          queryValues.page_size != `${pageSize}`)
       ) {
         history.push(newLocation);
       }
