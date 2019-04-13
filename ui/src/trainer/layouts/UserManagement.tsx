@@ -19,6 +19,9 @@ import Http from "../helpers/http";
 import UserRow from "../widgets/UserRow";
 import usePagination from "../hooks/usePagination";
 import { makeStyles } from "@material-ui/styles";
+import RichTableHead from "../widgets/RichTableHead";
+import xorSelected from "../helpers/xorSelected";
+import TableToolbar from "../widgets/TableToolbar";
 
 const useStyles = makeStyles((theme: Theme) => ({
   grow: {
@@ -46,6 +49,7 @@ const UserManagement = () => {
   } = usePagination();
   const [roles, setRoles] = useState<RoleList>({});
   const [t] = useTranslation(nsps.userManagement);
+  const [selected, setSelected] = useState<string[]>([]);
   const userApi = new UsersApi(apiConfig());
   const roleApi = new RolesApi(apiConfig());
 
@@ -82,33 +86,71 @@ const UserManagement = () => {
     setPageSize(+event.target.value);
   }
 
-  async function onDelete(user: User) {
-    userApi.deleteUser(user.email);
-    fetchUsers();
+  const headers = [
+    { id: 'name', label: t("Name") },
+    { id: 'email', label: t("Email") },
+    { id: 'roles', label: t("Roles") },
+  ]
+
+  async function onDeleteClick() {
+    const toDelete = users.filter(
+      value => selected.indexOf(value.email) !== -1
+    );
+    try {
+      setLoading(true);
+      await Promise.all(toDelete.map(user => userApi.deleteUser(user.email)));
+    } catch (e) {
+      // TODO: Handle errors
+    } finally {
+      setLoading(false);
+      setSelected([]);
+      fetchUsers();
+    }
   }
+
+  function handleSelectAll(event: any) {
+    if (event.target.checked) {
+      setSelected(users.map(user => user.email));
+    } else {
+      setSelected([]);
+    }
+  }
+
+  const isSelected = (id: string) => selected.indexOf(id) !== -1;
+  const handleRowClick = (user: User) => setSelected(xorSelected(selected, user.email));
 
   return (
     <div className={classes.grow}>
       <NavigationBar />
       <Grid container className={classes.content}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>{t("Name")}</TableCell>
-              <TableCell>{t("Email")}</TableCell>
-              <TableCell>{t("Roles")}</TableCell>
-              <TableCell align="center">{t("Actions")}</TableCell>
-            </TableRow>
-          </TableHead>
+        <Grid item xs={12}>
+          {selected.length > 0 && (
+            <TableToolbar
+              numSelected={selected.length}
+              onDelete={onDeleteClick}
+            />
+          )}
+        </Grid>
+
+        {!loading && <Table>
+          <RichTableHead
+            onSelectAll={handleSelectAll}
+            headers={headers}
+            numSelected={selected.length}
+            rowCount={users.length}
+          />
           <TableBody>
-            {users.map((user: User) => (
-              <UserRow
-                key={user.email}
-                user={user}
-                roles={roles}
-                onDelete={onDelete}
-              />
-            ))}
+            {users.map((user: User) => {
+              const rowSelected = isSelected(user.email);
+              return (
+                <UserRow
+                  user={user}
+                  selected={rowSelected}
+                  onClick={handleRowClick}
+                  availableRoles={roles}
+                />
+              )
+            })}
           </TableBody>
           {shouldPaginate && (
             <TableFooter>
@@ -124,7 +166,7 @@ const UserManagement = () => {
               </TableRow>
             </TableFooter>
           )}
-        </Table>
+        </Table>}
       </Grid>
     </div>
   );
