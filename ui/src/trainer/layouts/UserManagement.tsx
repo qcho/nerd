@@ -3,8 +3,6 @@ import {
   Theme,
   Grid,
   Table,
-  TableHead,
-  TableCell,
   TableRow,
   TableBody,
   TablePagination,
