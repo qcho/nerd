@@ -188,6 +188,5 @@ class EntityTypesResource(MethodView):
         """
         Returns the list of available entity types
         """
-        return []
         corpus = Corpus.objects.get(name=corpus_name)
         return corpus.types + corpus.parent.types
