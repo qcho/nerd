@@ -1,8 +1,5 @@
 import React from "react";
 import {
-  withStyles,
-  createStyles,
-  Theme,
   Paper,
   Typography,
   Button
@@ -10,26 +7,23 @@ import {
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
+import { makeStyles } from "@material-ui/styles";
 
-type Props = {
-  classes: any;
-};
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      height: "100vh"
-    }
-  });
+const useStyles = makeStyles(() => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100vh"
+  }
+}));
 
 const HomeLink = (props: any) => <Link to="/" {...props} />;
 
-const FourOhFour = ({ classes }: Props) => {
+const FourOhFour = () => {
   const [t] = useTranslation(nsps.fourOhFour);
+  const classes = useStyles();
   return (
     <Paper className={classes.root}>
       <Typography variant="h5">{t("Lost?")}</Typography>
@@ -40,4 +34,4 @@ const FourOhFour = ({ classes }: Props) => {
   );
 };
 
-export default withStyles(styles)(FourOhFour);
+export default FourOhFour;

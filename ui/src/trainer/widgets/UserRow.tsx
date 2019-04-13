@@ -9,7 +9,8 @@ import {
   Theme,
   Chip,
   OutlinedInput,
-  InputBase
+  InputBase,
+  Checkbox
 } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
@@ -36,11 +37,12 @@ const useStyles = makeStyles(
 
 type Props = {
   user: User;
-  roles: RoleList;
-  onDelete: any;
+  availableRoles: RoleList;
+  selected: boolean;
+  onClick: (user: User) => void;
 };
 
-const UserRow = ({ user, roles, onDelete }: Props) => {
+const UserRow = ({ user, availableRoles: roles, onClick, selected }: Props) => {
   const [t] = useTranslation(nsps.userManagement);
   const classes = useStyles();
   const [userRoles, setUserRoles] = useState<string[]>(user.roles || []);
@@ -76,43 +78,44 @@ const UserRow = ({ user, roles, onDelete }: Props) => {
     );
   }
 
+  const SelectRoles = () => (
+    <Select
+      multiple
+      displayEmpty
+      value={userRoles}
+      disabled={loading}
+      input={<InputBase className={classes.dropDown} />}
+      onChange={event => {
+        onRoleChange((event.target.value as unknown) as string[]);
+      }}
+      renderValue={selected => renderRoles(selected)}
+    >
+      <MenuItem disabled value="">
+        <em>{t("Roles")}</em>
+      </MenuItem>
+      {roles.roles!.map(name => (
+        <MenuItem key={name} value={name}>
+          {name}
+        </MenuItem>
+      ))}
+    </Select>
+  );
+
   return (
-    <TableRow>
+    <TableRow
+      hover
+      role="checkbox"
+      selected={selected}
+      onClick={() => onClick(user)}
+      tabIndex={-1}
+    >
+      <TableCell padding="checkbox">
+        <Checkbox checked={selected} />
+      </TableCell>
       <TableCell>{user.name}</TableCell>
       <TableCell>{user.email}</TableCell>
       <TableCell>
-        {roles.roles !== undefined && (
-          <Select
-            multiple
-            displayEmpty
-            value={userRoles}
-            disabled={loading}
-            input={<InputBase className={classes.dropDown} />}
-            onChange={event => {
-              onRoleChange((event.target.value as unknown) as string[]);
-            }}
-            renderValue={selected => renderRoles(selected)}
-          >
-            <MenuItem disabled value="">
-              <em>{t("Roles")}</em>
-            </MenuItem>
-            {roles.roles!.map(name => (
-              <MenuItem key={name} value={name}>
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-        )}
-      </TableCell>
-      <TableCell align="center">
-        <Button
-          onClick={() => onDelete(user)}
-          variant="outlined"
-          color="secondary"
-          size="small"
-        >
-          {t("Delete")}
-        </Button>
+        {roles.roles !== undefined && <SelectRoles />}
       </TableCell>
     </TableRow>
   );
