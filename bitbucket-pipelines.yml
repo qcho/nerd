@@ -9,11 +9,14 @@ clone:
   depth: full
 
 definitions:
+  caches:
+    sonar: ~/.sonar/cache
   steps:
     - step: &sonarcloud
       name: Analyze on SonarCloud
+      caches:
+        - sonar
       script:
-        - echo "Testing"
         - pipe: sonarsource/sonarcloud-scan:0.1.5
           variables:
             SONAR_TOKEN: ${SONAR_TOKEN}
