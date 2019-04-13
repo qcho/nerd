@@ -26,8 +26,6 @@ api.register_blueprint(roles, url_prefix='/api/roles')
 
 setup_cli(app)
 
-broker_url = os.environ.get('BROKER_URL', 'redis://redis:6379/0')
-
 celery = make_celery(app)
 
 if __name__ == '__main__':
