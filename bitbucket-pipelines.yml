@@ -12,7 +12,7 @@ definitions:
   caches:
     sonar: ~/.sonar/cache
   steps:
-    - step: &sonarcloud
+    - step: &static-analysis
       name: Analyze on SonarCloud
       caches:
         - sonar
@@ -21,4 +21,4 @@ definitions:
 
 pipelines:
   default:
-    - step: *sonarcloud
+    - step: *static-analysis
