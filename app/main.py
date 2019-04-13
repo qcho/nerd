@@ -1,5 +1,3 @@
-import os
-
 import mongoengine
 from apis import api
 from apis.auth import blp as auth
