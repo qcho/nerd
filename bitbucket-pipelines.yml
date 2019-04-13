@@ -5,8 +5,24 @@
 # You can specify a custom docker image from Docker Hub as your build environment.
 image: atlassian/default-image:2
 
+clone:
+  depth: full
+
+
+definitions:
+  caches:
+    sonar: ~/.sonar/cache
+  steps:
+    - step: &sonarcloud
+      name: Analyze on SonarCloud
+      caches:
+        - sonar
+      script:
+        - pipe: sonarsource/sonarcloud-scan:0.1.5
+          variables:
+            SONAR_TOKEN: ${SONAR_TOKEN}
+            EXTRA_ARGS: '-Dsonar.sources=.'
+
 pipelines:
   default:
-    - step:
-        script:
-          - echo "Everything is awesome!"
+    - step: *sonarcloud
