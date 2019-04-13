@@ -56,6 +56,13 @@ app.config['API_SPEC_OPTIONS'] = {
                 os.environ.get('NERD_SERVER_NAME', '0.0.0.0:80')
             ),
             'description': 'Default api endpoint'
+        },
+{
+            'url': '{}://{}'.format(
+                app.config['PREFERRED_URL_SCHEME'],
+                os.environ.get('NERD_SERVER_NAME', '127.0.0.1:5000')
+            ),
+            'description': 'Local api endpoint'
         }
     ],
     'components': {
