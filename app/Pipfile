@@ -13,9 +13,12 @@ spacy-nightly = "==2.1.0a6"
 celery = {extras = ["redis"],version = "*"}
 redis = "*"
 flower = "*"
+meinheld = "*"
+gunicorn = "*"
 
 [dev-packages]
 faker = "*"
+hupper = "*"
 
 [requires]
 python_version = "3.7"
