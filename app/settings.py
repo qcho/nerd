@@ -17,8 +17,6 @@ class BaseConfig(object):
     SERVER_NAME = os.environ.get('NERD_SERVER_NAME', 'localhost')
     # SERVER_NAME = os.environ.get('NERD_SERVER_NAME', '127.0.0.1:5000')
 
-    broker_url = os.environ.get('BROKER_URL', 'redis://redis:6379/0')
-
     CELERY_RESULT_BACKEND = os.environ.get(
         'CELERY_RESULT_BACKEND', 'redis')
     CELERY_BROKER_URL = os.environ.get(
