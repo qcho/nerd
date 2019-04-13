@@ -63,6 +63,9 @@ function UntokenizedEditor({
 
   function onMouseUp() {
     var selection = window.getSelection();
+    if (selection === null) {
+      return;
+    }
     let text = selection.toString();
     if (!text || !text.length) {
       return;
@@ -92,7 +95,7 @@ function UntokenizedEditor({
       });
 
       if (containsAnyEntity || isContainedInEntity) {
-        window.getSelection().removeAllRanges();
+        selection.removeAllRanges();
         setError("Selection can't contain other entities");
         return;
       }
@@ -103,7 +106,7 @@ function UntokenizedEditor({
       end: endPosition,
       label: "MISC"
     });
-    window.getSelection().removeAllRanges();
+    selection.removeAllRanges();
     onUpdate(document);
   }
 
