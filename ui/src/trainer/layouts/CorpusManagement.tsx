@@ -3,12 +3,9 @@ import NavigationBar from "../NavigationBar";
 import { CorporaApi, SystemCorpus, NERdCorpus } from "../apigen";
 import {
   Theme,
-  createStyles,
-  withStyles,
   Grid,
   LinearProgress,
   Button,
-  TableHead,
   TableRow,
   Checkbox,
   TableCell,
@@ -16,42 +13,41 @@ import {
   TableBody,
   TableFooter,
   TablePagination,
-  Toolbar,
-  Tooltip,
-  IconButton,
-  Typography
 } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
 import Http from "../helpers/http";
 import CreateCorpusDialog from "../widgets/CreateCorpusDialog";
-import DeleteIcon from "@material-ui/icons/Delete";
 import { apiConfig } from "../helpers/api-config";
 import moment from "moment";
 import usePagination from "../hooks/usePagination";
-import { lighten } from "@material-ui/core/styles/colorManipulator";
-import classNames from "classnames";
+import RichTableHead from '../widgets/RichTableHead';
+import TableToolbar from '../widgets/TableToolbar';
+import { makeStyles } from "@material-ui/styles";
+import xorSelected from '../helpers/xorSelected';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    grow: {
-      flexGrow: 1
-    },
-    content: {
-      padding: theme.spacing.unit * 2,
-      display: "flex",
-      flexDirection: "column"
-    },
-    modelList: {
-      marginTop: theme.spacing.unit * 2
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  grow: {
+    flexGrow: 1
+  },
+  content: {
+    paddingTop: theme.spacing.unit * 4,
+    paddingLeft: theme.spacing.unit * 10,
+    paddingRight: theme.spacing.unit * 10,
+    display: "flex",
+    flexDirection: "column"
+  },
+  modelList: {
+    marginTop: theme.spacing.unit * 2
+  }
+}), { withTheme: true });
 
-const CorpusManagement = ({ classes }: { classes: any }) => {
+const CorpusManagement = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [corpora, setCorpora] = useState<NERdCorpus[]>([]);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<string[]>([]);
+  const classes = useStyles();
   const [loadingErrorMessage, setLoadingErrorMessage] = useState<string>("");
   const [systemCorpora, setSystemCorpora] = useState<SystemCorpus[]>([]);
   const [t] = useTranslation(nsps.modelManagement);
@@ -109,38 +105,9 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
     reloadCorpora(true);
   }, [page, pageSize]);
 
-  async function deleteCorpus(model: NERdCorpus) {
-    try {
-      // TODO(jpo): Use new API
-      // await ModelApi.delete(modelName);
-      reloadCorpora();
-    } catch (error) {
-      console.log("Couldn't delete model", [error]);
-    }
-  }
-
   async function onCorpusCreated() {
     setDialogOpen(false);
     reloadCorpora();
-  }
-
-  function handleRowClick(corpus: NERdCorpus) {
-    const selectedIndex = selected.indexOf(corpus.id!);
-    var newSelected: string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, corpus.id!);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
   }
 
   async function onDeleteClick() {
@@ -168,6 +135,7 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
   }
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
+  const handleRowClick = (corpus: NERdCorpus) => setSelected(xorSelected(selected, corpus.id!));
 
   return (
     <div className={classes.grow}>
@@ -189,7 +157,7 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
             onCorpusCreated={onCorpusCreated}
           />
           {selected.length > 0 && (
-            <StyledTableToolbar
+            <TableToolbar
               numSelected={selected.length}
               onDelete={onDeleteClick}
             />
@@ -220,13 +188,13 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
                       <TableCell component="th" scope="row" padding="none">
                         {corpus.name}
                       </TableCell>
-                      <TableCell>{"creating"}</TableCell>
+                      <TableCell>{"creating" /* TODO: Un-hardcode this */}</TableCell>
                       <TableCell>
                         {moment()
-                          .subtract(1, "days")
+                          .subtract(1, "days") /* TODO: Un-hardcode this */
                           .fromNow()}
                       </TableCell>
-                      <TableCell>{Math.floor(Math.random() * 100)}</TableCell>
+                      <TableCell>{Math.floor(Math.random() * 100) /* TODO: Un-hardcode this */}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -253,4 +221,4 @@ const CorpusManagement = ({ classes }: { classes: any }) => {
   );
 };
 
-export default withStyles(styles)(CorpusManagement);
+export default CorpusManagement;
