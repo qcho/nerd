@@ -23,5 +23,6 @@ definitions:
             SONAR_TOKEN: ${SONAR_TOKEN}
 
 pipelines:
-  default:
-    - step: *sonarcloud
+  branches:
+    '*':
+      - step: *sonarcloud
