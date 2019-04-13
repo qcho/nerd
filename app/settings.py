@@ -14,7 +14,7 @@ class BaseConfig(object):
     DEBUG = False
     TESTING = False
     PREFERRED_URL_SCHEME = os.environ.get('NERD_URL_SCHEME', 'http')
-    SERVER_NAME = os.environ.get('NERD_SERVER_NAME', 'localhost')
+    NERD_SERVER_NAME = os.environ.get('NERD_SERVER_NAME', 'localhost')
     # SERVER_NAME = os.environ.get('NERD_SERVER_NAME', '127.0.0.1:5000')
 
     CELERY_RESULT_BACKEND = os.environ.get(
@@ -83,30 +83,30 @@ class BaseConfig(object):
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
     TESTING = True
+    ENV = "development"
 
 
 class TestingConfig(BaseConfig):
     DEBUG = False
     TESTING = True
+    ENV = "testing"
 
 
 class ProductionConfig(BaseConfig):
     PREFERRED_URL_SCHEME = os.environ.get('NERD_URL_SCHEME', 'https')
+    ENV = "production"
 
 
 config = {
-    "development": "settings.DevelopmentConfig",
-    "testing": "settings.TestingConfig",
-    "production": "settings.ProductionConfig"
+    "development": DevelopmentConfig,
+    "testing": TestingConfig,
+    "production": ProductionConfig
 }
 
 
-def configure_app(app):
+def setup_settings(app):
     config_name = os.getenv('FLASK_CONFIGURATION', 'development')
-    # object-based default configuration
     app.config.from_object(config[config_name])
-    # instance-folders configuration
-    app.config.from_pyfile('config.cfg', silent=True)
 
 
 MONGO_CONFIG = {
