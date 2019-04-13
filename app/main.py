@@ -1,88 +1,21 @@
-import os
-
 import mongoengine
-from flask import Flask
-
-from core.document.user import Role
-from core.security import jwt
-from core.cli import setup_cli
 from apis import api
 from apis.auth import blp as auth
 from apis.corpus.texts import blp as texts
 from apis.corpus.versions import blp as versions
-from apis.users import blp as users
 from apis.roles import blp as roles
+from apis.users import blp as users
+from core.cli import setup_cli
+from core.security import jwt
+from flask import Flask
+from settings import MONGO_CONFIG, configure_app
 from tasks import celery
 
 app = Flask('NERd')
-app.config['PREFERRED_URL_SCHEME'] = os.environ.get('NERD_URL_SCHEME', 'http')
-# app.config['SERVER_NAME'] = os.environ.get('NERD_SERVER_NAME', '127.0.0.1:5000')
+configure_app(app)
 
-mongoengine.connect(
-    db=os.environ.get('NERD_MONGO_DB_NAME', 'nerd'),
-    host=os.environ.get('NERD_MONGO_DB_HOST', None),
-    port=os.environ.get('NERD_MONGO_DB_PORT', None),
-    username=os.environ.get('NERD_MONGO_DB_USER', None),
-    password=os.environ.get('NERD_MONGO_DB_PASSWORD', None)
-)
-
-app.config['JWT_TOKEN_LOCATION'] = ('headers', 'json')
-app.config['JWT_ERROR_MESSAGE_KEY'] = "message"
-app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'zekrit dont tell plz')  # TODO: Change secret key
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 15 * 60
-app.config['JWT_IDENTITY_CLAIM'] = 'sub'
+mongoengine.connect(**MONGO_CONFIG)
 jwt.init_app(app)
-
-app.config['OPENAPI_URL_PREFIX'] = 'api'
-app.config['OPENAPI_VERSION'] = '3.0.2'
-app.config['OPENAPI_REDOC_PATH'] = '/redoc'
-app.config['OPENAPI_REDOC_VERSION'] = 'v2.0.0-rc.4'
-app.config['OPENAPI_SWAGGER_UI_PATH'] = '/doc'
-app.config['OPENAPI_SWAGGER_UI_VERSION'] = '3.22.0'
-app.config['API_VERSION'] = '1.0.0'
-app.config['API_SPEC_OPTIONS'] = {
-    'servers': [
-        {
-            'url': '{}://{}'.format(
-                app.config['PREFERRED_URL_SCHEME'],
-                os.environ.get('NERD_SERVER_NAME', '0.0.0.0:80')
-            ),
-            'description': 'Default api endpoint'
-        },
-        {
-            'url': '{}://{}'.format(
-                app.config['PREFERRED_URL_SCHEME'],
-                'localhost:3000'
-            ),
-            'description': 'Docker endpoint'
-        },
-        {
-            'url': '{}://{}'.format(
-                app.config['PREFERRED_URL_SCHEME'],
-                os.environ.get('NERD_SERVER_NAME', '127.0.0.1:5000')
-            ),
-            'description': 'UI endpoint'
-        }
-    ],
-    'components': {
-        'securitySchemes': {
-            'oAuth2Password': {
-                'type': 'oauth2',
-                'description': 'Some documentation',  # TODO: Complete this
-                'flows': {
-                    'password': {
-                        'tokenUrl': '/api/auth/token',
-                        'refreshUrl': '/api/auth/refresh',
-                        'scopes': {
-                            Role.USER.value: 'User can perform queries and training',
-                            Role.ADMIN.value: 'Admin user'
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 celery.init_app(app)
 
