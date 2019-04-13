@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Theme,
-  createStyles,
-  withStyles,
   Grid,
   Table,
   TableHead,
@@ -20,20 +18,23 @@ import { apiConfig } from "../helpers/api-config";
 import Http from "../helpers/http";
 import UserRow from "../widgets/UserRow";
 import usePagination from "../hooks/usePagination";
+import { makeStyles } from "@material-ui/styles";
 
-const styles = (theme: Theme) =>
-  createStyles({
-    grow: {
-      flexGrow: 1
-    },
-    content: {
-      marginTop: theme.spacing.unit * 2
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  grow: {
+    flexGrow: 1
+  },
+  content: {
+    marginTop: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing.unit * 10,
+    paddingRight: theme.spacing.unit * 10,
+  }
+}), { withTheme: true })
 
-const UserManagement = ({ classes }: { classes: any }) => {
+const UserManagement = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const classes = useStyles();
   const {
     page,
     total,
@@ -129,4 +130,4 @@ const UserManagement = ({ classes }: { classes: any }) => {
   );
 };
 
-export default withStyles(styles)(UserManagement);
+export default UserManagement;
