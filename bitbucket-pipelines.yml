@@ -22,3 +22,6 @@ definitions:
 pipelines:
   default:
     - step: *static-analysis
+  branches:
+    '*':
+      - step: *static-analysis
