@@ -33,7 +33,7 @@ class FilterUsersSchema(Schema):
         strict = True
         ordered = True
 
-    query = fields.String()
+    query = fields.String(required=False)
 
 
 @blp.route('/')
