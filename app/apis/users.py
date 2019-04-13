@@ -4,8 +4,11 @@ from flask.views import MethodView
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
+from marshmallow import Schema
+from marshmallow import fields
 from mongoengine import DoesNotExist
 from werkzeug.exceptions import NotFound, UnprocessableEntity
+from mongoengine.queryset.visitor import Q
 
 from apis import jwt_and_role_required, response_error
 from core.document.user import User, Role
@@ -25,19 +28,30 @@ class UserPayloadSchema(ModelSchema):
         exclude = ['password', 'email']
 
 
+class FilterUsersSchema(Schema):
+    class Meta:
+        strict = True
+        ordered = True
+
+    query = fields.String()
+
+
 @blp.route('/')
 class UserListView(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.response(UserSchema(many=True))
+    @blp.arguments(FilterUsersSchema, location='query')
     @blp.doc(operationId="listUsers")
     @blp.paginate()
-    def get(self, pagination_parameters: PaginationParameters):
+    def get(self, query_filter: FilterUsersSchema, pagination_parameters: PaginationParameters):
         """Returns a list of existing users
         """
-        pagination_parameters.item_count = User.objects.count()
+        results = User.objects if 'query' not in query_filter else User.objects(
+            Q(email__icontains=query_filter['query']) | Q(name__icontains=query_filter['query']))
+        pagination_parameters.item_count = results.count()
         skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
-        return User.objects.skip(skip_elements).limit(pagination_parameters.page_size)
+        return results.skip(skip_elements).limit(pagination_parameters.page_size)
 
 
 @blp.route('/<string:user_email>')
