@@ -8,7 +8,6 @@ image: atlassian/default-image:2
 clone:
   depth: full
 
-
 definitions:
   caches:
     sonar: ~/.sonar/cache
@@ -21,7 +20,6 @@ definitions:
         - pipe: sonarsource/sonarcloud-scan:0.1.5
           variables:
             SONAR_TOKEN: ${SONAR_TOKEN}
-            EXTRA_ARGS: '-Dsonar.sources=.'
 
 pipelines:
   default:
