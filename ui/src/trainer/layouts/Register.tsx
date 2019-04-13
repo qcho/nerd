@@ -16,39 +16,11 @@ import useAuthentication from "../hooks/useAuthentication";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
 import { Redirect } from "react-router-dom";
+import authStyles from '../styles/auth'
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-      marginLeft: theme.spacing.unit * 3,
-      marginRight: theme.spacing.unit * 3,
-      [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-        width: 400,
-        marginLeft: "auto",
-        marginRight: "auto"
-      }
-    },
-    paper: {
-      marginTop: theme.spacing.unit * 8,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-        .spacing.unit * 3}px`
-    },
-    form: {
-      width: "100%",
-      marginTop: theme.spacing.unit
-    },
-    errorMessageContainer: {
-      width: "100%",
-      marginTop: theme.spacing.unit * 2
-    },
-    errorMessage: {
-      color: theme.palette.error.main,
-      textAlign: "center"
-    }
+    ...authStyles(theme)
   });
 
 const Register = ({ classes }: { classes: any }) => {
