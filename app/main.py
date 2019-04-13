@@ -8,11 +8,14 @@ from apis.users import blp as users
 from core.cli import setup_cli
 from core.security import jwt
 from flask import Flask
-from settings import MONGO_CONFIG, configure_app
+from settings import MONGO_CONFIG, setup_settings
 from tasks import celery
+from logit import get_logger
+
+logger = get_logger(__name__)
 
 app = Flask('NERd')
-configure_app(app)
+setup_settings(app)
 
 mongoengine.connect(**MONGO_CONFIG)
 jwt.init_app(app)
