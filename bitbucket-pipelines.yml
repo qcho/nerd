@@ -13,27 +13,17 @@ definitions:
     sonar: ~/.sonar/cache
   steps:
     - step: &static-analysis
-      name: Analyze on SonarCloud
-      caches:
-        - sonar
-      script:
-        - set +u
-        - pipe: sonarsource/sonarcloud-scan:0.1.5
-          variable:
-            SONAR_TOKEN: ${SONAR_TOKEN}
-            EXTRA_ARGS: -Dsonar.projectKey=jorsay_nerd -Dsonar.organization=jorsay-bitbucket
-        - set -u
+        name: Analyze on SonarCloud
+        caches:
+          - sonar
+        script:
+          - set +u
+          - pipe: sonarsource/sonarcloud-scan:0.1.5
+            variable:
+              SONAR_TOKEN: ${SONAR_TOKEN}
+              EXTRA_ARGS: -Dsonar.projectKey=jorsay_nerd -Dsonar.organization=jorsay-bitbucket
+          - set -u
 
 pipelines:
   default:
-    - step:
-      script:
-        - ls
-    - step:
-      script:
-        - set +u
-        - pipe: sonarsource/sonarcloud-scan:0.1.5
-          variable:
-            SONAR_TOKEN: ${SONAR_TOKEN}
-            EXTRA_ARGS: -Dsonar.projectKey=jorsay_nerd -Dsonar.organization=jorsay-bitbucket
-        - set -u
+    - step: *static-analysis
