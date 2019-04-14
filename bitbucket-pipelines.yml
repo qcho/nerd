@@ -28,6 +28,9 @@ pipelines:
   default:
     - step:
       script:
+        - ls
+    - step:
+      script:
         - set +u
         - pipe: sonarsource/sonarcloud-scan:0.1.5
           variable:
