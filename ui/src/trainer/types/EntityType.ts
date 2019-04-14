@@ -4,4 +4,4 @@ export type EntityType = {
   color: string;
 };
 
-export type MaybeEntityType = EntityType|null;
+export type MaybeEntityType = EntityType | null;
