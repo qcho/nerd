@@ -15,6 +15,6 @@ function xorSelected<T>(selected: T[], entry: T) {
     );
   }
   return newSelected;
-};
+}
 
 export default xorSelected;
