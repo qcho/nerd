@@ -7,12 +7,10 @@ import {
   TextField,
   Button,
   Divider,
-  Typography,
   LinearProgress,
   Snackbar
 } from "@material-ui/core";
-import NerEditor from "../widgets/NerEditor";
-import { dummyNodeProvider } from "../helpers/nodeproviders";
+import { UntokenizedEditor } from "../widgets/UntokenizedEditor";
 import { MaybeNerDocument, NerDocument } from "../types/NerDocument";
 import NavigationBar from "../NavigationBar";
 import classNames from "classnames";
@@ -95,8 +93,6 @@ const PreviewLayout = ({ classes }: Props) => {
     // });
   }
 
-
-
   return (
     <div>
       <NavigationBar />
@@ -144,10 +140,9 @@ const PreviewLayout = ({ classes }: Props) => {
               justify="space-between"
             >
               <Grid item xs={10}>
-                <NerEditor
+                <UntokenizedEditor
                   document={document!}
                   onUpdate={onDocumentUpdate}
-                  nodeProvider={dummyNodeProvider}
                   entityTypes={entityTypes}
                 />
               </Grid>
