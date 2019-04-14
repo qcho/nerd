@@ -13,6 +13,7 @@ import {
   TableBody,
   TableFooter,
   TablePagination,
+  Paper
 } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
@@ -21,26 +22,32 @@ import CreateCorpusDialog from "../widgets/CreateCorpusDialog";
 import { apiConfig } from "../helpers/api-config";
 import moment from "moment";
 import usePagination from "../hooks/usePagination";
-import RichTableHead from '../widgets/RichTableHead';
-import TableToolbar from '../widgets/TableToolbar';
+import RichTableHead from "../widgets/RichTableHead";
+import TableToolbar from "../widgets/TableToolbar";
 import { makeStyles } from "@material-ui/styles";
-import xorSelected from '../helpers/xorSelected';
+import xorSelected from "../helpers/xorSelected";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  grow: {
-    flexGrow: 1
-  },
-  content: {
-    paddingTop: theme.spacing.unit * 4,
-    paddingLeft: theme.spacing.unit * 10,
-    paddingRight: theme.spacing.unit * 10,
-    display: "flex",
-    flexDirection: "column"
-  },
-  modelList: {
-    marginTop: theme.spacing.unit * 2
-  }
-}), { withTheme: true });
+const useStyles = makeStyles(
+  (theme: Theme) => ({
+    grow: {
+      flexGrow: 1,
+      height: "100vh"
+    },
+    content: {
+      marginTop: theme.spacing.unit * 4,
+      marginLeft: theme.spacing.unit * 10,
+      marginRight: theme.spacing.unit * 10
+    },
+    tableContainer: {
+      display: "flex",
+      flexDirection: "column"
+    },
+    modelList: {
+      marginTop: theme.spacing.unit * 2
+    }
+  }),
+  { withTheme: true }
+);
 
 const CorpusManagement = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -135,88 +142,91 @@ const CorpusManagement = () => {
   }
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
-  const handleRowClick = (corpus: NERdCorpus) => setSelected(xorSelected(selected, corpus.id!));
+  const handleRowClick = (corpus: NERdCorpus) =>
+    setSelected(xorSelected(selected, corpus.id!));
 
   return (
     <div className={classes.grow}>
       <NavigationBar />
       {loading && <LinearProgress />}
-      <Grid container className={classes.content}>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={() => setDialogOpen(true)}
-        >
-          {t("Create")}
-        </Button>
-        <div className={classes.modelList}>
-          <CreateCorpusDialog
-            open={dialogOpen}
-            systemCorpora={systemCorpora}
-            onClose={() => setDialogOpen(false)}
-            onCorpusCreated={onCorpusCreated}
-          />
-          {selected.length > 0 && (
+      <Paper className={classes.content}>
+        <Grid container className={classes.tableContainer}>
+          <div className={classes.modelList}>
+            <CreateCorpusDialog
+              open={dialogOpen}
+              systemCorpora={systemCorpora}
+              onClose={() => setDialogOpen(false)}
+              onCorpusCreated={onCorpusCreated}
+            />
+
             <TableToolbar
+              title={t("Corpus")}
               numSelected={selected.length}
               onDelete={onDeleteClick}
+              onCreate={() => setDialogOpen(true)}
             />
-          )}
-          {!loading && (
-            <Table>
-              <RichTableHead
-                onSelectAll={handleSelectAll}
-                headers={headers}
-                numSelected={selected.length}
-                rowCount={corpora.length}
-              />
-              <TableBody>
-                {corpora.map(corpus => {
-                  const rowSelected = isSelected(corpus.id!);
-                  return (
-                    <TableRow
-                      hover
-                      onClick={event => handleRowClick(corpus)}
-                      role="checkbox"
-                      selected={rowSelected}
-                      key={corpus.id}
-                      tabIndex={-1}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox checked={rowSelected} />
-                      </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
-                        {corpus.name}
-                      </TableCell>
-                      <TableCell>{"creating" /* TODO: Un-hardcode this */}</TableCell>
-                      <TableCell>
-                        {moment()
-                          .subtract(1, "days") /* TODO: Un-hardcode this */
-                          .fromNow()}
-                      </TableCell>
-                      <TableCell>{Math.floor(Math.random() * 100) /* TODO: Un-hardcode this */}</TableCell>
+            {!loading && (
+              <Table>
+                <RichTableHead
+                  onSelectAll={handleSelectAll}
+                  headers={headers}
+                  numSelected={selected.length}
+                  rowCount={corpora.length}
+                />
+                <TableBody>
+                  {corpora.map(corpus => {
+                    const rowSelected = isSelected(corpus.id!);
+                    return (
+                      <TableRow
+                        hover
+                        onClick={event => handleRowClick(corpus)}
+                        role="checkbox"
+                        selected={rowSelected}
+                        key={corpus.id}
+                        tabIndex={-1}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox checked={rowSelected} />
+                        </TableCell>
+                        <TableCell component="th" scope="row" padding="none">
+                          {corpus.name}
+                        </TableCell>
+                        <TableCell>
+                          {"creating" /* TODO: Un-hardcode this */}
+                        </TableCell>
+                        <TableCell>
+                          {moment()
+                            .subtract(1, "days") /* TODO: Un-hardcode this */
+                            .fromNow()}
+                        </TableCell>
+                        <TableCell>
+                          {Math.floor(
+                            Math.random() * 100
+                          ) /* TODO: Un-hardcode this */}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+                {shouldPaginate && (
+                  <TableFooter>
+                    <TableRow>
+                      <TablePagination
+                        count={total}
+                        page={page - 1}
+                        rowsPerPageOptions={[10, 20, 50]}
+                        rowsPerPage={pageSize}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeUsersPerPage}
+                      />
                     </TableRow>
-                  );
-                })}
-              </TableBody>
-              {shouldPaginate && (
-                <TableFooter>
-                  <TableRow>
-                    <TablePagination
-                      count={total}
-                      page={page - 1}
-                      rowsPerPageOptions={[10, 20, 50]}
-                      rowsPerPage={pageSize}
-                      onChangePage={handleChangePage}
-                      onChangeRowsPerPage={handleChangeUsersPerPage}
-                    />
-                  </TableRow>
-                </TableFooter>
-              )}
-            </Table>
-          )}
-        </div>
-      </Grid>
+                  </TableFooter>
+                )}
+              </Table>
+            )}
+          </div>
+        </Grid>
+      </Paper>
     </div>
   );
 };
