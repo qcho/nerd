@@ -102,21 +102,13 @@ const UserRow = ({ user, availableRoles: roles, onClick, selected }: Props) => {
   );
 
   return (
-    <TableRow
-      hover
-      role="checkbox"
-      selected={selected}
-      onClick={() => onClick(user)}
-      tabIndex={-1}
-    >
+    <TableRow hover role="checkbox" selected={selected} tabIndex={-1}>
       <TableCell padding="checkbox">
-        <Checkbox checked={selected} />
+        <Checkbox checked={selected} onClick={() => onClick(user)} />
       </TableCell>
       <TableCell>{user.name}</TableCell>
       <TableCell>{user.email}</TableCell>
-      <TableCell>
-        {roles.roles !== undefined && <SelectRoles />}
-      </TableCell>
+      <TableCell>{roles.roles !== undefined && <SelectRoles />}</TableCell>
     </TableRow>
   );
 };

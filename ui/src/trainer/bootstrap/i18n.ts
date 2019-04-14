@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next";
 
 import Backend from "i18next-xhr-backend";
 
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV === "development";
 
 i18n
   .use(Backend)

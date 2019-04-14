@@ -1,5 +1,5 @@
 export type Token = {
-    id: number;
-    start: number;
-    end: number;
+  id: number;
+  start: number;
+  end: number;
 };

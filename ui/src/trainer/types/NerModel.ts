@@ -1,3 +1,3 @@
 export type NerModel = {
-    name: string
-}
+  name: string;
+};

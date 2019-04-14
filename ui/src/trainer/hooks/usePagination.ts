@@ -36,7 +36,8 @@ export default function usePagination() {
     if (location.hash.length == 0 && total > 0) {
       history.replace(newLocation);
     } else {
-      if (shouldPaginate &&
+      if (
+        shouldPaginate &&
         (queryValues.page != `${page}` ||
           queryValues.page_size != `${pageSize}`)
       ) {
