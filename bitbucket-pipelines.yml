@@ -17,11 +17,12 @@ definitions:
       caches:
         - sonar
       script:
+        - set +u
         - pipe: sonarsource/sonarcloud-scan:0.1.5
+          variable:
+            SONAR_TOKEN: ${SONAR_TOKEN}
+        - set -u
 
 pipelines:
   default:
     - step: *static-analysis
-  branches:
-    '*':
-      - step: *static-analysis
