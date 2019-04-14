@@ -22,10 +22,23 @@ const EntityNode = (props: EntityNodeProps) => {
         marginRight: 2
       }}
     >
-      <span onClick={editable ? (event: any) => onClick(event.currentTarget, entity) : undefined}>
+      <span
+        onClick={
+          editable
+            ? (event: any) => onClick(event.currentTarget, entity)
+            : undefined
+        }
+      >
         <Chip
           variant="outlined"
-          label={<b><span style={{ color: entityType.color }}>{text}</span> <span>{entityType.code}</span></b>}
+          label={
+            <h1>
+              <b>
+                <span style={{ color: entityType.color }}>{text}</span>{" "}
+                <span>{entityType.code}</span>
+              </b>
+            </h1>
+          }
           onDelete={editable ? () => onDelete(entity) : undefined}
         />
       </span>

@@ -6,7 +6,7 @@ type TextNodeProps = {
 
 const TextNode = (props: TextNodeProps) => {
   return (
-    <span
+    <h1
       style={{
         height: 32,
         display: "inline-block",
@@ -15,7 +15,7 @@ const TextNode = (props: TextNodeProps) => {
       }}
     >
       {props.text}
-    </span>
+    </h1>
   );
 };
 
