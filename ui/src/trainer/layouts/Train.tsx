@@ -11,7 +11,7 @@ import {
 import NavigationBar from "../NavigationBar";
 import { makeStyles } from "@material-ui/styles";
 import { UntokenizedEditor } from "../widgets/UntokenizedEditor";
-import { NerDocument } from "../types/NerDocument";
+import { NerDocument, MaybeNerDocument } from "../types/NerDocument";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(
@@ -49,7 +49,7 @@ const useStyles = makeStyles(
   { withTheme: true }
 );
 
-const document: NerDocument = {
+const mockDocument: NerDocument = {
   ents: [
     {
       end: 32,
@@ -175,10 +175,22 @@ const entityTypes = [
 const Train = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [hasChanges, setHasChanges] = useState<boolean>(false);
+  const [document, setDocument] = useState<MaybeNerDocument>(mockDocument);
+
   const classes = useStyles();
   const [t] = useTranslation();
 
-  useEffect;
+  useEffect(() => {
+    loadNewDocument();
+  }, []);
+
+  const loadNewDocument = async () => {
+    setLoading(true);
+    setDocument(null);
+    // TODO: Load document
+    setHasChanges(false);
+    setLoading(false);
+  };
 
   const onDocumentUpdate = (document: NerDocument) => {
     setHasChanges(true);
@@ -202,63 +214,65 @@ const Train = () => {
     <div className={classes.container}>
       <NavigationBar />
       {loading && <LinearProgress />}
-      <Paper className={classes.paper}>
-        <AppBar
-          color="default"
-          position="relative"
-          className={classes.actionBar}
-        >
-          <Toolbar>
-            <div className={classes.actions}>
-              <Button
-                color="secondary"
-                variant="contained"
-                disabled={!hasChanges}
-                onClick={onReset}
-              >
-                <Typography
-                  style={{ paddingLeft: 80, paddingRight: 80 }}
-                  color="inherit"
-                  variant="h6"
-                  id="tableTitle"
+      {document != null && (
+        <Paper className={classes.paper}>
+          <AppBar
+            color="default"
+            position="relative"
+            className={classes.actionBar}
+          >
+            <Toolbar>
+              <div className={classes.actions}>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  disabled={!hasChanges}
+                  onClick={onReset}
                 >
-                  {t("RESET")}
-                </Typography>
-              </Button>
-              <Button color="inherit" onClick={onSkip}>
-                <Typography
-                  style={{ paddingLeft: 80, paddingRight: 80 }}
-                  color="inherit"
-                  variant="h6"
-                  id="tableTitle"
+                  <Typography
+                    style={{ paddingLeft: 80, paddingRight: 80 }}
+                    color="inherit"
+                    variant="h6"
+                    id="tableTitle"
+                  >
+                    {t("RESET")}
+                  </Typography>
+                </Button>
+                <Button color="inherit" onClick={onSkip}>
+                  <Typography
+                    style={{ paddingLeft: 80, paddingRight: 80 }}
+                    color="inherit"
+                    variant="h6"
+                    id="tableTitle"
+                  >
+                    {t("SKIP")}
+                  </Typography>
+                </Button>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  disabled={!hasChanges}
+                  onClick={onSave}
                 >
-                  {t("SKIP")}
-                </Typography>
-              </Button>
-              <Button
-                color="primary"
-                variant="contained"
-                disabled={!hasChanges}
-                onClick={onSave}
-              >
-                <Typography
-                  style={{ paddingLeft: 80, paddingRight: 80 }}
-                  color="inherit"
-                  variant="h6"
-                  id="tableTitle"
-                >
-                  {t("SAVE")}
-                </Typography>
-              </Button>
-            </div>
-          </Toolbar>
-        </AppBar>
-        <UntokenizedEditor
-          document={document}
-          entityTypes={entityTypes}
-          onUpdate={onDocumentUpdate}
-        />
-      </Paper>
+                  <Typography
+                    style={{ paddingLeft: 80, paddingRight: 80 }}
+                    color="inherit"
+                    variant="h6"
+                    id="tableTitle"
+                  >
+                    {t("SAVE")}
+                  </Typography>
+                </Button>
+              </div>
+            </Toolbar>
+          </AppBar>
+          <UntokenizedEditor
+            document={document}
+            entityTypes={entityTypes}
+            onUpdate={onDocumentUpdate}
+          />
+        </Paper>
+      )}
     </div>
   );
 };
