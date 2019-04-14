@@ -21,6 +21,7 @@ definitions:
         - pipe: sonarsource/sonarcloud-scan:0.1.5
           variable:
             SONAR_TOKEN: ${SONAR_TOKEN}
+            EXTRA_ARGS: -Dsonar.projectKey=jorsay_nerd -Dsonar.organization=jorsay-bitbucket
         - set -u
 
 pipelines:
