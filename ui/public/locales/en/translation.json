@@ -1,3 +1,6 @@
 {
+  "SAVE": "SAVE",
+  "RESET": "RESET",
+  "SKIP": "SKIP",
   "ADD": "ADD"
 }

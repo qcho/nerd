@@ -17,7 +17,7 @@ export default function useRouteTitle(location: any) {
     return t("User Management");
   }
   if (pathname == "/train") {
-    return t("Train");
+    return t("Train Corpus");
   }
   return "";
 }

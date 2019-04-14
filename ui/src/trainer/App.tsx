@@ -11,8 +11,7 @@ import FourOhFour from "./layouts/FourOhFour";
 import CorpusManagement from "./layouts/CorpusManagement";
 import useAuthentication from "./hooks/useAuthentication";
 import UserManagement from "./layouts/UserManagement";
-import TrainChooseCorpus from "./layouts/TrainChooseCorpus";
-import TrainCorpus from "./layouts/TrainCorpus";
+import Train from "./layouts/Train";
 
 const theme = createMuiTheme({
   typography: {
@@ -30,8 +29,7 @@ const Navigation = () => {
       <Route exact path="/register" component={Register} />
       {isAdmin && <Route exact path="/corpora" component={CorpusManagement} />}
       {isAdmin && <Route exact path="/users" component={UserManagement} />}
-      {isUser && <Route exact path="/train" component={TrainChooseCorpus} />}
-      {isUser && <Route path="/train/:corpus" component={TrainCorpus} />}
+      {isUser && <Route exact path="/train" component={Train} />}
       <Route component={FourOhFour} />
     </Switch>
   );
