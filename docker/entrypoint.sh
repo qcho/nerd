@@ -2,7 +2,7 @@
 set -e
 
 case "$ENV_PIPENV_ARGS" in
-  "--dev"*) HUPPER="hupper -m";;
+  # "--dev"*) HUPPER="hupper -m";;
   *)    HUPPER="";;
 esac
 
@@ -14,7 +14,7 @@ main() {
     case "${func}" in
         "web")
             export GUNICORN_CONF=""
-            exec $HUPPER gunicorn.app.wsgiapp -k egg:meinheld#gunicorn_worker -c "/gunicorn_conf.py" "main:app"
+            exec $HU#PPER gunicorn.app.wsgiapp -k egg:meinheld#gunicorn_worker -c "/gunicorn_conf.py" "main:app"
             return;;
         "worker")
             exec $HUPPER celery worker -A "main:celery"
