@@ -17,10 +17,6 @@ class BaseConfig(object):
     NERD_SERVER_NAME = os.environ.get('NERD_SERVER_NAME', 'localhost')
     # SERVER_NAME = os.environ.get('NERD_SERVER_NAME', '127.0.0.1:5000')
 
-    CELERY_RESULT_BACKEND = os.environ.get(
-        'CELERY_RESULT_BACKEND', 'redis')
-    CELERY_BROKER_URL = os.environ.get(
-        'CELERY_BROKER_URL', 'redis://redis:6379')
     JWT_TOKEN_LOCATION = ('headers', 'json')
     JWT_ERROR_MESSAGE_KEY = "message"
     JWT_SECRET_KEY = os.environ.get(

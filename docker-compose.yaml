@@ -23,6 +23,8 @@ services:
     image: nerd/app:latest
     build:
       context: .
+      args:
+        PIPENV_ARGS: --dev
     volumes:
       - ./app:/app
     ports:
@@ -33,10 +35,13 @@ services:
     depends_on:
       - mongodb
       - redis
+    command: ["web"]
   worker:
     image: nerd/app:latest
     build:
       context: .
+      args:
+        PIPENV_ARGS: --dev
     volumes:
       - ./app:/app
       - ./volumes/models:/app/models
@@ -45,12 +50,14 @@ services:
     env_file: .env
     depends_on:
       - app
-    command: ["celery", "worker", "-A", "main:celery"]
+    command: ["worker"]
 
   flower:
     image: nerd/app:latest
     build:
       context: .
+      args:
+        PIPENV_ARGS: --dev
     ports:
       - 5555:5555
     env_file: .env
@@ -58,8 +65,9 @@ services:
     init: true
     depends_on:
       - app
-    command: ["celery", "flower", "-A", "main:celery"]
+    command: ["flower"]
 
 volumes:
   mongodb-data:
   redis-data:
+

@@ -1,4 +1,4 @@
-from core.document.corpus import DocumentModel, NERdCorpus, TrainingEntry, TrainedText
+from core.document.corpus import SpacyDocument, NERdCorpus, TrainingEntry, Training
 from core.document.user import User
 from core.schema.corpus import (DocumentModelSchema)
 from nlp import load_custom_model, train_model
@@ -32,8 +32,8 @@ def queue_text(corpus: NERdCorpus, text: str):
     return training_entity
 
 
-def add_correction(corpus: NERdCorpus, user: User, correction: DocumentModel):
-    text = TrainedText(
+def add_correction(corpus: NERdCorpus, user: User, correction: SpacyDocument):
+    text = Training(
         trained_by=user,
         text=correction
     )

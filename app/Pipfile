@@ -9,13 +9,24 @@ flask-rest-api = "*"
 marshmallow-mongoengine = "*"
 blinker = "*"
 flask-jwt-extended = "*"
-spacy-nightly = "==2.1.0a6"
+spacy = "~=2.1"
 celery = {extras = ["redis"],version = "*"}
 redis = "*"
 flower = "*"
+meinheld = "*"
+gunicorn = "*"
+marshmallow-enum = "*"
 
 [dev-packages]
 faker = "*"
+hupper = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.7"
+
+[scripts]
+download-model = "python -m spacy download ${NERD_SPACY_MODEL}"
+worker = "celery worker -A main:celery -l info -E --pool solo -n cli -Q nerd,vSNAPSHOT"
+ping = "flask worker ping"
+nlp = "flask worker nlp"

@@ -1,4 +1,6 @@
-from core.document.corpus import SystemCorpus, NERType, NERdCorpus
+from datetime import datetime
+
+from core.document.version import Version
 from core.document.user import User
 
 
@@ -15,17 +17,14 @@ class NERdSetup:
         ).save()
 
         if drop:
-            SystemCorpus.drop_collection()
-        SystemCorpus(
+            Version.drop_collection()
+        Version(
             name='Spanish (medium)',
-            spacy_model='es_core_news_md',
-            types={
-                'PER': NERType(label='Person', color='#903d3d'),
-                'LOC': NERType(label='Location', color='#b83ca6'),
-                'ORG': NERType(label='Organization', color='#e1d458'),
-                'MISC': NERType(label='Miscellaneous', color='#38dd9e')
-            }
+            created_at=datetime.now(),
+            types={}
         ).save()
+
+
 
     @staticmethod
     def dev_setup(drop: bool):

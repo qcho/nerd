@@ -42,10 +42,4 @@ log_data = {
 }
 reload = os.getenv("RELOAD", False) == 'True'
 
-
-def worker_int(worker):
-    print('Exit because of worker failure')
-    sys.exit(1)
-
-
 print(json.dumps(log_data))
