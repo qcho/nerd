@@ -8,16 +8,15 @@ from core.security import jwt
 from core.cli import setup_cli
 from apis import api
 from apis.auth import blp as auth
-from apis.corpora import blp as corpora
+from apis.corpus.texts import blp as texts
+from apis.corpus.versions import blp as versions
 from apis.users import blp as users
 from apis.roles import blp as roles
-from tasks import make_celery
+from tasks import celery
 
 app = Flask('NERd')
 app.config['PREFERRED_URL_SCHEME'] = os.environ.get('NERD_URL_SCHEME', 'http')
 # app.config['SERVER_NAME'] = os.environ.get('NERD_SERVER_NAME', '127.0.0.1:5000')
-
-app.config['broker_url'] = os.environ.get('BROKER_URL', 'redis://redis:6379/0')
 
 mongoengine.connect(
     db=os.environ.get('NERD_MONGO_DB_NAME', 'nerd'),
@@ -57,7 +56,7 @@ app.config['API_SPEC_OPTIONS'] = {
             ),
             'description': 'Docker endpoint'
         },
-{
+        {
             'url': '{}://{}'.format(
                 app.config['PREFERRED_URL_SCHEME'],
                 os.environ.get('NERD_SERVER_NAME', '127.0.0.1:5000')
@@ -84,18 +83,14 @@ app.config['API_SPEC_OPTIONS'] = {
         }
     }
 }
+
+celery.init_app(app)
+
 api.init_app(app)
 api.register_blueprint(auth, url_prefix='/api/auth')
-api.register_blueprint(corpora, url_prefix='/api/corpora')
 api.register_blueprint(users, url_prefix='/api/users')
 api.register_blueprint(roles, url_prefix='/api/roles')
+api.register_blueprint(texts, url_prefix='/api/corpus/texts')
+api.register_blueprint(versions, url_prefix='/api/corpus/version')
 
 setup_cli(app)
-
-app.config['CELERY_RESULT_BACKEND'] = os.environ.get('CELERY_RESULT_BACKEND', 'redis')
-app.config['CELERY_BROKER_URL'] = os.environ.get('CELERY_BROKER_URL', 'redis://redis:6379')
-
-celery = make_celery(app)
-
-if __name__ == '__main__':
-    app.run()

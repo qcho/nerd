@@ -5,65 +5,18 @@ from werkzeug.exceptions import BadRequest, Conflict, NotFound
 
 from apis import (get_current_user, jwt_and_role_required,
                   jwt_optional, response_error)
-from core.document.corpus import (Corpus, NERdCorpus, NERType,
-                                  SystemCorpus)
+from core.document.corpus import Type, Version
 from core.document.user import Role
 from core.schema.corpus import (CreateNERdCorpusSchema, DocumentModelSchema,
-                                MetadataFieldsSchema, NERdCorpusSchema,
-                                NERTypeSchema, NewTextSchema,
-                                SystemCorpusSchema)
+                                MetadataFieldsSchema, CorpusSchema,
+                                NERTypeSchema, NewTextSchema)
 from worker import add_correction, force_training, queue_text
 
-blp = Blueprint("corpora", "corpora", description="NER Corpora operations")
+from tasks.ner import add_together
+
+blp = Blueprint("corpus", "corpus", description="Corpus operations")
 
 
-@blp.route('/system')
-class SystemCorporaResource(MethodView):
-    @jwt_and_role_required(Role.ADMIN)  # TODO: review permission levels
-    @blp.response(SystemCorpusSchema(many=True))
-    @blp.doc(operationId="listSystemCorpora")
-    def get(self):
-        """List available SpaCy base corpus
-        """
-        return SystemCorpus.objects
-
-
-@blp.route("")
-class CorporaResource(MethodView):
-    @jwt_and_role_required(Role.ADMIN)  # TODO: review permission levels
-    @blp.response(NERdCorpusSchema(many=True))
-    @blp.doc(operationId="listCorpora")
-    @blp.paginate()
-    def get(self, pagination_parameters: PaginationParameters):
-        """List available corpora
-        """
-        pagination_parameters.item_count = Corpus.objects.count()
-        skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
-        return Corpus.objects.skip(skip_elements).limit(pagination_parameters.page_size)
-
-    @jwt_and_role_required(Role.ADMIN)  # TODO: review permission levels
-    @blp.doc(operationId="upsert_corpus")
-    @blp.arguments(CreateNERdCorpusSchema)
-    @response_error(Conflict("Corpus exists with that name"))
-    @response_error(Conflict("No such base model"))
-    @blp.response(NERdCorpusSchema, code=200, description="Model created")
-    def post(self, payload):
-        """
-        Creates a corpus from a given SpaCy corpus
-        """
-        try:
-            # TODO: We may be able to make the corpus creation threaded (inside the create_model method)
-            base_corpus = SystemCorpus.objects(
-                name=payload["base_corpus_name"]).get()
-            if not base_corpus:
-                raise Conflict("No such base model")
-            corpus = NERdCorpus(
-                name=payload["corpus_name"],
-                parent=base_corpus
-            ).save()
-            return corpus
-        except:
-            raise Conflict("Corpus exists with that name")
 
 
 @blp.route("/<string:corpus_name>")
@@ -159,6 +112,13 @@ class NerDocumentResource(MethodView):
         return parse_text(corpus, request.args["text"])
 
 
+@blp.route("/qcho")
+class QchoResource(MethodView):
+    def post(self):
+        result = add_together.delay(23, 42)
+        result.wait()  # 65
+
+
 @blp.route("/<string:corpus_name>/entity-types")
 class EntityTypesResource(MethodView):
     @jwt_and_role_required(Role.ADMIN)  # TODO: check permission level
@@ -172,7 +132,7 @@ class EntityTypesResource(MethodView):
 
         corpus.update(
             "add_to_set__types",
-            NERType(
+            Type(
                 name=blp.payload["name"],
                 code=blp.payload["code"],
                 color=blp.payload["color"],

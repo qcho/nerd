@@ -27,3 +27,14 @@ pipenv run flask shell
 ```bash
 pipenv run flask run
 ```
+
+## Versions state machine:
+```mermaid
+graph LR;
+  UNTRAINED-->TRAINING
+  TRAINING-->TRAINED;
+  TRAINED-->UNTRAINED;
+  TRAINED-->LOADING;
+  LOADING-->ONLINE;
+  ONLINE-->TRAINED;
+```
