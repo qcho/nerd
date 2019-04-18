@@ -10,10 +10,10 @@ export default function useRouteTitle(location: any) {
   if (pathname == "/preview") {
     return t("NER preview");
   }
-  if (pathname == "/corpora") {
+  if (pathname == "/admin/corpus") {
     return t("Corpus Management");
   }
-  if (pathname == "/users") {
+  if (pathname == "/admin/users") {
     return t("User Management");
   }
   if (pathname == "/train") {

@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }), { withTheme: true });
 
 const Home = () => {
-  const { isAdmin } = useAuthentication();
+  const { isAdmin, isUser } = useAuthentication();
   const [t] = useTranslation(nsps.home);
   const classes = useStyles();
   return (
@@ -28,8 +28,9 @@ const Home = () => {
       <NavigationBar />
       <div className={classNames(classes.content, classes.grow)}>
         <Link to="/preview">{t("Find entities")}</Link>
-        {isAdmin && <Link to="/corpora">{t("Manage models")}</Link>}
-        {isAdmin && <Link to="/users">{t("Manage users")}</Link>}
+        {isUser && <Link to="/train">{t("Train corpus")}</Link>}
+        {isAdmin && <Link to="/admin/corpus">{t("Manage corpus")}</Link>}
+        {isAdmin && <Link to="/admin/users">{t("Manage users")}</Link>}
       </div>
     </div>
   );
