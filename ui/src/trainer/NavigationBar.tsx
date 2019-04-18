@@ -31,22 +31,20 @@ const styles = (theme: Theme) =>
     }
   });
 
-const LoginLink = (props: any) => <Link to="/login" {...props} />;
-const RegisterLink = (props: any) => <Link to="/register" {...props} />;
-const HomeLink = (props: any) => <Link to="/" {...props} />;
+const link = (to: string) => (props: any) => <Link to={to} {...props} />;
 
 const NavigationBar = (props: any) => {
   const { classes, location } = props;
   const title = useRouteTitle(location);
   const [t] = useTranslation(nsps.authentication);
-  const { loggedIn, logout } = useAuthentication();
+  const { loggedIn, logout, isAdmin } = useAuthentication();
 
   return (
     <AppBar position="static">
       <Toolbar>
         {location.pathname != "/" && (
           <IconButton
-            component={HomeLink}
+            component={link("/")}
             className={classes.homeButton}
             color="inherit"
           >
@@ -56,17 +54,38 @@ const NavigationBar = (props: any) => {
         <Typography variant="h6" color="inherit" className={classes.grow}>
           {title}
         </Typography>
+        {isAdmin && (
+          <Button color="inherit" component={link("/admin/users")}>
+            {t("Users")}
+          </Button>
+        )}
+        {isAdmin && (
+          <Button color="inherit" component={link("/admin/corpus")}>
+            {t("Corpus")}
+          </Button>
+        )}
+        {isAdmin && (
+          <span
+            style={{
+              borderRight: "1px solid rgba(255, 255, 255, 0.5)",
+              paddingLeft: 1,
+              marginLeft: "1em",
+              marginRight: "1em",
+              height: "2em"
+            }}
+          />
+        )}
         {loggedIn ? (
           <Button color="inherit" onClick={logout}>
             {t("Logout")}
           </Button>
         ) : (
-          <Button color="inherit" component={LoginLink}>
+          <Button color="inherit" component={link("/login")}>
             {t("Login")}
           </Button>
         )}
         {!loggedIn && (
-          <Button color="inherit" component={RegisterLink}>
+          <Button color="inherit" component={link("/register")}>
             {t("Register")}
           </Button>
         )}
