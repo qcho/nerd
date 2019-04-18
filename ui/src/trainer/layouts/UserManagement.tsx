@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 import NavigationBar from "../NavigationBar";
 import { useTranslation } from "react-i18next";
-import nsps from "../helpers/i18n-namespaces";
 import { UsersApi, User, RoleList, RolesApi } from "../apigen";
 import { apiConfig } from "../helpers/api-config";
 import Http from "../helpers/http";
@@ -50,7 +49,7 @@ const UserManagement = () => {
     shouldPaginate
   } = usePagination();
   const [roles, setRoles] = useState<RoleList>({});
-  const [t] = useTranslation(nsps.userManagement);
+  const [t] = useTranslation();
   const [selected, setSelected] = useState<string[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const userApi = new UsersApi(apiConfig());

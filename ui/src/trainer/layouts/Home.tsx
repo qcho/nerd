@@ -12,7 +12,6 @@ import {
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import nsps from "../helpers/i18n-namespaces";
 import { makeStyles } from "@material-ui/styles";
 import useAuthentication from "../hooks/useAuthentication";
 
@@ -67,7 +66,7 @@ const useStyles = makeStyles(
 );
 
 const Home = () => {
-  const [t] = useTranslation(nsps.home);
+  const [t] = useTranslation();
   const classes = useStyles();
   const { loggedIn } = useAuthentication();
 

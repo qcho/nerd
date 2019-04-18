@@ -13,7 +13,6 @@ import {
   Checkbox
 } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
-import nsps from "../helpers/i18n-namespaces";
 import { makeStyles } from "@material-ui/styles";
 import { apiConfig } from "../helpers/api-config";
 
@@ -43,7 +42,7 @@ type Props = {
 };
 
 const UserRow = ({ user, availableRoles: roles, onClick, selected }: Props) => {
-  const [t] = useTranslation(nsps.userManagement);
+  const [t] = useTranslation();
   const classes = useStyles();
   const [userRoles, setUserRoles] = useState<string[]>(user.roles || []);
   const [loading, setLoading] = useState<boolean>(false);

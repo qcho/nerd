@@ -13,7 +13,6 @@ import { withRouter, Link } from "react-router-dom";
 import useRouteTitle from "./hooks/useRouteTitle";
 import useAuthentication from "./hooks/useAuthentication";
 import { useTranslation } from "react-i18next";
-import nsps from "./helpers/i18n-namespaces";
 import Home from "@material-ui/icons/Home";
 
 const styles = (theme: Theme) =>
@@ -36,7 +35,7 @@ const link = (to: string) => (props: any) => <Link to={to} {...props} />;
 const NavigationBar = (props: any) => {
   const { classes, location } = props;
   const title = useRouteTitle(location);
-  const [t] = useTranslation(nsps.authentication);
+  const [t] = useTranslation();
   const { loggedIn, logout, isAdmin } = useAuthentication();
 
   return (

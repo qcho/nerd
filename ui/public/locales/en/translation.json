@@ -1,6 +1,10 @@
 {
-  "SAVE": "SAVE",
-  "RESET": "RESET",
-  "SKIP": "SKIP",
-  "ADD": "ADD"
+  "Logout": "Logout",
+  "Corpus": "Corpus",
+  "Users": "Users",
+  "Register": "Register",
+  "Login": "Login",
+  "Corpus Management": "Corpus Management",
+  "Go home": "Go home",
+  "Lost?": "Lost?"
 }

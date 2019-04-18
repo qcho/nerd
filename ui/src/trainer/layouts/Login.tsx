@@ -15,7 +15,6 @@ import {
 import useAuthentication from "../hooks/useAuthentication";
 import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import nsps from "../helpers/i18n-namespaces";
 import authStyles from "../styles/auth";
 
 const styles = (theme: Theme) =>
@@ -33,7 +32,7 @@ const Login = ({ classes }: { classes: any }) => {
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
-  const [t] = useTranslation(nsps.authentication);
+  const [t] = useTranslation();
   const { login, loggedIn } = useAuthentication();
 
   const onInputChange = (setter: any) => (

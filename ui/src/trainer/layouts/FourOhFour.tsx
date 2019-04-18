@@ -1,12 +1,7 @@
 import React from "react";
-import {
-  Paper,
-  Typography,
-  Button
-} from "@material-ui/core";
+import { Paper, Typography, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import nsps from "../helpers/i18n-namespaces";
 import { makeStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles(() => ({
@@ -22,7 +17,7 @@ const useStyles = makeStyles(() => ({
 const HomeLink = (props: any) => <Link to="/" {...props} />;
 
 const FourOhFour = () => {
-  const [t] = useTranslation(nsps.fourOhFour);
+  const [t] = useTranslation();
   const classes = useStyles();
   return (
     <Paper className={classes.root}>

@@ -14,9 +14,8 @@ import {
 } from "@material-ui/core";
 import useAuthentication from "../hooks/useAuthentication";
 import { useTranslation } from "react-i18next";
-import nsps from "../helpers/i18n-namespaces";
 import { Redirect } from "react-router-dom";
-import authStyles from '../styles/auth'
+import authStyles from "../styles/auth";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -30,7 +29,7 @@ const Register = ({ classes }: { classes: any }) => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
-  const [t] = useTranslation(nsps.authentication);
+  const [t] = useTranslation();
   const { register, loggedIn } = useAuthentication();
 
   const onInputChange = (setter: any) => (

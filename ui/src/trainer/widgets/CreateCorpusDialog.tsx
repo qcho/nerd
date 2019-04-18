@@ -16,7 +16,6 @@ import {
   Button,
   Theme
 } from "@material-ui/core";
-import nsps from "../helpers/i18n-namespaces";
 import { useTranslation } from "react-i18next";
 import { makeStyles } from "@material-ui/styles";
 
@@ -56,7 +55,7 @@ const CreateCorpusDialog = ({
   const [baseCorpus, setBaseCorpus] = useState<MaybeSystemCorpus>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const classes = useStyles();
-  const [t] = useTranslation(nsps.modelManagement);
+  const [t] = useTranslation();
 
   function resetBaseCorpus(corpora: SystemCorpus[]) {
     if (corpora.length > 0) {

@@ -18,7 +18,6 @@ import useAuthentication from "../hooks/useAuthentication";
 import EntityTypeApi from "../api/EntityTypeApi";
 import { EntityType } from "../types/EntityType";
 import { useTranslation } from "react-i18next";
-import nsps from "../helpers/i18n-namespaces";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -40,7 +39,7 @@ const PreviewLayout = ({ classes }: Props) => {
   const [document, setDocument] = useState<MaybeNerDocument>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
-  const [t] = useTranslation(nsps.ner);
+  const [t] = useTranslation();
   const { loggedIn } = useAuthentication();
   // TODO(jpo): Use new API.
   // const nerApi = new NerApi(nerModel);

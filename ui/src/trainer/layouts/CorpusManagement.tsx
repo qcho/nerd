@@ -16,7 +16,6 @@ import {
   Paper
 } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
-import nsps from "../helpers/i18n-namespaces";
 import Http from "../helpers/http";
 import CreateCorpusDialog from "../widgets/CreateCorpusDialog";
 import { apiConfig } from "../helpers/api-config";
@@ -57,7 +56,6 @@ const CorpusManagement = () => {
   const classes = useStyles();
   const [loadingErrorMessage, setLoadingErrorMessage] = useState<string>("");
   const [systemCorpora, setSystemCorpora] = useState<SystemCorpus[]>([]);
-  const [t] = useTranslation(nsps.modelManagement);
   const api = new CorporaApi(apiConfig());
   const {
     page,

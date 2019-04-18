@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { AuthApi } from "../apigen/api";
 import useAuthStorage from "./useAuthStorage";
 import Http from "../helpers/http";
-import nsps from "../helpers/i18n-namespaces";
 import { useTranslation } from "react-i18next";
 
 function useAuthentication() {
@@ -10,7 +9,7 @@ function useAuthentication() {
   let [loggedIn, setLoggedIn] = useState<boolean>(false);
   let [isAdmin, setIsAdmin] = useState<boolean>(false);
   let [isUser, setIsUser] = useState<boolean>(false);
-  const [t] = useTranslation(nsps.authentication);
+  const [t] = useTranslation();
   const api = new AuthApi();
 
   async function login(
