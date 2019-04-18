@@ -2,7 +2,6 @@ import React from "react";
 import NavigationBar from "../NavigationBar";
 import {
   Theme,
-  Paper,
   Grid,
   Card,
   CardContent,
@@ -94,7 +93,7 @@ const Home = () => {
     <div className={classes.grow}>
       <NavigationBar />
       <div className={classes.container}>
-        <Paper className={classes.content}>
+        <div className={classes.content}>
           {loggedIn ? (
             <Grid
               container
@@ -198,7 +197,7 @@ const Home = () => {
               </Grid>
             </Grid>
           )}
-        </Paper>
+        </div>
       </div>
     </div>
   );
