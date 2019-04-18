@@ -45,5 +45,3 @@ class NERdSetup:
                 plain_password='1',
                 roles=['user']
             ).save()
-
-        # TODO: Create a base corpus
