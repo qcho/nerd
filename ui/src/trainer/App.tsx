@@ -27,8 +27,12 @@ const Navigation = () => {
       <Route exact path="/preview" component={Preview} />
       <Route exact path="/login" component={Login} />
       <Route exact path="/register" component={Register} />
-      {isAdmin && <Route exact path="/corpora" component={CorpusManagement} />}
-      {isAdmin && <Route exact path="/users" component={UserManagement} />}
+      {isAdmin && (
+        <Route exact path="/admin/corpus" component={CorpusManagement} />
+      )}
+      {isAdmin && (
+        <Route exact path="/admin/users" component={UserManagement} />
+      )}
       {isUser && <Route exact path="/train" component={Train} />}
       <Route component={FourOhFour} />
     </Switch>
