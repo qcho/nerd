@@ -1,143 +1,72 @@
 from flask.views import MethodView
 from flask_rest_api import Blueprint
+from flask_rest_api.pagination import PaginationParameters
+from nerd.apis import response_error
+from nerd.core.document.snapshot import Type
+from nerd.core.document.user import Role
 from werkzeug.exceptions import BadRequest, NotFound
 
-from nerd.apis.roles import jwt_and_role_required
-from nerd.core.document.user import Role
-from nerd.core.document.snapshot import Type
-from nerd.tasks.ner import add_together
+from .roles import jwt_and_role_required
 
 blp = Blueprint("corpus", "corpus", description="Corpus operations")
 
 
-@blp.route("/<string:corpus_name>")
-class CorpusResource(MethodView):
-    @jwt_and_role_required(Role.ADMIN)  # TODO: review permission levels
-    @blp.doc(operationId="get_corpus")
-    @response_error(NotFound("Corpus does not exist"))
-    @blp.response(MetadataFieldsSchema, code=200, description="Model")
-    def get(self, payload, corpus_name):
-        """
-        Returns metadata for a given corpus
-        """
-        corpus = NERdCorpus.objects.get(name=corpus_name)
+@blp.route("/<string:text_id>")
+class CorpusTextResource(MethodView):
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.doc(operationId="getCorpusText")
+    @response_error(NotFound("Corpus text does not exist"))
+    @blp.response(..., code=200, description="Model")
+    def get(self, payload, text_id):
+        ...
 
-        queued = len(list_queued(corpus))
-        trained = len(list_trained(corpus))
-        return {"queued": queued, "trained": trained}
-
-    @jwt_and_role_required(Role.ADMIN)  # TODO: review permission levels
-    @blp.doc(operationId="remove_corpus")
-    @response_error(BadRequest("There was a problem deleting the corpus"))
-    def delete(self, corpus_name=None):
-        """
-        Deletes a corpus
-
-        :raises Unauthorized: When current user has insufficient permissions
-        :raises BadRequest: When couldn't delete the corpus
-        """
-        try:
-            NERdCorpus.objects(name=corpus_name).get().delete()
-            return "", 200
-        except:
-            raise BadRequest("There was a problem deleting the corpus")
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.doc(operationId="removeCorpusText")
+    @response_error(BadRequest("There was a problem deleting the corpus text"))
+    def delete(self, text_id):
+        ...
 
 
-@blp.route("/<string:corpus_name>/training")
-class CorpusTrainingResource(MethodView):
-    @jwt_and_role_required(Role.ADMIN)  # TODO: check permission level
-    @blp.arguments(NewTextSchema)
-    @blp.doc(operationId="queue_training_text")
-    @blp.response(None, code=204)
-    def post(self, payload, corpus_name):
-        """
-        Add a new text to used for training
-        """
-        corpus = NERdCorpus.objects.get(name=corpus_name)
-        text = payload["text"]
-        queue_text(corpus, text)
-        return None, 204
+@blp.route("/<string:text_id>/trainings/me")
+@blp.route("/<string:text_id>/trainings/<int:user_id>")
+class TrainingView(MethodView):
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.arguments(...)
+    @blp.doc(operationId="getTraining")
+    @blp.response(..., code=...)
+    def get(self, text_id, user_id=None):
+        ...
+
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.arguments(...)
+    @blp.doc(operationId="upsertTraining")
+    @blp.response(..., code=...)
+    def put(self, payload, text_id, user_id=None):
+        ...
 
 
-@blp.route("/<string:corpus_name>/refresh")
-class CorpusRefreshResource(MethodView):
-    @jwt_and_role_required(Role.ADMIN)  # TODO: check permission level
-    @blp.doc(operationId="force_training")
-    @blp.response(None, code=204)
+@blp.route("/train")
+class TrainResource(MethodView):
+    @jwt_and_role_required(Role.USER)
+    @blp.doc(operationId="getTrainingInfo")
+    @blp.response(..., code=...)
     @response_error(NotFound("Corpus not found"))
-    def put(self, corpus_name):
-        """
-        Force a training event
-        """
-        try:
-            corpus = NERdCorpus.objects.get(name=corpus_name)
-            force_training(corpus)
-        except:
-            raise NotFound("Corpus not found")
-        return None, 204
+    def put(self):
+        ...
 
 
-@blp.route("/<string:corpus_name>/ner")
-class NerDocumentResource(MethodView):
-    @jwt_and_role_required(Role.ADMIN)  # TODO: check permission level
-    @blp.doc(operationId="upsert_ner_document")
-    @blp.arguments(DocumentModelSchema)
-    def put(self, payload, model_name):
-        """
-        Model entity recognition correction
-        TODO: Document this
-        """
-        corpus = NERdCorpus.objects.get(name=model_name)
-        user = get_current_user()
-        result = add_correction(corpus, user, payload)
-        return None, 204
+@blp.route("/")
+class IndexResource(MethodView):
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.doc(operationId="getCorpus")
+    @blp.response(..., code=200)
+    @blp.paginate()
+    def get(self, pagination_parameters: PaginationParameters):
+        ...
 
-    @jwt_and_role_required(Role.ADMIN)  # TODO: check permission level
-    @blp.doc(operationId="get_ner_document")
-    @blp.response(DocumentModelSchema, code=200)
-    def get(self, model_name):
-        """
-        Processes given text with SpaCy
-        """
-        corpus = Corpus.objects.get(name=model_name)
-        return parse_text(corpus, request.args["text"])
-
-
-@blp.route("/qcho")
-class QchoResource(MethodView):
-    def post(self):
-        result = add_together.delay(23, 42)
-        result.wait()  # 65
-
-
-@blp.route("/<string:corpus_name>/entity-types")
-class EntityTypesResource(MethodView):
-    @jwt_and_role_required(Role.ADMIN)  # TODO: check permission level
-    @blp.doc(operationId="upsert_entity_types")
-    @blp.arguments(NERTypeSchema)
-    def put(self, corpus_name):
-        """
-        Update or create entity types
-        """
-        corpus = Corpus.objects.get(name=corpus_name)
-
-        corpus.update(
-            "add_to_set__types",
-            Type(
-                name=blp.payload["name"],
-                code=blp.payload["code"],
-                color=blp.payload["color"],
-            ),
-        )
-        # TODO: Figure out what we need to return here
-        return None, 204
-
-    @jwt_optional
-    @blp.doc(operationId="get_entity_types")
-    @blp.response(NERTypeSchema(many=True))
-    def get(self, corpus_name):
-        """
-        Returns the list of available entity types
-        """
-        corpus = Corpus.objects.get(name=corpus_name)
-        return corpus.types + corpus.parent.types
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.doc(operationId="addNewText")
+    @blp.arguments(...)
+    @blp.response(..., code=200)
+    def post(self, payload, model_name):
+        ...

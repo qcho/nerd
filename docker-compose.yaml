@@ -28,7 +28,7 @@ services:
     volumes:
       - ./app:/app
     ports:
-      - 80:80
+      - 80:5000
     restart: on-failure
     init: true
     env_file: .env
@@ -36,6 +36,7 @@ services:
       - mongodb
       - redis
     command: ["web"]
+
   worker:
     image: nerd/app:latest
     build:
