@@ -3,6 +3,10 @@ import { Theme } from "@material-ui/core";
 const authStyles: any = (theme: Theme) => ({
   root: {
     flexGrow: 1,
+    height: "80vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     marginLeft: theme.spacing.unit * 3,
     marginRight: theme.spacing.unit * 3,
     [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {

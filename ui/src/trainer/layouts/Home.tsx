@@ -138,7 +138,11 @@ const Home = () => {
                 })}
             </Grid>
           ) : (
-            <Grid container className={classes.cardContainer}>
+            <Grid
+              container
+              className={classes.cardContainer}
+              style={{ marginTop: "-15em" }}
+            >
               <Grid item>
                 <Typography
                   component="h1"

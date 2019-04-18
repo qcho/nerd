@@ -16,7 +16,7 @@ import useAuthentication from "../hooks/useAuthentication";
 import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
-import authStyles from '../styles/auth'
+import authStyles from "../styles/auth";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -61,62 +61,62 @@ const Login = ({ classes }: { classes: any }) => {
   return loggedIn ? (
     <Redirect to="/" />
   ) : (
-      <div className={classes.root}>
-        <Paper className={classes.paper}>
-          <Typography component="h1" variant="h3">
-            {t("Login")}
-          </Typography>
-          <form className={classes.form} onSubmit={onFormSubmit}>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="email">{t("Email Address")}</InputLabel>
-              <Input
-                id="email"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                onChange={onInputChange(setUsername)}
-              />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="password">{t("Password")}</InputLabel>
-              <Input
-                name="password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={onInputChange(setPassword)}
-              />
-            </FormControl>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  value="remember"
-                  color="primary"
-                  onChange={onCheckboxChange(setRememberMe)}
-                />
-              }
-              label={t("Remember me")}
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
+        <Typography component="h1" variant="h3">
+          {t("Login")}
+        </Typography>
+        <form className={classes.form} onSubmit={onFormSubmit}>
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="email">{t("Email Address")}</InputLabel>
+            <Input
+              id="email"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              onChange={onInputChange(setUsername)}
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Login
+          </FormControl>
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="password">{t("Password")}</InputLabel>
+            <Input
+              name="password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={onInputChange(setPassword)}
+            />
+          </FormControl>
+          <FormControlLabel
+            control={
+              <Checkbox
+                value="remember"
+                color="primary"
+                onChange={onCheckboxChange(setRememberMe)}
+              />
+            }
+            label={t("Remember me")}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Login
           </Button>
-          </form>
-          {errorMessage && errorMessage.length > 0 && (
-            <div className={classes.errorMessageContainer}>
-              <Typography variant="subtitle2" className={classes.errorMessage}>
-                {errorMessage}
-              </Typography>
-            </div>
-          )}
-        </Paper>
-      </div>
-    );
+        </form>
+        {errorMessage && errorMessage.length > 0 && (
+          <div className={classes.errorMessageContainer}>
+            <Typography variant="subtitle2" className={classes.errorMessage}>
+              {errorMessage}
+            </Typography>
+          </div>
+        )}
+      </Paper>
+    </div>
+  );
 };
 
 // @ts-ignore
