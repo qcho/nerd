@@ -35,3 +35,4 @@ worker = "celery worker -A nerd:celery -l info -E --pool solo -n cli -Q nerd,vCU
 ping = "flask worker ping"
 nlp = "flask worker nlp"
 flower = "celery flower -A nerd:celery"
+serve = "flask run"

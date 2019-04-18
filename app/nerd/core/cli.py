@@ -22,7 +22,7 @@ def setup_cli(app: Flask):
 
     @app.cli.group()
     @click.pass_context
-    @click.option('-Q', '--queue', default=Snapshot.CURRENT)
+    @click.option('-Q', '--queue', default='vCURRENT')
     def worker(ctx, queue):
         ctx.ensure_object(dict)
         ctx.obj['QUEUE'] = queue

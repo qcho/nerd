@@ -18,6 +18,17 @@ class NERdSetup:
         if drop:
             Snapshot.drop_collection()
             Snapshot.id.set_next_value(0)
+        current = Snapshot(
+            id=0,
+            types={
+                "PER": Type(label="Person", color="#903d3d"),
+                "LOC": Type(label="Location", color="#b83ca6"),
+                "ORG": Type(label="Organization", color="#e1d458"),
+                "MISC": Type(label="Miscellaneous", color="#38dd9e")
+            }
+        ).save()
+        Model(current).train()
+
         genesis = Snapshot(
             types={
                 "PER": Type(label="Person", color="#903d3d"),

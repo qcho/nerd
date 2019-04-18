@@ -15,7 +15,6 @@ class Type(me.EmbeddedDocument):
 
 
 class Snapshot(me.Document):
-    CURRENT = 'vCURRENT'
     id = me.SequenceField(primary_key=True)
     created_at = me.DateTimeField(default=datetime.now())
     trained_at = me.DateTimeField()
@@ -28,8 +27,12 @@ class Snapshot(me.Document):
         ]
     }
 
+    @staticmethod
+    def current():
+        return Snapshot.objects(id=0)
+
     def __str__(self):
-        return f'v{self.id}'
+        return f'v{"CURRENT" if self.id == 0 else self.id}'
 
     @contextmanager
     def training_lock(self, un_train: bool = False):
