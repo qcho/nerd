@@ -103,12 +103,6 @@ class NerDocumentResource(MethodView):
         return parse_text(corpus, request.args["text"])
 
 
-@blp.route("/qcho")
-class QchoResource(MethodView):
-    def post(self):
-        result = add_together.delay(23, 42)
-        result.wait()  # 65
-
 
 @blp.route("/<string:corpus_name>/entity-types")
 class EntityTypesResource(MethodView):
