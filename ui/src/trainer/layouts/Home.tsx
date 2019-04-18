@@ -8,16 +8,19 @@ import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
 import { makeStyles } from "@material-ui/styles";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  grow: {
-    flexGrow: 1
-  },
-  content: {
-    padding: theme.spacing.unit * 3,
-    display: "flex",
-    flexDirection: "column"
-  }
-}), { withTheme: true });
+const useStyles = makeStyles(
+  (theme: Theme) => ({
+    grow: {
+      flexGrow: 1
+    },
+    content: {
+      padding: theme.spacing.unit * 3,
+      display: "flex",
+      flexDirection: "column"
+    }
+  }),
+  { withTheme: true }
+);
 
 const Home = () => {
   const { isAdmin, isUser } = useAuthentication();
