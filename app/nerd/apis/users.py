@@ -3,15 +3,15 @@ import json
 from flask.views import MethodView
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
-from marshmallow_mongoengine import ModelSchema
 from marshmallow import Schema
 from marshmallow import fields
+from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
-from werkzeug.exceptions import NotFound, UnprocessableEntity
 from mongoengine.queryset.visitor import Q
+from werkzeug.exceptions import NotFound, UnprocessableEntity
 
-from apis import jwt_and_role_required, response_error
-from core.document.user import User, Role
+from nerd.apis import jwt_and_role_required, response_error
+from nerd.core.document.user import User, Role
 
 blp = Blueprint('users', 'users', description='User management')
 
@@ -95,7 +95,7 @@ class UserView(MethodView):
             result = UserPayloadSchema().update(
                 User.objects.get(email=user_email),
                 json.loads(user_payload.to_json())  # TODO: update only accepts JSON objects and doesn't accept
-                                                    #       Documents
+                #       Documents
             )
             if result.errors:
                 raise UnprocessableEntity("There was an error processing the payload")

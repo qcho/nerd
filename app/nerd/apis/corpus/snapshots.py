@@ -3,21 +3,21 @@ from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
 
-from apis import jwt_and_role_required
-from core.document.version import Version
-from core.document.user import Role
+from nerd.apis import jwt_and_role_required
+from nerd.core.document.user import Role
+from nerd.core.document.snapshot import Snapshot
 
-blp = Blueprint("corpus_versions", "corpus_versions", description="Corpus version operations")
+blp = Blueprint("corpus_snapshots", "corpus_snapshots", description="Corpus snapshot operations")
 
 
-class CorpusVersionSchema(ModelSchema):
+class CorpusSnapshotSchema(ModelSchema):
     class Meta:
-        model = Version
+        model = Snapshot
 
 
-class CreateCorpusVersionSchema(ModelSchema):
+class CreateCorpusSnapshotSchema(ModelSchema):
     class Meta:
-        model = Version
+        model = Snapshot
         exclude = ['created_at']
 
 
@@ -25,18 +25,18 @@ class CreateCorpusVersionSchema(ModelSchema):
 class IndexResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(CorpusVersionSchema(many=True))
-    @blp.doc(operationId="listCorpusVersions")
+    @blp.response(CorpusSnapshotSchema(many=True))
+    @blp.doc(operationId="listCorpusSnapshots")
     @blp.paginate()
     def get(self, pagination_parameters: PaginationParameters):
         """List available corpora
         """
-        pagination_parameters.item_count = Version.objects.count()
+        pagination_parameters.item_count = Snapshot.objects.count()
         skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
-        return Version.objects.skip(skip_elements).limit(pagination_parameters.page_size)
+        return Snapshot.objects.skip(skip_elements).limit(pagination_parameters.page_size)
 
     # @jwt_and_role_required(Role.ADMIN)
-    # @blp.doc(operationId="createCorpusVersion")
+    # @blp.doc(operationId="createCorpusSnapshot")
     # @blp.arguments(CreateNERdCorpusSchema)
     # @response_error(Conflict("Corpus exists with that name"))
     # @response_error(Conflict("No such base model"))

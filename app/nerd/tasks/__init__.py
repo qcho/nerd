@@ -4,8 +4,6 @@ import types
 from celery import Celery
 from flask import Flask
 
-from core.document.version import Version
-
 
 def assert_redis_env(env_var: str):
     value = os.environ.get(env_var, '')
@@ -24,8 +22,7 @@ celery = Celery(
 
 
 def init_app(self, app: Flask):
-    # TODO: probably default queue should be something like 'nerd' for control operations in workers
-    self.conf.task_default_queue = Version.SNAPSHOT
+    self.conf.task_default_queue = 'nerd'
     self.conf.update(app.config)
 
     class ContextTask(self.Task):
@@ -37,7 +34,6 @@ def init_app(self, app: Flask):
 
 
 celery.init_app = types.MethodType(init_app, celery)
-
 
 # TODO: warmup model load on init based on queues being listen
 # @worker_init.connect

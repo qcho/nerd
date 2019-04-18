@@ -1,7 +1,6 @@
-
 import os
 
-from core.document.user import Role
+from nerd.core.document.user import Role
 
 SERVERS = {
     3000: 'UI endpoint',

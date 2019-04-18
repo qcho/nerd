@@ -1,22 +1,13 @@
 from flask.views import MethodView
 from flask_rest_api import Blueprint
-from flask_rest_api.pagination import PaginationParameters
-from werkzeug.exceptions import BadRequest, Conflict, NotFound
+from werkzeug.exceptions import BadRequest, NotFound
 
-from apis import (get_current_user, jwt_and_role_required,
-                  jwt_optional, response_error)
-from core.document.corpus import Type, Version
-from core.document.user import Role
-from core.schema.corpus import (CreateNERdCorpusSchema, DocumentModelSchema,
-                                MetadataFieldsSchema, CorpusSchema,
-                                NERTypeSchema, NewTextSchema)
-from worker import add_correction, force_training, queue_text
-
-from tasks.ner import add_together
+from nerd.apis.roles import jwt_and_role_required
+from nerd.core.document.user import Role
+from nerd.core.document.snapshot import Type
+from nerd.tasks.ner import add_together
 
 blp = Blueprint("corpus", "corpus", description="Corpus operations")
-
-
 
 
 @blp.route("/<string:corpus_name>")

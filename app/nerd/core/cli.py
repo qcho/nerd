@@ -3,14 +3,13 @@ from pprint import pprint
 import click
 from flask import Flask
 
-from core.document.version import Version
-from core.setup import NERdSetup
-from tasks import celery
-from tasks.corpus import ping as ping_task, nlp as nlp_task
+from nerd.core.document.snapshot import Snapshot
+from nerd.core.setup import NERdSetup
+from nerd.tasks import celery
+from nerd.tasks.corpus import ping as ping_task, nlp as nlp_task
 
 
 def setup_cli(app: Flask):
-
     @app.cli.command()
     @click.option('--drop/--no-drop', help='Drop old database information before setup', default=False)
     def setup(drop):
@@ -23,7 +22,7 @@ def setup_cli(app: Flask):
 
     @app.cli.group()
     @click.pass_context
-    @click.option('-Q', '--queue', default=Version.SNAPSHOT)
+    @click.option('-Q', '--queue', default=Snapshot.CURRENT)
     def worker(ctx, queue):
         ctx.ensure_object(dict)
         ctx.obj['QUEUE'] = queue

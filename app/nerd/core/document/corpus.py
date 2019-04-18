@@ -1,7 +1,7 @@
 import mongoengine as me
 
-from core.document.spacy import SpacyDocument
-from core.document.user import User
+from nerd.core.document.spacy import SpacyDocument
+from nerd.core.document.user import User
 
 
 class Training(me.EmbeddedDocument):
@@ -12,4 +12,3 @@ class Training(me.EmbeddedDocument):
 class Text(me.Document):
     value = me.StringField()
     trainings = me.ListField(me.EmbeddedDocumentField(Training))
-

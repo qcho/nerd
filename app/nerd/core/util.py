@@ -1,4 +1,7 @@
 import logging
+import time
+from contextlib import contextmanager
+from functools import wraps
 
 DEFAULT_VERBOSITY = 0
 
@@ -17,6 +20,31 @@ def get_logger(name: str) -> logging.Logger:
     logger.addHandler(ch)
     return logger
 
+
+logger = get_logger(__name__)
+
+
+@contextmanager
+def log_perf(prefix: str):
+    logger.debug(f'{prefix} STARTED')
+    start = time.perf_counter()
+    try:
+        yield
+    finally:
+        logger.debug(f'{prefix} FINISHED in {time.perf_counter() - start:10.4f}s')
+
+
+def add_method(cls):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            return func(*args, **kwargs)
+
+        setattr(cls, func.__name__, wrapper)
+        # Note we are not binding func, but wrapper which accepts self but does exactly the same as func
+        return func  # returning func means func can still be used normally
+
+    return decorator
 
 
 def __set_log_level(logger, verbosity=DEFAULT_VERBOSITY) -> None:

@@ -1,7 +1,7 @@
 from flask_jwt_extended import JWTManager
 from werkzeug.exceptions import Unauthorized
 
-from core.document.user import User
+from nerd.core.document.user import User
 
 jwt = JWTManager()
 

@@ -1,15 +1,14 @@
-from werkzeug.exceptions import Conflict, Unauthorized
-
-from apis import BaseSchema, response_error
-from core.document.user import User
 from flask.views import MethodView
 from flask_jwt_extended import (create_access_token, create_refresh_token,
-                                get_jwt_identity, jwt_refresh_token_required,
-                                jwt_required)
+                                get_jwt_identity, jwt_refresh_token_required)
 from flask_rest_api import Blueprint
 from marshmallow import fields, post_load
 from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
+from werkzeug.exceptions import Conflict, Unauthorized
+
+from nerd.apis import BaseSchema, response_error
+from nerd.core.document.user import User
 
 blp = Blueprint('auth', 'auth', description='Authentication')
 
@@ -61,7 +60,6 @@ class RegisterResource(MethodView):
 
 @blp.route('/token')
 class TokenResource(MethodView):
-
     class TokenSchema(BaseSchema):
         grant_type = fields.Constant('password', example='password')
         username = fields.Email()
@@ -93,7 +91,6 @@ class TokenResource(MethodView):
 
 @blp.route('/refresh')
 class RefreshResource(MethodView):
-
     class RefreshTokenSchema(BaseSchema):
         grant_type = fields.Constant(
             'refresh_token', example='refresh_token', required=True)

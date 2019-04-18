@@ -44,7 +44,7 @@ services:
         PIPENV_ARGS: --dev
     volumes:
       - ./app:/app
-      - ./volumes/models:/app/models
+      - ./docker/volumes/models:/app/models
     restart: on-failure
     init: true
     env_file: .env

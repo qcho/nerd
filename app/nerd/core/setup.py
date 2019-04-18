@@ -1,7 +1,6 @@
-from datetime import datetime
-
-from core.document.version import Version
-from core.document.user import User
+from nerd.core.document.snapshot import Snapshot, Type
+from nerd.core.document.user import User
+from nerd.core.model import Model
 
 
 class NERdSetup:
@@ -17,14 +16,17 @@ class NERdSetup:
         ).save()
 
         if drop:
-            Version.drop_collection()
-        Version(
-            name='Spanish (medium)',
-            created_at=datetime.now(),
-            types={}
+            Snapshot.drop_collection()
+            Snapshot.id.set_next_value(0)
+        genesis = Snapshot(
+            types={
+                "PER": Type(label="Person", color="#903d3d"),
+                "LOC": Type(label="Location", color="#b83ca6"),
+                "ORG": Type(label="Organization", color="#e1d458"),
+                "MISC": Type(label="Miscellaneous", color="#38dd9e")
+            }
         ).save()
-
-
+        Model(genesis).train()
 
     @staticmethod
     def dev_setup(drop: bool):

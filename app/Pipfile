@@ -21,12 +21,16 @@ marshmallow-enum = "*"
 faker = "*"
 hupper = "*"
 python-dotenv = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.7"
 
 [scripts]
+setup = "flask setup --drop"
 download-model = "python -m spacy download ${NERD_SPACY_MODEL}"
-worker = "celery worker -A main:celery -l info -E --pool solo -n cli -Q nerd,vSNAPSHOT"
+worker = "celery worker -A nerd:celery -l info -E --pool solo -n cli -Q nerd,vCURRENT"
 ping = "flask worker ping"
 nlp = "flask worker nlp"
+flower = "celery flower -A nerd:celery"

@@ -28,7 +28,7 @@ pipenv run flask shell
 pipenv run flask run
 ```
 
-## Versions state machine:
+## Snapshot state machine:
 ```mermaid
 graph LR;
   UNTRAINED-->TRAINING
