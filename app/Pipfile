@@ -29,6 +29,7 @@ python_version = "3.7"
 
 [scripts]
 setup = "flask setup --drop"
+dev-setup = "flask dev-setup --drop"
 download-model = "python -m spacy download ${NERD_SPACY_MODEL}"
 worker = "celery worker -A nerd:celery -l info -E --pool solo -n cli -Q nerd,vCURRENT"
 ping = "flask worker ping"
