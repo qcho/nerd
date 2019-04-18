@@ -11,17 +11,24 @@ import {
   CardActions,
   Button
 } from "@material-ui/core";
-import classNames from "classnames";
 import { Link } from "react-router-dom";
-import useAuthentication from "../hooks/useAuthentication";
 import { useTranslation } from "react-i18next";
 import nsps from "../helpers/i18n-namespaces";
 import { makeStyles } from "@material-ui/styles";
+import useAuthentication from "../hooks/useAuthentication";
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
     grow: {
       flexGrow: 1
+    },
+    container: {
+      marginTop: -theme.mixins.toolbar.minHeight!,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      height: "100vh"
     },
     content: {
       width: "auto",
@@ -60,12 +67,10 @@ const useStyles = makeStyles(
   { withTheme: true }
 );
 
-const onActionClick = (card: ApiService) => {};
-
 const Home = () => {
-  const { isAdmin, isUser } = useAuthentication();
   const [t] = useTranslation(nsps.home);
   const classes = useStyles();
+  const { loggedIn } = useAuthentication();
 
   const services: ApiService[] = [
     {
@@ -73,7 +78,7 @@ const Home = () => {
       actionPath: "/train",
       action: "Go",
       description: t(
-        "Help me become smarter! We'll show you a text with some tags and you can then decide if it's correct or fix them!"
+        "Help me become smarter! I'll show you a text with some tags and you can then decide if it's correct or fix it!"
       )
     },
     {
@@ -81,60 +86,120 @@ const Home = () => {
       actionPath: "/preview",
       action: "Go",
       description:
-        "Want to try and see what we find for a given text? Then this is the way to go!"
+        "Want to try and see what entities I find for a given text? Then this is the way to go!"
     }
   ];
 
   return (
     <div className={classes.grow}>
       <NavigationBar />
-      <Paper className={classes.content}>
-        <Grid
-          container
-          spacing={40}
-          alignItems="flex-end"
-          className={classes.cardContainer}
-        >
-          {services.map(service => {
-            return (
+      <div className={classes.container}>
+        <Paper className={classes.content}>
+          {loggedIn ? (
+            <Grid
+              container
+              spacing={40}
+              alignItems="flex-end"
+              className={classes.cardContainer}
+            >
+              {loggedIn &&
+                services.map(service => {
+                  return (
+                    <Grid item key={service.name}>
+                      <Card>
+                        <CardHeader
+                          title={service.name}
+                          titleTypographyProps={{ align: "center" }}
+                          className={classes.cardHeader}
+                        />
+                        <CardContent>
+                          <Typography
+                            variant="subtitle1"
+                            align="center"
+                            style={{ width: 350 }}
+                          >
+                            {service.description}
+                          </Typography>
+                        </CardContent>
+                        <CardActions className={classes.cardActions}>
+                          <Button
+                            component={(props: any) => (
+                              <Link to={service.actionPath} {...props} />
+                            )}
+                            fullWidth
+                            variant="outlined"
+                            color="primary"
+                          >
+                            {service.action}
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  );
+                })}
+            </Grid>
+          ) : (
+            <Grid container className={classes.cardContainer}>
               <Grid item>
-                <Card>
-                  <CardHeader
-                    title={service.name}
-                    titleTypographyProps={{ align: "center" }}
-                    className={classes.cardHeader}
-                  />
-                  <CardContent>
-                    <Typography
-                      variant="subtitle1"
-                      align="center"
-                      style={{ width: 350 }}
-                    >
-                      {service.description}
-                    </Typography>
-                  </CardContent>
-                  <CardActions className={classes.cardActions}>
+                <Typography
+                  component="h1"
+                  variant="h2"
+                  align="center"
+                  color="textPrimary"
+                  gutterBottom
+                >
+                  {t("Welcome")}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  align="center"
+                  color="textSecondary"
+                  component="p"
+                >
+                  To continue please
+                </Typography>
+                <Grid
+                  container
+                  style={{ marginTop: "1em" }}
+                  direction="row"
+                  spacing={24}
+                  alignContent="center"
+                  alignItems="center"
+                  justify="space-around"
+                >
+                  <Grid item>
                     <Button
+                      component={(props: any) => (
+                        <Link to={"/login"} {...props} />
+                      )}
                       fullWidth
-                      onClick={() => onActionClick(service)}
                       variant="outlined"
                       color="primary"
                     >
-                      {service.action}
+                      {t("Login")}
                     </Button>
-                  </CardActions>
-                </Card>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="subtitle1">or</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      component={(props: any) => (
+                        <Link to={"/register"} {...props} />
+                      )}
+                      fullWidth
+                      variant="outlined"
+                      color="primary"
+                    >
+                      {t("Register")}
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
-            );
-          })}
-        </Grid>
-      </Paper>
-      {/* <div className={classNames(classes.content, classes.grow)}>
-        <Link to="/preview">{t("Find entities")}</Link>
-        {isUser && <Link to="/train">{t("Train corpus")}</Link>}
-        {isAdmin && <Link to="/admin/corpus">{t("Manage corpus")}</Link>}
-        {isAdmin && <Link to="/admin/users">{t("Manage users")}</Link>}
-      </div> */}
+            </Grid>
+          )}
+        </Paper>
+      </div>
     </div>
   );
 };
