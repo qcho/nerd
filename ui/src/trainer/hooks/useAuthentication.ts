@@ -48,10 +48,9 @@ function useAuthentication() {
   }
 
   useEffect(() => {
-    const hasCredentials = credentials != null;
-    setLoggedIn(hasCredentials);
-    if (hasCredentials) {
-      const roles = credentials!.roles || [];
+    setLoggedIn(credentials != null);
+    if (credentials != null) {
+      const roles = credentials.roles || [];
       setIsAdmin(roles.includes("admin"));
       setIsUser(roles.includes("user"));
     } else {

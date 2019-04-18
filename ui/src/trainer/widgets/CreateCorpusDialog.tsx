@@ -67,7 +67,7 @@ const CreateCorpusDialog = ({
   async function createCorpus() {
     setErrorMessage("");
     if (
-      (baseCorpus != undefined && baseCorpus!.name!.length == 0) ||
+      (baseCorpus != undefined && baseCorpus.name!.length == 0) ||
       name.length == 0
     ) {
       setErrorMessage(t("Please fill the required fields"));
@@ -118,7 +118,7 @@ const CreateCorpusDialog = ({
                 name: "baseCorpus",
                 id: "baseCorpus"
               }}
-              value={(baseCorpus && baseCorpus!.id) || 0}
+              value={(baseCorpus && baseCorpus.id) || 0}
               onChange={event => setBaseCorpus({ id: event.target.value })}
             >
               {systemCorpora.map(corpus => {

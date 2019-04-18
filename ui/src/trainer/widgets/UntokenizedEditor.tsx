@@ -115,7 +115,9 @@ export function UntokenizedEditor({ document, onUpdate, entityTypes }: Props) {
   const entities = document.ents;
 
   function onEntityTypeChange(value: string) {
-    currentEntity!.entity.label = value;
+    if (currentEntity != null) {
+      currentEntity.entity.label = value;
+    }
     setCurrentEntity(null);
   }
 
@@ -186,18 +188,18 @@ export function UntokenizedEditor({ document, onUpdate, entityTypes }: Props) {
     onUpdate(document);
   }
 
-  let popoverOpen = currentEntity != null;
-  let anchorElement = popoverOpen ? currentEntity!.element : null;
+  let anchorElement = currentEntity != null ? currentEntity.element : null;
   let { loggedIn } = useAuthentication();
-  let popoverContents = popoverOpen ? (
-    <EntityDialog
-      value={currentEntity!.entity.label}
-      onTypeChange={(event: any) => onEntityTypeChange(event.target.value)}
-      options={entityTypes}
-    />
-  ) : (
-    <div />
-  );
+  let popoverContents =
+    currentEntity != null ? (
+      <EntityDialog
+        value={currentEntity.entity.label}
+        onTypeChange={(event: any) => onEntityTypeChange(event.target.value)}
+        options={entityTypes}
+      />
+    ) : (
+      <div />
+    );
 
   return (
     <div>

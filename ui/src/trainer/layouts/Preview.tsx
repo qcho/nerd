@@ -36,7 +36,6 @@ type Props = {
 
 const PreviewLayout = ({ classes }: Props) => {
   const [text, setText] = useState<string>("");
-  const [nerModel, setNerModel] = useState<string>("noticias"); // TODO: Hardcoded model
   const [entityTypes, setEntityTypes] = useState<EntityType[]>([]);
   const [document, setDocument] = useState<MaybeNerDocument>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -65,14 +64,14 @@ const PreviewLayout = ({ classes }: Props) => {
       try {
         // TODO(jpo): Use new API.
         const entityTypeApi = new EntityTypeApi();
-        const availableTypes = await entityTypeApi.availableTypes(nerModel);
+        const availableTypes = await entityTypeApi.availableTypes("noticias");
         setEntityTypes(availableTypes);
       } catch (e) {
         console.log([e]);
       }
     };
     fetchTypes();
-  }, [nerModel]);
+  }, []);
 
   function onDocumentUpdate(document: NerDocument) {
     setDocument(prevState => {
@@ -141,7 +140,7 @@ const PreviewLayout = ({ classes }: Props) => {
             >
               <Grid item xs={10}>
                 <UntokenizedEditor
-                  document={document!}
+                  document={document}
                   onUpdate={onDocumentUpdate}
                   entityTypes={entityTypes}
                 />
