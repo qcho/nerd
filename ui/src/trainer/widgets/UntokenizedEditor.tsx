@@ -214,7 +214,7 @@ export function UntokenizedEditor({ document, onUpdate, entityTypes }: Props) {
       </div>
       <Popover
         id="entity-popover"
-        open={popoverOpen}
+        open={currentEntity != null}
         onClose={() => setCurrentEntity(null)}
         anchorEl={anchorElement}
         anchorOrigin={{
