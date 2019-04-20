@@ -136,16 +136,16 @@ const UserManagement = () => {
             />
           </Grid>
 
-          {!loading && (
-            <Table>
-              <RichTableHead
-                onSelectAll={handleSelectAll}
-                headers={headers}
-                numSelected={selected.length}
-                rowCount={users.length}
-              />
-              <TableBody>
-                {users.map((user: User) => {
+          <Table>
+            <RichTableHead
+              onSelectAll={handleSelectAll}
+              headers={headers}
+              numSelected={selected.length}
+              rowCount={users.length}
+            />
+            <TableBody>
+              {false &&
+                users.map((user: User) => {
                   const rowSelected = isSelected(user.email);
                   return (
                     <UserRow
@@ -156,23 +156,22 @@ const UserManagement = () => {
                     />
                   );
                 })}
-              </TableBody>
-              {shouldPaginate && (
-                <TableFooter>
-                  <TableRow>
-                    <TablePagination
-                      count={total}
-                      page={page - 1}
-                      rowsPerPageOptions={[20, 50, 100]}
-                      rowsPerPage={pageSize}
-                      onChangePage={handleChangePage}
-                      onChangeRowsPerPage={handleChangeUsersPerPage}
-                    />
-                  </TableRow>
-                </TableFooter>
-              )}
-            </Table>
-          )}
+            </TableBody>
+            {shouldPaginate && (
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    count={total}
+                    page={page - 1}
+                    rowsPerPageOptions={[20, 50, 100]}
+                    rowsPerPage={pageSize}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeUsersPerPage}
+                  />
+                </TableRow>
+              </TableFooter>
+            )}
+          </Table>
         </Grid>
       </Paper>
     </div>
