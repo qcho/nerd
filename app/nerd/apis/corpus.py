@@ -3,13 +3,16 @@ from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
+import mongoengine as me
+from marshmallow import fields
+from werkzeug.exceptions import BadRequest, NotFound, FailedDependency
 
 from nerd.apis import response_error
 from nerd.core.document.corpus import Text
-from nerd.core.document.snapshot import Type
+from nerd.core.document.snapshot import Snapshot
+from nerd.core.document.spacy import SpacyDocumentSchema
+from nerd.tasks.corpus import nlp as nlp_task
 from nerd.core.document.user import Role
-from werkzeug.exceptions import BadRequest, NotFound
-
 from .roles import jwt_and_role_required
 
 blp = Blueprint("corpus", "corpus", description="Corpus operations")
@@ -46,43 +49,66 @@ class CorpusTextResource(MethodView):
             raise NotFound()
 
 
-@blp.route("/<string:text_id>/trainings/me")
-@blp.route("/<string:text_id>/trainings/<int:user_id>")
-class TrainingView(MethodView):
-    @jwt_and_role_required(Role.ADMIN)
-    @blp.arguments(...)
-    @blp.doc(operationId="getTraining")
-    @blp.response(..., code=...)
-    def get(self, text_id, user_id=None):
-        ...
+# @blp.route("/<string:text_id>/trainings/me")
+# @blp.route("/<string:text_id>/trainings/<int:user_id>")
+# class TrainingView(MethodView):
+#     @jwt_and_role_required(Role.ADMIN)
+#     @blp.arguments(...)
+#     @blp.doc(operationId="getTraining")
+#     @blp.response(..., code=...)
+#     def get(self, text_id, user_id=None):
+#         ...
+#
+#     @jwt_and_role_required(Role.ADMIN)
+#     @blp.arguments(...)
+#     @blp.doc(operationId="upsertTraining")
+#     @blp.response(..., code=...)
+#     def put(self, payload, text_id, user_id=None):
+#         ...
 
-    @jwt_and_role_required(Role.ADMIN)
-    @blp.arguments(...)
-    @blp.doc(operationId="upsertTraining")
-    @blp.response(..., code=...)
-    def put(self, payload, text_id, user_id=None):
-        ...
+
+class SnapshotTrainSchema(ModelSchema):
+    class Meta:
+        strict = True
+        model = Snapshot
+        exclude = ['id', 'created_at', 'trained_at', 'semaphore']
+
+
+class ValueOnlyTextSchema(ModelSchema):
+    class Meta:
+        strict = True
+        model = Text
+        exclude = ['id', 'trainings', 'created_at']
+
+
+class TrainTextSchema(ModelSchema):
+    snapshot = fields.Nested(SnapshotTrainSchema)
+    spacy_document = fields.Nested(SpacyDocumentSchema)
 
 
 @blp.route("/train")
 class TrainResource(MethodView):
+
     @jwt_and_role_required(Role.USER)
     @blp.doc(operationId="getTrainingInfo")
-    @blp.response(..., code=...)
+    @blp.response(TrainTextSchema, code=200)
     @response_error(NotFound("Corpus not found"))
+    @response_error(FailedDependency("Failed to infer entities"))
     def get(self):
-        ...
-
-
+        try:
+            text = list(Text.objects.aggregate({"$sample": {'size': 1}}))[0]
+            snapshot = Snapshot.current()
+            spacy_document = nlp_task.apply_async([text['value']], queue=str(snapshot)).wait(timeout=5)
+            return {
+                'snapshot': snapshot,
+                'spacy_document': spacy_document
+            }
+        except TimeoutError:
+            raise FailedDependency()
 
 
 @blp.route("/")
 class IndexResource(MethodView):
-    class AddTextSchema(ModelSchema):
-        class Meta:
-            strict = True
-            model = Text
-            exclude = ['id', 'trainings', 'created_at']
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="getCorpus")
@@ -96,9 +122,9 @@ class IndexResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="addNewText")
-    @blp.arguments(AddTextSchema)
+    @blp.arguments(ValueOnlyTextSchema)
     @blp.response(code=200)
-    def post(self, payload: AddTextSchema):
+    def post(self, payload: ValueOnlyTextSchema):
         # TODO: We should avoid adding equal texts
         Text(
            value=payload.value,

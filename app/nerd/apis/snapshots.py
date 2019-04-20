@@ -36,53 +36,52 @@ class IndexResource(MethodView):
             pagination_parameters.page_size
         return Snapshot.objects.skip(skip_elements).limit(pagination_parameters.page_size)
 
-    @jwt_and_role_required(Role.ADMIN)
-    @blp.doc(operationId="listCorpusSnapshots")
-    @blp.response(...)
-    @blp.arguments(...)
-    def post(self, payload):
-        ...
+    # @jwt_and_role_required(Role.ADMIN)
+    # @blp.doc(operationId="listCorpusSnapshots")
+    # @blp.response(...)
+    # @blp.arguments(...)
+    # def post(self, payload):
+    #     ...
 
 
-@blp.route("/current")
-@blp.route("/<int:snapshot_id>")
-class SnapshotResource(MethodView):
-
-    @jwt_and_role_required(Role.ADMIN)
-    @blp.response(...)
-    @blp.doc(operationId="")
-    def get(self, snapshot_id: int = None):
-        ...
-
-
-
-@blp.route("/current/entity-types")
-@blp.route("/<int:snapshot_id>/entity-types")
-class EntityTypesResource(MethodView):
-
-    @jwt_and_role_required(Role.ADMIN)
-    @blp.response(...)
-    @blp.doc(operationId="")
-    def get(self, snapshot_id: int = None):
-        ...
+# @blp.route("/current")
+# @blp.route("/<int:snapshot_id>")
+# class SnapshotResource(MethodView):
+#
+#     @jwt_and_role_required(Role.ADMIN)
+#     @blp.response(...)
+#     @blp.doc(operationId="")
+#     def get(self, snapshot_id: int = None):
+#         ...
 
 
-@blp.route("/current/entity-types/<string:type_name>")
-@blp.route("/<int:snapshot_id>/entity-types/<string:type_name>")
-class EntityTypeResource(MethodView):
+# @blp.route("/current/entity-types")
+# @blp.route("/<int:snapshot_id>/entity-types")
+# class EntityTypesResource(MethodView):
+#
+#     @jwt_and_role_required(Role.ADMIN)
+#     @blp.response(...)
+#     @blp.doc(operationId="")
+#     def get(self, snapshot_id: int = None):
+#         ...
 
-    @jwt_and_role_required(Role.ADMIN)
-    @blp.response(...)
-    @blp.doc(operationId="")
-    def delete(self, snapshot_id: int = None, type_name: str = None):
-        ...
+
+# @blp.route("/current/entity-types/<string:type_name>")
+# @blp.route("/<int:snapshot_id>/entity-types/<string:type_name>")
+# class EntityTypeResource(MethodView):
+#
+#     @jwt_and_role_required(Role.ADMIN)
+#     @blp.response(...)
+#     @blp.doc(operationId="")
+#     def delete(self, snapshot_id: int = None, type_name: str = None):
+#         ...
 
 
-@blp.route("/force-train")
-class ForceTrainingResource(MethodView):
-
-    @jwt_and_role_required(Role.ADMIN)
-    @blp.response(...)
-    @blp.doc(operationId="")
-    def post(self, payload):
-        ...
+# @blp.route("/force-train")
+# class ForceTrainingResource(MethodView):
+#
+#     @jwt_and_role_required(Role.ADMIN)
+#     @blp.response(...)
+#     @blp.doc(operationId="")
+#     def post(self, payload):
+#         ...
