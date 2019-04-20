@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from "react";
 import NavigationBar from "../NavigationBar";
-import {
-  Theme,
-  Grid,
-  LinearProgress,
-  Paper,
-  CardHeader,
-  CardContent,
-  Typography,
-  Card
-} from "@material-ui/core";
+import { Theme, Grid, LinearProgress, Typography } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { makeStyles } from "@material-ui/styles";
-import { Link } from "react-router-dom";
+import { Line } from "rc-progress";
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -21,9 +12,9 @@ const useStyles = makeStyles(
       height: "100vh"
     },
     content: {
-      marginTop: theme.spacing.unit * 4,
-      marginLeft: theme.spacing.unit * 10,
-      marginRight: theme.spacing.unit * 10
+      marginTop: theme.spacing.unit,
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit
     },
     cardHeader: {
       backgroundColor: theme.palette.grey[200]
@@ -32,6 +23,9 @@ const useStyles = makeStyles(
       ...theme.typography.h4,
       color: "fafafa",
       textDecoration: "none"
+    },
+    progressCircle: {
+      fontFamily: theme.typography.body1.fontFamily
     }
   }),
   { withTheme: true }
@@ -46,6 +40,11 @@ const CorpusManagement = () => {
     // TODO: Load corpus metadata
   }, []);
 
+  const totalTexts = 10000;
+  const trainedTexts = 400;
+  const percentageTrained = (trainedTexts / totalTexts) * 100;
+  console.log(percentageTrained);
+
   return (
     <div className={classes.grow}>
       <NavigationBar />
@@ -57,49 +56,63 @@ const CorpusManagement = () => {
         alignItems="flex-end"
       >
         <Grid item xs={8}>
-          <Grid container spacing={24}>
-            <Grid item>
-              <Card style={{ width: 250 }}>
-                <CardHeader
-                  title="Versions"
-                  titleTypographyProps={{ align: "center" }}
-                  className={classes.cardHeader}
+          <Typography variant="h4" gutterBottom component="h2">
+            {t("Information")}
+          </Typography>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column"
+              // alignItems: "center"
+            }}
+          >
+            <Typography variant="h6">{t("Texts") + ":"}</Typography>
+
+            <div style={{ paddingLeft: "1em" }}>
+              <div
+                style={{
+                  width: "10em",
+                  height: "1em",
+                  verticalAlign: "top"
+                }}
+              >
+                <Line
+                  percent={percentageTrained}
+                  strokeColor={progressColor(percentageTrained)}
+                  strokeWidth={3}
+                  trailWidth={3}
                 />
-                <CardContent>
-                  <Typography variant="subtitle1" align="center">
-                    <Link className={classes.versionLink} to="">
-                      {10}
-                    </Link>
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item>
-              <Card style={{ width: 250 }}>
-                <CardHeader
-                  title="Texts"
-                  titleTypographyProps={{ align: "center" }}
-                  className={classes.cardHeader}
-                />
-                <CardContent>
-                  <Typography variant="subtitle1" align="center">
-                    <Link className={classes.versionLink} to="">
-                      {"60/100"}
-                    </Link>
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+              </div>
+              <Typography variant="body1">
+                {t("{{trained}} of {{total}} trained", {
+                  total: totalTexts,
+                  trained: trainedTexts
+                })}
+              </Typography>
+            </div>
+          </div>
         </Grid>
-        <Grid
-          item
-          xs={4}
-          style={{ borderLeft: "1px solid rgba(0, 0, 0, 0.12)" }}
-        />
+        <Grid item xs={8}>
+          <Typography variant="h4" gutterBottom component="h2">
+            {t("Versions")}
+          </Typography>
+        </Grid>
       </Grid>
     </div>
   );
+};
+
+const progressColor = (percentage: number) => {
+  if (percentage < 40) {
+    return "#D2222D";
+  }
+  if (percentage < 70) {
+    return "#FFBF00";
+  }
+  if (percentage < 100) {
+    return "#0099E5";
+  }
+  return "#238823";
 };
 
 export default CorpusManagement;
