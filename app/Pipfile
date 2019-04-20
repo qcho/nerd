@@ -16,6 +16,7 @@ flower = "*"
 meinheld = "*"
 gunicorn = "*"
 marshmallow-enum = "*"
+newsapi-python = "*"
 
 [dev-packages]
 faker = "*"
