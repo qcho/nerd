@@ -4,6 +4,7 @@ import click
 from flask import Flask
 
 from nerd.core.document.snapshot import Snapshot
+from nerd.core.news import NewsApi
 from nerd.core.setup import NERdSetup
 from nerd.tasks import celery
 from nerd.tasks.corpus import ping as ping_task, nlp as nlp_task
@@ -19,6 +20,12 @@ def setup_cli(app: Flask):
     @click.option('--drop/--no-drop', help='Drop old database information before setup', default=False)
     def dev_setup(drop):
         NERdSetup.dev_setup(drop)
+
+    @app.cli.command()
+    @click.option('--api-key', type=str)
+    @click.option('--pages', type=int, default=1)
+    def fetch_news(api_key: str, pages: int):
+        NewsApi(api_key).fetch_news(pages)
 
     @app.cli.group()
     @click.pass_context
