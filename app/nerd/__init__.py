@@ -3,9 +3,10 @@ from flask import Flask
 
 from .apis import api
 from .apis.auth import blp as auth
-from .apis.corpus.snapshots import blp as snapshots
-from .apis.corpus.texts import blp as texts
+from .apis.corpus import blp as corpus
+from .apis.ner import blp as ner
 from .apis.roles import blp as roles
+from .apis.snapshots import blp as snapshots
 from .apis.users import blp as users
 from .core.cli import setup_cli
 from .core.security import jwt
@@ -25,7 +26,8 @@ api.init_app(app)
 api.register_blueprint(auth, url_prefix='/api/auth')
 api.register_blueprint(users, url_prefix='/api/users')
 api.register_blueprint(roles, url_prefix='/api/roles')
-api.register_blueprint(texts, url_prefix='/api/corpus/texts')
-api.register_blueprint(snapshots, url_prefix='/api/corpus/snapshots')
+api.register_blueprint(corpus, url_prefix='/api/corpus')
+api.register_blueprint(snapshots, url_prefix='/api/snapshots')
+api.register_blueprint(ner, url_prefix='/api/ner')
 
 setup_cli(app)
