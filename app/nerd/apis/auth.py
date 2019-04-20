@@ -75,7 +75,7 @@ class TokenResource(MethodView):
     #       https://www.oauth.com/oauth2-servers/access-tokens/password-grant/
     @blp.arguments(TokenSchema, location='json')
     @response_error(Unauthorized('Invalid credentials'))
-    @blp.response(UserCredentialsSchema)
+    @blp.response(UserCredentialsSchema, code=200)
     @blp.doc(operationId="createAccessToken")
     def post(self, login_payload):
         """Generate new access and refresh tokens with password grant_type"""
