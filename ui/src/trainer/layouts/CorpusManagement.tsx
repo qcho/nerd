@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import NavigationBar from "../NavigationBar";
-import { Theme, Grid, LinearProgress, Typography } from "@material-ui/core";
+import {
+  Theme,
+  Grid,
+  LinearProgress,
+  Typography,
+  Button
+} from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { makeStyles } from "@material-ui/styles";
 import { Line } from "rc-progress";
@@ -40,10 +46,9 @@ const CorpusManagement = () => {
     // TODO: Load corpus metadata
   }, []);
 
-  const totalTexts = 10000;
-  const trainedTexts = 400;
+  const totalTexts = 1000;
+  const trainedTexts = 1000;
   const percentageTrained = (trainedTexts / totalTexts) * 100;
-  console.log(percentageTrained);
 
   return (
     <div className={classes.grow}>
@@ -63,11 +68,9 @@ const CorpusManagement = () => {
             style={{
               display: "flex",
               flexDirection: "column"
-              // alignItems: "center"
             }}
           >
-            <Typography variant="h6">{t("Texts") + ":"}</Typography>
-
+            <Typography variant="h6">{t("Texts")}</Typography>
             <div style={{ paddingLeft: "1em" }}>
               <div
                 style={{
@@ -89,7 +92,19 @@ const CorpusManagement = () => {
                   trained: trainedTexts
                 })}
               </Typography>
+              <Button
+                style={{ marginTop: "1em" }}
+                size="small"
+                color="primary"
+                variant="contained"
+              >
+                View all
+              </Button>
             </div>
+            <Typography style={{ marginTop: "1em" }} variant="h6">
+              {t("Types")}
+            </Typography>
+            <div style={{ paddingLeft: "1em" }} />
           </div>
         </Grid>
         <Grid item xs={8}>
