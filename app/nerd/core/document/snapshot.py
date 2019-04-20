@@ -28,8 +28,14 @@ class Snapshot(me.Document):
     }
 
     @staticmethod
+    def from_string(version_string):
+        if 'CURRENT' in version_string:
+            return Snapshot.current()
+        return Snapshot.objects.get(id=int(version_string[1:]))
+
+    @staticmethod
     def current():
-        return Snapshot.objects(id=0)
+        return Snapshot.objects.get(id=0)
 
     def __str__(self):
         return f'v{"CURRENT" if self.id == 0 else self.id}'

@@ -20,7 +20,7 @@ class Model:
         if self._spacy_model is None:
             with self.snapshot.loading_lock():
                 with log_perf(f'{self.snapshot} LOADING'):
-                    self._spacy_model = Language().from_disk(self._path)
+                    self._spacy_model = spacy.load(self._path)
         return self._spacy_model
 
     @_nlp.setter
@@ -29,7 +29,7 @@ class Model:
 
     def __init__(self, snapshot: Snapshot):
         self.snapshot = snapshot
-        self._path = FS_PATH / snapshot.__str__()
+        self._path = FS_PATH / str(snapshot)
 
     def warm_up(self):
         self._nlp()
@@ -40,8 +40,8 @@ class Model:
     def train(self):
         with log_perf(f'{self.snapshot} TRAINING'):
             # TODO: perform training logic on self._nlp
-            #  self._nlp = spacy.load(os.environ.get('NERD_SPACY_MODEL'))
-            self._nlp = spacy.blank('en')
+            self._nlp = spacy.load(os.environ.get('NERD_SPACY_MODEL'))
+            # self._nlp = spacy.blank('en')
         with self.snapshot.training_lock():
             """ Only locking when saving to disk after training is done in memory """
             with log_perf(f'{self.snapshot} SAVING_TO_DISK'):

@@ -16,8 +16,7 @@ class CorpusTask(Task, ABC):
 
     @property
     def model(self) -> Model:
-        # TODO: get snapshot from request (?)
-        snapshot = Snapshot(id='SNAPSHOT')
+        snapshot = Snapshot.from_string(self.request.delivery_info['routing_key'])
         if self._model is None:
             # self.backend.client REDIS BACKEND
             self._model = Model(snapshot)
