@@ -1,7 +1,10 @@
 from flask.views import MethodView
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
+from marshmallow_mongoengine import ModelSchema
+
 from nerd.apis import response_error
+from nerd.core.document.corpus import Text
 from nerd.core.document.snapshot import Type
 from nerd.core.document.user import Role
 from werkzeug.exceptions import BadRequest, NotFound
@@ -16,7 +19,7 @@ class CorpusTextResource(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="getCorpusText")
     @response_error(NotFound("Corpus text does not exist"))
-    @blp.response(..., code=200, description="Model")
+    @blp.response(...   , code=200, description="Model")
     def get(self, payload, text_id):
         ...
 
@@ -55,18 +58,37 @@ class TrainResource(MethodView):
         ...
 
 
+class AddTextSchema(ModelSchema):
+    class Meta:
+        strict = True
+        model = Text
+        exclude = ['trainings', 'created_at']
+
+
+class TextSchema(ModelSchema):
+    class Meta:
+        strict = True
+        model = Text
+
+
 @blp.route("/")
 class IndexResource(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="getCorpus")
-    @blp.response(..., code=200)
+    @blp.response(TextSchema(many=True), code=200)
     @blp.paginate()
     def get(self, pagination_parameters: PaginationParameters):
-        ...
+        results = Text.objects
+        pagination_parameters.item_count = results.count()
+        skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
+        return results.skip(skip_elements).limit(pagination_parameters.page_size)
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="addNewText")
-    @blp.arguments(...)
-    @blp.response(..., code=200)
-    def post(self, payload, model_name):
-        ...
+    @blp.arguments(AddTextSchema)
+    @blp.response(code=200)
+    def post(self, payload: AddTextSchema):
+        # TODO: We should avoid adding equal texts
+        Text(
+           value=payload.value,
+        ).save()
