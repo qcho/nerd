@@ -2,6 +2,7 @@ from flask.views import MethodView
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
+from mongoengine import DoesNotExist
 
 from nerd.apis import response_error
 from nerd.core.document.corpus import Text
@@ -14,20 +15,35 @@ from .roles import jwt_and_role_required
 blp = Blueprint("corpus", "corpus", description="Corpus operations")
 
 
+class TextSchema(ModelSchema):
+    class Meta:
+        strict = True
+        model = Text
+
+
 @blp.route("/<string:text_id>")
 class CorpusTextResource(MethodView):
+
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="getCorpusText")
     @response_error(NotFound("Corpus text does not exist"))
-    @blp.response(...   , code=200, description="Model")
-    def get(self, payload, text_id):
-        ...
+    @blp.response(TextSchema, code=200, description="Model")
+    def get(self, text_id):
+        try:
+            return Text.objects.get(id=text_id)
+        except DoesNotExist:
+            raise NotFound()
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="removeCorpusText")
     @response_error(BadRequest("There was a problem deleting the corpus text"))
     def delete(self, text_id):
-        ...
+        try:
+            text = Text.objects.get(id=text_id)
+            text.delete()
+            return
+        except DoesNotExist:
+            raise NotFound()
 
 
 @blp.route("/<string:text_id>/trainings/me")
@@ -58,21 +74,16 @@ class TrainResource(MethodView):
         ...
 
 
-class AddTextSchema(ModelSchema):
-    class Meta:
-        strict = True
-        model = Text
-        exclude = ['trainings', 'created_at']
-
-
-class TextSchema(ModelSchema):
-    class Meta:
-        strict = True
-        model = Text
 
 
 @blp.route("/")
 class IndexResource(MethodView):
+    class AddTextSchema(ModelSchema):
+        class Meta:
+            strict = True
+            model = Text
+            exclude = ['id', 'trainings', 'created_at']
+
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="getCorpus")
     @blp.response(TextSchema(many=True), code=200)
