@@ -6,6 +6,6 @@ from nerd.core.document.spacy import SpacyDocument
 
 
 class Text(me.Document):
-    value = me.StringField()
+    value = me.StringField(unique=True)
     created_at = me.DateTimeField(default=datetime.now())
     trainings = me.MapField(me.EmbeddedDocumentField(SpacyDocument))
