@@ -51,7 +51,7 @@ class TrainResource(MethodView):
     @blp.doc(operationId="getTrainingInfo")
     @blp.response(..., code=...)
     @response_error(NotFound("Corpus not found"))
-    def put(self):
+    def get(self):
         ...
 
 
