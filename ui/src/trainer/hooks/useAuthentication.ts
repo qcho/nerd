@@ -23,7 +23,6 @@ function useAuthentication() {
         password,
         grant_type: "password"
       });
-      console.log("Login result", [loginResult.data]);
       updateCredentials(loginResult.data, !rememberMe);
       return { success: true, message: "" };
     } catch (e) {
