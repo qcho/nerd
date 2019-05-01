@@ -4,12 +4,12 @@ from flask_rest_api.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
 import mongoengine as me
-from marshmallow import fields
+from marshmallow import fields, Schema
 from werkzeug.exceptions import BadRequest, NotFound, FailedDependency
 
 from nerd.apis import response_error
 from nerd.core.document.corpus import Text
-from nerd.core.document.snapshot import Snapshot
+from nerd.core.document.snapshot import Snapshot, Type
 from nerd.core.document.spacy import SpacyDocumentSchema
 from nerd.tasks.corpus import nlp as nlp_task
 from nerd.core.document.user import Role
@@ -67,11 +67,10 @@ class CorpusTextResource(MethodView):
 #         ...
 
 
-class SnapshotTrainSchema(ModelSchema):
+class TypeSchema(ModelSchema):
     class Meta:
         strict = True
-        model = Snapshot
-        exclude = ['id', 'created_at', 'trained_at', 'semaphore']
+        model = Type
 
 
 class ValueOnlyTextSchema(ModelSchema):
@@ -81,8 +80,13 @@ class ValueOnlyTextSchema(ModelSchema):
         exclude = ['id', 'trainings', 'created_at']
 
 
-class TrainTextSchema(ModelSchema):
-    snapshot = fields.Nested(SnapshotTrainSchema)
+class SnapshotSchema(ModelSchema):
+    class Meta:
+        model = Snapshot
+
+
+class TrainTextSchema(Schema):
+    snapshot = fields.Nested(SnapshotSchema)
     spacy_document = fields.Nested(SpacyDocumentSchema)
 
 
@@ -90,8 +94,8 @@ class TrainTextSchema(ModelSchema):
 class TrainResource(MethodView):
 
     @jwt_and_role_required(Role.USER)
-    @blp.doc(operationId="getTrainingInfo")
-    @blp.response(TrainTextSchema, code=200)
+    @blp.doc(operationId="train")
+    @blp.response(TrainTextSchema, code=200, description="Training entity")
     @response_error(NotFound("Corpus not found"))
     @response_error(FailedDependency("Failed to infer entities"))
     def get(self):
@@ -112,7 +116,7 @@ class IndexResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="getCorpus")
-    @blp.response(TextSchema(many=True), code=200)
+    @blp.response(TextSchema(many=True), code=200, description="Corpus")
     @blp.paginate()
     def get(self, pagination_parameters: PaginationParameters):
         results = Text.objects
@@ -123,7 +127,7 @@ class IndexResource(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="addNewText")
     @blp.arguments(ValueOnlyTextSchema)
-    @blp.response(code=200)
+    @blp.response(code=200, description="Ok")
     def post(self, payload: ValueOnlyTextSchema):
         # TODO: We should avoid adding equal texts
         Text(
