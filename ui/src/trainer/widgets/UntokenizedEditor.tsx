@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-import { NerDocument } from "../types/NerDocument";
-import { Entity } from "../types/Entity";
 import { Popover, Theme, Snackbar } from "@material-ui/core";
 import EntityDialog from "./EntityDialog";
 import useAuthentication from "../hooks/useAuthentication";
-import { EntityType } from "../types/EntityType";
 import { makeStyles } from "@material-ui/styles";
 import EntityNode from "../widgets/EntityNode";
 import TextNode from "../widgets/TextNode";
+import { SpacyDocument, Nested } from "../apigen";
 
 function nodeProvider(
-  document: NerDocument,
-  entityTypes: EntityType[],
+  document: SpacyDocument,
+  entityTypes: Nested[],
   onEntityClick: any,
   onEntityDelete: any,
   editable: boolean
@@ -27,8 +25,8 @@ function nodeProvider(
   };
 
   function entityFor(index: number) {
-    for (let idx = 0; idx < entities.length; ++idx) {
-      let entity = entities[idx];
+    for (let idx = 0; idx < entities!.length; ++idx) {
+      let entity = entities![idx] as Nested2;
       if (entity.start <= index && entity.end >= index) {
         return entity;
       }

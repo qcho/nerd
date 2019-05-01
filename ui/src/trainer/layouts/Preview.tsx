@@ -11,13 +11,13 @@ import {
   Snackbar
 } from "@material-ui/core";
 import { UntokenizedEditor } from "../widgets/UntokenizedEditor";
-import { MaybeNerDocument, NerDocument } from "../types/NerDocument";
 import NavigationBar from "../NavigationBar";
 import classNames from "classnames";
 import useAuthentication from "../hooks/useAuthentication";
-import EntityTypeApi from "../api/EntityTypeApi";
 import { EntityType } from "../types/EntityType";
 import { useTranslation } from "react-i18next";
+import { MaybeSpacyDocument } from "../types/optionals";
+import { SpacyDocument } from "../apigen";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -36,7 +36,7 @@ type Props = {
 const PreviewLayout = ({ classes }: Props) => {
   const [text, setText] = useState<string>("");
   const [entityTypes, setEntityTypes] = useState<EntityType[]>([]);
-  const [document, setDocument] = useState<MaybeNerDocument>(null);
+  const [document, setDocument] = useState<MaybeSpacyDocument>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [t] = useTranslation();
@@ -62,9 +62,9 @@ const PreviewLayout = ({ classes }: Props) => {
     const fetchTypes = async () => {
       try {
         // TODO(jpo): Use new API.
-        const entityTypeApi = new EntityTypeApi();
-        const availableTypes = await entityTypeApi.availableTypes("noticias");
-        setEntityTypes(availableTypes);
+        // const entityTypeApi = new EntityTypeApi();
+        // const availableTypes = await entityTypeApi.availableTypes("noticias");
+        // setEntityTypes(availableTypes);
       } catch (e) {
         console.log([e]);
       }
@@ -72,7 +72,7 @@ const PreviewLayout = ({ classes }: Props) => {
     fetchTypes();
   }, []);
 
-  function onDocumentUpdate(document: NerDocument) {
+  function onDocumentUpdate(document: SpacyDocument) {
     setDocument(prevState => {
       return { ...prevState, ...document };
     });
