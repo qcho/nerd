@@ -14,10 +14,9 @@ import { UntokenizedEditor } from "../widgets/UntokenizedEditor";
 import NavigationBar from "../NavigationBar";
 import classNames from "classnames";
 import useAuthentication from "../hooks/useAuthentication";
-import { EntityType } from "../types/EntityType";
 import { useTranslation } from "react-i18next";
 import { MaybeSpacyDocument } from "../types/optionals";
-import { SpacyDocument } from "../apigen";
+import { SpacyDocument, Type } from "../apigen";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -35,7 +34,7 @@ type Props = {
 
 const PreviewLayout = ({ classes }: Props) => {
   const [text, setText] = useState<string>("");
-  const [entityTypes, setEntityTypes] = useState<EntityType[]>([]);
+  const [entityTypes, setEntityTypes] = useState<{ [key: string]: Type }>({});
   const [document, setDocument] = useState<MaybeSpacyDocument>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");

@@ -5,18 +5,18 @@ import useAuthentication from "../hooks/useAuthentication";
 import { makeStyles } from "@material-ui/styles";
 import EntityNode from "../widgets/EntityNode";
 import TextNode from "../widgets/TextNode";
-import { SpacyDocument, Nested } from "../apigen";
+import { SpacyDocument, Type, SpacyEntity } from "../apigen";
 
 function nodeProvider(
   document: SpacyDocument,
-  entityTypes: Nested[],
+  entityTypes: { [key: string]: Type },
   onEntityClick: any,
   onEntityDelete: any,
   editable: boolean
 ) {
   let out: any[] = [];
-  let text = document.text;
-  let entities = document.ents;
+  let text = document.text!;
+  let entities = document.ents || [];
   let accumulatedText = "";
   let nodeIndex = 0;
 
@@ -26,8 +26,8 @@ function nodeProvider(
 
   function entityFor(index: number) {
     for (let idx = 0; idx < entities!.length; ++idx) {
-      let entity = entities![idx] as Nested2;
-      if (entity.start <= index && entity.end >= index) {
+      let entity = entities![idx] as SpacyEntity;
+      if (entity.start! <= index && entity.end! >= index) {
         return entity;
       }
     }
@@ -35,11 +35,8 @@ function nodeProvider(
   }
 
   function entityTypeFor(code: string) {
-    for (let i = 0; i < entityTypes.length; ++i) {
-      let entityType = entityTypes[i];
-      if (entityType.code == code) {
-        return entityType;
-      }
+    if (code in entityTypes) {
+      return entityTypes[code];
     }
     return null;
   }
@@ -61,20 +58,24 @@ function nodeProvider(
 
         accumulatedText = "";
       }
-      let entityText = text.substring(entityForIndex.start, entityForIndex.end);
-      let entityType: EntityType = entityTypeFor(entityForIndex.label)!;
+      let entityText = text.substring(
+        entityForIndex.start!,
+        entityForIndex.end!
+      );
+      let entityType: Type = entityTypeFor(entityForIndex.label!)!;
       out.push(
         <EntityNode
           key={`ner-${nodeIndex++}`}
           text={entityText}
           entity={entityForIndex}
           entityType={entityType}
+          typeCode={entityForIndex.label!}
           onDelete={onEntityDelete}
           onClick={onEntityClick}
           editable={editable}
         />
       );
-      idx = entityForIndex.end;
+      idx = entityForIndex.end!;
     }
     if (idx < text.length) {
       accumulatedText += text[idx];
@@ -87,13 +88,13 @@ function nodeProvider(
 }
 
 type Props = {
-  document: NerDocument;
-  onUpdate: (document: NerDocument) => void;
-  entityTypes: EntityType[];
+  document: SpacyDocument;
+  onUpdate: (document: SpacyDocument) => void;
+  entityTypes: { [key: string]: Type };
 };
 
 type MaybeCurrentEntity = {
-  entity: Entity;
+  entity: SpacyEntity;
   element: any;
 } | null;
 
@@ -119,18 +120,18 @@ export function UntokenizedEditor({ document, onUpdate, entityTypes }: Props) {
     setCurrentEntity(null);
   }
 
-  function deleteEntity(entity: Entity) {
-    let index = entities.findIndex(
+  function deleteEntity(entity: SpacyEntity) {
+    let index = entities!.findIndex(
       search => search.start == entity.start && search.end == entity.end
     );
     if (index < 0) {
       return; // Shouldn't happen
     }
-    entities.splice(index, 1);
+    entities!.splice(index, 1);
     onUpdate(document);
   }
 
-  function onEntityClick(element: any, entity: Entity) {
+  function onEntityClick(element: any, entity: SpacyEntity) {
     setCurrentEntity({
       element: element,
       entity: entity
@@ -147,16 +148,16 @@ export function UntokenizedEditor({ document, onUpdate, entityTypes }: Props) {
       return;
     }
 
-    let startPosition = document.text.indexOf(text);
+    let startPosition = document!.text!.indexOf(text);
     let endPosition = startPosition + text.length;
 
-    function contains(entity: Entity, index: number) {
-      return index >= entity.start && index <= entity.end;
+    function contains(entity: SpacyEntity, index: number) {
+      return index >= entity.start! && index <= entity.end!;
     }
 
-    if (document.ents.length > 0) {
-      let isContainedInEntity = document.ents
-        .map(
+    if (document!.ents!.length > 0) {
+      let isContainedInEntity = document
+        .ents!.map(
           entity =>
             contains(entity, startPosition) || contains(entity, endPosition)
         )
@@ -164,10 +165,10 @@ export function UntokenizedEditor({ document, onUpdate, entityTypes }: Props) {
 
       let containsAnyEntity = false;
 
-      document.ents.forEach((entity: Entity) => {
+      document!.ents!.forEach((entity: SpacyEntity) => {
         containsAnyEntity =
           containsAnyEntity ||
-          (startPosition <= entity.start && endPosition >= entity.end);
+          (startPosition <= entity.start! && endPosition >= entity.end!);
       });
 
       if (containsAnyEntity || isContainedInEntity) {
@@ -177,7 +178,7 @@ export function UntokenizedEditor({ document, onUpdate, entityTypes }: Props) {
       }
     }
 
-    document.ents.push({
+    document.ents!.push({
       start: startPosition,
       end: endPosition,
       label: "MISC"
@@ -191,7 +192,7 @@ export function UntokenizedEditor({ document, onUpdate, entityTypes }: Props) {
   let popoverContents =
     currentEntity != null ? (
       <EntityDialog
-        value={currentEntity.entity.label}
+        value={currentEntity.entity.label!}
         onTypeChange={(event: any) => onEntityTypeChange(event.target.value)}
         options={entityTypes}
       />

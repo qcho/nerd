@@ -101,7 +101,7 @@ const Train = () => {
     <div className={classes.container}>
       <NavigationBar />
       {loading && <LinearProgress />}
-      {document != null && (
+      {trainText != null && (
         <Paper className={classes.paper}>
           <AppBar
             color="default"
@@ -154,8 +154,8 @@ const Train = () => {
             </Toolbar>
           </AppBar>
           <UntokenizedEditor
-            document={document}
-            entityTypes={entityTypes}
+            document={trainText!.spacy_document!}
+            entityTypes={trainText!.snapshot!.types!}
             onUpdate={onDocumentUpdate}
           />
         </Paper>

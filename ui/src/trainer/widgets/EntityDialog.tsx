@@ -1,21 +1,21 @@
 import React from "react";
-import { EntityType } from "../types/EntityType";
-import {
-  MenuItem,
-  DialogContent,
-  Select,
-} from "@material-ui/core";
+import { MenuItem, DialogContent, Select } from "@material-ui/core";
+import { Type } from "../apigen";
 
 type EntityDialogProps = {
   value: string;
   onTypeChange: any;
-  options: EntityType[];
+  options: { [key: string]: Type };
 };
 
 const EntityDialog = (props: EntityDialogProps) => {
   let { value, onTypeChange, options } = props;
-  let optionWidgets = options.map((option: EntityType) => {
-    return <MenuItem key={option.code} value={option.code}>{option.name}</MenuItem>;
+  let optionWidgets = Object.keys(options).map((code: string) => {
+    return (
+      <MenuItem key={code} value={code}>
+        {options[code].label}
+      </MenuItem>
+    );
   });
   return (
     <>

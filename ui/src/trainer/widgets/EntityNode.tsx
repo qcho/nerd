@@ -1,22 +1,30 @@
 import React from "react";
-import { Entity } from "../types/Entity";
 import { Tooltip, Chip } from "@material-ui/core";
-import { EntityType } from "../types/EntityType";
+import { Type, SpacyEntity } from "../apigen";
 
 type EntityNodeProps = {
   text: string;
-  entity: Entity;
-  entityType: EntityType;
+  entity: SpacyEntity;
+  entityType: Type;
+  typeCode: string;
   editable: boolean;
-  onClick: (htmlTarget: HTMLElement, entity: Entity) => void;
-  onDelete: (entity: Entity) => void;
+  onClick: (htmlTarget: HTMLElement, entity: SpacyEntity) => void;
+  onDelete: (entity: SpacyEntity) => void;
 };
 
 const EntityNode = (props: EntityNodeProps) => {
-  let { text, entity, entityType, onClick, onDelete, editable } = props;
+  let {
+    text,
+    entity,
+    entityType,
+    typeCode,
+    onClick,
+    onDelete,
+    editable
+  } = props;
   return (
     <Tooltip
-      title={entityType.name}
+      title={entityType.label}
       style={{
         marginLeft: 2,
         marginRight: 2
@@ -35,7 +43,7 @@ const EntityNode = (props: EntityNodeProps) => {
             <h1>
               <b>
                 <span style={{ color: entityType.color }}>{text}</span>{" "}
-                <span>{entityType.code}</span>
+                <span>{typeCode}</span>
               </b>
             </h1>
           }
