@@ -3,7 +3,6 @@ from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
-import mongoengine as me
 from marshmallow import fields, Schema
 from werkzeug.exceptions import BadRequest, NotFound, FailedDependency
 
@@ -22,6 +21,49 @@ class TextSchema(ModelSchema):
     class Meta:
         strict = True
         model = Text
+        model_fields_kwargs = {
+            'trainings': {
+                'metadata': {
+                    'type': 'object',
+                    'additionalProperties': {
+                        '$ref': '#/components/schemas/SpacyDocument'
+                    }
+                }
+            }
+        }
+
+
+class TypeSchema(ModelSchema):
+    class Meta:
+        strict = True
+        model = Type
+
+
+class ValueOnlyTextSchema(ModelSchema):
+    class Meta:
+        strict = True
+        model = Text
+        exclude = ['id', 'trainings', 'created_at']
+
+
+class SnapshotSchema(ModelSchema):
+    class Meta:
+        model = Snapshot
+        model_fields_kwargs = {
+            'types': {
+                'metadata': {
+                    'type': 'object',
+                    'additionalProperties': {
+                        '$ref': '#/components/schemas/Type'
+                    }
+                }
+            }
+        }
+
+
+class TrainTextSchema(Schema):
+    snapshot = fields.Nested(SnapshotSchema)
+    spacy_document = fields.Nested(SpacyDocumentSchema)
 
 
 @blp.route("/<string:text_id>")
@@ -65,29 +107,6 @@ class CorpusTextResource(MethodView):
 #     @blp.response(..., code=...)
 #     def put(self, payload, text_id, user_id=None):
 #         ...
-
-
-class TypeSchema(ModelSchema):
-    class Meta:
-        strict = True
-        model = Type
-
-
-class ValueOnlyTextSchema(ModelSchema):
-    class Meta:
-        strict = True
-        model = Text
-        exclude = ['id', 'trainings', 'created_at']
-
-
-class SnapshotSchema(ModelSchema):
-    class Meta:
-        model = Snapshot
-
-
-class TrainTextSchema(Schema):
-    snapshot = fields.Nested(SnapshotSchema)
-    spacy_document = fields.Nested(SpacyDocumentSchema)
 
 
 @blp.route("/train")
