@@ -2,6 +2,7 @@ import mongoengine
 from apispec.ext.marshmallow import MarshmallowPlugin
 from flask import Flask
 
+from nerd.core.schema_registry import register_custom_schemas
 from nerd.core.schema_resolver import resolver
 from .apis import api
 from .apis.auth import blp as auth
@@ -27,6 +28,7 @@ celery.init_app(app)
 api.init_app(app, spec_kwargs={
     'marshmallow_plugin': MarshmallowPlugin(resolver)
 })
+register_custom_schemas(api.spec)
 api.register_blueprint(auth, url_prefix='/api/auth')
 api.register_blueprint(users, url_prefix='/api/users')
 api.register_blueprint(roles, url_prefix='/api/roles')
