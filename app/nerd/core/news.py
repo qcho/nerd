@@ -7,13 +7,16 @@ from nerd.core.document.corpus import Text
 
 def add_headlines(headlines):
     texts = [Text(value=headline['description']) for headline in headlines]
+    added = 0
     for text in texts:
         try:
             # TODO: Can't use bulk-insert since continue_on_error isn't supported yet:
             #           Text.objects.insert(texts)
             text.save()
+            added = added + 1
         except NotUniqueError:
             pass
+    return added
 
 
 class NewsApi:
@@ -22,10 +25,11 @@ class NewsApi:
 
     def fetch_news(self, pages: int = 1):
         client = NewsApiClient(api_key=self.api_key)
+        added = 0
         for page in range(1, pages + 1):
             try:
                 response = client.get_top_headlines(country='ar', page_size=100, page=page)
-                add_headlines(response['articles'])
+                added = added + add_headlines(response['articles'])
             except NewsAPIException:
                 pass
-
+        print(f"Added {added} news.")
