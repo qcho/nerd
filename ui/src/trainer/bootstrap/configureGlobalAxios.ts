@@ -15,6 +15,7 @@ async function refreshToken(credentials: UserCredentials) {
     CredentialsStorage.update(response.data);
     return Promise.resolve(response.data.access_token);
   } catch (error) {
+    CredentialsStorage.clear();
     return Promise.reject(error);
   }
 }

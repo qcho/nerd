@@ -14,7 +14,7 @@ import { UntokenizedEditor } from "../widgets/UntokenizedEditor";
 import { useTranslation } from "react-i18next";
 import { CorpusApi, SpacyDocument } from "../apigen";
 import { apiConfig } from "../helpers/api-config";
-import { MaybeTrainText } from "../types/optionals";
+import { MaybeTrainText, MaybeSpacyDocument } from "../types/optionals";
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -55,6 +55,7 @@ const Train = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [hasChanges, setHasChanges] = useState<boolean>(false);
   const [trainText, setTrainText] = useState<MaybeTrainText>(null);
+  const [spacyDocument, setSpacyDocument] = useState<MaybeSpacyDocument>(null);
   const api = new CorpusApi(apiConfig());
 
   const classes = useStyles();
@@ -69,19 +70,20 @@ const Train = () => {
     try {
       const trainingInfoResult = await api.train();
       setTrainText(trainingInfoResult.data);
-      console.log("Result:", trainingInfoResult.data);
+      setSpacyDocument(trainingInfoResult.data.spacy_document);
     } catch (e) {
       console.log("Error getting training info", e);
       setTrainText(null);
+      setSpacyDocument(null);
     }
 
     setHasChanges(false);
     setLoading(false);
   };
 
-  const onDocumentUpdate = (document: SpacyDocument) => {
+  const onDocumentUpdate = async (trainedDocument: SpacyDocument) => {
     setHasChanges(true);
-    // TODO:
+    setSpacyDocument(trainedDocument);
   };
 
   const onReset = () => {
@@ -90,18 +92,19 @@ const Train = () => {
   };
 
   const onSkip = () => {
-    // TODO: Load next text
+    loadNewDocument();
   };
 
-  const onSave = () => {
-    // TODO: Save and load next
+  const onSave = async () => {
+    api.upsertTraining_1(trainText!.text_id, spacyDocument!);
   };
+  console.log([trainText, spacyDocument]);
 
   return (
     <div className={classes.container}>
       <NavigationBar />
       {loading && <LinearProgress />}
-      {trainText != null && (
+      {spacyDocument != null && (
         <Paper className={classes.paper}>
           <AppBar
             color="default"
@@ -154,7 +157,7 @@ const Train = () => {
             </Toolbar>
           </AppBar>
           <UntokenizedEditor
-            document={trainText!.spacy_document!}
+            document={spacyDocument!}
             entityTypes={trainText!.snapshot!.types!}
             onUpdate={onDocumentUpdate}
           />

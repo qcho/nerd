@@ -11,7 +11,7 @@ class Role(Enum):
 
 
 class User(me.Document):
-    email = me.EmailField(primary_key=True)
+    email = me.EmailField(unique=True)
     name = me.StringField(required=True)
     password = me.StringField(required=True)
     roles = me.ListField(me.StringField(), required=True)

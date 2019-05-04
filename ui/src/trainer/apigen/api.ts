@@ -32,18 +32,6 @@ export interface CorpusSnapshot {
     created_at?: Date;
     /**
      * 
-     * @type {Date}
-     * @memberof CorpusSnapshot
-     */
-    trained_at?: Date;
-    /**
-     * 
-     * @type {string}
-     * @memberof CorpusSnapshot
-     */
-    types?: string;
-    /**
-     * 
      * @type {number}
      * @memberof CorpusSnapshot
      */
@@ -54,6 +42,18 @@ export interface CorpusSnapshot {
      * @memberof CorpusSnapshot
      */
     semaphore?: number;
+    /**
+     * 
+     * @type {Date}
+     * @memberof CorpusSnapshot
+     */
+    trained_at?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof CorpusSnapshot
+     */
+    types?: string;
 }
 
 /**
@@ -81,13 +81,13 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    name: string;
+    email: string;
     /**
      * 
      * @type {string}
      * @memberof Register
      */
-    email: string;
+    name: string;
     /**
      * 
      * @type {string}
@@ -118,10 +118,10 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
-     * @type {number}
+     * @type {{ [key: string]: Type; }}
      * @memberof Snapshot
      */
-    id: number;
+    types?: { [key: string]: Type; };
     /**
      * 
      * @type {Date}
@@ -130,10 +130,10 @@ export interface Snapshot {
     trained_at?: Date;
     /**
      * 
-     * @type {{ [key: string]: Type; }}
+     * @type {number}
      * @memberof Snapshot
      */
-    types?: { [key: string]: Type; };
+    id: number;
     /**
      * 
      * @type {Date}
@@ -150,28 +150,28 @@ export interface Snapshot {
 export interface SpacyDocument {
     /**
      * 
-     * @type {Array<SpacyEntity>}
-     * @memberof SpacyDocument
-     */
-    ents?: Array<SpacyEntity>;
-    /**
-     * 
      * @type {Array<SpacySentence>}
      * @memberof SpacyDocument
      */
     sents?: Array<SpacySentence>;
     /**
      * 
-     * @type {string}
-     * @memberof SpacyDocument
-     */
-    text: string;
-    /**
-     * 
      * @type {Array<SpacyToken>}
      * @memberof SpacyDocument
      */
     tokens?: Array<SpacyToken>;
+    /**
+     * 
+     * @type {Array<SpacyEntity>}
+     * @memberof SpacyDocument
+     */
+    ents?: Array<SpacyEntity>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyDocument
+     */
+    text: string;
 }
 
 /**
@@ -180,12 +180,6 @@ export interface SpacyDocument {
  * @interface SpacyEntity
  */
 export interface SpacyEntity {
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyEntity
-     */
-    start: number;
     /**
      * 
      * @type {string}
@@ -198,6 +192,12 @@ export interface SpacyEntity {
      * @memberof SpacyEntity
      */
     end: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity
+     */
+    start: number;
 }
 
 /**
@@ -211,13 +211,13 @@ export interface SpacySentence {
      * @type {number}
      * @memberof SpacySentence
      */
-    start: number;
+    end: number;
     /**
      * 
      * @type {number}
      * @memberof SpacySentence
      */
-    end: number;
+    start: number;
 }
 
 /**
@@ -231,7 +231,19 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
+    head?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
     start: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
+    id: number;
     /**
      * 
      * @type {string}
@@ -240,22 +252,10 @@ export interface SpacyToken {
     dep?: string;
     /**
      * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    head?: number;
-    /**
-     * 
      * @type {string}
      * @memberof SpacyToken
      */
     tag?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    pos?: string;
     /**
      * 
      * @type {number}
@@ -264,10 +264,10 @@ export interface SpacyToken {
     end: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof SpacyToken
      */
-    id: number;
+    pos?: string;
 }
 
 /**
@@ -278,10 +278,10 @@ export interface SpacyToken {
 export interface Text {
     /**
      * 
-     * @type {{ [key: string]: SpacyDocument; }}
+     * @type {string}
      * @memberof Text
      */
-    trainings?: { [key: string]: SpacyDocument; };
+    value: string;
     /**
      * 
      * @type {string}
@@ -290,16 +290,16 @@ export interface Text {
     id?: string;
     /**
      * 
-     * @type {string}
-     * @memberof Text
-     */
-    value: string;
-    /**
-     * 
      * @type {Date}
      * @memberof Text
      */
     created_at?: Date;
+    /**
+     * 
+     * @type {{ [key: string]: SpacyDocument; }}
+     * @memberof Text
+     */
+    trainings?: { [key: string]: SpacyDocument; };
 }
 
 /**
@@ -342,6 +342,12 @@ export interface TrainText {
     snapshot: Snapshot;
     /**
      * 
+     * @type {string}
+     * @memberof TrainText
+     */
+    text_id: string;
+    /**
+     * 
      * @type {SpacyDocument}
      * @memberof TrainText
      */
@@ -359,13 +365,13 @@ export interface Type {
      * @type {string}
      * @memberof Type
      */
-    color: string;
+    label: string;
     /**
      * 
      * @type {string}
      * @memberof Type
      */
-    label: string;
+    color: string;
 }
 
 /**
@@ -379,13 +385,13 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    name: string;
+    email: string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    email: string;
+    name: string;
     /**
      * 
      * @type {Array<string>}
@@ -428,6 +434,12 @@ export interface UserCredentials {
 export interface UserPayload {
     /**
      * 
+     * @type {Array<string>}
+     * @memberof UserPayload
+     */
+    roles?: Array<string>;
+    /**
+     * 
      * @type {string}
      * @memberof UserPayload
      */
@@ -438,12 +450,6 @@ export interface UserPayload {
      * @memberof UserPayload
      */
     plain_password?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof UserPayload
-     */
-    roles?: Array<string>;
 }
 
 /**

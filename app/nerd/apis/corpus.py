@@ -1,4 +1,5 @@
 from flask.views import MethodView
+from flask_jwt_extended import get_jwt_identity
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
@@ -11,7 +12,7 @@ from nerd.core.document.corpus import Text
 from nerd.core.document.snapshot import Snapshot, Type, SnapshotSchema
 from nerd.core.document.spacy import SpacyDocumentSchema
 from nerd.tasks.corpus import nlp as nlp_task
-from nerd.core.document.user import Role
+from nerd.core.document.user import Role, User
 from .roles import jwt_and_role_required
 
 blp = Blueprint("corpus", "corpus", description="Corpus operations")
@@ -47,6 +48,7 @@ class ValueOnlyTextSchema(ModelSchema):
 
 
 class TrainTextSchema(Schema):
+    text_id = fields.String(required=True)
     snapshot = fields.Nested(SnapshotSchema, required=True)
     spacy_document = fields.Nested(SpacyDocumentSchema, required=True)
 
@@ -76,22 +78,27 @@ class CorpusTextResource(MethodView):
             raise NotFound()
 
 
-# @blp.route("/<string:text_id>/trainings/me")
-# @blp.route("/<string:text_id>/trainings/<int:user_id>")
-# class TrainingView(MethodView):
-#     @jwt_and_role_required(Role.ADMIN)
-#     @blp.arguments(...)
-#     @blp.doc(operationId="getTraining")
-#     @blp.response(..., code=...)
-#     def get(self, text_id, user_id=None):
-#         ...
-#
-#     @jwt_and_role_required(Role.ADMIN)
-#     @blp.arguments(...)
-#     @blp.doc(operationId="upsertTraining")
-#     @blp.response(..., code=...)
-#     def put(self, payload, text_id, user_id=None):
-#         ...
+@blp.route("/<string:text_id>/trainings/me")
+@blp.route("/<string:text_id>/trainings/<int:user_id>")
+class TrainingView(MethodView):
+    #     @jwt_and_role_required(Role.ADMIN)
+    #     @blp.arguments(...)
+    #     @blp.doc(operationId="getTraining")
+    #     @blp.response(..., code=...)
+    #     def get(self, text_id, user_id=None):
+    #         ...
+    #
+    @jwt_and_role_required(Role.USER)
+    @blp.arguments(SpacyDocumentSchema)
+    @blp.doc(operationId="upsertTraining")
+    @blp.response(code=200)
+    def put(self, payload, text_id, user_id=None):
+        if user_id is None:
+            user = User.objects.get(email=get_jwt_identity())
+            user_id = str(user.pk)
+        text = Text.objects.get(id=text_id)
+        text.trainings[user_id] = payload
+        text.save()
 
 
 @blp.route("/train")
@@ -106,8 +113,9 @@ class TrainResource(MethodView):
         try:
             text = list(Text.objects.aggregate({"$sample": {'size': 1}}))[0]
             snapshot = Snapshot.current()
-            spacy_document = nlp_task.apply_async([text['value']], queue=str(snapshot)).wait(timeout=5)
+            spacy_document = nlp_task.apply_async([text['value']], queue=str(snapshot)).wait()
             return {
+                'text_id': str(text['_id']),
                 'snapshot': snapshot,
                 'spacy_document': spacy_document
             }
