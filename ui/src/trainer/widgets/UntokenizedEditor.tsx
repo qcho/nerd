@@ -58,24 +58,21 @@ function nodeProvider(
 
         accumulatedText = "";
       }
-      let entityText = text.substring(
-        entityForIndex.start!,
-        entityForIndex.end!
-      );
-      let entityType: Type = entityTypeFor(entityForIndex.label!)!;
+      let entityText = text.substring(entityForIndex.start, entityForIndex.end);
+      let entityType: Type = entityTypeFor(entityForIndex.label)!;
       out.push(
         <EntityNode
           key={`ner-${nodeIndex++}`}
           text={entityText}
           entity={entityForIndex}
           entityType={entityType}
-          typeCode={entityForIndex.label!}
+          typeCode={entityForIndex.label}
           onDelete={onEntityDelete}
           onClick={onEntityClick}
           editable={editable}
         />
       );
-      idx = entityForIndex.end!;
+      idx = entityForIndex.end;
     }
     if (idx < text.length) {
       accumulatedText += text[idx];
@@ -148,14 +145,14 @@ export function UntokenizedEditor({ document, onUpdate, entityTypes }: Props) {
       return;
     }
 
-    let startPosition = document!.text!.indexOf(text);
+    let startPosition = document.text.indexOf(text);
     let endPosition = startPosition + text.length;
 
     function contains(entity: SpacyEntity, index: number) {
-      return index >= entity.start! && index <= entity.end!;
+      return index >= entity.start && index <= entity.end;
     }
 
-    if (document!.ents!.length > 0) {
+    if (document.ents!.length > 0) {
       let isContainedInEntity = document
         .ents!.map(
           entity =>
@@ -165,10 +162,10 @@ export function UntokenizedEditor({ document, onUpdate, entityTypes }: Props) {
 
       let containsAnyEntity = false;
 
-      document!.ents!.forEach((entity: SpacyEntity) => {
+      document.ents!.forEach((entity: SpacyEntity) => {
         containsAnyEntity =
           containsAnyEntity ||
-          (startPosition <= entity.start! && endPosition >= entity.end!);
+          (startPosition <= entity.start && endPosition >= entity.end);
       });
 
       if (containsAnyEntity || isContainedInEntity) {
@@ -192,7 +189,7 @@ export function UntokenizedEditor({ document, onUpdate, entityTypes }: Props) {
   let popoverContents =
     currentEntity != null ? (
       <EntityDialog
-        value={currentEntity.entity.label!}
+        value={currentEntity.entity.label}
         onTypeChange={(event: any) => onEntityTypeChange(event.target.value)}
         options={entityTypes}
       />
