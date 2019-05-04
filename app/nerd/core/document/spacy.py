@@ -3,20 +3,20 @@ from marshmallow_mongoengine import ModelSchema
 
 
 class SpacyEntity(me.EmbeddedDocument):
-    start = me.IntField()
-    end = me.IntField()
-    label = me.StringField()
+    start = me.IntField(required=True)
+    end = me.IntField(required=True)
+    label = me.StringField(required=True)
 
 
 class SpacySentence(me.EmbeddedDocument):
-    start = me.IntField()
-    end = me.IntField()
+    start = me.IntField(required=True)
+    end = me.IntField(required=True)
 
 
 class SpacyToken(me.EmbeddedDocument):
-    id = me.IntField()
-    start = me.IntField()
-    end = me.IntField()
+    id = me.IntField(required=True)
+    start = me.IntField(required=True)
+    end = me.IntField(required=True)
     head = me.IntField()
     pos = me.StringField()
     dep = me.StringField()
@@ -24,10 +24,10 @@ class SpacyToken(me.EmbeddedDocument):
 
 
 class SpacyDocument(me.EmbeddedDocument):
-    ents = me.ListField(me.EmbeddedDocumentField(SpacyEntity))
-    sents = me.ListField(me.EmbeddedDocumentField(SpacySentence))
-    text = me.StringField()
-    tokens = me.ListField(me.EmbeddedDocumentField(SpacyToken))
+    ents = me.ListField(me.EmbeddedDocumentField(SpacyEntity, required=True))
+    sents = me.ListField(me.EmbeddedDocumentField(SpacySentence, required=True))
+    text = me.StringField(required=True)
+    tokens = me.ListField(me.EmbeddedDocumentField(SpacyToken, required=True))
 
 
 class SpacyDocumentSchema(ModelSchema):

@@ -62,8 +62,8 @@ class RegisterResource(MethodView):
 class TokenResource(MethodView):
     class TokenSchema(BaseSchema):
         grant_type = fields.Constant('password', example='password')
-        username = fields.Email()
-        password = fields.String()
+        username = fields.Email(required=True)
+        password = fields.String(required=True)
 
         @post_load
         def sanitize_fields(self, item):

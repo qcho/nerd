@@ -8,7 +8,7 @@ from werkzeug.exceptions import BadRequest, NotFound, FailedDependency
 
 from nerd.apis import response_error
 from nerd.core.document.corpus import Text
-from nerd.core.document.snapshot import Snapshot, Type
+from nerd.core.document.snapshot import Snapshot, Type, SnapshotSchema
 from nerd.core.document.spacy import SpacyDocumentSchema
 from nerd.tasks.corpus import nlp as nlp_task
 from nerd.core.document.user import Role
@@ -46,24 +46,9 @@ class ValueOnlyTextSchema(ModelSchema):
         exclude = ['id', 'trainings', 'created_at']
 
 
-class SnapshotSchema(ModelSchema):
-    class Meta:
-        model = Snapshot
-        model_fields_kwargs = {
-            'types': {
-                'metadata': {
-                    'type': 'object',
-                    'additionalProperties': {
-                        '$ref': '#/components/schemas/Type'
-                    }
-                }
-            }
-        }
-
-
 class TrainTextSchema(Schema):
-    snapshot = fields.Nested(SnapshotSchema)
-    spacy_document = fields.Nested(SpacyDocumentSchema)
+    snapshot = fields.Nested(SnapshotSchema, required=True)
+    spacy_document = fields.Nested(SpacyDocumentSchema, required=True)
 
 
 @blp.route("/<string:text_id>")

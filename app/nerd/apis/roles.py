@@ -9,7 +9,7 @@ blp = Blueprint('roles', 'roles', description='Roles')
 
 
 class RoleListSchema(BaseSchema):
-    roles = fields.List(fields.String())
+    roles = fields.List(fields.String(required=True))
 
 
 @blp.route('/')

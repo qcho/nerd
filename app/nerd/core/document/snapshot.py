@@ -10,15 +10,15 @@ logger = get_logger(__name__)
 
 
 class Type(me.EmbeddedDocument):
-    label = me.StringField()
-    color = me.StringField()
+    label = me.StringField(required=True)
+    color = me.StringField(required=True)
 
 
 class Snapshot(me.Document):
     id = me.SequenceField(primary_key=True)
-    created_at = me.DateTimeField(default=datetime.now())
+    created_at = me.DateTimeField(default=datetime.now(), required=True)
     trained_at = me.DateTimeField()
-    types = me.MapField(me.EmbeddedDocumentField(Type))
+    types = me.MapField(me.EmbeddedDocumentField(Type), required=True)
     semaphore = me.IntField(default=0)
 
     meta = {
@@ -72,6 +72,17 @@ class Snapshot(me.Document):
 class SnapshotSchema(ModelSchema):
     class Meta:
         model = Snapshot
+        exclude = ['semaphore']
+        model_fields_kwargs = {
+            'types': {
+                'metadata': {
+                    'type': 'object',
+                    'additionalProperties': {
+                        '$ref': '#/components/schemas/Type'
+                    }
+                }
+            }
+        }
 
 
 class TrainingLockAcquireError(Exception):
