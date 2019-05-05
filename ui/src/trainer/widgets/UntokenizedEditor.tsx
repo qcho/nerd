@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Popover, Theme, Snackbar } from "@material-ui/core";
-import EntityDialog from "./EntityDialog";
+import UntokenizedEntityDialog from "./UntokenizedEntityDialog";
 import useAuthentication from "../hooks/useAuthentication";
 import { makeStyles } from "@material-ui/styles";
-import EntityNode from "../widgets/EntityNode";
-import TextNode from "../widgets/TextNode";
+import UntokenizedEntityNode from "./UntokenizedEntityNode";
+import UntokenizedTextNode from "../widgets/UntokenizedTextNode";
 import { SpacyDocument, Type, SpacyEntity } from "../apigen";
+import { MaybeString } from "../types/optionals";
+import { MaybeCurrentEntity } from "../types/CurrentEntity";
 
 function nodeProvider(
   document: SpacyDocument,
@@ -21,7 +23,12 @@ function nodeProvider(
   let nodeIndex = 0;
 
   let textNodeBuilder = (index: number, text: string) => {
-    return <TextNode key={`ner-${index}`} text={text == "" ? " " : text} />;
+    return (
+      <UntokenizedTextNode
+        key={`ner-${index}`}
+        text={text == "" ? " " : text}
+      />
+    );
   };
 
   function entityFor(index: number) {
@@ -61,7 +68,7 @@ function nodeProvider(
       let entityText = text.substring(entityForIndex.start, entityForIndex.end);
       let entityType: Type = entityTypeFor(entityForIndex.label)!;
       out.push(
-        <EntityNode
+        <UntokenizedEntityNode
           key={`ner-${nodeIndex++}`}
           text={entityText}
           entity={entityForIndex}
@@ -90,13 +97,6 @@ type Props = {
   entityTypes: { [key: string]: Type };
 };
 
-type MaybeCurrentEntity = {
-  entity: SpacyEntity;
-  element: any;
-} | null;
-
-type MaybeString = string | null;
-
 const useStyles = makeStyles(
   (theme: Theme) => ({
     // TODO
@@ -115,6 +115,7 @@ export function UntokenizedEditor({ document, onUpdate, entityTypes }: Props) {
       currentEntity.entity.label = value;
     }
     setCurrentEntity(null);
+    onUpdate(document);
   }
 
   function deleteEntity(entity: SpacyEntity) {
@@ -188,7 +189,7 @@ export function UntokenizedEditor({ document, onUpdate, entityTypes }: Props) {
   let { loggedIn } = useAuthentication();
   let popoverContents =
     currentEntity != null ? (
-      <EntityDialog
+      <UntokenizedEntityDialog
         value={currentEntity.entity.label}
         onTypeChange={(event: any) => onEntityTypeChange(event.target.value)}
         options={entityTypes}

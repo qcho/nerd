@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { CorpusApi, SpacyDocument } from "../apigen";
 import { apiConfig } from "../helpers/api-config";
 import { MaybeTrainText, MaybeSpacyDocument } from "../types/optionals";
+import TokenizedEditor from "../widgets/TokenizedEditor";
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -83,12 +84,12 @@ const Train = () => {
 
   const onDocumentUpdate = async (trainedDocument: SpacyDocument) => {
     setHasChanges(true);
-    setSpacyDocument(trainedDocument);
+    setSpacyDocument({ ...spacyDocument, ...trainedDocument });
   };
 
   const onReset = () => {
     setHasChanges(false);
-    // TODO: Reset text
+    setSpacyDocument(trainText!.spacy_document);
   };
 
   const onSkip = () => {
@@ -96,9 +97,11 @@ const Train = () => {
   };
 
   const onSave = async () => {
-    api.upsertTraining_1(trainText!.text_id, spacyDocument!);
+    try {
+      api.upsertTraining_1(trainText!.text_id, spacyDocument!);
+      loadNewDocument();
+    } catch (e) {}
   };
-  console.log([trainText, spacyDocument]);
 
   return (
     <div className={classes.container}>
@@ -156,8 +159,8 @@ const Train = () => {
               </div>
             </Toolbar>
           </AppBar>
-          <UntokenizedEditor
-            document={spacyDocument!}
+          <TokenizedEditor
+            spacyDocument={spacyDocument!}
             entityTypes={trainText!.snapshot!.types!}
             onUpdate={onDocumentUpdate}
           />

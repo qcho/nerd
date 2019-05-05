@@ -1,57 +1,112 @@
 import React from "react";
-import { Tooltip, Chip } from "@material-ui/core";
-import { Type, SpacyEntity } from "../apigen";
+import { makeStyles } from "@material-ui/styles";
+import { SpacyToken, SpacyEntity, Type } from "../apigen";
+import { useNodeStyles } from "./NodeStyles";
+import classNames from "classnames";
+import { MaybeSpacyEntity } from "../types/optionals";
+
+const borderStyle = "1px solid black";
+const borderRadius = "12px";
+const entityMargin = "2px";
+const entityPadding = "5px";
+
+const useEntityNodeStyles = makeStyles(() => ({
+  borderComplete: {
+    paddingLeft: entityPadding,
+    paddingRight: entityPadding,
+    marginLeft: entityMargin,
+    marginRight: entityMargin,
+    border: borderStyle,
+    borderRadius: borderRadius
+  },
+  borderStart: {
+    paddingLeft: entityPadding,
+    marginLeft: entityMargin,
+    borderTop: borderStyle,
+    borderBottom: borderStyle,
+    borderLeft: borderStyle,
+    borderTopLeftRadius: borderRadius,
+    borderBottomLeftRadius: borderRadius
+  },
+  borderMiddle: {
+    borderTop: borderStyle,
+    borderBottom: borderStyle
+  },
+  borderEnd: {
+    paddingRight: entityPadding,
+    marginRight: entityMargin,
+    borderTop: borderStyle,
+    borderBottom: borderStyle,
+    borderRight: borderStyle,
+    borderTopRightRadius: borderRadius,
+    borderBottomRightRadius: borderRadius
+  }
+}));
+
+const borderClass = (
+  token: SpacyToken,
+  entity: SpacyEntity,
+  styles: Record<
+    "borderComplete" | "borderStart" | "borderMiddle" | "borderEnd",
+    string
+  >
+) => {
+  if (token.end == entity.end && token.start == entity.start) {
+    return styles.borderComplete;
+  }
+  if (token.start == entity.start) {
+    return styles.borderStart;
+  }
+  if (token.end == entity.end) {
+    return styles.borderEnd;
+  }
+  return styles.borderMiddle;
+};
 
 type EntityNodeProps = {
   text: string;
+  token: SpacyToken;
   entity: SpacyEntity;
   entityType: Type;
-  typeCode: string;
-  editable: boolean;
-  onClick: (htmlTarget: HTMLElement, entity: SpacyEntity) => void;
-  onDelete: (entity: SpacyEntity) => void;
+  onClick:
+    | ((
+        target: HTMLElement,
+        token: SpacyToken,
+        entity: MaybeSpacyEntity
+      ) => void)
+    | null;
 };
 
-const EntityNode = (props: EntityNodeProps) => {
-  let {
-    text,
-    entity,
-    entityType,
-    typeCode,
-    onClick,
-    onDelete,
-    editable
-  } = props;
+const EntityNode = ({
+  text,
+  token,
+  onClick,
+  entity,
+  entityType
+}: EntityNodeProps) => {
+  const nodeStyles = useNodeStyles();
+  const entityNodeStyles = useEntityNodeStyles();
+  var contents = text;
+  if (token.end == entity.end) {
+    contents += ` ${entity.label}`;
+  }
+  const borderClassName = borderClass(token, entity, entityNodeStyles);
+
+  const _onClick = (target: any) => {
+    if (onClick != null) {
+      onClick(target, token, entity);
+    }
+  };
+
   return (
-    <Tooltip
-      title={entityType.label}
-      style={{
-        marginLeft: 2,
-        marginRight: 2
-      }}
+    <b
+      style={{ color: entityType.color }}
+      className={classNames(nodeStyles.node, borderClassName)}
+      onClick={(event: any) => _onClick(event.target)}
     >
-      <span
-        onClick={
-          editable
-            ? (event: any) => onClick(event.currentTarget, entity)
-            : undefined
-        }
-      >
-        <Chip
-          variant="outlined"
-          label={
-            <h1>
-              <b>
-                <span style={{ color: entityType.color }}>{text}</span>{" "}
-                <span>{typeCode}</span>
-              </b>
-            </h1>
-          }
-          onDelete={editable ? () => onDelete(entity) : undefined}
-        />
-      </span>
-    </Tooltip>
+      {contents}
+    </b>
   );
 };
 
-export default EntityNode;
+export { EntityNode };

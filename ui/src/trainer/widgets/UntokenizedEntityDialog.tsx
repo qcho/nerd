@@ -8,7 +8,7 @@ type EntityDialogProps = {
   options: { [key: string]: Type };
 };
 
-const EntityDialog = (props: EntityDialogProps) => {
+const UntokenizedEntityDialog = (props: EntityDialogProps) => {
   let { value, onTypeChange, options } = props;
   let optionWidgets = Object.keys(options).map((code: string) => {
     return (
@@ -18,14 +18,12 @@ const EntityDialog = (props: EntityDialogProps) => {
     );
   });
   return (
-    <>
-      <DialogContent>
-        <Select value={value} onChange={onTypeChange}>
-          {optionWidgets}
-        </Select>
-      </DialogContent>
-    </>
+    <DialogContent>
+      <Select value={value} onChange={onTypeChange}>
+        {optionWidgets}
+      </Select>
+    </DialogContent>
   );
 };
 
-export default EntityDialog;
+export default UntokenizedEntityDialog;
