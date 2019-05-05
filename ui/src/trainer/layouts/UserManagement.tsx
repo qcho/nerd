@@ -144,18 +144,17 @@ const UserManagement = () => {
               rowCount={users.length}
             />
             <TableBody>
-              {false &&
-                users.map((user: User) => {
-                  const rowSelected = isSelected(user.email);
-                  return (
-                    <UserRow
-                      user={user}
-                      selected={rowSelected}
-                      onClick={handleRowClick}
-                      availableRoles={roles}
-                    />
-                  );
-                })}
+              {users.map((user: User) => {
+                const rowSelected = isSelected(user.email);
+                return (
+                  <UserRow
+                    user={user}
+                    selected={rowSelected}
+                    onClick={handleRowClick}
+                    availableRoles={roles}
+                  />
+                );
+              })}
             </TableBody>
             {shouldPaginate && (
               <TableFooter>
