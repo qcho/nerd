@@ -1,5 +1,10 @@
 {
   "20": "20",
+  "Invalid credentials": "Invalid credentials",
+  "Delete": "Delete",
+  "Remove": "Remove",
+  "Join >": "Join >",
+  "< Join": "< Join",
   "Can't login": "Can't login",
   "Types": "Types",
   "Versions": "Versions",
