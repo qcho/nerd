@@ -59,6 +59,7 @@ function useAuthentication() {
       const registerResult = await api.registerUser({
         name,
         email: username,
+        // eslint-disable-next-line @typescript-eslint/camelcase
         plain_password: password,
       });
       updateCredentials(registerResult.data, !rememberMe);
