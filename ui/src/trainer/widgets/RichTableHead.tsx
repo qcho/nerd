@@ -1,24 +1,19 @@
 import React from 'react';
-import {
-  TableHead,
-  TableRow,
-  TableCell,
-  Checkbox,
-} from "@material-ui/core";
+import { TableHead, TableRow, TableCell, Checkbox } from '@material-ui/core';
 
-type RichTableHeadProps = {
-  onSelectAll: any;
+interface Header {
+  id: string;
+  label: string;
+}
+
+interface RichTableHeadProps {
+  onSelectAll: () => void;
   numSelected: number;
   rowCount: number;
-  headers: any[];
-};
+  headers: Header[];
+}
 
-const RichTableHead = ({
-  onSelectAll,
-  numSelected,
-  rowCount,
-  headers
-}: RichTableHeadProps) => {
+const RichTableHead = ({ onSelectAll, numSelected, rowCount, headers }: RichTableHeadProps) => {
   return (
     <TableHead>
       <TableRow>

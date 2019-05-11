@@ -1,27 +1,19 @@
-import React from "react";
-import {
-  Theme,
-  createStyles,
-  withStyles,
-  CircularProgress
-} from "@material-ui/core";
+import React from 'react';
+import { CircularProgress } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      height: "100vh"
-    }
-  });
+const useStyles = makeStyles(() => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+  },
+}));
 
-type Props = {
-  classes: any;
-};
-
-const Loading = ({ classes }: Props) => {
+const Loading = () => {
+  const classes = useStyles();
   return (
     <div className={classes.root}>
       <CircularProgress />
@@ -29,4 +21,4 @@ const Loading = ({ classes }: Props) => {
   );
 };
 
-export default withStyles(styles)(Loading);
+export default Loading;

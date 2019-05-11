@@ -1,4 +1,4 @@
-import { SpacyEntity } from "../apigen";
+import { SpacyEntity } from '../apigen';
 
 export type MaybeCurrentEntity = {
   entity: SpacyEntity;

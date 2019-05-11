@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { User, RoleList, UsersApi } from "../apigen";
+import React, { useState } from 'react';
+import { User, RoleList, UsersApi } from '../apigen';
 import {
   TableRow,
   TableCell,
@@ -10,36 +10,36 @@ import {
   Chip,
   OutlinedInput,
   InputBase,
-  Checkbox
-} from "@material-ui/core";
-import { useTranslation } from "react-i18next";
-import { makeStyles } from "@material-ui/styles";
-import { apiConfig } from "../helpers/api-config";
+  Checkbox,
+} from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
+import { makeStyles } from '@material-ui/styles';
+import { apiConfig } from '../helpers/api-config';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
     chips: {
-      display: "flex",
-      flexWrap: "wrap"
+      display: 'flex',
+      flexWrap: 'wrap',
     },
     chip: {
-      margin: theme.spacing.unit / 4
+      margin: theme.spacing.unit / 4,
     },
     dropDown: {
-      position: "relative",
-      width: "auto",
-      paddingLeft: "5px"
-    }
+      position: 'relative',
+      width: 'auto',
+      paddingLeft: '5px',
+    },
   }),
-  { withTheme: true }
+  { withTheme: true },
 );
 
-type Props = {
+interface Props {
   user: User;
   availableRoles: RoleList;
   selected: boolean;
   onClick: (user: User) => void;
-};
+}
 
 const UserRow = ({ user, availableRoles: roles, onClick, selected }: Props) => {
   const [t] = useTranslation();
@@ -53,7 +53,7 @@ const UserRow = ({ user, availableRoles: roles, onClick, selected }: Props) => {
     setLoading(true);
     try {
       let result = await userApi.updateUser(user.email, {
-        roles: values
+        roles: values,
       });
       setUserRoles(result.data.roles || []);
     } catch (e) {
@@ -66,7 +66,7 @@ const UserRow = ({ user, availableRoles: roles, onClick, selected }: Props) => {
   function renderRoles(value: any) {
     const roles: string[] = value as string[];
     if (roles.length == 0) {
-      return <em>{t("None")}</em>;
+      return <em>{t('None')}</em>;
     }
     return (
       <div className={classes.chips}>
@@ -90,13 +90,14 @@ const UserRow = ({ user, availableRoles: roles, onClick, selected }: Props) => {
       renderValue={selected => renderRoles(selected)}
     >
       <MenuItem disabled value="">
-        <em>{t("Roles")}</em>
+        <em>{t('Roles')}</em>
       </MenuItem>
-      {roles.roles!.map(name => (
-        <MenuItem key={name} value={name}>
-          {name}
-        </MenuItem>
-      ))}
+      {roles.roles &&
+        roles.roles.map(name => (
+          <MenuItem key={name} value={name}>
+            {name}
+          </MenuItem>
+        ))}
     </Select>
   );
 

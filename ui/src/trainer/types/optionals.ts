@@ -1,10 +1,5 @@
-import {
-  UserCredentials,
-  TrainText,
-  SpacyDocument,
-  SpacyEntity
-} from "../apigen";
-import { Pagination } from "./Pagination";
+import { UserCredentials, TrainText, SpacyDocument, SpacyEntity } from '../apigen';
+import { Pagination } from './Pagination';
 
 export type MaybeUserCredentials = UserCredentials | null;
 export type MaybePagination = Pagination | null;

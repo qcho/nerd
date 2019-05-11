@@ -32,49 +32,52 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
   };
 
   const onJoinLeft = () => {
-    const start = currentToken!.token.start;
-    const end = currentToken!.token.end;
+    if (!currentToken || !currentToken.entity || !spacyDocument.ents) return;
+    const start = currentToken.token.start;
+    const end = currentToken.token.end;
     var entityIndex = 0;
-    var previousEntity: SpacyEntity = spacyDocument.ents![entityIndex]!;
-    for (var i = 0; i < spacyDocument.ents!.length; ++i) {
-      const entity = spacyDocument.ents![i]!;
+    var previousEntity: SpacyEntity = spacyDocument.ents[entityIndex];
+    for (var i = 0; i < spacyDocument.ents.length; ++i) {
+      const entity = spacyDocument.ents[i];
       if (entity.end > previousEntity.end && entity.end < start) {
         previousEntity = entity;
         entityIndex = i;
       }
     }
     previousEntity.end = end;
-    currentToken!.entity = previousEntity;
-    setCurrentToken({ ...currentToken! });
-    spacyDocument.ents![entityIndex] = previousEntity;
+    currentToken.entity = previousEntity;
+    setCurrentToken({ ...currentToken });
+    spacyDocument.ents[entityIndex] = previousEntity;
     setCurrentToken(null);
     onUpdate(spacyDocument);
   };
   const onJoinRight = () => {
-    const start = currentToken!.token.start;
-    const end = currentToken!.token.end;
+    if (!currentToken || !currentToken.entity || !spacyDocument.ents) return;
+    const start = currentToken.token.start;
+    const end = currentToken.token.end;
     var entityIndex = 0;
-    var nextEntity: SpacyEntity = spacyDocument.ents![entityIndex]!;
-    for (var i = 0; i < spacyDocument.ents!.length; ++i) {
-      const entity = spacyDocument.ents![i]!;
+    var nextEntity: SpacyEntity = spacyDocument.ents[entityIndex];
+    for (var i = 0; i < spacyDocument.ents.length; ++i) {
+      const entity = spacyDocument.ents[i];
       if (entity.start < nextEntity.start && entity.start > end) {
         nextEntity = entity;
         entityIndex = i;
       }
     }
-    const idx = spacyDocument.ents!.indexOf(currentToken!.entity!);
+    const idx = spacyDocument.ents.indexOf(currentToken.entity);
     if (idx > -1) {
-      spacyDocument.ents!.splice(idx, 1);
+      spacyDocument.ents.splice(idx, 1);
     }
     nextEntity.start = start;
-    currentToken!.entity = nextEntity;
-    spacyDocument.ents![entityIndex] = nextEntity;
+    currentToken.entity = nextEntity;
+    spacyDocument.ents[entityIndex] = nextEntity;
     setCurrentToken(null);
     onUpdate(spacyDocument);
   };
   const onDelete = () => {
-    const currentEntity = currentToken!.entity!;
-    spacyDocument.ents = spacyDocument.ents!.filter(entity => {
+    if (!currentToken || !currentToken.entity || !spacyDocument.ents) return;
+    const currentEntity = currentToken.entity;
+    spacyDocument.ents = spacyDocument.ents.filter(entity => {
       return entity.start != currentEntity.start && entity.end != currentEntity.end;
     });
     onUpdate(spacyDocument);
@@ -82,20 +85,20 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
   };
   const onRemove = () => {};
   const onTypeChange = (value: string) => {
-    if (currentToken != null) {
-      currentToken.entity!.label = value;
+    if (currentToken && currentToken.entity) {
+      currentToken.entity.label = value;
     }
     onUpdate(spacyDocument);
     setCurrentToken(null);
   };
 
   let popoverContents =
-    currentToken != null ? (
+    currentToken && currentToken.entity ? (
       <TokenDialog
         typeOptions={entityTypes}
         onTypeChange={onTypeChange}
         onDelete={onDelete}
-        value={currentToken.entity!.label}
+        value={currentToken.entity.label}
         onJoinLeft={onJoinLeft}
         onJoinRight={onJoinRight}
       />
@@ -110,7 +113,7 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
   const mapNodes = (
     document: SpacyDocument,
     entityTypes: { [key: string]: Type },
-    onTokenClick: ((target: HTMLElement, token: SpacyToken) => void) | null,
+    onTokenClick: ((token: SpacyToken) => void) | null,
   ) => {
     var entities = document.ents || [];
 
@@ -123,7 +126,8 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
       return null;
     };
 
-    return document.tokens!.map(token => {
+    if (!document.tokens) return [];
+    return document.tokens.map(token => {
       const text = document.text.substring(token.start, token.end);
       const nodeKey = `${token.start}-${token.end}`;
       const entity = entityFor(token) || undefined;
@@ -150,6 +154,7 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
         id="entity-popover"
         open={currentToken != null}
         onClose={() => setCurrentToken(null)}
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         anchorEl={() => currentTokenEl.current!}
         anchorOrigin={{
           vertical: 'bottom',

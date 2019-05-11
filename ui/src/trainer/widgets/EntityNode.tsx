@@ -1,14 +1,13 @@
-import React from "react";
-import { makeStyles } from "@material-ui/styles";
-import { SpacyToken, SpacyEntity, Type } from "../apigen";
-import { useNodeStyles } from "./NodeStyles";
-import classNames from "classnames";
-import { MaybeSpacyEntity } from "../types/optionals";
+import React from 'react';
+import { makeStyles } from '@material-ui/styles';
+import { SpacyToken, SpacyEntity, Type } from '../apigen';
+import { useNodeStyles } from './NodeStyles';
+import classNames from 'classnames';
 
-const borderStyle = "1px solid black";
-const borderRadius = "12px";
-const entityMargin = "2px";
-const entityPadding = "5px";
+const borderStyle = '1px solid black';
+const borderRadius = '12px';
+const entityMargin = '2px';
+const entityPadding = '5px';
 
 const useEntityNodeStyles = makeStyles(() => ({
   borderComplete: {
@@ -17,7 +16,7 @@ const useEntityNodeStyles = makeStyles(() => ({
     marginLeft: entityMargin,
     marginRight: entityMargin,
     border: borderStyle,
-    borderRadius: borderRadius
+    borderRadius: borderRadius,
   },
   borderStart: {
     paddingLeft: entityPadding,
@@ -26,11 +25,11 @@ const useEntityNodeStyles = makeStyles(() => ({
     borderBottom: borderStyle,
     borderLeft: borderStyle,
     borderTopLeftRadius: borderRadius,
-    borderBottomLeftRadius: borderRadius
+    borderBottomLeftRadius: borderRadius,
   },
   borderMiddle: {
     borderTop: borderStyle,
-    borderBottom: borderStyle
+    borderBottom: borderStyle,
   },
   borderEnd: {
     paddingRight: entityPadding,
@@ -39,17 +38,14 @@ const useEntityNodeStyles = makeStyles(() => ({
     borderBottom: borderStyle,
     borderRight: borderStyle,
     borderTopRightRadius: borderRadius,
-    borderBottomRightRadius: borderRadius
-  }
+    borderBottomRightRadius: borderRadius,
+  },
 }));
 
 const borderClass = (
   token: SpacyToken,
   entity: SpacyEntity,
-  styles: Record<
-    "borderComplete" | "borderStart" | "borderMiddle" | "borderEnd",
-    string
-  >
+  styles: Record<'borderComplete' | 'borderStart' | 'borderMiddle' | 'borderEnd', string>,
 ) => {
   if (token.end == entity.end && token.start == entity.start) {
     return styles.borderComplete;
@@ -63,12 +59,12 @@ const borderClass = (
   return styles.borderMiddle;
 };
 
-type EntityNodeProps = {
+interface EntityNodeProps {
   text: string;
   token: SpacyToken;
   entity: SpacyEntity;
   entityType: Type;
-};
+}
 
 const EntityNode = ({ text, token, entity, entityType }: EntityNodeProps) => {
   const nodeStyles = useNodeStyles();
@@ -80,10 +76,7 @@ const EntityNode = ({ text, token, entity, entityType }: EntityNodeProps) => {
   const borderClassName = borderClass(token, entity, entityNodeStyles);
 
   return (
-    <b
-      style={{ color: entityType.color }}
-      className={classNames(nodeStyles.node, borderClassName)}
-    >
+    <b style={{ color: entityType.color }} className={classNames(nodeStyles.node, borderClassName)}>
       {contents}
     </b>
   );

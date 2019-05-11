@@ -88,8 +88,9 @@ const Train = () => {
   };
 
   const onReset = () => {
+    if (!trainText) return;
     setHasChanges(false);
-    setSpacyDocument({ ...trainText!.spacy_document });
+    setSpacyDocument({ ...trainText.spacy_document });
   };
 
   const onSkip = () => {
@@ -98,7 +99,8 @@ const Train = () => {
 
   const onSave = async () => {
     try {
-      api.upsertTraining_1(trainText!.text_id, spacyDocument!);
+      if (!(trainText && spacyDocument)) return;
+      api.upsertTraining_1(trainText.text_id, spacyDocument);
       loadNewDocument();
     } catch (e) {}
   };
@@ -114,7 +116,7 @@ const Train = () => {
     <div className={classes.container}>
       <NavigationBar />
       {loading && <LinearProgress />}
-      {spacyDocument != null && (
+      {spacyDocument && trainText && (
         <Paper className={classes.paper}>
           <AppBar color="default" position="relative" className={classes.actionBar}>
             <Toolbar>
@@ -144,8 +146,8 @@ const Train = () => {
             </Toolbar>
           </AppBar>
           <TokenizedEditor
-            spacyDocument={spacyDocument!}
-            entityTypes={trainText!.snapshot!.types!}
+            spacyDocument={spacyDocument}
+            entityTypes={trainText.snapshot.types || {}}
             onUpdate={onDocumentUpdate}
           />
         </Paper>

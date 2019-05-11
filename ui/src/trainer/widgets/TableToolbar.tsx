@@ -1,95 +1,86 @@
-import React, { useState } from "react";
-import { makeStyles } from "@material-ui/styles";
-import {
-  Typography,
-  Tooltip,
-  IconButton,
-  Theme,
-  Toolbar,
-  InputBase,
-  Button,
-  Grid
-} from "@material-ui/core";
-import { lighten, fade } from "@material-ui/core/styles/colorManipulator";
-import classNames from "classnames";
-import DeleteIcon from "@material-ui/icons/Delete";
-import SearchIcon from "@material-ui/icons/Search";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/styles';
+import { Typography, Tooltip, IconButton, Theme, Toolbar, InputBase, Button, Grid } from '@material-ui/core';
+import { lighten, fade } from '@material-ui/core/styles/colorManipulator';
+import classNames from 'classnames';
+import DeleteIcon from '@material-ui/icons/Delete';
+import SearchIcon from '@material-ui/icons/Search';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
     root: {
-      paddingRight: theme.spacing.unit
+      paddingRight: theme.spacing.unit,
     },
     highlight:
-      theme.palette.type === "light"
+      theme.palette.type === 'light'
         ? {
             color: theme.palette.secondary.main,
-            backgroundColor: lighten(theme.palette.secondary.light, 0.85)
+            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
           }
         : {
             color: theme.palette.text.primary,
-            backgroundColor: theme.palette.secondary.dark
+            backgroundColor: theme.palette.secondary.dark,
           },
     spacer: {
-      flex: "1 1 100%"
+      flex: '1 1 100%',
     },
     actions: {
-      color: theme.palette.text.secondary
+      color: theme.palette.text.secondary,
     },
     title: {
-      flex: "0 0 auto"
+      flex: '0 0 auto',
     },
     search: {
-      position: "relative",
+      position: 'relative',
       borderRadius: theme.shape.borderRadius,
       backgroundColor: fade(theme.palette.common.white, 0.15),
-      "&:hover": {
-        backgroundColor: fade(theme.palette.common.white, 0.25)
+      '&:hover': {
+        backgroundColor: fade(theme.palette.common.white, 0.25),
       },
       marginLeft: 0,
-      width: "100%",
-      [theme.breakpoints.up("sm")]: {
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
         marginLeft: theme.spacing.unit,
-        width: "auto"
-      }
+        width: 'auto',
+      },
     },
     searchIcon: {
       width: theme.spacing.unit * 9,
-      height: "100%",
-      position: "absolute",
-      pointerEvents: "none",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
+      height: '100%',
+      position: 'absolute',
+      pointerEvents: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     inputRoot: {
-      color: "inherit",
-      width: "100%"
+      color: 'inherit',
+      width: '100%',
     },
     inputInput: {
       paddingTop: theme.spacing.unit,
       paddingRight: theme.spacing.unit,
       paddingBottom: theme.spacing.unit,
       paddingLeft: theme.spacing.unit * 10,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("sm")]: {
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
         width: 120,
-        "&:focus": {
-          width: 200
-        }
-      }
+        '&:focus': {
+          width: 200,
+        },
+      },
     },
     addButton: {
       marginLeft: 10,
-      marginRight: 10
+      marginRight: 10,
     },
     addButtonText: {
-      color: theme.palette.common.white
-    }
+      color: theme.palette.common.white,
+    },
   }),
-  { withTheme: true }
+  { withTheme: true },
 );
 
 const TableToolbar = ({
@@ -97,7 +88,7 @@ const TableToolbar = ({
   numSelected,
   onDelete,
   onSearch,
-  onCreate
+  onCreate,
 }: {
   numSelected: number;
   onDelete: any;
@@ -122,7 +113,7 @@ const TableToolbar = ({
   return (
     <Toolbar
       className={classNames(classes.root, {
-        [classes.highlight]: numSelected > 0
+        [classes.highlight]: numSelected > 0,
       })}
     >
       <div className={classes.title}>
@@ -145,7 +136,7 @@ const TableToolbar = ({
             </IconButton>
           </Tooltip>
         ) : (
-          <div style={{ flex: 1, display: "flex", flexDirection: "row" }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
             {onSearch && (
               <div className={classes.search}>
                 <div className={classes.searchIcon}>
@@ -153,26 +144,17 @@ const TableToolbar = ({
                 </div>
                 <InputBase
                   placeholder="Search…"
-                  onChange={(event: any) =>
-                    onSearchTextChange(event.target.value)
-                  }
+                  onChange={(event: any) => onSearchTextChange(event.target.value)}
                   classes={{
                     root: classes.inputRoot,
-                    input: classes.inputInput
+                    input: classes.inputInput,
                   }}
                 />
               </div>
             )}
             {onCreate && (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={onCreate}
-                className={classes.addButton}
-              >
-                <Typography className={classes.addButtonText}>
-                  {t("ADD")}
-                </Typography>
+              <Button variant="contained" color="primary" onClick={onCreate} className={classes.addButton}>
+                <Typography className={classes.addButtonText}>{t('ADD')}</Typography>
               </Button>
             )}
           </div>

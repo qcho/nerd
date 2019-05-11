@@ -1,51 +1,35 @@
-import React, { RefObject, Ref } from "react";
-import { SpacyToken, SpacyEntity, Type } from "../apigen";
-import { useNodeStyles } from "./NodeStyles";
-import { EntityNode } from "./EntityNode";
-import { PlainNode } from "./PlainNode";
-import { MaybeSpacyEntity } from "../types/optionals";
+import React, { Ref } from 'react';
+import { SpacyToken, SpacyEntity, Type } from '../apigen';
+import { EntityNode } from './EntityNode';
+import { PlainNode } from './PlainNode';
+import { MaybeSpacyEntity } from '../types/optionals';
 
-type TextNodeProps = {
+interface TextNodeProps {
   text: string;
   token: SpacyToken;
-  onClick:
-    | ((
-        target: HTMLElement,
-        token: SpacyToken,
-        entity: MaybeSpacyEntity
-      ) => void)
-    | null;
+  onClick: ((token: SpacyToken, entity: MaybeSpacyEntity) => void) | null;
   entity?: SpacyEntity;
   entityType?: Type;
-  ref: any;
-};
+}
 
+// eslint-disable-next-line react/display-name
 const TextNode = React.forwardRef(
-  (
-    { text, token, onClick, entity, entityType }: TextNodeProps,
-    ref: Ref<HTMLSpanElement>
-  ) => {
-    const nodeStyles = useNodeStyles();
-
-    const _onClick = (target: any) => {
+  ({ text, token, onClick, entity, entityType }: TextNodeProps, ref: Ref<HTMLSpanElement>) => {
+    const _onClick = () => {
       if (onClick != null) {
-        onClick(target, token, entity);
+        onClick(token, entity);
       }
     };
 
     var component =
-      entity && entityType ? (
-        <EntityNode {...{ text, token, entity, entityType }} />
-      ) : (
-        <PlainNode {...{ text }} />
-      );
+      entity && entityType ? <EntityNode {...{ text, token, entity, entityType }} /> : <PlainNode {...{ text }} />;
 
     return (
-      <span ref={ref} onClick={(event: any) => _onClick(event.target)}>
+      <span ref={ref} onClick={() => _onClick()}>
         {component}
       </span>
     );
-  }
+  },
 );
 
 export { TextNode };
