@@ -54,16 +54,19 @@ const UserManagement = () => {
   const [searchText, setSearchText] = useState<string>("");
   const userApi = new UsersApi(apiConfig());
   const roleApi = new RolesApi(apiConfig());
+  let unmounted = false;
 
   async function fetchUsers() {
     setLoading(true);
     try {
       const users = await userApi.listUsers(page, pageSize, searchText); // TODO: Add query
       const rolesResponse = await roleApi.listRoles();
+      if (unmounted) return;
       setFromHeaders(users.headers);
       setUsers(users.data);
       setRoles(rolesResponse.data);
     } catch (e) {
+      if (unmounted) return;
       // TODO: Set error
       const errorMessage = Http.handleRequestError(e, (status, data) => {
         console.log("Error loading users", data);
@@ -76,6 +79,9 @@ const UserManagement = () => {
 
   useEffect(() => {
     fetchUsers();
+    return () => {
+      unmounted = true;
+    };
   }, [page, pageSize, searchText]);
 
   function handleChangePage(event: any, page: number) {

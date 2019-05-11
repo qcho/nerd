@@ -30,8 +30,18 @@ const useStyles = makeStyles(
       display: "flex",
       flex: 1,
       flexDirection: "column",
-      width: "60vw",
-      marginTop: theme.spacing.unit * 8,
+      [theme.breakpoints.down("sm")]: {
+        marginTop: theme.spacing.unit * 3,
+        width: "90vw"
+      },
+      [theme.breakpoints.up("md")]: {
+        marginTop: theme.spacing.unit * 6,
+        width: "80vw"
+      },
+      [theme.breakpoints.up("lg")]: {
+        marginTop: theme.spacing.unit * 8,
+        width: "60vw"
+      },
       marginBottom: theme.spacing.unit * 8,
       padding: theme.spacing.unit * 2
     },
@@ -46,7 +56,7 @@ const useStyles = makeStyles(
       flex: 1,
       width: "100%",
       flexDirection: "row",
-      justifyContent: "space-around"
+      justifyContent: "space-between"
     }
   }),
   { withTheme: true }
@@ -58,21 +68,27 @@ const Train = () => {
   const [trainText, setTrainText] = useState<MaybeTrainText>(null);
   const [spacyDocument, setSpacyDocument] = useState<MaybeSpacyDocument>(null);
   const api = new CorpusApi(apiConfig());
+  let unmounted = false;
 
   const classes = useStyles();
   const [t] = useTranslation();
 
   useEffect(() => {
     loadNewDocument();
+    return () => {
+      unmounted = true;
+    };
   }, []);
 
   const loadNewDocument = async () => {
     setLoading(true);
     try {
       const trainingInfoResult = await api.train();
+      if (unmounted) return;
       setTrainText(trainingInfoResult.data);
       setSpacyDocument(trainingInfoResult.data.spacy_document);
     } catch (e) {
+      if (unmounted) return;
       console.log("Error getting training info", e);
       setTrainText(null);
       setSpacyDocument(null);
@@ -89,7 +105,7 @@ const Train = () => {
 
   const onReset = () => {
     setHasChanges(false);
-    setSpacyDocument(trainText!.spacy_document);
+    setSpacyDocument({ ...trainText!.spacy_document });
   };
 
   const onSkip = () => {
@@ -131,21 +147,11 @@ const Train = () => {
                     {t("RESET")}
                   </Typography>
                 </Button>
-                <Button color="inherit" onClick={onSkip}>
-                  <Typography
-                    style={{ paddingLeft: 80, paddingRight: 80 }}
-                    color="inherit"
-                    variant="h6"
-                    id="tableTitle"
-                  >
-                    {t("SKIP")}
-                  </Typography>
-                </Button>
+                <div style={{ width: "1em" }} />
                 <Button
                   color="primary"
                   variant="contained"
-                  disabled={!hasChanges}
-                  onClick={onSave}
+                  onClick={hasChanges ? onSave : onSkip}
                 >
                   <Typography
                     style={{ paddingLeft: 80, paddingRight: 80 }}
@@ -153,7 +159,7 @@ const Train = () => {
                     variant="h6"
                     id="tableTitle"
                   >
-                    {t("SAVE")}
+                    {t(hasChanges ? "SAVE" : "SKIP")}
                   </Typography>
                 </Button>
               </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { SpacyDocument, Type, SpacyEntity, SpacyToken } from "../apigen";
 import { Popover, Snackbar } from "@material-ui/core";
 import { MaybeString, MaybeSpacyEntity } from "../types/optionals";
@@ -20,6 +20,7 @@ const TokenizedEditor = ({
 }: Props) => {
   const [error, setError] = useState<MaybeString>(null);
   const [currentToken, setCurrentToken] = useState<MaybeCurrentToken>(null);
+  const currentTokenEl = useRef<HTMLSpanElement | null>(null);
 
   let anchorElement = currentToken != null ? currentToken.element : null;
 
@@ -29,7 +30,7 @@ const TokenizedEditor = ({
     entity: MaybeSpacyEntity = null
   ) => {
     var entities = spacyDocument.ents || [];
-    if (entity == null) {
+    if (!entity) {
       entity = { label: "MISC", end: token.end, start: token.start };
       entities.push(entity);
       spacyDocument.ents = entities;
@@ -73,6 +74,10 @@ const TokenizedEditor = ({
         entityIndex = i;
       }
     }
+    const idx = spacyDocument.ents!.indexOf(currentToken!.entity!);
+    if (idx > -1) {
+      spacyDocument.ents!.splice(idx, 1);
+    }
     nextEntity.start = start;
     currentToken!.entity = nextEntity;
     spacyDocument.ents![entityIndex] = nextEntity;
@@ -107,11 +112,54 @@ const TokenizedEditor = ({
         value={currentToken.entity!.label}
         onJoinLeft={onJoinLeft}
         onJoinRight={onJoinRight}
-        // onTypeChange={(event: any) => onEntityTypeChange(event.target.value)}
       />
     ) : (
       <div />
     );
+
+  const isCurrentToken = (token: SpacyToken) => {
+    return (
+      currentToken != null &&
+      currentToken.token.start == token.start &&
+      currentToken.token.end == token.end
+    );
+  };
+
+  const mapNodes = (
+    document: SpacyDocument,
+    entityTypes: { [key: string]: Type },
+    onTokenClick: ((target: HTMLElement, token: SpacyToken) => void) | null
+  ) => {
+    var entities = document.ents || [];
+
+    const entityFor = (token: SpacyToken) => {
+      for (const entity of entities) {
+        if (entity.start <= token.start && entity.end >= token.end) {
+          return entity;
+        }
+      }
+      return null;
+    };
+
+    return document.tokens!.map(token => {
+      const text = document.text.substring(token.start, token.end);
+      const nodeKey = `${token.start}-${token.end}`;
+      const entity = entityFor(token) || undefined;
+      const entityType = entity && entityTypes[entity.label];
+      // console.log([token, currentToken, currentTokenEl, isCurrentToken(token)]);
+      return (
+        <TextNode
+          ref={(isCurrentToken(token) && currentTokenEl) || null}
+          entity={entity}
+          entityType={entityType}
+          key={nodeKey}
+          text={text}
+          token={token}
+          onClick={onTokenClick}
+        />
+      );
+    });
+  };
 
   return (
     <div>
@@ -120,7 +168,7 @@ const TokenizedEditor = ({
         id="entity-popover"
         open={currentToken != null}
         onClose={() => setCurrentToken(null)}
-        anchorEl={anchorElement}
+        anchorEl={() => currentTokenEl.current!}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "center"
@@ -144,49 +192,6 @@ const TokenizedEditor = ({
       />
     </div>
   );
-};
-
-const mapNodes = (
-  document: SpacyDocument,
-  entityTypes: { [key: string]: Type },
-  onTokenClick: ((target: HTMLElement, token: SpacyToken) => void) | null
-) => {
-  var entities = document.ents || [];
-
-  const entityFor = (token: SpacyToken) => {
-    for (const entity of entities) {
-      if (entity.start <= token.start && entity.end >= token.end) {
-        return entity;
-      }
-    }
-    return null;
-  };
-
-  return document.tokens!.map(token => {
-    const text = document.text.substring(token.start, token.end);
-    const nodeKey = `${token.start}-${token.end}`;
-    const entity = entityFor(token);
-    if (entity != null) {
-      return (
-        <EntityNode
-          entity={entity}
-          entityType={entityTypes[entity.label]}
-          key={nodeKey}
-          text={text}
-          onClick={onTokenClick}
-          token={token}
-        />
-      );
-    }
-    return (
-      <TextNode
-        key={nodeKey}
-        text={text}
-        token={token}
-        onClick={onTokenClick}
-      />
-    );
-  });
 };
 
 export default TokenizedEditor;

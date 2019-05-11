@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   MenuItem,
   DialogContent,
@@ -34,6 +34,7 @@ const TokenDialog = ({
   onRemove = null
 }: Props) => {
   const [t] = useTranslation();
+  const [open, setOpen] = useState<boolean>(true);
   const actions = [
     onJoinLeft && (
       <MenuItem key={joinLeftAction} value={joinLeftAction}>
@@ -99,6 +100,9 @@ const TokenDialog = ({
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Select
+            onClose={() => setOpen(false)}
+            onOpen={() => setOpen(true)}
+            open={open}
             value={value || "MISC"}
             onChange={(event: any) => onSelect(event.target.value)}
           >

@@ -68,22 +68,9 @@ type EntityNodeProps = {
   token: SpacyToken;
   entity: SpacyEntity;
   entityType: Type;
-  onClick:
-    | ((
-        target: HTMLElement,
-        token: SpacyToken,
-        entity: MaybeSpacyEntity
-      ) => void)
-    | null;
 };
 
-const EntityNode = ({
-  text,
-  token,
-  onClick,
-  entity,
-  entityType
-}: EntityNodeProps) => {
+const EntityNode = ({ text, token, entity, entityType }: EntityNodeProps) => {
   const nodeStyles = useNodeStyles();
   const entityNodeStyles = useEntityNodeStyles();
   var contents = text;
@@ -92,17 +79,10 @@ const EntityNode = ({
   }
   const borderClassName = borderClass(token, entity, entityNodeStyles);
 
-  const _onClick = (target: any) => {
-    if (onClick != null) {
-      onClick(target, token, entity);
-    }
-  };
-
   return (
     <b
       style={{ color: entityType.color }}
       className={classNames(nodeStyles.node, borderClassName)}
-      onClick={(event: any) => _onClick(event.target)}
     >
       {contents}
     </b>
