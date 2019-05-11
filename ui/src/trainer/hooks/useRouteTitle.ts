@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-export default function useRouteTitle(location: Location) {
+export default function useRouteTitle(location: any) {
   const [t] = useTranslation();
   const pathname = location.pathname;
   if (pathname == '/') {

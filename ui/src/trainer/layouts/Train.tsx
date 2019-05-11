@@ -114,8 +114,7 @@ const Train = () => {
 
   return (
     <div className={classes.container}>
-      <NavigationBar />
-      {loading && <LinearProgress />}
+      <NavigationBar loading={loading} />
       {spacyDocument && trainText && (
         <Paper className={classes.paper}>
           <AppBar color="default" position="relative" className={classes.actionBar}>

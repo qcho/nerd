@@ -1,33 +1,39 @@
 import React from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Button, Theme, createStyles, withStyles } from '@material-ui/core';
-import { withRouter, Link } from 'react-router-dom';
+import { AppBar, Toolbar, IconButton, Typography, Button, LinearProgress } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import useRouteTitle from './hooks/useRouteTitle';
 import useAuthentication from './hooks/useAuthentication';
 import { useTranslation } from 'react-i18next';
 import Home from '@material-ui/icons/Home';
+import useRouter from 'use-react-router';
+import { makeStyles } from '@material-ui/styles';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    menuButton: {
-      marginLeft: -12,
-      marginRight: 20,
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    homeButton: {
-      marginLeft: -12,
-      marginRight: 20,
-    },
-  });
+const useStyles = makeStyles(() => ({
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  homeButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
+}));
 
 const link = (to: string) =>
   function RouteLink(props: any) {
     return <Link to={to} {...props} />;
   };
 
-const NavigationBar = (props: any) => {
-  const { classes, location } = props;
+interface NavigationBarProps {
+  loading?: boolean;
+}
+
+const NavigationBar = ({ loading }: NavigationBarProps) => {
+  const { location } = useRouter();
+  const classes = useStyles();
   const title = useRouteTitle(location);
   const [t] = useTranslation();
   const { loggedIn, logout, isAdmin } = useAuthentication();
@@ -79,9 +85,9 @@ const NavigationBar = (props: any) => {
           )}
         </Toolbar>
       </AppBar>
+      {loading && <LinearProgress />}
     </>
   );
 };
 
-// @ts-ignore
-export default withRouter(withStyles(styles)(NavigationBar));
+export default NavigationBar;

@@ -92,8 +92,7 @@ const PreviewLayout = ({ classes }: Props) => {
 
   return (
     <div>
-      <NavigationBar />
-      {loading && <LinearProgress />}
+      <NavigationBar loading={loading} />
       <Grid container className={classNames(classes.content, classes.root)} direction="column" justify="space-around">
         <Grid item>
           <Grid container direction="row" spacing={24} alignItems="center">

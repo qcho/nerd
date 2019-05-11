@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Theme, Grid, Table, TableRow, TableBody, TablePagination, TableFooter, Paper } from '@material-ui/core';
 import NavigationBar from '../NavigationBar';
 import { useTranslation } from 'react-i18next';
@@ -39,7 +39,7 @@ const UserManagement = () => {
   const roleApi = new RolesApi(apiConfig());
   let unmounted = false;
 
-  async function fetchUsers() {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const users = await userApi.listUsers(page, pageSize, searchText);
@@ -58,14 +58,15 @@ const UserManagement = () => {
     } finally {
       setLoading(false);
     }
-  }
+  }, [page, pageSize, roleApi, searchText, setFromHeaders, unmounted, userApi]);
 
   useEffect(() => {
     fetchUsers();
     return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       unmounted = true;
     };
-  }, [page, pageSize, searchText]);
+  });
 
   function handleChangePage(event: any, page: number) {
     setPage(page + 1);
@@ -108,7 +109,7 @@ const UserManagement = () => {
 
   return (
     <div className={classes.grow}>
-      <NavigationBar />
+      <NavigationBar loading={loading} />
       <Paper className={classes.content}>
         <Grid container>
           <Grid item xs={12}>

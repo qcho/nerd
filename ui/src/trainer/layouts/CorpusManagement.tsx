@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import NavigationBar from '../NavigationBar';
 import { Theme, Grid, LinearProgress, Typography, Button } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
 import { Line } from 'rc-progress';
+import { Snapshot, SnapshotsApi } from '../apigen';
+import { apiConfig } from '../helpers/api-config';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -49,9 +51,34 @@ const CorpusManagement = () => {
   const classes = useStyles();
   const [t] = useTranslation();
 
-  useEffect(() => {
-    // TODO: Load corpus metadata
+  const fetchUsers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const users = await snapshotsApi.listUsers(page, pageSize, searchText);
+      const rolesResponse = await roleApi.listRoles();
+      if (unmounted) return;
+      setFromHeaders(users.headers);
+      setUsers(users.data);
+      setRoles(rolesResponse.data);
+    } catch (e) {
+      if (unmounted) return;
+      // TODO: Set error
+      const errorMessage = Http.handleRequestError(e, (status, data) => {
+        console.log('Error loading users', data);
+        return '';
+      });
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchUsers();
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      unmounted = true;
+    };
+  });
 
   const totalTexts = 1000;
   const trainedTexts = 1000;
@@ -59,8 +86,7 @@ const CorpusManagement = () => {
 
   return (
     <div className={classes.grow}>
-      <NavigationBar />
-      {loading && <LinearProgress />}
+      <NavigationBar loading={loading} />
       <Grid container className={classes.content} spacing={40} alignItems="flex-end">
         <Grid item xs={8}>
           <Typography variant="h4" gutterBottom component="h2">
