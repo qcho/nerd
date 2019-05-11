@@ -42,7 +42,7 @@ const UserManagement = () => {
   async function fetchUsers() {
     setLoading(true);
     try {
-      const users = await userApi.listUsers(page, pageSize, searchText); // TODO: Add query
+      const users = await userApi.listUsers(page, pageSize, searchText);
       const rolesResponse = await roleApi.listRoles();
       if (unmounted) return;
       setFromHeaders(users.headers);
