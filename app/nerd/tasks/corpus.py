@@ -47,7 +47,7 @@ def train(snapshot: Snapshot) -> Snapshot:
     if snapshot.trained_at < train.model.snapshot.trained_at:
         # TODO: we could restrict training if it was done x time ago
         return snapshot
-    train.model
+    train.model: Model
     train.model.train()
     return snapshot
 
@@ -69,5 +69,6 @@ def reload(snapshot: Snapshot):
 
 
 @celery.task(base=CorpusTask)
-def nlp(text: str):
+def nlp(text: str) -> dict:
+    nlp.model: Model
     return nlp.model.nlp(text).to_json()

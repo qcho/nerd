@@ -1,9 +1,9 @@
+import json
 from pprint import pprint
 
 import click
 from flask import Flask
 
-from nerd.core.document.snapshot import Snapshot
 from nerd.core.news import NewsApi
 from nerd.core.setup import NERdSetup
 from nerd.tasks import celery
@@ -48,4 +48,6 @@ def setup_cli(app: Flask):
     @click.pass_context
     @click.argument('text')
     def nlp(ctx, text):
-        pprint(nlp_task.apply_async([text], queue=ctx.obj['QUEUE']).wait())
+        result = nlp_task.apply_async([text], queue=ctx.obj['QUEUE']).wait()
+        json_result = json.dumps(result)
+        print(json_result)

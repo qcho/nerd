@@ -17,6 +17,7 @@ meinheld = "*"
 gunicorn = "*"
 marshmallow-enum = "*"
 newsapi-python = "*"
+es_core_news_md = {file = 'https://github.com/explosion/spacy-models/releases/download/es_core_news_md-2.1.0/es_core_news_md-2.1.0.tar.gz'}
 
 [dev-packages]
 faker = "*"

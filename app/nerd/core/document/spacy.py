@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import mongoengine as me
 from marshmallow_mongoengine import ModelSchema
 
@@ -28,6 +30,7 @@ class SpacyDocument(me.EmbeddedDocument):
     sents = me.ListField(me.EmbeddedDocumentField(SpacySentence, required=True))
     text = me.StringField(required=True)
     tokens = me.ListField(me.EmbeddedDocumentField(SpacyToken, required=True))
+    _created_at = me.DateTimeField(default=datetime.now(), required=True)
 
 
 class SpacyDocumentSchema(ModelSchema):

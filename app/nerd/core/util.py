@@ -1,7 +1,10 @@
 import logging
+import random
 import time
 from contextlib import contextmanager
 from functools import wraps
+from itertools import islice
+from typing import Generator
 
 DEFAULT_VERBOSITY = 0
 
@@ -53,3 +56,13 @@ def __set_log_level(logger, verbosity=DEFAULT_VERBOSITY) -> None:
         0, len(choices)) else choices[DEFAULT_VERBOSITY]
     logger.setLevel(log_level)
     logger.debug('Set log level to %s', log_level)
+
+
+def shuffle(generator: Generator, buffer_size: int):
+    while True:
+        buffer = list(islice(generator, buffer_size))
+        if len(buffer) == 0:
+            break
+        random.shuffle(buffer)
+        for item in buffer:
+            yield item

@@ -8,6 +8,8 @@ from nerd.core.util import get_logger
 
 logger = get_logger(__name__)
 
+CURRENT_ID = 0
+
 
 class Type(me.EmbeddedDocument):
     label = me.StringField(required=True)
@@ -35,10 +37,10 @@ class Snapshot(me.Document):
 
     @staticmethod
     def current():
-        return Snapshot.objects.get(id=0)
+        return Snapshot.objects.get(id=CURRENT_ID)
 
     def __str__(self):
-        return f'v{"CURRENT" if self.id == 0 else self.id}'
+        return f'v{"CURRENT" if self.id == CURRENT_ID else self.id}'
 
     @contextmanager
     def training_lock(self, un_train: bool = False):
