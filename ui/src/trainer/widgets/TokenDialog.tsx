@@ -7,8 +7,8 @@ interface Props {
   value: string;
   onTypeChange: (value: string) => void;
   onDelete: () => void;
-  onJoinLeft?: (() => void) | null;
-  onJoinRight?: (() => void) | null;
+  onJoinLeft?: (() => void) | null | false;
+  onJoinRight?: (() => void) | null | false;
   onRemove?: (() => void) | null;
   typeOptions: { [key: string]: Type };
 }

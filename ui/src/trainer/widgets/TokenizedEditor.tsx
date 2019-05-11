@@ -12,6 +12,22 @@ interface Props {
   entityTypes: { [key: string]: Type };
 }
 
+const hasPreviousEntities = (token: SpacyToken, document: SpacyDocument) => {
+  if (!document.ents) return;
+  for (const ent of document.ents) {
+    if (ent.end < token.start) return true;
+  }
+  return false;
+};
+
+const hasNextEntities = (token: SpacyToken, document: SpacyDocument) => {
+  if (!document.ents) return;
+  for (const ent of document.ents) {
+    if (ent.start > token.end) return true;
+  }
+  return false;
+};
+
 const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }: Props) => {
   const [error, setError] = useState<MaybeString>(null);
   const [currentToken, setCurrentToken] = useState<MaybeCurrentToken>(null);
@@ -83,7 +99,6 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
     onUpdate(spacyDocument);
     setCurrentToken(null);
   };
-  const onRemove = () => {};
   const onTypeChange = (value: string) => {
     if (currentToken && currentToken.entity) {
       currentToken.entity.label = value;
@@ -99,8 +114,8 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
         onTypeChange={onTypeChange}
         onDelete={onDelete}
         value={currentToken.entity.label}
-        onJoinLeft={onJoinLeft}
-        onJoinRight={onJoinRight}
+        onJoinLeft={hasPreviousEntities(currentToken.token, spacyDocument) && onJoinLeft}
+        onJoinRight={hasNextEntities(currentToken.token, spacyDocument) && onJoinRight}
       />
     ) : (
       <div />
@@ -132,7 +147,6 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
       const nodeKey = `${token.start}-${token.end}`;
       const entity = entityFor(token) || undefined;
       const entityType = entity && entityTypes[entity.label];
-      // console.log([token, currentToken, currentTokenEl, isCurrentToken(token)]);
       return (
         <TextNode
           ref={(isCurrentToken(token) && currentTokenEl) || null}
