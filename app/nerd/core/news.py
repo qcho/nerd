@@ -6,7 +6,7 @@ from nerd.core.document.corpus import Text
 
 
 def add_headlines(headlines):
-    texts = [Text(value=headline['description']) for headline in headlines]
+    texts = [Text(value=f"{headline['title']}\n{headline['description']}") for headline in headlines]
     added = 0
     for text in texts:
         try:
