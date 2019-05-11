@@ -26,24 +26,6 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 export interface CorpusSnapshot {
     /**
      * 
-     * @type {Date}
-     * @memberof CorpusSnapshot
-     */
-    trained_at?: Date;
-    /**
-     * 
-     * @type {number}
-     * @memberof CorpusSnapshot
-     */
-    id: number;
-    /**
-     * 
-     * @type {Date}
-     * @memberof CorpusSnapshot
-     */
-    created_at?: Date;
-    /**
-     * 
      * @type {number}
      * @memberof CorpusSnapshot
      */
@@ -54,6 +36,24 @@ export interface CorpusSnapshot {
      * @memberof CorpusSnapshot
      */
     types?: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof CorpusSnapshot
+     */
+    created_at?: Date;
+    /**
+     * 
+     * @type {Date}
+     * @memberof CorpusSnapshot
+     */
+    trained_at?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof CorpusSnapshot
+     */
+    id: number;
 }
 
 /**
@@ -81,13 +81,7 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
-    plain_password?: string;
+    email?: string;
     /**
      * 
      * @type {string}
@@ -99,7 +93,13 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    email?: string;
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Register
+     */
+    plain_password?: string;
 }
 
 /**
@@ -124,6 +124,12 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
+     * @type {number}
+     * @memberof Snapshot
+     */
+    id: number;
+    /**
+     * 
      * @type {{ [key: string]: Type; }}
      * @memberof Snapshot
      */
@@ -133,19 +139,13 @@ export interface Snapshot {
      * @type {Date}
      * @memberof Snapshot
      */
-    trained_at?: Date;
+    created_at?: Date;
     /**
      * 
      * @type {Date}
      * @memberof Snapshot
      */
-    created_at?: Date;
-    /**
-     * 
-     * @type {number}
-     * @memberof Snapshot
-     */
-    id: number;
+    trained_at?: Date;
 }
 
 /**
@@ -156,28 +156,28 @@ export interface Snapshot {
 export interface SpacyDocument {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyDocument
-     */
-    text: string;
-    /**
-     * 
-     * @type {Array<SpacySentence>}
-     * @memberof SpacyDocument
-     */
-    sents?: Array<SpacySentence>;
-    /**
-     * 
      * @type {Array<SpacyToken>}
      * @memberof SpacyDocument
      */
     tokens?: Array<SpacyToken>;
     /**
      * 
+     * @type {string}
+     * @memberof SpacyDocument
+     */
+    text: string;
+    /**
+     * 
      * @type {Date}
      * @memberof SpacyDocument
      */
     _created_at?: Date;
+    /**
+     * 
+     * @type {Array<SpacySentence>}
+     * @memberof SpacyDocument
+     */
+    sents?: Array<SpacySentence>;
     /**
      * 
      * @type {Array<SpacyEntity>}
@@ -200,16 +200,16 @@ export interface SpacyEntity {
     end: number;
     /**
      * 
-     * @type {number}
-     * @memberof SpacyEntity
-     */
-    start: number;
-    /**
-     * 
      * @type {string}
      * @memberof SpacyEntity
      */
     label: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity
+     */
+    start: number;
 }
 
 /**
@@ -243,7 +243,7 @@ export interface SpacyToken {
      * @type {string}
      * @memberof SpacyToken
      */
-    tag?: string;
+    pos?: string;
     /**
      * 
      * @type {number}
@@ -252,16 +252,10 @@ export interface SpacyToken {
     end: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof SpacyToken
      */
-    start: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    id: number;
+    tag?: string;
     /**
      * 
      * @type {string}
@@ -270,16 +264,22 @@ export interface SpacyToken {
     dep?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SpacyToken
      */
-    pos?: string;
+    head?: number;
     /**
      * 
      * @type {number}
      * @memberof SpacyToken
      */
-    head?: number;
+    id: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
+    start: number;
 }
 
 /**
@@ -293,13 +293,7 @@ export interface Text {
      * @type {string}
      * @memberof Text
      */
-    value: string;
-    /**
-     * 
-     * @type {Date}
-     * @memberof Text
-     */
-    created_at?: Date;
+    id?: string;
     /**
      * 
      * @type {{ [key: string]: SpacyDocument; }}
@@ -311,7 +305,13 @@ export interface Text {
      * @type {string}
      * @memberof Text
      */
-    id?: string;
+    value: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof Text
+     */
+    created_at?: Date;
 }
 
 /**
@@ -394,16 +394,16 @@ export interface Type {
 export interface User {
     /**
      * 
-     * @type {string}
-     * @memberof User
-     */
-    id?: string;
-    /**
-     * 
      * @type {Array<string>}
      * @memberof User
      */
     roles?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    email?: string;
     /**
      * 
      * @type {string}
@@ -415,7 +415,7 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    email?: string;
+    id?: string;
 }
 
 /**
@@ -452,12 +452,6 @@ export interface UserCredentials {
 export interface UserPayload {
     /**
      * 
-     * @type {string}
-     * @memberof UserPayload
-     */
-    id?: string;
-    /**
-     * 
      * @type {Array<string>}
      * @memberof UserPayload
      */
@@ -467,13 +461,19 @@ export interface UserPayload {
      * @type {string}
      * @memberof UserPayload
      */
-    plain_password?: string;
+    name?: string;
     /**
      * 
      * @type {string}
      * @memberof UserPayload
      */
-    name?: string;
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPayload
+     */
+    plain_password?: string;
 }
 
 /**
@@ -1458,6 +1458,165 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
     return {
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsCurrentGet(options: any = {}): RequestArgs {
+            const localVarPath = `/api/snapshots/current`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} snapshot_id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsSnapshotIdGet(snapshot_id: number, options: any = {}): RequestArgs {
+            // verify required parameter 'snapshot_id' is not null or undefined
+            if (snapshot_id === null || snapshot_id === undefined) {
+                throw new RequiredError('snapshot_id','Required parameter snapshot_id was null or undefined when calling apiSnapshotsSnapshotIdGet.');
+            }
+            const localVarPath = `/api/snapshots/{snapshot_id}`
+                .replace(`{${"snapshot_id"}}`, encodeURIComponent(String(snapshot_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {CorpusSnapshot} corpus_snapshot 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createCorpusSnapshot(corpus_snapshot: CorpusSnapshot, options: any = {}): RequestArgs {
+            // verify required parameter 'corpus_snapshot' is not null or undefined
+            if (corpus_snapshot === null || corpus_snapshot === undefined) {
+                throw new RequiredError('corpus_snapshot','Required parameter corpus_snapshot was null or undefined when calling createCorpusSnapshot.');
+            }
+            const localVarPath = `/api/snapshots/current`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"CorpusSnapshot" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(corpus_snapshot !== undefined ? corpus_snapshot : {}) : (corpus_snapshot || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        forceTrain(options: any = {}): RequestArgs {
+            const localVarPath = `/api/snapshots/force-train`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary List available corpora
          * @param {number} [page] 
          * @param {number} [page_size] 
@@ -1514,6 +1673,56 @@ export const SnapshotsApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsCurrentGet(options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<CorpusSnapshot> {
+            const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).apiSnapshotsCurrentGet(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {number} snapshot_id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsSnapshotIdGet(snapshot_id: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<CorpusSnapshot> {
+            const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).apiSnapshotsSnapshotIdGet(snapshot_id, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {CorpusSnapshot} corpus_snapshot 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createCorpusSnapshot(corpus_snapshot: CorpusSnapshot, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<CorpusSnapshot> {
+            const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).createCorpusSnapshot(corpus_snapshot, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        forceTrain(options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).forceTrain(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @summary List available corpora
          * @param {number} [page] 
          * @param {number} [page_size] 
@@ -1538,6 +1747,40 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
     return {
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsCurrentGet(options?: any) {
+            return SnapshotsApiFp(configuration).apiSnapshotsCurrentGet(options)(axios, basePath);
+        },
+        /**
+         * 
+         * @param {number} snapshot_id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiSnapshotsSnapshotIdGet(snapshot_id: number, options?: any) {
+            return SnapshotsApiFp(configuration).apiSnapshotsSnapshotIdGet(snapshot_id, options)(axios, basePath);
+        },
+        /**
+         * 
+         * @param {CorpusSnapshot} corpus_snapshot 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createCorpusSnapshot(corpus_snapshot: CorpusSnapshot, options?: any) {
+            return SnapshotsApiFp(configuration).createCorpusSnapshot(corpus_snapshot, options)(axios, basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        forceTrain(options?: any) {
+            return SnapshotsApiFp(configuration).forceTrain(options)(axios, basePath);
+        },
+        /**
+         * 
          * @summary List available corpora
          * @param {number} [page] 
          * @param {number} [page_size] 
@@ -1557,6 +1800,48 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
  * @extends {BaseAPI}
  */
 export class SnapshotsApi extends BaseAPI {
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SnapshotsApi
+     */
+    public apiSnapshotsCurrentGet(options?: any) {
+        return SnapshotsApiFp(this.configuration).apiSnapshotsCurrentGet(options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {number} snapshot_id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SnapshotsApi
+     */
+    public apiSnapshotsSnapshotIdGet(snapshot_id: number, options?: any) {
+        return SnapshotsApiFp(this.configuration).apiSnapshotsSnapshotIdGet(snapshot_id, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {CorpusSnapshot} corpus_snapshot 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SnapshotsApi
+     */
+    public createCorpusSnapshot(corpus_snapshot: CorpusSnapshot, options?: any) {
+        return SnapshotsApiFp(this.configuration).createCorpusSnapshot(corpus_snapshot, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SnapshotsApi
+     */
+    public forceTrain(options?: any) {
+        return SnapshotsApiFp(this.configuration).forceTrain(options)(this.axios, this.basePath);
+    }
+
     /**
      * 
      * @summary List available corpora
