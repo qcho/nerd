@@ -1,65 +1,56 @@
-import React, { useState, useEffect } from "react";
-import {
-  LinearProgress,
-  Paper,
-  Theme,
-  Toolbar,
-  Typography,
-  AppBar,
-  Button
-} from "@material-ui/core";
-import NavigationBar from "../NavigationBar";
-import { makeStyles } from "@material-ui/styles";
-import { UntokenizedEditor } from "../widgets/UntokenizedEditor";
-import { useTranslation } from "react-i18next";
-import { CorpusApi, SpacyDocument } from "../apigen";
-import { apiConfig } from "../helpers/api-config";
-import { MaybeTrainText, MaybeSpacyDocument } from "../types/optionals";
-import TokenizedEditor from "../widgets/TokenizedEditor";
+import React, { useState, useEffect } from 'react';
+import { LinearProgress, Paper, Theme, Toolbar, Typography, AppBar, Button } from '@material-ui/core';
+import NavigationBar from '../NavigationBar';
+import { makeStyles } from '@material-ui/styles';
+import { useTranslation } from 'react-i18next';
+import { CorpusApi, SpacyDocument } from '../apigen';
+import { apiConfig } from '../helpers/api-config';
+import { MaybeTrainText, MaybeSpacyDocument } from '../types/optionals';
+import TokenizedEditor from '../widgets/TokenizedEditor';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
     container: {
-      display: "flex",
+      display: 'flex',
       flex: 1,
-      flexDirection: "column",
-      alignItems: "center",
-      height: "100vh"
+      flexDirection: 'column',
+      alignItems: 'center',
+      height: '100vh',
     },
     paper: {
-      display: "flex",
+      display: 'flex',
       flex: 1,
-      flexDirection: "column",
-      [theme.breakpoints.down("sm")]: {
+      flexDirection: 'column',
+      [theme.breakpoints.down('sm')]: {
         marginTop: theme.spacing.unit * 3,
-        width: "90vw"
+        width: '90vw',
       },
-      [theme.breakpoints.up("md")]: {
+      [theme.breakpoints.up('md')]: {
         marginTop: theme.spacing.unit * 6,
-        width: "80vw"
+        width: '80vw',
       },
-      [theme.breakpoints.up("lg")]: {
+      [theme.breakpoints.up('lg')]: {
         marginTop: theme.spacing.unit * 8,
-        width: "60vw"
+        width: '60vw',
       },
       marginBottom: theme.spacing.unit * 8,
-      padding: theme.spacing.unit * 2
+      padding: theme.spacing.unit * 2,
     },
     spacer: {
-      flex: "1 1 100%"
+      flex: '1 1 100%',
     },
     actionBar: {
-      marginBottom: theme.spacing.unit
+      marginBottom: theme.spacing.unit,
     },
     actions: {
-      display: "flex",
+      display: 'flex',
       flex: 1,
-      width: "100%",
-      flexDirection: "row",
-      justifyContent: "space-between"
-    }
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
   }),
-  { withTheme: true }
+  { withTheme: true },
 );
 
 const Train = () => {
@@ -73,13 +64,6 @@ const Train = () => {
   const classes = useStyles();
   const [t] = useTranslation();
 
-  useEffect(() => {
-    loadNewDocument();
-    return () => {
-      unmounted = true;
-    };
-  }, []);
-
   const loadNewDocument = async () => {
     setLoading(true);
     try {
@@ -89,7 +73,7 @@ const Train = () => {
       setSpacyDocument(trainingInfoResult.data.spacy_document);
     } catch (e) {
       if (unmounted) return;
-      console.log("Error getting training info", e);
+      console.log('Error getting training info', e);
       setTrainText(null);
       setSpacyDocument(null);
     }
@@ -119,47 +103,41 @@ const Train = () => {
     } catch (e) {}
   };
 
+  useEffect(() => {
+    loadNewDocument();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+
   return (
     <div className={classes.container}>
       <NavigationBar />
       {loading && <LinearProgress />}
       {spacyDocument != null && (
         <Paper className={classes.paper}>
-          <AppBar
-            color="default"
-            position="relative"
-            className={classes.actionBar}
-          >
+          <AppBar color="default" position="relative" className={classes.actionBar}>
             <Toolbar>
               <div className={classes.actions}>
-                <Button
-                  color="secondary"
-                  variant="contained"
-                  disabled={!hasChanges}
-                  onClick={onReset}
-                >
+                <Button color="secondary" variant="contained" disabled={!hasChanges} onClick={onReset}>
                   <Typography
                     style={{ paddingLeft: 80, paddingRight: 80 }}
                     color="inherit"
                     variant="h6"
                     id="tableTitle"
                   >
-                    {t("RESET")}
+                    {t('RESET')}
                   </Typography>
                 </Button>
-                <div style={{ width: "1em" }} />
-                <Button
-                  color="primary"
-                  variant="contained"
-                  onClick={hasChanges ? onSave : onSkip}
-                >
+                <div style={{ width: '1em' }} />
+                <Button color="primary" variant="contained" onClick={hasChanges ? onSave : onSkip}>
                   <Typography
                     style={{ paddingLeft: 80, paddingRight: 80 }}
                     color="inherit"
                     variant="h6"
                     id="tableTitle"
                   >
-                    {t(hasChanges ? "SAVE" : "SKIP")}
+                    {t(hasChanges ? 'SAVE' : 'SKIP')}
                   </Typography>
                 </Button>
               </div>

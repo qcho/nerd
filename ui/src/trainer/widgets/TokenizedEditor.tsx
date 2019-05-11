@@ -1,44 +1,32 @@
-import React, { useState, useRef } from "react";
-import { SpacyDocument, Type, SpacyEntity, SpacyToken } from "../apigen";
-import { Popover, Snackbar } from "@material-ui/core";
-import { MaybeString, MaybeSpacyEntity } from "../types/optionals";
-import { MaybeCurrentToken } from "../types/CurrentToken";
-import { TokenDialog } from "./TokenDialog";
-import { EntityNode } from "./EntityNode";
-import { TextNode } from "./TextNode";
+import React, { useState, useRef } from 'react';
+import { SpacyDocument, Type, SpacyEntity, SpacyToken } from '../apigen';
+import { Popover, Snackbar } from '@material-ui/core';
+import { MaybeString, MaybeSpacyEntity } from '../types/optionals';
+import { MaybeCurrentToken } from '../types/CurrentToken';
+import { TokenDialog } from './TokenDialog';
+import { TextNode } from './TextNode';
 
-type Props = {
+interface Props {
   spacyDocument: SpacyDocument;
   onUpdate: (document: SpacyDocument) => void;
   entityTypes: { [key: string]: Type };
-};
+}
 
-const TokenizedEditor = ({
-  spacyDocument: spacyDocument,
-  onUpdate,
-  entityTypes
-}: Props) => {
+const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }: Props) => {
   const [error, setError] = useState<MaybeString>(null);
   const [currentToken, setCurrentToken] = useState<MaybeCurrentToken>(null);
   const currentTokenEl = useRef<HTMLSpanElement | null>(null);
 
-  let anchorElement = currentToken != null ? currentToken.element : null;
-
-  const onTokenClick = (
-    element: any,
-    token: SpacyToken,
-    entity: MaybeSpacyEntity = null
-  ) => {
+  const onTokenClick = (token: SpacyToken, entity: MaybeSpacyEntity = null) => {
     var entities = spacyDocument.ents || [];
     if (!entity) {
-      entity = { label: "MISC", end: token.end, start: token.start };
+      entity = { label: 'MISC', end: token.end, start: token.start };
       entities.push(entity);
       spacyDocument.ents = entities;
     }
     setCurrentToken({
       token,
-      element,
-      entity: entity || undefined
+      entity: entity || undefined,
     });
     onUpdate(spacyDocument);
   };
@@ -87,9 +75,7 @@ const TokenizedEditor = ({
   const onDelete = () => {
     const currentEntity = currentToken!.entity!;
     spacyDocument.ents = spacyDocument.ents!.filter(entity => {
-      return (
-        entity.start != currentEntity.start && entity.end != currentEntity.end
-      );
+      return entity.start != currentEntity.start && entity.end != currentEntity.end;
     });
     onUpdate(spacyDocument);
     setCurrentToken(null);
@@ -118,17 +104,13 @@ const TokenizedEditor = ({
     );
 
   const isCurrentToken = (token: SpacyToken) => {
-    return (
-      currentToken != null &&
-      currentToken.token.start == token.start &&
-      currentToken.token.end == token.end
-    );
+    return currentToken != null && currentToken.token.start == token.start && currentToken.token.end == token.end;
   };
 
   const mapNodes = (
     document: SpacyDocument,
     entityTypes: { [key: string]: Type },
-    onTokenClick: ((target: HTMLElement, token: SpacyToken) => void) | null
+    onTokenClick: ((target: HTMLElement, token: SpacyToken) => void) | null,
   ) => {
     var entities = document.ents || [];
 
@@ -170,20 +152,20 @@ const TokenizedEditor = ({
         onClose={() => setCurrentToken(null)}
         anchorEl={() => currentTokenEl.current!}
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center"
+          vertical: 'bottom',
+          horizontal: 'center',
         }}
         transformOrigin={{
-          vertical: "top",
-          horizontal: "center"
+          vertical: 'top',
+          horizontal: 'center',
         }}
       >
         {popoverContents}
       </Popover>
       <Snackbar
         anchorOrigin={{
-          vertical: "top",
-          horizontal: "left"
+          vertical: 'top',
+          horizontal: 'left',
         }}
         open={error != null}
         autoHideDuration={1000}

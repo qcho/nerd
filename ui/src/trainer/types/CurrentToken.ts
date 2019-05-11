@@ -1,9 +1,8 @@
-import { SpacyEntity, SpacyToken } from "../apigen";
+import { SpacyEntity, SpacyToken } from '../apigen';
 
-export type CurrentToken = {
+export interface CurrentToken {
   token: SpacyToken;
   entity?: SpacyEntity;
-  element: any;
-};
+}
 
 export type MaybeCurrentToken = CurrentToken | null;
