@@ -1,6 +1,6 @@
+import gc
 from abc import ABC
 
-import gc
 from celery import Task
 from celery.utils.log import get_task_logger
 
@@ -16,7 +16,8 @@ class CorpusTask(Task, ABC):
 
     @property
     def model(self) -> Model:
-        snapshot = Snapshot.from_string(self.request.delivery_info['routing_key'])
+        snapshot = Snapshot.from_string(
+            self.request.delivery_info['routing_key'])
         if self._model is None:
             # self.backend.client REDIS BACKEND
             self._model = Model(snapshot)
@@ -43,13 +44,15 @@ class IsTrainingError(Exception):
 
 
 @celery.task(base=CorpusTask)
-def train(snapshot: Snapshot) -> Snapshot:
+def train(snapshot_id: int = 0):
+    snapshot = Snapshot.objects.get(id=snapshot_id)
     if snapshot.trained_at < train.model.snapshot.trained_at:
         # TODO: we could restrict training if it was done x time ago
         return snapshot
     train.model: Model
     train.model.train()
-    return snapshot
+    # TODO: Emit a reload event
+    return snapshot.id
 
 
 @celery.task(base=CorpusTask)
