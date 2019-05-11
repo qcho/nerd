@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   withStyles,
   Theme,
@@ -8,36 +8,36 @@ import {
   Button,
   Divider,
   LinearProgress,
-  Snackbar
-} from "@material-ui/core";
-import { UntokenizedEditor } from "../widgets/UntokenizedEditor";
-import NavigationBar from "../NavigationBar";
-import classNames from "classnames";
-import useAuthentication from "../hooks/useAuthentication";
-import { useTranslation } from "react-i18next";
-import { MaybeSpacyDocument } from "../types/optionals";
-import { SpacyDocument, Type } from "../apigen";
+  Snackbar,
+} from '@material-ui/core';
+import NavigationBar from '../NavigationBar';
+import classNames from 'classnames';
+import useAuthentication from '../hooks/useAuthentication';
+import { useTranslation } from 'react-i18next';
+import { MaybeSpacyDocument } from '../types/optionals';
+import { SpacyDocument, Type } from '../apigen';
+import TokenizedEditor from '../widgets/TokenizedEditor';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1
+      flexGrow: 1,
     },
     content: {
-      padding: theme.spacing.unit * 2
-    }
+      padding: theme.spacing.unit * 2,
+    },
   });
 
-type Props = {
+interface Props {
   classes: any;
-};
+}
 
 const PreviewLayout = ({ classes }: Props) => {
-  const [text, setText] = useState<string>("");
+  const [text, setText] = useState<string>('');
   const [entityTypes, setEntityTypes] = useState<{ [key: string]: Type }>({});
   const [document, setDocument] = useState<MaybeSpacyDocument>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
   const [t] = useTranslation();
   const { loggedIn } = useAuthentication();
   // TODO(jpo): Use new API.
@@ -51,7 +51,7 @@ const PreviewLayout = ({ classes }: Props) => {
       // setDocument(doc as NerDocument);
     } catch (e) {
       // TODO: correctly handle this
-      console.log("Fuuu", [e]);
+      console.log('Fuuu', [e]);
     } finally {
       setLoading(false);
     }
@@ -94,17 +94,12 @@ const PreviewLayout = ({ classes }: Props) => {
     <div>
       <NavigationBar />
       {loading && <LinearProgress />}
-      <Grid
-        container
-        className={classNames(classes.content, classes.root)}
-        direction="column"
-        justify="space-around"
-      >
+      <Grid container className={classNames(classes.content, classes.root)} direction="column" justify="space-around">
         <Grid item>
           <Grid container direction="row" spacing={24} alignItems="center">
             <Grid item xs={10}>
               <TextField
-                label={t("Text")}
+                label={t('Text')}
                 type="search"
                 margin="normal"
                 variant="outlined"
@@ -122,7 +117,7 @@ const PreviewLayout = ({ classes }: Props) => {
             </Grid>
             <Grid item xs={2}>
               <Button fullWidth color="primary" onClick={onParseClick}>
-                {t("Parse")}
+                {t('Parse')}
               </Button>
             </Grid>
           </Grid>
@@ -130,18 +125,9 @@ const PreviewLayout = ({ classes }: Props) => {
         {document == null || loading ? null : (
           <Grid item>
             <Divider style={{ marginTop: 10, marginBottom: 10 }} />
-            <Grid
-              container
-              direction="row"
-              spacing={24}
-              justify="space-between"
-            >
+            <Grid container direction="row" spacing={24} justify="space-between">
               <Grid item xs={10}>
-                <UntokenizedEditor
-                  document={document}
-                  onUpdate={onDocumentUpdate}
-                  entityTypes={entityTypes}
-                />
+                <TokenizedEditor spacyDocument={document} onUpdate={onDocumentUpdate} entityTypes={entityTypes} />
               </Grid>
               <div>
                 {loggedIn ? (
@@ -150,17 +136,12 @@ const PreviewLayout = ({ classes }: Props) => {
                     xs={2}
                     style={{
                       marginTop: 2,
-                      borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                      padding: "0.5em"
+                      borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                      padding: '0.5em',
                     }}
                   >
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      color="primary"
-                      onClick={onSaveClick}
-                    >
-                      {t("Save")}
+                    <Button variant="contained" fullWidth color="primary" onClick={onSaveClick}>
+                      {t('Save')}
                     </Button>
                   </Grid>
                 ) : null}
@@ -171,12 +152,12 @@ const PreviewLayout = ({ classes }: Props) => {
       </Grid>
       <Snackbar
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left"
+          vertical: 'bottom',
+          horizontal: 'left',
         }}
-        open={snackbarMessage != ""}
+        open={snackbarMessage != ''}
         autoHideDuration={1000}
-        onClose={() => setSnackbarMessage("")}
+        onClose={() => setSnackbarMessage('')}
         message={<span>{snackbarMessage}</span>}
       />
     </div>

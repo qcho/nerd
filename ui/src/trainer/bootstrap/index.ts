@@ -1,3 +1,3 @@
-import "./i18n";
-import "./styleBootstrap";
-import "./configureGlobalAxios";
+import './i18n';
+import './styleBootstrap';
+import './configureGlobalAxios';

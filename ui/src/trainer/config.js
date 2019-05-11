@@ -1,5 +1,5 @@
 const Config = {
-  serverURL: "/api"
+  serverURL: '/api',
 };
 
 export default Config;

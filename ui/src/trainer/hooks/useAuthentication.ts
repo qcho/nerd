@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { AuthApi } from "../apigen/api";
-import useAuthStorage from "./useAuthStorage";
-import Http from "../helpers/http";
-import { useTranslation } from "react-i18next";
+import { useState, useEffect } from 'react';
+import { AuthApi } from '../apigen/api';
+import useAuthStorage from './useAuthStorage';
+import Http from '../helpers/http';
+import { useTranslation } from 'react-i18next';
 
 function useAuthentication() {
   const { credentials, updateCredentials, clearCredentials } = useAuthStorage();
@@ -12,19 +12,16 @@ function useAuthentication() {
   const [t] = useTranslation();
   const api = new AuthApi();
 
-  async function login(
-    username: string,
-    password: string,
-    rememberMe: boolean
-  ) {
+  async function login(username: string, password: string, rememberMe: boolean) {
     try {
       const loginResult = await api.createAccessToken({
         username,
         password,
-        grant_type: "password"
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        grant_type: 'password',
       });
       updateCredentials(loginResult.data, !rememberMe);
-      return { success: true, message: "" };
+      return { success: true, message: '' };
     } catch (e) {
       const errorMessage = Http.handleRequestError(e, (status, data) => {
         if (status == 422) {
@@ -37,7 +34,7 @@ function useAuthentication() {
           }
         }
         if (status == 401) {
-          return t("Invalid credentials");
+          return t('Invalid credentials');
         }
         return t("Can't login");
       });
@@ -49,25 +46,20 @@ function useAuthentication() {
     setLoggedIn(credentials != null);
     if (credentials != null) {
       const roles = credentials.roles || [];
-      setIsAdmin(roles.includes("admin"));
-      setIsUser(roles.includes("user"));
+      setIsAdmin(roles.includes('admin'));
+      setIsUser(roles.includes('user'));
     } else {
       setIsAdmin(false);
       setIsUser(false);
     }
   }, [credentials]);
 
-  async function register(
-    name: string,
-    username: string,
-    password: string,
-    rememberMe: boolean
-  ) {
+  async function register(name: string, username: string, password: string, rememberMe: boolean) {
     try {
       const registerResult = await api.registerUser({
         name,
         email: username,
-        plain_password: password
+        plain_password: password,
       });
       updateCredentials(registerResult.data, !rememberMe);
       return;
@@ -94,7 +86,7 @@ function useAuthentication() {
     isAdmin,
     isUser,
     register,
-    credentials
+    credentials,
   };
 }
 

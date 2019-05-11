@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   createStyles,
   withStyles,
@@ -10,40 +10,36 @@ import {
   FormControlLabel,
   Checkbox,
   InputLabel,
-  Input
-} from "@material-ui/core";
-import useAuthentication from "../hooks/useAuthentication";
-import { Redirect } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import authStyles from "../styles/auth";
+  Input,
+} from '@material-ui/core';
+import useAuthentication from '../hooks/useAuthentication';
+import { Redirect } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import authStyles from '../styles/auth';
 
 const styles = (theme: Theme) =>
   createStyles({
     ...authStyles(theme),
     ...{
       submit: {
-        marginTop: theme.spacing.unit * 3
-      }
-    }
+        marginTop: theme.spacing.unit * 3,
+      },
+    },
   });
 
 const Login = ({ classes }: { classes: any }) => {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [t] = useTranslation();
   const { login, loggedIn } = useAuthentication();
 
-  const onInputChange = (setter: any) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const onInputChange = (setter: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setter(event.target.value);
   };
 
-  const onCheckboxChange = (setter: any) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const onCheckboxChange = (setter: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setter(event.target.checked);
   };
 
@@ -63,21 +59,15 @@ const Login = ({ classes }: { classes: any }) => {
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <Typography component="h1" variant="h3">
-          {t("Login")}
+          {t('Login')}
         </Typography>
         <form className={classes.form} onSubmit={onFormSubmit}>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">{t("Email Address")}</InputLabel>
-            <Input
-              id="email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              onChange={onInputChange(setUsername)}
-            />
+            <InputLabel htmlFor="email">{t('Email Address')}</InputLabel>
+            <Input id="email" name="email" autoComplete="email" autoFocus onChange={onInputChange(setUsername)} />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">{t("Password")}</InputLabel>
+            <InputLabel htmlFor="password">{t('Password')}</InputLabel>
             <Input
               name="password"
               type="password"
@@ -87,22 +77,10 @@ const Login = ({ classes }: { classes: any }) => {
             />
           </FormControl>
           <FormControlLabel
-            control={
-              <Checkbox
-                value="remember"
-                color="primary"
-                onChange={onCheckboxChange(setRememberMe)}
-              />
-            }
-            label={t("Remember me")}
+            control={<Checkbox value="remember" color="primary" onChange={onCheckboxChange(setRememberMe)} />}
+            label={t('Remember me')}
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
+          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             Login
           </Button>
         </form>

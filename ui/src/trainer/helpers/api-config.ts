@@ -1,5 +1,5 @@
-import CredentialsStorage from "./CredentialsStorage";
-import { Configuration } from "../apigen";
+import CredentialsStorage from './CredentialsStorage';
+import { Configuration } from '../apigen';
 
 export function apiConfig(): Configuration {
   const credentials = CredentialsStorage.getStored();

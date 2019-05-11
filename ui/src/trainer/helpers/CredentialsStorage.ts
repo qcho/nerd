@@ -1,40 +1,40 @@
-import { UserCredentials } from "../apigen";
-import { MaybeUserCredentials } from "../types/optionals";
+import { UserCredentials } from '../apigen';
+import { MaybeUserCredentials } from '../types/optionals';
 
-const authKey = "auth";
+const authKey = 'auth';
 
 export default class CredentialsStorage {
   private static listeners: any[] = [];
 
-  static getStored(): MaybeUserCredentials {
+  public static getStored(): MaybeUserCredentials {
     const stored = this.getStorage()[authKey];
     return stored == null ? null : JSON.parse(stored);
   }
 
-  static clear() {
+  public static clear() {
     CredentialsStorage.doClear();
     CredentialsStorage.notifyListeners();
   }
 
-  static registerChangeListener(listener: any) {
+  public static registerChangeListener(listener: any) {
     CredentialsStorage.listeners.push(listener);
   }
 
-  static removeChangeListener(listener: any) {
+  public static removeChangeListener(listener: any) {
     const index = CredentialsStorage.listeners.indexOf(listener, 0);
     if (index > -1) {
       CredentialsStorage.listeners.splice(index, 1);
     }
   }
 
-  static save(credentials: UserCredentials, sessionOnly: boolean) {
+  public static save(credentials: UserCredentials, sessionOnly: boolean) {
     CredentialsStorage.doClear();
     const storage = sessionOnly ? sessionStorage : localStorage;
     this.store(credentials, storage);
     CredentialsStorage.notifyListeners();
   }
 
-  static update(credentials: UserCredentials) {
+  public static update(credentials: UserCredentials) {
     this.store(credentials, this.getStorage());
   }
 
