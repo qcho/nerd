@@ -54,7 +54,7 @@ class SnapshotCurrentResource(MethodView):
     @blp.arguments(CorpusSnapshotSchema)
     @blp.response(CorpusSnapshotSchema)
     def put(self, payload):
-        current_snapshot = Snapshot.current
+        current_snapshot = Snapshot.current()
         new_snapshot = Snapshot(types=current_snapshot.types)
         new_snapshot.save()
         current_snapshot.types = payload.types
@@ -84,6 +84,6 @@ class ForceTrainingResource(MethodView):
     @blp.response(None)
     @blp.doc(operationId="forceTrain")
     def post(self, payload):
-        snapshot = Snapshot.current
+        snapshot = Snapshot.current()
         train_task.apply_async([snapshot], queue='vCURRENT')
         return "", 204
