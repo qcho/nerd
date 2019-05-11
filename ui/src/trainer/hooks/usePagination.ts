@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import useReactRouter from 'use-react-router';
-import { parse, stringify, parseUrl } from 'query-string';
+import { parse, stringify } from 'query-string';
 import { Pagination } from '../types/Pagination';
 
 function buildHash(page: number, pageSize: number) {
