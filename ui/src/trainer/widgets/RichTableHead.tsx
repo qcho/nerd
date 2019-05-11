@@ -7,7 +7,7 @@ interface Header {
 }
 
 interface RichTableHeadProps {
-  onSelectAll: () => void;
+  onSelectAll: (event: React.ChangeEvent<HTMLInputElement>) => void;
   numSelected: number;
   rowCount: number;
   headers: Header[];
