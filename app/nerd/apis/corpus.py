@@ -111,7 +111,11 @@ class TrainResource(MethodView):
     @response_error(FailedDependency("Failed to infer entities"))
     def get(self):
         try:
-            text = list(Text.objects.aggregate({"$sample": {'size': 1}}))[0]
+            # FIXME: This should sample only from the texts that the user hasn't trained yet.
+            texts = list(Text.objects.aggregate({"$sample": {'size': 1}}))
+            if not texts:
+                pass  # User has trained all available texts
+            text = texts[0]
             snapshot = Snapshot.current()
             spacy_document = nlp_task.apply_async([text['value']], queue=str(snapshot)).wait()
             return {
