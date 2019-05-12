@@ -1,18 +1,19 @@
+from werkzeug.exceptions import BadRequest, FailedDependency, NotFound
+
 from flask.views import MethodView
 from flask_jwt_extended import get_jwt_identity
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
+from marshmallow import Schema, fields
 from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
-from marshmallow import fields, Schema
-from werkzeug.exceptions import BadRequest, NotFound, FailedDependency
-
 from nerd.apis import response_error
 from nerd.core.document.corpus import Text
-from nerd.core.document.snapshot import Snapshot, Type, SnapshotSchema
+from nerd.core.document.snapshot import Snapshot, SnapshotSchema, Type
 from nerd.core.document.spacy import SpacyDocumentSchema
-from nerd.tasks.corpus import nlp as nlp_task
 from nerd.core.document.user import Role, User
+from nerd.tasks.corpus import nlp as nlp_task
+
 from .roles import jwt_and_role_required
 
 blp = Blueprint("corpus", "corpus", description="Corpus operations")
@@ -79,15 +80,22 @@ class CorpusTextResource(MethodView):
 
 
 @blp.route("/<string:text_id>/trainings/me")
-@blp.route("/<string:text_id>/trainings/<int:user_id>")
 class TrainingView(MethodView):
-    #     @jwt_and_role_required(Role.ADMIN)
-    #     @blp.arguments(...)
-    #     @blp.doc(operationId="getTraining")
-    #     @blp.response(..., code=...)
-    #     def get(self, text_id, user_id=None):
-    #         ...
-    #
+    ## TODO: Finish
+    # @jwt_and_role_required(Role.USER)
+    # @blp.doc(operationId="getTraining")
+    # @blp.response(TextSchema(many=True), code=200)
+    # @blp.paginate()
+    # def get(self, text_id, pagination_parameters: PaginationParameters):
+    #     user = User.objects.get(email=get_jwt_identity())
+    #     user_id = str(user.pk)
+    #     pagination_parameters.item_count = Text.objects.count()
+    #     skip_elements = (pagination_parameters.page - 1) * \
+    #         pagination_parameters.page_size
+    #     return (Text.objects.skip(skip_elements)
+    #             .limit(pagination_parameters.page_size)
+    #             .filter(user_id=user_id))
+
     @jwt_and_role_required(Role.USER)
     @blp.arguments(SpacyDocumentSchema)
     @blp.doc(operationId="upsertTraining")
@@ -101,8 +109,41 @@ class TrainingView(MethodView):
         text.save()
 
 
+# @blp.route("/<string:text_id>/trainings/<int:user_id>")
+# class TrainingAdminView(MethodView):
+#     ## TODO: Finish
+#     @jwt_and_role_required(Role.ADMIN)
+#     @blp.paginate()
+#     @blp.doc(operationId="getTraining")
+#     @blp.response(TextSchema(many=True), code=200)
+#     def get(self, text_id, user_id, pagination_parameters: PaginationParameters):
+#         if user_id is None:
+#             user = User.objects.get(email=get_jwt_identity())
+#             user_id = str(user.pk)
+#         pagination_parameters.item_count = Training.objects.count()
+#         skip_elements = (pagination_parameters.page - 1) * \
+#             pagination_parameters.page_size
+#         return (Training.objects.skip(skip_elements)
+#                 .limit(pagination_parameters.page_size)
+#                 .filter(user_id=user_id))
+
+#     ## TODO: Finish
+#     @jwt_and_role_required(Role.ADMIN)
+#     @blp.arguments(SpacyDocumentSchema)
+#     @blp.doc(operationId="upsertTraining")
+#     @blp.response(code=200)
+#     def put(self, payload, text_id, user_id=None):
+#         if user_id is None:
+#             user = User.objects.get(email=get_jwt_identity())
+#             user_id = str(user.pk)
+#         text = Text.objects.get(id=text_id)
+#         text.trainings[user_id] = payload
+#         text.save()
+
+
 @blp.route("/train")
 class TrainResource(MethodView):
+    """Returns a random text"""
 
     @jwt_and_role_required(Role.USER)
     @blp.doc(operationId="train")
@@ -117,7 +158,8 @@ class TrainResource(MethodView):
                 pass  # User has trained all available texts
             text = texts[0]
             snapshot = Snapshot.current()
-            spacy_document = nlp_task.apply_async([text['value']], queue=str(snapshot)).wait()
+            spacy_document = nlp_task.apply_async(
+                [text['value']], queue=str(snapshot)).wait()
             return {
                 'text_id': str(text['_id']),
                 'snapshot': snapshot,
@@ -137,7 +179,8 @@ class IndexResource(MethodView):
     def get(self, pagination_parameters: PaginationParameters):
         results = Text.objects
         pagination_parameters.item_count = results.count()
-        skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
+        skip_elements = (pagination_parameters.page - 1) * \
+            pagination_parameters.page_size
         return results.skip(skip_elements).limit(pagination_parameters.page_size)
 
     @jwt_and_role_required(Role.ADMIN)
@@ -147,5 +190,5 @@ class IndexResource(MethodView):
     def post(self, payload: ValueOnlyTextSchema):
         # TODO: We should avoid adding equal texts
         Text(
-           value=payload.value,
+            value=payload.value,
         ).save()
