@@ -26,12 +26,6 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 export interface CorpusSnapshot {
     /**
      * 
-     * @type {number}
-     * @memberof CorpusSnapshot
-     */
-    semaphore?: number;
-    /**
-     * 
      * @type {string}
      * @memberof CorpusSnapshot
      */
@@ -54,6 +48,12 @@ export interface CorpusSnapshot {
      * @memberof CorpusSnapshot
      */
     id: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CorpusSnapshot
+     */
+    semaphore?: number;
 }
 
 /**
@@ -81,7 +81,7 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    email?: string;
+    plain_password?: string;
     /**
      * 
      * @type {string}
@@ -99,7 +99,7 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    plain_password?: string;
+    email: string;
 }
 
 /**
@@ -124,18 +124,6 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
-     * @type {number}
-     * @memberof Snapshot
-     */
-    id: number;
-    /**
-     * 
-     * @type {{ [key: string]: Type; }}
-     * @memberof Snapshot
-     */
-    types?: { [key: string]: Type; };
-    /**
-     * 
      * @type {Date}
      * @memberof Snapshot
      */
@@ -146,6 +134,18 @@ export interface Snapshot {
      * @memberof Snapshot
      */
     trained_at?: Date;
+    /**
+     * 
+     * @type {{ [key: string]: Type; }}
+     * @memberof Snapshot
+     */
+    types?: { [key: string]: Type; };
+    /**
+     * 
+     * @type {number}
+     * @memberof Snapshot
+     */
+    id: number;
 }
 
 /**
@@ -162,6 +162,12 @@ export interface SpacyDocument {
     tokens?: Array<SpacyToken>;
     /**
      * 
+     * @type {Array<SpacySentence>}
+     * @memberof SpacyDocument
+     */
+    sents?: Array<SpacySentence>;
+    /**
+     * 
      * @type {string}
      * @memberof SpacyDocument
      */
@@ -172,12 +178,6 @@ export interface SpacyDocument {
      * @memberof SpacyDocument
      */
     _created_at?: Date;
-    /**
-     * 
-     * @type {Array<SpacySentence>}
-     * @memberof SpacyDocument
-     */
-    sents?: Array<SpacySentence>;
     /**
      * 
      * @type {Array<SpacyEntity>}
@@ -194,16 +194,16 @@ export interface SpacyDocument {
 export interface SpacyEntity {
     /**
      * 
-     * @type {number}
-     * @memberof SpacyEntity
-     */
-    end: number;
-    /**
-     * 
      * @type {string}
      * @memberof SpacyEntity
      */
     label: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity
+     */
+    end: number;
     /**
      * 
      * @type {number}
@@ -240,22 +240,34 @@ export interface SpacySentence {
 export interface SpacyToken {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    pos?: string;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyToken
      */
     end: number;
     /**
      * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
+    start: number;
+    /**
+     * 
      * @type {string}
      * @memberof SpacyToken
      */
     tag?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
+    id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    pos?: string;
     /**
      * 
      * @type {string}
@@ -268,18 +280,6 @@ export interface SpacyToken {
      * @memberof SpacyToken
      */
     head?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    id: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    start: number;
 }
 
 /**
@@ -293,18 +293,6 @@ export interface Text {
      * @type {string}
      * @memberof Text
      */
-    id?: string;
-    /**
-     * 
-     * @type {{ [key: string]: SpacyDocument; }}
-     * @memberof Text
-     */
-    trainings?: { [key: string]: SpacyDocument; };
-    /**
-     * 
-     * @type {string}
-     * @memberof Text
-     */
     value: string;
     /**
      * 
@@ -312,6 +300,18 @@ export interface Text {
      * @memberof Text
      */
     created_at?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof Text
+     */
+    id?: string;
+    /**
+     * 
+     * @type {{ [key: string]: SpacyDocument; }}
+     * @memberof Text
+     */
+    trainings?: { [key: string]: SpacyDocument; };
 }
 
 /**
@@ -348,6 +348,12 @@ export interface Token {
 export interface TrainText {
     /**
      * 
+     * @type {SpacyDocument}
+     * @memberof TrainText
+     */
+    spacy_document: SpacyDocument;
+    /**
+     * 
      * @type {string}
      * @memberof TrainText
      */
@@ -358,12 +364,6 @@ export interface TrainText {
      * @memberof TrainText
      */
     snapshot: Snapshot;
-    /**
-     * 
-     * @type {SpacyDocument}
-     * @memberof TrainText
-     */
-    spacy_document: SpacyDocument;
 }
 
 /**
@@ -377,13 +377,13 @@ export interface Type {
      * @type {string}
      * @memberof Type
      */
-    color: string;
+    label: string;
     /**
      * 
      * @type {string}
      * @memberof Type
      */
-    label: string;
+    color: string;
 }
 
 /**
@@ -403,12 +403,6 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    email?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
     name: string;
     /**
      * 
@@ -416,6 +410,12 @@ export interface User {
      * @memberof User
      */
     id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    email: string;
 }
 
 /**
@@ -966,28 +966,28 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * 
-         * @param {string} text_id 
          * @param {number} user_id 
+         * @param {string} text_id 
          * @param {SpacyDocument} spacy_document 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        upsertTraining(text_id: string, user_id: number, spacy_document: SpacyDocument, options: any = {}): RequestArgs {
-            // verify required parameter 'text_id' is not null or undefined
-            if (text_id === null || text_id === undefined) {
-                throw new RequiredError('text_id','Required parameter text_id was null or undefined when calling upsertTraining.');
-            }
+        upsertTraining(user_id: number, text_id: string, spacy_document: SpacyDocument, options: any = {}): RequestArgs {
             // verify required parameter 'user_id' is not null or undefined
             if (user_id === null || user_id === undefined) {
                 throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling upsertTraining.');
+            }
+            // verify required parameter 'text_id' is not null or undefined
+            if (text_id === null || text_id === undefined) {
+                throw new RequiredError('text_id','Required parameter text_id was null or undefined when calling upsertTraining.');
             }
             // verify required parameter 'spacy_document' is not null or undefined
             if (spacy_document === null || spacy_document === undefined) {
                 throw new RequiredError('spacy_document','Required parameter spacy_document was null or undefined when calling upsertTraining.');
             }
             const localVarPath = `/api/corpus/{text_id}/trainings/{user_id}`
-                .replace(`{${"text_id"}}`, encodeURIComponent(String(text_id)))
-                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)))
+                .replace(`{${"text_id"}}`, encodeURIComponent(String(text_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             let baseOptions;
             if (configuration) {
@@ -1148,14 +1148,14 @@ export const CorpusApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} text_id 
          * @param {number} user_id 
+         * @param {string} text_id 
          * @param {SpacyDocument} spacy_document 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        upsertTraining(text_id: string, user_id: number, spacy_document: SpacyDocument, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
-            const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).upsertTraining(text_id, user_id, spacy_document, options);
+        upsertTraining(user_id: number, text_id: string, spacy_document: SpacyDocument, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).upsertTraining(user_id, text_id, spacy_document, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1231,14 +1231,14 @@ export const CorpusApiFactory = function (configuration?: Configuration, basePat
         },
         /**
          * 
-         * @param {string} text_id 
          * @param {number} user_id 
+         * @param {string} text_id 
          * @param {SpacyDocument} spacy_document 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        upsertTraining(text_id: string, user_id: number, spacy_document: SpacyDocument, options?: any) {
-            return CorpusApiFp(configuration).upsertTraining(text_id, user_id, spacy_document, options)(axios, basePath);
+        upsertTraining(user_id: number, text_id: string, spacy_document: SpacyDocument, options?: any) {
+            return CorpusApiFp(configuration).upsertTraining(user_id, text_id, spacy_document, options)(axios, basePath);
         },
         /**
          * 
@@ -1317,15 +1317,15 @@ export class CorpusApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} text_id 
      * @param {number} user_id 
+     * @param {string} text_id 
      * @param {SpacyDocument} spacy_document 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorpusApi
      */
-    public upsertTraining(text_id: string, user_id: number, spacy_document: SpacyDocument, options?: any) {
-        return CorpusApiFp(this.configuration).upsertTraining(text_id, user_id, spacy_document, options)(this.axios, this.basePath);
+    public upsertTraining(user_id: number, text_id: string, spacy_document: SpacyDocument, options?: any) {
+        return CorpusApiFp(this.configuration).upsertTraining(user_id, text_id, spacy_document, options)(this.axios, this.basePath);
     }
 
     /**
