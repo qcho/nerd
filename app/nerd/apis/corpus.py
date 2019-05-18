@@ -147,14 +147,19 @@ class TrainResource(MethodView):
     @jwt_and_role_required(Role.USER)
     @blp.doc(operationId="train")
     @blp.response(TrainTextSchema, code=200, description="Training entity")
+    @blp.response(code=204, description="No documents left to train")
     @response_error(NotFound("Corpus not found"))
     @response_error(FailedDependency("Failed to infer entities"))
     def get(self):
         try:
-            # FIXME: This should sample only from the texts that the user hasn't trained yet.
-            texts = list(Text.objects.aggregate({"$sample": {'size': 1}}))
+            user = User.objects.get(email=get_jwt_identity())
+            user_id = str(user.pk)
+            texts = list(
+                Text.objects.filter(__raw__={f'trainings.{user_id}': {'$exists': False}})
+                    .aggregate({"$sample": {'size': 1}})
+            )
             if not texts:
-                pass  # User has trained all available texts
+                return '', 204
             text = texts[0]
             snapshot = Snapshot.current()
             spacy_document = nlp_task.apply_async(
