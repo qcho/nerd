@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LinearProgress, Paper, Theme, Toolbar, Typography, AppBar, Button } from '@material-ui/core';
+import { Paper, Theme, Toolbar, Typography, AppBar, Button } from '@material-ui/core';
 import NavigationBar from '../NavigationBar';
 import { makeStyles } from '@material-ui/styles';
 import { useTranslation } from 'react-i18next';
@@ -58,6 +58,7 @@ const Train = () => {
   const [hasChanges, setHasChanges] = useState<boolean>(false);
   const [trainText, setTrainText] = useState<MaybeTrainText>(null);
   const [spacyDocument, setSpacyDocument] = useState<MaybeSpacyDocument>(null);
+  const [noMoreDocuments, setNoMoreDocuments] = useState<boolean>(false);
   const api = new CorpusApi(apiConfig());
   let unmounted = false;
 
@@ -69,6 +70,11 @@ const Train = () => {
     try {
       const trainingInfoResult = await api.train();
       if (unmounted) return;
+      if (trainingInfoResult.status == 204) {
+        setNoMoreDocuments(true);
+        return;
+      }
+      setNoMoreDocuments(false);
       setTrainText(trainingInfoResult.data);
       setSpacyDocument(trainingInfoResult.data.spacy_document);
     } catch (e) {
@@ -93,10 +99,6 @@ const Train = () => {
     setSpacyDocument({ ...trainText.spacy_document });
   };
 
-  const onSkip = () => {
-    loadNewDocument();
-  };
-
   const onSave = async () => {
     try {
       if (!(trainText && spacyDocument)) return;
@@ -115,42 +117,49 @@ const Train = () => {
   return (
     <div className={classes.container}>
       <NavigationBar loading={loading} />
-      {spacyDocument && trainText && (
-        <Paper className={classes.paper}>
-          <AppBar color="default" position="relative" className={classes.actionBar}>
-            <Toolbar>
-              <div className={classes.actions}>
-                <Button color="secondary" variant="contained" disabled={!hasChanges} onClick={onReset}>
-                  <Typography
-                    style={{ paddingLeft: 80, paddingRight: 80 }}
-                    color="inherit"
-                    variant="h6"
-                    id="tableTitle"
-                  >
-                    {t('RESET')}
-                  </Typography>
-                </Button>
-                <div style={{ width: '1em' }} />
-                <Button color="primary" variant="contained" onClick={hasChanges ? onSave : onSkip}>
-                  <Typography
-                    style={{ paddingLeft: 80, paddingRight: 80 }}
-                    color="inherit"
-                    variant="h6"
-                    id="tableTitle"
-                  >
-                    {t(hasChanges ? 'SAVE' : 'SKIP')}
-                  </Typography>
-                </Button>
-              </div>
-            </Toolbar>
-          </AppBar>
-          <TokenizedEditor
-            spacyDocument={spacyDocument}
-            entityTypes={trainText.snapshot.types || {}}
-            onUpdate={onDocumentUpdate}
-          />
-        </Paper>
-      )}
+      <>
+        {noMoreDocuments && (
+          <Paper className={classes.paper}>
+            <Typography>{t('No more documents to train!')}</Typography>
+          </Paper>
+        )}
+        {spacyDocument && trainText && (
+          <Paper className={classes.paper}>
+            <AppBar color="default" position="relative" className={classes.actionBar}>
+              <Toolbar>
+                <div className={classes.actions}>
+                  <Button color="secondary" variant="contained" disabled={!hasChanges} onClick={onReset}>
+                    <Typography
+                      style={{ paddingLeft: 80, paddingRight: 80 }}
+                      color="inherit"
+                      variant="h6"
+                      id="tableTitle"
+                    >
+                      {t('RESET')}
+                    </Typography>
+                  </Button>
+                  <div style={{ width: '1em' }} />
+                  <Button color="primary" variant="contained" onClick={onSave}>
+                    <Typography
+                      style={{ paddingLeft: 80, paddingRight: 80 }}
+                      color="inherit"
+                      variant="h6"
+                      id="tableTitle"
+                    >
+                      {t(hasChanges ? 'SAVE' : 'SKIP')}
+                    </Typography>
+                  </Button>
+                </div>
+              </Toolbar>
+            </AppBar>
+            <TokenizedEditor
+              spacyDocument={spacyDocument}
+              entityTypes={trainText.snapshot.types || {}}
+              onUpdate={onDocumentUpdate}
+            />
+          </Paper>
+        )}
+      </>
     </div>
   );
 };
