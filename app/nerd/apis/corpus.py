@@ -81,7 +81,6 @@ class CorpusTextResource(MethodView):
 
 @blp.route("/<string:text_id>/trainings/me")
 class TrainingView(MethodView):
-    ## TODO: Finish
     @jwt_and_role_required(Role.USER)
     @blp.doc(operationId="getTrainingsForMyself")
     @blp.response(SpacyDocumentSchema(many=True), code=200)
@@ -110,36 +109,35 @@ class TrainingView(MethodView):
         text.save()
 
 
-# @blp.route("/<string:text_id>/trainings/<int:user_id>")
-# class TrainingAdminView(MethodView):
-#     ## TODO: Finish
-#     @jwt_and_role_required(Role.ADMIN)
-#     @blp.paginate()
-#     @blp.doc(operationId="getTraining")
-#     @blp.response(TextSchema(many=True), code=200)
-#     def get(self, text_id, user_id, pagination_parameters: PaginationParameters):
-#         if user_id is None:
-#             user = User.objects.get(email=get_jwt_identity())
-#             user_id = str(user.pk)
-#         pagination_parameters.item_count = Training.objects.count()
-#         skip_elements = (pagination_parameters.page - 1) * \
-#             pagination_parameters.page_size
-#         return (Training.objects.skip(skip_elements)
-#                 .limit(pagination_parameters.page_size)
-#                 .filter(user_id=user_id))
+@blp.route("/<string:text_id>/trainings/<string:user_id>")
+class TrainingAdminView(MethodView):
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.paginate()
+    @blp.doc(operationId="getTraining")
+    @blp.response(TextSchema(many=True), code=200)
+    def get(self, text_id, user_id, pagination_parameters: PaginationParameters):
+        if user_id is None:
+            user = User.objects.get(email=get_jwt_identity())
+            user_id = str(user.pk)
+        training_key = f'trainings.{user_id}'
+        trainings = Text.objects.filter(trainings__match={training_key: {"$exists": True}})
+        pagination_parameters.item_count = trainings.count()
+        skip_elements = (pagination_parameters.page - 1) * \
+            pagination_parameters.page_size
+        return (trainings.skip(skip_elements)
+                .limit(pagination_parameters.page_size))
 
-#     ## TODO: Finish
-#     @jwt_and_role_required(Role.ADMIN)
-#     @blp.arguments(SpacyDocumentSchema)
-#     @blp.doc(operationId="upsertTraining")
-#     @blp.response(code=200)
-#     def put(self, payload, text_id, user_id=None):
-#         if user_id is None:
-#             user = User.objects.get(email=get_jwt_identity())
-#             user_id = str(user.pk)
-#         text = Text.objects.get(id=text_id)
-#         text.trainings[user_id] = payload
-#         text.save()
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.arguments(SpacyDocumentSchema)
+    @blp.doc(operationId="upsertTraining")
+    @blp.response(code=200)
+    def put(self, payload, text_id, user_id=None):
+        if user_id is None:
+            user = User.objects.get(email=get_jwt_identity())
+            user_id = str(user.pk)
+        text = Text.objects.get(id=text_id)
+        text.trainings[user_id] = payload
+        text.save()
 
 
 @blp.route("/train")
