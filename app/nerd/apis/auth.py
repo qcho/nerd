@@ -1,5 +1,3 @@
-from werkzeug.exceptions import Conflict, Unauthorized
-
 from flask.views import MethodView
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 get_jwt_identity, jwt_refresh_token_required)
@@ -7,6 +5,8 @@ from flask_rest_api import Blueprint
 from marshmallow import fields, post_load
 from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
+from werkzeug.exceptions import Conflict, Unauthorized
+
 from nerd.apis import BaseSchema, response_error
 from nerd.core.document.user import User
 
@@ -73,8 +73,8 @@ class TokenResource(MethodView):
     # TODO: Because SWAGGER-UI password-flow doesn't follow the oauth2 RFC it needs location='form' for it to work.
     #       Rewrite is being discussed in https://github.com/swagger-api/swagger-ui/issues/3227
     #       https://www.oauth.com/oauth2-servers/access-tokens/password-grant/
-    @blp.arguments(TokenSchema, location='form')
-    # @blp.arguments(TokenSchema, location='json')
+    # @blp.arguments(TokenSchema, location='form')
+    @blp.arguments(TokenSchema, location='json')
     @response_error(Unauthorized('Invalid credentials'))
     @blp.response(UserCredentialsSchema, code=200)
     @blp.doc(operationId="createAccessToken")

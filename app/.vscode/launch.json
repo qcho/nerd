@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Flask",
+            "name": "Flask",
             "type": "python",
             "request": "launch",
             "module": "flask",
@@ -21,5 +21,58 @@
             ],
             "jinja": true
         },
+        // celery worker -A nerd:celery -l info -E --pool solo -n cli -Q nerd,vCURRENT
+        {
+            "name": "Worker vCURRENT",
+            "type": "python",
+            "request": "launch",
+            "module": "celery",
+            "console": "externalTerminal",
+            "args": [
+                "worker",
+                "-A",
+                "nerd:celery",
+                "-l",
+                "info",
+                "-E",
+                "--pool",
+                "solo",
+                "-n",
+                "cli",
+                "-Q",
+                "nerd,vCURRENT"
+            ]
+        },
+        {
+            "name": "Worker v1",
+            "type": "python",
+            "request": "launch",
+            "module": "celery",
+            "console": "externalTerminal",
+            "args": [
+                "worker",
+                "-A",
+                "nerd:celery",
+                "-l",
+                "info",
+                "-E",
+                "--pool",
+                "solo",
+                "-n",
+                "cli",
+                "-Q",
+                "nerd,v1"
+            ]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "API",
+            "configurations": [
+                "Flask",
+                "Worker vCURRENT",
+                "Worker v1"
+            ]
+        }
     ]
 }
