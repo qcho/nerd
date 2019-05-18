@@ -1,5 +1,3 @@
-from werkzeug.exceptions import BadRequest, FailedDependency, NotFound
-
 from flask.views import MethodView
 from flask_jwt_extended import get_jwt_identity
 from flask_rest_api import Blueprint
@@ -7,6 +5,8 @@ from flask_rest_api.pagination import PaginationParameters
 from marshmallow import Schema, fields
 from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
+from werkzeug.exceptions import BadRequest, FailedDependency, NotFound
+
 from nerd.apis import response_error
 from nerd.core.document.corpus import Text
 from nerd.core.document.snapshot import Snapshot, SnapshotSchema, Type
@@ -82,19 +82,20 @@ class CorpusTextResource(MethodView):
 @blp.route("/<string:text_id>/trainings/me")
 class TrainingView(MethodView):
     ## TODO: Finish
-    # @jwt_and_role_required(Role.USER)
-    # @blp.doc(operationId="getTraining")
-    # @blp.response(TextSchema(many=True), code=200)
-    # @blp.paginate()
-    # def get(self, text_id, pagination_parameters: PaginationParameters):
-    #     user = User.objects.get(email=get_jwt_identity())
-    #     user_id = str(user.pk)
-    #     pagination_parameters.item_count = Text.objects.count()
-    #     skip_elements = (pagination_parameters.page - 1) * \
-    #         pagination_parameters.page_size
-    #     return (Text.objects.skip(skip_elements)
-    #             .limit(pagination_parameters.page_size)
-    #             .filter(user_id=user_id))
+    @jwt_and_role_required(Role.USER)
+    @blp.doc(operationId="getTrainingsForMyself")
+    @blp.response(SpacyDocumentSchema(many=True), code=200)
+    @blp.paginate()
+    def get(self, text_id, pagination_parameters: PaginationParameters):
+        user = User.objects.get(email=get_jwt_identity())
+        user_id = str(user.pk)
+        training_key = f'trainings.{user_id}'
+        trainings = Text.objects.filter(trainings__match={training_key: {"$exists": True}})
+        pagination_parameters.item_count = trainings.count()
+        skip_elements = (pagination_parameters.page - 1) * \
+            pagination_parameters.page_size
+        return (trainings.skip(skip_elements)
+                .limit(pagination_parameters.page_size))
 
     @jwt_and_role_required(Role.USER)
     @blp.arguments(SpacyDocumentSchema)

@@ -3,3 +3,4 @@
 .DS_Store
 models/
 .scannerwork/
+.venv/

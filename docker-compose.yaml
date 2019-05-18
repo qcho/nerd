@@ -28,7 +28,7 @@ services:
     volumes:
       - ./app:/app
     ports:
-      - 80:5000
+      - 5000:5000
     restart: on-failure
     init: true
     env_file: .env
