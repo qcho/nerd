@@ -145,9 +145,10 @@ class TrainResource(MethodView):
     """Returns a random text"""
 
     @jwt_and_role_required(Role.USER)
-    @blp.doc(operationId="train")
+    @blp.doc(operationId="train", responses={
+        '204': {'description': "No documents left to train"}
+    })
     @blp.response(TrainTextSchema, code=200, description="Training entity")
-    @blp.response(code=204, description="No documents left to train")
     @response_error(NotFound("Corpus not found"))
     @response_error(FailedDependency("Failed to infer entities"))
     def get(self):
