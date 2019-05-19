@@ -15,7 +15,7 @@ interface Props {
 const hasPreviousEntities = (token: SpacyToken, document: SpacyDocument) => {
   if (!document.ents) return;
   for (const ent of document.ents) {
-    if (ent.end < token.start) return true;
+    if (ent.end <= token.start) return true;
   }
   return false;
 };
@@ -23,7 +23,7 @@ const hasPreviousEntities = (token: SpacyToken, document: SpacyDocument) => {
 const hasNextEntities = (token: SpacyToken, document: SpacyDocument) => {
   if (!document.ents) return;
   for (const ent of document.ents) {
-    if (ent.start > token.end) return true;
+    if (ent.start >= token.end) return true;
   }
   return false;
 };
@@ -49,13 +49,13 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
 
   const onJoinLeft = () => {
     if (!currentToken || !currentToken.entity || !spacyDocument.ents) return;
-    const start = currentToken.token.start;
-    const end = currentToken.token.end;
-    var entityIndex = 0;
+    const { start, end } = currentToken.token;
+    spacyDocument.ents = spacyDocument.ents.filter(entity => entity.start != start && entity.end != end);
+    var entityIndex = spacyDocument.ents.findIndex(entity => entity.start < start);
     var previousEntity: SpacyEntity = spacyDocument.ents[entityIndex];
     for (var i = 0; i < spacyDocument.ents.length; ++i) {
       const entity = spacyDocument.ents[i];
-      if (entity.end > previousEntity.end && entity.end < start) {
+      if (entity.end > previousEntity.end && entity.end <= start) {
         previousEntity = entity;
         entityIndex = i;
       }
@@ -69,13 +69,13 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
   };
   const onJoinRight = () => {
     if (!currentToken || !currentToken.entity || !spacyDocument.ents) return;
-    const start = currentToken.token.start;
-    const end = currentToken.token.end;
-    var entityIndex = 0;
+    const { start, end } = currentToken.token;
+    spacyDocument.ents = spacyDocument.ents.filter(entity => entity.start != start && entity.end != end);
+    var entityIndex = spacyDocument.ents.findIndex(entity => entity.start > start);
     var nextEntity: SpacyEntity = spacyDocument.ents[entityIndex];
     for (var i = 0; i < spacyDocument.ents.length; ++i) {
       const entity = spacyDocument.ents[i];
-      if (entity.start < nextEntity.start && entity.start > end) {
+      if (entity.start < nextEntity.start && entity.start >= end) {
         nextEntity = entity;
         entityIndex = i;
       }

@@ -126,7 +126,11 @@ const PreviewLayout = ({ classes }: Props) => {
             <Divider style={{ marginTop: 10, marginBottom: 10 }} />
             <Grid container direction="row" spacing={24} justify="space-between">
               <Grid item xs={10}>
-                <TokenizedEditor spacyDocument={document} onUpdate={onDocumentUpdate} entityTypes={entityTypes} />
+                <TokenizedEditor
+                  spacyDocument={{ ...document }}
+                  onUpdate={onDocumentUpdate}
+                  entityTypes={entityTypes}
+                />
               </Grid>
               <div>
                 {loggedIn ? (

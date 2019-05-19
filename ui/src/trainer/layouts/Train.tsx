@@ -7,6 +7,7 @@ import { CorpusApi, SpacyDocument } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
 import { MaybeTrainText, MaybeSpacyDocument } from '../types/optionals';
 import TokenizedEditor from '../widgets/TokenizedEditor';
+import { clone } from '../helpers/utils';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -76,7 +77,7 @@ const Train = () => {
       }
       setNoMoreDocuments(false);
       setTrainText(trainingInfoResult.data);
-      setSpacyDocument(trainingInfoResult.data.spacy_document);
+      setSpacyDocument(clone(trainingInfoResult.data.spacy_document));
     } catch (e) {
       if (unmounted) return;
       console.log('Error getting training info', e);
@@ -90,13 +91,13 @@ const Train = () => {
 
   const onDocumentUpdate = async (trainedDocument: SpacyDocument) => {
     setHasChanges(true);
-    setSpacyDocument({ ...spacyDocument, ...trainedDocument });
+    setSpacyDocument({ ...clone(spacyDocument), ...trainedDocument });
   };
 
   const onReset = () => {
     if (!trainText) return;
     setHasChanges(false);
-    setSpacyDocument({ ...trainText.spacy_document });
+    setSpacyDocument(clone(trainText.spacy_document));
   };
 
   const onSave = async () => {
@@ -153,7 +154,7 @@ const Train = () => {
               </Toolbar>
             </AppBar>
             <TokenizedEditor
-              spacyDocument={spacyDocument}
+              spacyDocument={{ ...spacyDocument }}
               entityTypes={trainText.snapshot.types || {}}
               onUpdate={onDocumentUpdate}
             />
