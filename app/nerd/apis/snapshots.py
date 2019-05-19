@@ -4,9 +4,11 @@ from flask.views import MethodView
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
+
 from nerd.apis import jwt_and_role_required
 from nerd.core.document.snapshot import CURRENT_ID, Snapshot
 from nerd.core.document.user import Role
+from nerd.tasks.corpus import reload as reload_task
 from nerd.tasks.corpus import train as train_task
 
 blp = Blueprint("snapshots", "snapshots",
@@ -60,6 +62,7 @@ class SnapshotCurrentResource(MethodView):
         current_snapshot.types = payload.types
         current_snapshot.created_at = datetime.now()
         current_snapshot.save()
+        train_task.apply_async([current_snapshot.id])
         return current_snapshot
 
 
@@ -86,4 +89,14 @@ class ForceTrainingResource(MethodView):
     def post(self):
         snapshot = Snapshot.current()
         train_task.apply_async([CURRENT_ID], queue='vCURRENT')
+        return "", 204
+
+@blp.route("/force-reload")
+class ForceReloadResource(MethodView):
+
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.response(None)
+    @blp.doc(operationId="forceReload")
+    def post(self):
+        reload_task.apply_async([CURRENT_ID], queue='broadcast_tasks')
         return "", 204

@@ -52,6 +52,7 @@ def train(snapshot_id: int = 0):
     train.model: Model
     train.model.train()
     # TODO: Emit a reload event
+    reload.apply_async([], queue='broadcast_tasks')
     return snapshot.id
 
 
@@ -64,11 +65,12 @@ def un_train():
     base=CorpusTask,
     autoretry_for=(IsTrainingError,), retry_backoff=True
 )
-def reload(snapshot: Snapshot):
+def reload(snapshot_id: int = 0):
+    snapshot = Snapshot.objects.get(id=snapshot_id)
     reload.model = None
     gc.collect()
     reload.model.warm_up()
-    return snapshot
+    return snapshot.id
 
 
 @celery.task(base=CorpusTask)
