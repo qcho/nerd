@@ -88,8 +88,7 @@ class TrainingView(MethodView):
     def get(self, text_id, pagination_parameters: PaginationParameters):
         user = User.objects.get(email=get_jwt_identity())
         user_id = str(user.pk)
-        training_key = f'trainings.{user_id}'
-        trainings = Text.objects.filter(trainings__match={training_key: {"$exists": True}})
+        trainings = Text.objects.filter(id=text_id, trainings__match={f'trainings.{user_id}': {"$exists": True}})
         pagination_parameters.item_count = trainings.count()
         skip_elements = (pagination_parameters.page - 1) * \
             pagination_parameters.page_size
@@ -100,12 +99,10 @@ class TrainingView(MethodView):
     @blp.arguments(SpacyDocumentSchema)
     @blp.doc(operationId="upsertTraining")
     @blp.response(code=200)
-    def put(self, payload, text_id, user_id=None):
-        if user_id is None:
-            user = User.objects.get(email=get_jwt_identity())
-            user_id = str(user.pk)
+    def put(self, payload, text_id):
+        user = User.objects.get(email=get_jwt_identity())
         text = Text.objects.get(id=text_id)
-        text.trainings[user_id] = payload
+        text.trainings[str(user.pk)] = payload
         text.save()
 
 
@@ -116,11 +113,8 @@ class TrainingAdminView(MethodView):
     @blp.doc(operationId="getTraining")
     @blp.response(TextSchema(many=True), code=200)
     def get(self, text_id, user_id, pagination_parameters: PaginationParameters):
-        if user_id is None:
-            user = User.objects.get(email=get_jwt_identity())
-            user_id = str(user.pk)
         training_key = f'trainings.{user_id}'
-        trainings = Text.objects.filter(trainings__match={training_key: {"$exists": True}})
+        trainings = Text.objects.filter(id=text_id, trainings__match={training_key: {"$exists": True}})
         pagination_parameters.item_count = trainings.count()
         skip_elements = (pagination_parameters.page - 1) * \
             pagination_parameters.page_size
