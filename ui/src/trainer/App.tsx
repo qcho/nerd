@@ -11,6 +11,7 @@ import FourOhFour from './layouts/FourOhFour';
 import CorpusManagement from './layouts/CorpusManagement';
 import useAuthentication from './hooks/useAuthentication';
 import UserManagement from './layouts/UserManagement';
+import { MyTrainings } from './layouts/MyTrainings';
 import Train from './layouts/Train';
 
 const theme = createMuiTheme({
@@ -27,6 +28,7 @@ const Navigation = () => {
       <Route exact path="/preview" component={Preview} />
       <Route exact path="/login" component={Login} />
       <Route exact path="/register" component={Register} />
+      <Route exact path="/trainings/me" component={MyTrainings} />
       {isAdmin && <Route exact path="/admin/corpus" component={CorpusManagement} />}
       {isAdmin && <Route exact path="/admin/users" component={UserManagement} />}
       {isUser && <Route exact path="/train" component={Train} />}

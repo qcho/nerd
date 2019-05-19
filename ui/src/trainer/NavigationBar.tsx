@@ -31,12 +31,26 @@ interface NavigationBarProps {
   loading?: boolean;
 }
 
+const Separator = () => {
+  return (
+    <span
+      style={{
+        borderRight: '1px solid rgba(255, 255, 255, 0.5)',
+        paddingLeft: 1,
+        marginLeft: '1em',
+        marginRight: '1em',
+        height: '2em',
+      }}
+    />
+  );
+};
+
 const NavigationBar = ({ loading }: NavigationBarProps) => {
   const { location } = useRouter();
   const classes = useStyles();
   const title = useRouteTitle(location);
   const [t] = useTranslation();
-  const { loggedIn, logout, isAdmin } = useAuthentication();
+  const { loggedIn, logout, isAdmin, isUser } = useAuthentication();
 
   return (
     <>
@@ -50,6 +64,14 @@ const NavigationBar = ({ loading }: NavigationBarProps) => {
           <Typography variant="h6" color="inherit" className={classes.grow}>
             {title}
           </Typography>
+          {isUser && (
+            <>
+              <Button color="inherit" component={link('/trainings/me')}>
+                {t('My trainings')}
+              </Button>
+              <Separator />
+            </>
+          )}
           {isAdmin && (
             <>
               <Button color="inherit" component={link('/admin/users')}>
@@ -58,15 +80,7 @@ const NavigationBar = ({ loading }: NavigationBarProps) => {
               <Button color="inherit" component={link('/admin/corpus')}>
                 {t('Corpus')}
               </Button>
-              <span
-                style={{
-                  borderRight: '1px solid rgba(255, 255, 255, 0.5)',
-                  paddingLeft: 1,
-                  marginLeft: '1em',
-                  marginRight: '1em',
-                  height: '2em',
-                }}
-              />
+              <Separator />
             </>
           )}
           {loggedIn ? (
