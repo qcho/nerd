@@ -67,7 +67,7 @@ const UserManagement = () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       unmounted = true;
     };
-  });
+  }, []);
 
   function handleChangePage(event: any, page: number) {
     setPage(page + 1);
