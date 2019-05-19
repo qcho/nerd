@@ -73,6 +73,8 @@ const Train = () => {
       if (unmounted) return;
       if (trainingInfoResult.status == 204) {
         setNoMoreDocuments(true);
+        setTrainText(null);
+        setSpacyDocument(null);
         return;
       }
       setNoMoreDocuments(false);
