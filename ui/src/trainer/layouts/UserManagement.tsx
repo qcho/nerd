@@ -56,6 +56,7 @@ const UserManagement = () => {
         return '';
       });
     } finally {
+      if (unmounted) return;
       setLoading(false);
     }
   }, [page, pageSize, roleApi, searchText, setFromHeaders, unmounted, userApi]);
