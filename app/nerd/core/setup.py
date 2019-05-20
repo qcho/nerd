@@ -1,3 +1,4 @@
+from nerd.core.document.corpus import Text, TrainedText
 from nerd.core.document.snapshot import Snapshot, Type, CURRENT_ID
 from nerd.core.document.user import User
 from nerd.core.model import Model
@@ -14,6 +15,10 @@ class NERdSetup:
             plain_password='1',
             roles=['user', 'admin']
         ).save()
+
+        if drop:
+            Text.drop_collection()
+            TrainedText.drop_collection()
 
         if drop:
             Snapshot.drop_collection()
