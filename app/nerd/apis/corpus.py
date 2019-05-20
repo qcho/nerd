@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask.views import MethodView
 from flask_jwt_extended import get_jwt_identity
 from flask_rest_api import Blueprint
@@ -8,7 +9,7 @@ from mongoengine import DoesNotExist
 from werkzeug.exceptions import BadRequest, FailedDependency, NotFound
 
 from nerd.apis import response_error
-from nerd.core.document.corpus import Text
+from nerd.core.document.corpus import Text, TrainedText
 from nerd.core.document.snapshot import Snapshot, SnapshotSchema, Type
 from nerd.core.document.spacy import SpacyDocumentSchema
 from nerd.core.document.user import Role, User
@@ -26,13 +27,19 @@ class TextSchema(ModelSchema):
         model_fields_kwargs = {
             'trainings': {
                 'metadata': {
-                    'type': 'object',
+                    'type': 'list',
                     'additionalProperties': {
-                        '$ref': '#/components/schemas/SpacyDocument'
+                        '$ref': '#/components/schemas/TrainedText'
                     }
                 }
             }
         }
+
+
+class TrainedTextSchema(ModelSchema):
+    class Meta:
+        strict = True
+        model = TrainedText
 
 
 class TypeSchema(ModelSchema):
@@ -88,10 +95,10 @@ class TrainingView(MethodView):
     def get(self, text_id, pagination_parameters: PaginationParameters):
         user = User.objects.get(email=get_jwt_identity())
         user_id = str(user.pk)
-        trainings = Text.objects.filter(id=text_id, trainings__match={f'trainings.{user_id}': {"$exists": True}})
+        trainings = TrainedText.objects.filter(text_id=text_id, user_id=user_id)
         pagination_parameters.item_count = trainings.count()
         skip_elements = (pagination_parameters.page - 1) * \
-            pagination_parameters.page_size
+                        pagination_parameters.page_size
         return (trainings.skip(skip_elements)
                 .limit(pagination_parameters.page_size))
 
@@ -102,8 +109,17 @@ class TrainingView(MethodView):
     def put(self, payload, text_id):
         user = User.objects.get(email=get_jwt_identity())
         text = Text.objects.get(id=text_id)
-        text.trainings[str(user.pk)] = payload
-        text.save()
+        trained_text = TrainedText.objects(user_id=user.pk, text_id=text.pk).update_one(
+            upsert=True,
+            full_result=True,
+            user_id=user.pk,
+            text_id=text.pk,
+            set__document=payload,
+            set__created_at=datetime.now())
+        trained_text_pk = trained_text.upserted_id
+        user.update(add_to_set__trainings=trained_text_pk)
+        text.update(add_to_set__trainings=trained_text_pk)
+        return
 
 
 @blp.route("/<string:text_id>/trainings/<string:user_id>")
@@ -113,11 +129,10 @@ class TrainingAdminView(MethodView):
     @blp.doc(operationId="getTraining")
     @blp.response(TextSchema(many=True), code=200)
     def get(self, text_id, user_id, pagination_parameters: PaginationParameters):
-        training_key = f'trainings.{user_id}'
-        trainings = Text.objects.filter(id=text_id, trainings__match={training_key: {"$exists": True}})
+        trainings = TrainedText.objects.filter(text_id=text_id, user_id=user_id)
         pagination_parameters.item_count = trainings.count()
         skip_elements = (pagination_parameters.page - 1) * \
-            pagination_parameters.page_size
+                        pagination_parameters.page_size
         return (trainings.skip(skip_elements)
                 .limit(pagination_parameters.page_size))
 
@@ -148,10 +163,44 @@ class TrainResource(MethodView):
     def get(self):
         try:
             user = User.objects.get(email=get_jwt_identity())
-            user_id = str(user.pk)
             texts = list(
-                Text.objects.filter(__raw__={f'trainings.{user_id}': {'$exists': False}})
-                    .aggregate({"$sample": {'size': 1}})
+                Text.objects.aggregate(*[
+                    {
+                        '$lookup': {
+                            'from': TrainedText._get_collection_name(),
+                            'localField': '_id',
+                            'foreignField': 'text_id',
+                            'as': 'trained_texts'
+                        }
+                    }, {
+                        '$project': {
+                            '_id': 1,
+                            'value': 1,
+                            'trained_texts': {
+                                '$filter': {
+                                    'input': '$trained_texts',
+                                    'cond': {
+                                        'user_id': {
+                                            '$eq': [
+                                                'user_id', user.pk
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }, {
+                        '$match': {
+                            'trained_texts.0': {
+                                '$exists': False
+                            }
+                        }
+                    }, {
+                        '$sample': {
+                            'size': 1
+                        }
+                    }
+                ])
             )
             if not texts:
                 return '', 204
@@ -179,7 +228,7 @@ class IndexResource(MethodView):
         results = Text.objects
         pagination_parameters.item_count = results.count()
         skip_elements = (pagination_parameters.page - 1) * \
-            pagination_parameters.page_size
+                        pagination_parameters.page_size
         return results.skip(skip_elements).limit(pagination_parameters.page_size)
 
     @jwt_and_role_required(Role.ADMIN)

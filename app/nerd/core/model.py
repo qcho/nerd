@@ -9,7 +9,7 @@ from spacy.language import Language
 from spacy.tokens import Doc
 from spacy.util import minibatch, compounding
 
-from nerd.core.document.corpus import Text
+from nerd.core.document.corpus import Text, TrainedText
 from nerd.core.document.spacy import SpacyDocument
 from nerd.core.util import log_perf, get_logger
 from nerd.core.document.snapshot import Snapshot
@@ -50,10 +50,8 @@ class Model:
         pass
 
     def _fetch_training_data(self) -> Generator[SpacyDocument, None, None]:
-        for text in Text.objects.filter(trainings__match={"_created_at": {"$lte": self.snapshot.created_at}}):
-            for training in text.trainings:
-                # TODO: check if all trainings are lte snapshots creation time.
-                yield training
+        for trained_text in TrainedText.objects.filter(created_at__lte=self.snapshot.created_at):
+            yield trained_text.document
 
     def _train_snapshot_texts(self, n_iter: int = 30):
         training_data = list(self._fetch_training_data())

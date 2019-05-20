@@ -4,6 +4,8 @@ import mongoengine as me
 from mongoengine import signals
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from nerd.core.document.corpus import TrainedText
+
 
 class Role(Enum):
     ADMIN = 'admin'
@@ -16,6 +18,7 @@ class User(me.Document):
     password = me.StringField(required=True)
     roles = me.ListField(me.StringField(), required=True)
     plain_password = me.StringField(default=None)
+    trainings = me.ListField(me.LazyReferenceField(TrainedText))
 
     @classmethod
     def pre_save(cls, sender, document, **kwargs):
