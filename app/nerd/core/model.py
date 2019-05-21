@@ -51,7 +51,9 @@ class Model:
 
     def _fetch_training_data(self) -> Generator[SpacyDocument, None, None]:
         for trained_text in TrainedText.objects.filter(created_at__lte=self.snapshot.created_at):
-            yield trained_text.document
+            trained_text.document: SpacyDocument
+            # TODO: Should only yield for texts that have entities
+            yield trained_text.document.text, trained_text.document.ents
 
     def _train_snapshot_texts(self, n_iter: int = 30):
         training_data = list(self._fetch_training_data())
