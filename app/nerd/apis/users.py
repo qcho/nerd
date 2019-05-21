@@ -151,8 +151,8 @@ class UserView(MethodView):
         try:
             result = UserPayloadSchema().update(
                 User.objects.get(email=user_email),
-                json.loads(user_payload.to_json())  # TODO: update only accepts JSON objects and doesn't accept
-                #       Documents
+                # TODO: update only accepts JSON objects and doesn't accept Documents
+                json.loads(user_payload.to_json())
             )
             if result.errors:
                 raise UnprocessableEntity("There was an error processing the payload")
