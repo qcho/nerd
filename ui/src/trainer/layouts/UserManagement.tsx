@@ -81,6 +81,7 @@ const UserManagement = () => {
     { id: 'name', label: t('Name') },
     { id: 'email', label: t('Email') },
     { id: 'roles', label: t('Roles') },
+    { id: 'trainings', label: t('Trainings') },
   ];
 
   async function onDeleteClick() {
