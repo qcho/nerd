@@ -11,6 +11,8 @@ from mongoengine.queryset.visitor import Q
 from werkzeug.exceptions import NotFound, UnprocessableEntity
 
 from nerd.apis import jwt_and_role_required, response_error
+from nerd.apis.corpus import TrainedTextSchema
+from nerd.core.document.corpus import TrainedText
 from nerd.core.document.user import User, Role
 
 blp = Blueprint('users', 'users', description='User management')
@@ -52,6 +54,36 @@ class UserListView(MethodView):
         pagination_parameters.item_count = results.count()
         skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
         return results.skip(skip_elements).limit(pagination_parameters.page_size)
+
+
+def _get_user_trainings(user: User, pagination_params: PaginationParameters):
+    texts = TrainedText.objects.filter(user_id=user.pk)
+    pagination_params.item_count = texts.count()
+    skip_elements = (pagination_params.page - 1) * pagination_params.page_size
+    return texts.skip(skip_elements).limit(pagination_params.page_size)
+
+
+@blp.route('/me/trainings')
+class MyTrainings(MethodView):
+
+    @jwt_and_role_required(Role.USER)
+    @blp.paginate()
+    @blp.doc(operationId="myTrainings")
+    @blp.response(TrainedTextSchema(many=True), code=200)
+    def get(self, pagination_params: PaginationParameters):
+        user = User.objects.get(email=get_jwt_identity())
+        return _get_user_trainings(user, pagination_params)
+
+
+@blp.route('/<string:user_email>/trainings')
+class UserTrainings(MethodView):
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.paginate()
+    @blp.doc(operationId="userTrainings")
+    @blp.response(TrainedTextSchema(many=True), code=200)
+    def get(self, user_email, pagination_params: PaginationParameters):
+        user = User.objects.get(email=user_email)
+        return _get_user_trainings(user, pagination_params)
 
 
 @blp.route('/<string:user_email>')
