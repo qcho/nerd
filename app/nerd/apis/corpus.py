@@ -88,10 +88,8 @@ class TrainingView(MethodView):
         user_id = str(user.pk)
         trainings = TrainedText.objects.filter(text_id=text_id, user_id=user_id)
         pagination_parameters.item_count = trainings.count()
-        skip_elements = (pagination_parameters.page - 1) * \
-                        pagination_parameters.page_size
-        return (trainings.skip(skip_elements)
-                .limit(pagination_parameters.page_size))
+        skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
+        return trainings.skip(skip_elements).limit(pagination_parameters.page_size)
 
     @jwt_and_role_required(Role.USER)
     @blp.arguments(SpacyDocumentSchema)
@@ -122,10 +120,8 @@ class TrainingAdminView(MethodView):
     def get(self, text_id, user_id, pagination_parameters: PaginationParameters):
         trainings = TrainedText.objects.filter(text_id=text_id, user_id=user_id)
         pagination_parameters.item_count = trainings.count()
-        skip_elements = (pagination_parameters.page - 1) * \
-                        pagination_parameters.page_size
-        return (trainings.skip(skip_elements)
-                .limit(pagination_parameters.page_size))
+        skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
+        return trainings.skip(skip_elements).limit(pagination_parameters.page_size)
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.arguments(SpacyDocumentSchema)
