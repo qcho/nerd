@@ -76,6 +76,7 @@ class CorpusTextResource(MethodView):
             raise NotFound()
 
 
+# TODO: Seems that this route isn't necessary since we access own trainings from /users/me/trainings
 @blp.route("/<string:text_id>/trainings/me")
 class TrainingView(MethodView):
     @jwt_and_role_required(Role.USER)
