@@ -24,16 +24,6 @@ class TextSchema(ModelSchema):
     class Meta:
         strict = True
         model = Text
-        model_fields_kwargs = {
-            'trainings': {
-                'metadata': {
-                    'type': 'list',
-                    'additionalProperties': {
-                        '$ref': '#/components/schemas/TrainedText'
-                    }
-                }
-            }
-        }
 
 
 class TrainedTextSchema(ModelSchema):
