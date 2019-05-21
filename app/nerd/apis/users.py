@@ -1,6 +1,7 @@
 import json
 
 from flask.views import MethodView
+from flask_jwt_extended import get_jwt_identity
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
 from marshmallow import Schema
@@ -21,7 +22,9 @@ blp = Blueprint('users', 'users', description='User management')
 class UserSchema(ModelSchema):
     class Meta:
         model = User
-        exclude = ['password', 'plain_password']
+        exclude = ['password', 'plain_password', 'trainings']
+
+    total_trainings = fields.Integer()
 
 
 class UserPayloadSchema(ModelSchema):
@@ -53,7 +56,29 @@ class UserListView(MethodView):
             Q(email__icontains=query_filter['query']) | Q(name__icontains=query_filter['query']))
         pagination_parameters.item_count = results.count()
         skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
-        return results.skip(skip_elements).limit(pagination_parameters.page_size)
+        return results.aggregate(*[
+            {
+                '$skip': skip_elements
+            },
+            {
+                '$limit': pagination_parameters.page_size
+            },
+            {
+                '$project': {
+                    '_id': 1,
+                    'email': 1,
+                    'name': 1,
+                    'roles': 1,
+                    'total_trainings': {
+                        '$cond': {
+                            'if': {'$isArray': "$trainings"},
+                            'then': {'$size': "$trainings"},
+                            'else': 0
+                        }
+                    }
+                }
+            }
+        ])
 
 
 def _get_user_trainings(user: User, pagination_params: PaginationParameters):
