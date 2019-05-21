@@ -93,7 +93,7 @@ class TrainingView(MethodView):
 
     @jwt_and_role_required(Role.USER)
     @blp.arguments(SpacyDocumentSchema)
-    @blp.doc(operationId="upsertTraining")
+    @blp.doc(operationId="upsertMyTraining")
     @blp.response(code=200)
     def put(self, payload, text_id):
         user = User.objects.get(email=get_jwt_identity())
