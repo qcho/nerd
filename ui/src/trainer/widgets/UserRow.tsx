@@ -109,6 +109,7 @@ const UserRow = ({ user, availableRoles: roles, onClick, selected }: Props) => {
       <TableCell>{user.name}</TableCell>
       <TableCell>{user.email}</TableCell>
       <TableCell>{roles.roles !== undefined && <SelectRoles />}</TableCell>
+      <TableCell>{user.total_trainings || 0}</TableCell>
     </TableRow>
   );
 };
