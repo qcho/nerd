@@ -16,7 +16,7 @@ class TrainedText(me.Document):
         'indexes': [[('text_id', 1), ('user_id', 1)]],
         'cascade': True
     }
-    text_id = me.LazyReferenceField('Text')
-    user_id = me.LazyReferenceField('User')
+    text_id = me.LazyReferenceField('Text', required=True)
+    user_id = me.LazyReferenceField('User', required=True)
     created_at = me.DateTimeField(default=datetime.now(), required=True)
     document = me.EmbeddedDocumentField(SpacyDocument, required=True)
