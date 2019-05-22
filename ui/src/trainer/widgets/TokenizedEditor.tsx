@@ -7,8 +7,9 @@ import { TokenDialog } from './TokenDialog';
 import { TextNode } from './TextNode';
 
 interface Props {
+  readOnly?: boolean;
   spacyDocument: SpacyDocument;
-  onUpdate: (document: SpacyDocument) => void;
+  onUpdate?: (document: SpacyDocument) => void;
   entityTypes: { [key: string]: Type };
 }
 
@@ -28,12 +29,17 @@ const hasNextEntities = (token: SpacyToken, document: SpacyDocument) => {
   return false;
 };
 
-const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }: Props) => {
+const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, readOnly }: Props) => {
   const [error, setError] = useState<MaybeString>(null);
   const [currentToken, setCurrentToken] = useState<MaybeCurrentToken>(null);
   const currentTokenEl = useRef<HTMLSpanElement | null>(null);
 
+  if (!readOnly && !onUpdate) {
+    throw new Error('Widget needs an onUpdate callback in editor mode');
+  }
+
   const onTokenClick = (token: SpacyToken, entity: MaybeSpacyEntity = null) => {
+    if (!onUpdate) return;
     var entities = spacyDocument.ents || [];
     if (!entity) {
       entity = { label: 'MISC', end: token.end, start: token.start };
@@ -48,6 +54,7 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
   };
 
   const onJoinLeft = () => {
+    if (!onUpdate) return;
     if (!currentToken || !currentToken.entity || !spacyDocument.ents) return;
     const { start, end } = currentToken.token;
     spacyDocument.ents = spacyDocument.ents.filter(entity => entity.start != start && entity.end != end);
@@ -68,6 +75,7 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
     onUpdate(spacyDocument);
   };
   const onJoinRight = () => {
+    if (!onUpdate) return;
     if (!currentToken || !currentToken.entity || !spacyDocument.ents) return;
     const { start, end } = currentToken.token;
     spacyDocument.ents = spacyDocument.ents.filter(entity => entity.start != start && entity.end != end);
@@ -91,6 +99,7 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
     onUpdate(spacyDocument);
   };
   const onDelete = () => {
+    if (!onUpdate) return;
     if (!currentToken || !currentToken.entity || !spacyDocument.ents) return;
     const currentEntity = currentToken.entity;
     spacyDocument.ents = spacyDocument.ents.filter(entity => {
@@ -100,6 +109,7 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
     setCurrentToken(null);
   };
   const onTypeChange = (value: string) => {
+    if (!onUpdate) return;
     if (currentToken && currentToken.entity) {
       currentToken.entity.label = value;
     }
@@ -155,7 +165,7 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes }
           key={nodeKey}
           text={text}
           token={token}
-          onClick={onTokenClick}
+          onClick={!readOnly && onTokenClick}
         />
       );
     });
