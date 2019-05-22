@@ -91,9 +91,9 @@ const TableToolbar = ({
   onCreate,
 }: {
   numSelected: number;
-  onDelete: any;
-  title: string;
-  onSearch?: (text: string) => void;
+  onDelete?: (() => void) | false;
+  title?: string;
+  onSearch?: ((text: string) => void) | false;
   onCreate?: () => void;
 }) => {
   const classes = useStyles();
@@ -122,14 +122,16 @@ const TableToolbar = ({
             {numSelected} selected {/* TODO: Translate this */}
           </Typography>
         ) : (
-          <Typography variant="h6" id="tableTitle">
-            {title}
-          </Typography>
+          title && (
+            <Typography variant="h6" id="tableTitle">
+              {title}
+            </Typography>
+          )
         )}
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
-        {numSelected > 0 ? (
+        {onDelete && numSelected > 0 ? (
           <Tooltip title="Delete">
             <IconButton aria-label="Delete" onClick={onDelete}>
               <DeleteIcon />

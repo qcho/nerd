@@ -7,7 +7,7 @@ interface Header {
 }
 
 interface RichTableHeadProps {
-  onSelectAll: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSelectAll?: ((event: React.ChangeEvent<HTMLInputElement>) => void) | false;
   numSelected: number;
   rowCount: number;
   headers: Header[];
@@ -17,13 +17,15 @@ const RichTableHead = ({ onSelectAll, numSelected, rowCount, headers }: RichTabl
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={numSelected === rowCount}
-            onChange={onSelectAll}
-          />
-        </TableCell>
+        {onSelectAll && (
+          <TableCell padding="checkbox">
+            <Checkbox
+              indeterminate={numSelected > 0 && numSelected < rowCount}
+              checked={numSelected === rowCount}
+              onChange={onSelectAll}
+            />
+          </TableCell>
+        )}
         {headers.map(col => (
           <TableCell key={col.id} align="left">
             {col.label}
