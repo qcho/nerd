@@ -12,6 +12,7 @@ import CorpusManagement from './layouts/CorpusManagement';
 import useAuthentication from './hooks/useAuthentication';
 import UserManagement from './layouts/UserManagement';
 import { MyTrainings } from './layouts/MyTrainings';
+import { UserTrainings } from './layouts/UserTrainings';
 import Train from './layouts/Train';
 import { Routes } from './helpers/routeHelper';
 
@@ -32,6 +33,7 @@ const Navigation = () => {
       <Route exact path={Routes.myTrainings} component={MyTrainings} />
       {isAdmin && <Route exact path={Routes.corpusAdmin} component={CorpusManagement} />}
       {isAdmin && <Route exact path={Routes.userAdmin} component={UserManagement} />}
+      {isAdmin && <Route exact path={Routes.trainingsByUser.route} component={UserTrainings} />}
       {isUser && <Route exact path={Routes.train} component={Train} />}
       <Route component={FourOhFour} />
     </Switch>

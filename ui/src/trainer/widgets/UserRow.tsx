@@ -1,20 +1,11 @@
 import React, { useState } from 'react';
 import { User, RoleList, UsersApi } from '../apigen';
-import {
-  TableRow,
-  TableCell,
-  Select,
-  MenuItem,
-  Button,
-  Theme,
-  Chip,
-  OutlinedInput,
-  InputBase,
-  Checkbox,
-} from '@material-ui/core';
+import { TableRow, TableCell, Select, MenuItem, Theme, Chip, InputBase, Checkbox, Link } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
 import { apiConfig } from '../helpers/api-config';
+import { Link as RRDLink } from 'react-router-dom';
+import { Routes } from '../helpers/routeHelper';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -109,7 +100,11 @@ const UserRow = ({ user, availableRoles: roles, onClick, selected }: Props) => {
       <TableCell>{user.name}</TableCell>
       <TableCell>{user.email}</TableCell>
       <TableCell>{roles.roles !== undefined && <SelectRoles />}</TableCell>
-      <TableCell>{user.total_trainings || 0}</TableCell>
+      <TableCell>
+        <Link component={(props: any) => <RRDLink to={Routes.trainingsByUser.buildRoute(user)} {...props} />}>
+          {user.total_trainings || 0}
+        </Link>
+      </TableCell>
     </TableRow>
   );
 };
