@@ -28,11 +28,9 @@ const useStyles = makeStyles(
 interface Props {
   user: User;
   availableRoles: RoleList;
-  selected: boolean;
-  onClick: (user: User) => void;
 }
 
-const UserRow = ({ user, availableRoles: roles, onClick, selected }: Props) => {
+const UserRow = ({ user, availableRoles: roles }: Props) => {
   const [t] = useTranslation();
   const classes = useStyles();
   const [userRoles, setUserRoles] = useState<string[]>(user.roles || []);
@@ -93,10 +91,7 @@ const UserRow = ({ user, availableRoles: roles, onClick, selected }: Props) => {
   );
 
   return (
-    <TableRow hover role="checkbox" selected={selected} tabIndex={-1}>
-      <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={() => onClick(user)} />
-      </TableCell>
+    <>
       <TableCell>{user.name}</TableCell>
       <TableCell>{user.email}</TableCell>
       <TableCell>{roles.roles !== undefined && <SelectRoles />}</TableCell>
@@ -105,7 +100,7 @@ const UserRow = ({ user, availableRoles: roles, onClick, selected }: Props) => {
           {user.total_trainings || 0}
         </Link>
       </TableCell>
-    </TableRow>
+    </>
   );
 };
 
