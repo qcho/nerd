@@ -130,20 +130,20 @@ class MyTrainings(MethodView):
     @blp.paginate()
     @blp.doc(operationId="myTrainings")
     @blp.response(TrainedTextSchema(many=True), code=200)
-    def get(self, pagination_params: PaginationParameters):
+    def get(self, pagination_parameters: PaginationParameters):
         user = User.objects.get(email=get_jwt_identity())
-        return _get_user_trainings(user, pagination_params)
+        return _get_user_trainings(user, pagination_parameters)
 
 
 @blp.route('/<string:user_id>/trainings')
 class UserTrainings(MethodView):
     @jwt_and_role_required(Role.ADMIN)
-    @blp.paginate()
     @blp.doc(operationId="userTrainings")
     @blp.response(TrainedTextSchema(many=True), code=200)
-    def get(self, user_email, pagination_params: PaginationParameters):
-        user = User.objects.get(email=user_email)
-        return _get_user_trainings(user, pagination_params)
+    @blp.paginate()
+    def get(self, user_id, pagination_parameters: PaginationParameters):
+        user = User.objects.get(id=user_id)
+        return _get_user_trainings(user, pagination_parameters)
 
 
 @blp.route('/<string:user_id>')
