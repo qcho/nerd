@@ -13,6 +13,7 @@ import useAuthentication from './hooks/useAuthentication';
 import UserManagement from './layouts/UserManagement';
 import { MyTrainings } from './layouts/MyTrainings';
 import Train from './layouts/Train';
+import { Routes } from './helpers/routeHelper';
 
 const theme = createMuiTheme({
   typography: {
@@ -24,14 +25,14 @@ const Navigation = () => {
   const { isAdmin, isUser } = useAuthentication();
   return (
     <Switch>
-      <Route exact path="/" component={Home} />
-      <Route exact path="/preview" component={Preview} />
-      <Route exact path="/login" component={Login} />
-      <Route exact path="/register" component={Register} />
-      <Route exact path="/trainings/me" component={MyTrainings} />
-      {isAdmin && <Route exact path="/admin/corpus" component={CorpusManagement} />}
-      {isAdmin && <Route exact path="/admin/users" component={UserManagement} />}
-      {isUser && <Route exact path="/train" component={Train} />}
+      <Route exact path={Routes.home} component={Home} />
+      <Route exact path={Routes.preview} component={Preview} />
+      <Route exact path={Routes.login} component={Login} />
+      <Route exact path={Routes.register} component={Register} />
+      <Route exact path={Routes.myTrainings} component={MyTrainings} />
+      {isAdmin && <Route exact path={Routes.corpusAdmin} component={CorpusManagement} />}
+      {isAdmin && <Route exact path={Routes.userAdmin} component={UserManagement} />}
+      {isUser && <Route exact path={Routes.train} component={Train} />}
       <Route component={FourOhFour} />
     </Switch>
   );

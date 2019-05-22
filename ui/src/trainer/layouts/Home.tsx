@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
 import useAuthentication from '../hooks/useAuthentication';
+import { Routes } from '../helpers/routeHelper';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -64,7 +65,7 @@ const Home = () => {
   const services: ApiService[] = [
     {
       name: 'Train',
-      actionPath: '/train',
+      actionPath: Routes.train,
       action: 'Go',
       description: t(
         "Help me become smarter! I'll show you a text with some tags and you can then decide if it's correct or fix it!",
@@ -72,7 +73,7 @@ const Home = () => {
     },
     {
       name: 'Find',
-      actionPath: '/preview',
+      actionPath: Routes.preview,
       action: 'Go',
       description: 'Want to try and see what entities I find for a given text? Then this is the way to go!',
     },
@@ -135,7 +136,7 @@ const Home = () => {
                 >
                   <Grid item>
                     <Button
-                      component={(props: any) => <Link to={'/login'} {...props} />}
+                      component={(props: any) => <Link to={Routes.login} {...props} />}
                       fullWidth
                       variant="outlined"
                       color="primary"
@@ -148,7 +149,7 @@ const Home = () => {
                   </Grid>
                   <Grid item>
                     <Button
-                      component={(props: any) => <Link to={'/register'} {...props} />}
+                      component={(props: any) => <Link to={Routes.register} {...props} />}
                       fullWidth
                       variant="outlined"
                       color="primary"

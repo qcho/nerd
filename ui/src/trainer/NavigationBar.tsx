@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Home from '@material-ui/icons/Home';
 import useRouter from 'use-react-router';
 import { makeStyles } from '@material-ui/styles';
+import { Routes } from './helpers/routeHelper';
 
 const useStyles = makeStyles(() => ({
   menuButton: {
@@ -57,7 +58,7 @@ const NavigationBar = ({ loading }: NavigationBarProps) => {
       <AppBar position="static">
         <Toolbar>
           {location.pathname != '/' && (
-            <IconButton component={link('/')} className={classes.homeButton} color="inherit">
+            <IconButton component={link(Routes.home)} className={classes.homeButton} color="inherit">
               <Home />
             </IconButton>
           )}
@@ -66,7 +67,7 @@ const NavigationBar = ({ loading }: NavigationBarProps) => {
           </Typography>
           {isUser && (
             <>
-              <Button color="inherit" component={link('/trainings/me')}>
+              <Button color="inherit" component={link(Routes.myTrainings)}>
                 {t('My trainings')}
               </Button>
               <Separator />
@@ -74,10 +75,10 @@ const NavigationBar = ({ loading }: NavigationBarProps) => {
           )}
           {isAdmin && (
             <>
-              <Button color="inherit" component={link('/admin/users')}>
+              <Button color="inherit" component={link(Routes.userAdmin)}>
                 {t('Users')}
               </Button>
-              <Button color="inherit" component={link('/admin/corpus')}>
+              <Button color="inherit" component={link(Routes.corpusAdmin)}>
                 {t('Corpus')}
               </Button>
               <Separator />
@@ -89,10 +90,10 @@ const NavigationBar = ({ loading }: NavigationBarProps) => {
             </Button>
           ) : (
             <>
-              <Button color="inherit" component={link('/login')}>
+              <Button color="inherit" component={link(Routes.login)}>
                 {t('Login')}
               </Button>
-              <Button color="inherit" component={link('/register')}>
+              <Button color="inherit" component={link(Routes.register)}>
                 {t('Register')}
               </Button>
             </>
