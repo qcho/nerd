@@ -7,7 +7,7 @@ import { MaybeSpacyEntity } from '../types/optionals';
 interface TextNodeProps {
   text: string;
   token: SpacyToken;
-  onClick: ((token: SpacyToken, entity: MaybeSpacyEntity) => void) | null;
+  onClick: ((token: SpacyToken, entity: MaybeSpacyEntity) => void) | null | false;
   entity?: SpacyEntity;
   entityType?: Type;
 }
@@ -16,7 +16,7 @@ interface TextNodeProps {
 const TextNode = React.forwardRef(
   ({ text, token, onClick, entity, entityType }: TextNodeProps, ref: Ref<HTMLSpanElement>) => {
     const _onClick = () => {
-      if (onClick != null) {
+      if (onClick) {
         onClick(token, entity);
       }
     };
