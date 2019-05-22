@@ -119,7 +119,7 @@ const Train = () => {
 
   return (
     <div className={classes.container}>
-      <NavigationBar loading={loading} />
+      <NavigationBar title={t('Train')} loading={loading} />
       <>
         {noMoreDocuments && (
           <Paper className={classes.paper}>

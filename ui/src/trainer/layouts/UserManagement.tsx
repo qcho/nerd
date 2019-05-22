@@ -78,7 +78,7 @@ const UserManagement = () => {
 
   return (
     <div className={classes.grow}>
-      <NavigationBar loading={loading} />
+      <NavigationBar title={t('User management')} loading={loading} />
       <Paper className={classes.content}>
         <RichTable
           title={t('Users')}

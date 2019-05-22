@@ -82,7 +82,7 @@ const Home = () => {
 
   return (
     <div className={classes.grow}>
-      <NavigationBar />
+      <NavigationBar title={'Home'} />
       <div className={classes.container}>
         <div className={classes.content}>
           <div>
