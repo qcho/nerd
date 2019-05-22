@@ -1,6 +1,16 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import usePagination from '../hooks/usePagination';
-import { Grid, Table, TableBody, TableFooter, TableRow, TablePagination, TableCell, Checkbox } from '@material-ui/core';
+import {
+  Grid,
+  Table,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TablePagination,
+  TableCell,
+  Checkbox,
+  CircularProgress,
+} from '@material-ui/core';
 import TableToolbar from './TableToolbar';
 import RichTableHead from './RichTableHead';
 
@@ -53,18 +63,21 @@ const RichTable = ({
   paginatable,
 }: Props) => {
   const [selected, setSelected] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
   const [records, setRecords] = useState<any[]>([]);
   const { page, total, pageSize, setPage, setPageSize, setFromHeaders, shouldPaginate } = usePagination();
   let unmounted = false;
 
   const fetchData = useCallback(async () => {
+    setLoading(true);
     const result = await datasource({
       searchText,
       page,
       pageSize,
     });
     if (unmounted) return;
+    setLoading(false);
     if (!result) return;
     setRecords(result.records);
     if (result.headers) {
@@ -103,6 +116,20 @@ const RichTable = ({
 
   const isSelected = (record: any) => selected.indexOf(valueToId(record)) !== -1;
   const handleRowClick = (record: any) => setSelected(xorSelected(selected, valueToId(record)));
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignContent: 'center',
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <Grid container>
