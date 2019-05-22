@@ -100,7 +100,7 @@ class MyTrainings(MethodView):
         return _get_user_trainings(user, pagination_params)
 
 
-@blp.route('/<string:user_email>/trainings')
+@blp.route('/<string:user_id>/trainings')
 class UserTrainings(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.paginate()
@@ -111,33 +111,33 @@ class UserTrainings(MethodView):
         return _get_user_trainings(user, pagination_params)
 
 
-@blp.route('/<string:user_email>')
+@blp.route('/<string:user_id>')
 class UserView(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
     @response_error(NotFound('User does not exist'))
     @blp.response(UserSchema)
     @blp.doc(operationId="userDetails")
-    def get(self, user_email: str):
+    def get(self, user_id: str):
         """Gets user entity by email
         """
         try:
-            return User.objects.get(email=user_email)
+            return User.objects.get(id=user_id)
         except DoesNotExist:
-            raise NotFound('User {} does not exist'.format(user_email))
+            raise NotFound('User {} does not exist'.format(user_id))
 
     @jwt_and_role_required(Role.ADMIN)
     @response_error(NotFound('User does not exist'))
     @blp.response(UserSchema)
     @blp.doc(operationId="deleteUser")
-    def delete(self, user_email: str):
-        """Delete user by email"""
+    def delete(self, user_id: str):
+        """Delete user by id"""
         try:
-            user = User.objects.get(email=user_email)
+            user = User.objects.get(id=user_id)
             user.delete()
             return user
         except DoesNotExist:
-            raise NotFound('User {} does not exist'.format(user_email))
+            raise NotFound('User {} does not exist'.format(user_id))
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.arguments(UserPayloadSchema(partial=True))
