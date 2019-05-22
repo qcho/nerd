@@ -21,7 +21,7 @@ function xorSelected<T>(selected: T[], entry: T) {
 }
 
 export interface DatasourceResult {
-  headers: { [id: string]: string } | null;
+  headers?: { [id: string]: string } | null;
   records: any[];
 }
 
@@ -37,7 +37,7 @@ interface Props {
   paginatable?: boolean;
   headers: { id: string; label: string }[];
   valueToId: (value: any) => string;
-  datasource: ({ searchText, page, pageSize }: DatasourceParameters) => Promise<DatasourceResult | undefined>;
+  datasource: ({ searchText, page, pageSize }: DatasourceParameters) => Promise<DatasourceResult | undefined | void>;
   columnBuilder: (data: any) => JSX.Element;
   onDelete?: (rows: any[]) => Promise<void>;
 }

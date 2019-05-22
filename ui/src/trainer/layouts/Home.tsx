@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
 import useAuthentication from '../hooks/useAuthentication';
 import { Routes } from '../helpers/routeHelper';
+import { TopContributors } from '../widgets/TopContributors';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -84,83 +85,97 @@ const Home = () => {
       <NavigationBar />
       <div className={classes.container}>
         <div className={classes.content}>
-          {loggedIn ? (
-            <Grid container spacing={40} alignItems="flex-end" className={classes.cardContainer}>
-              {loggedIn &&
-                services.map(service => {
-                  return (
-                    <Grid item key={service.name}>
-                      <Card>
-                        <CardHeader
-                          title={service.name}
-                          titleTypographyProps={{ align: 'center' }}
-                          className={classes.cardHeader}
-                        />
-                        <CardContent>
-                          <Typography variant="subtitle1" align="center" style={{ width: 350 }}>
-                            {service.description}
-                          </Typography>
-                        </CardContent>
-                        <CardActions className={classes.cardActions}>
-                          <Button
-                            component={(props: any) => <Link to={service.actionPath} {...props} />}
-                            fullWidth
-                            variant="outlined"
-                            color="primary"
-                          >
-                            {service.action}
-                          </Button>
-                        </CardActions>
-                      </Card>
+          <div>
+            {loggedIn ? (
+              <Grid container spacing={40} alignItems="flex-end" className={classes.cardContainer}>
+                {loggedIn &&
+                  services.map(service => {
+                    return (
+                      <Grid item key={service.name}>
+                        <Card>
+                          <CardHeader
+                            title={service.name}
+                            titleTypographyProps={{ align: 'center' }}
+                            className={classes.cardHeader}
+                          />
+                          <CardContent>
+                            <Typography variant="subtitle1" align="center" style={{ width: 350 }}>
+                              {service.description}
+                            </Typography>
+                          </CardContent>
+                          <CardActions className={classes.cardActions}>
+                            <Button
+                              component={(props: any) => <Link to={service.actionPath} {...props} />}
+                              fullWidth
+                              variant="outlined"
+                              color="primary"
+                            >
+                              {service.action}
+                            </Button>
+                          </CardActions>
+                        </Card>
+                      </Grid>
+                    );
+                  })}
+              </Grid>
+            ) : (
+              <Grid container className={classes.cardContainer} style={{ marginTop: '-15em' }}>
+                <Grid item>
+                  <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+                    {t('Welcome')}
+                  </Typography>
+                  <Typography variant="h6" align="center" color="textSecondary" component="p">
+                    To continue please
+                  </Typography>
+                  <Grid
+                    container
+                    style={{ marginTop: '1em' }}
+                    direction="row"
+                    spacing={24}
+                    alignContent="center"
+                    alignItems="center"
+                    justify="space-around"
+                  >
+                    <Grid item>
+                      <Button
+                        component={(props: any) => <Link to={Routes.login} {...props} />}
+                        fullWidth
+                        variant="outlined"
+                        color="primary"
+                      >
+                        {t('Login')}
+                      </Button>
                     </Grid>
-                  );
-                })}
-            </Grid>
-          ) : (
-            <Grid container className={classes.cardContainer} style={{ marginTop: '-15em' }}>
-              <Grid item>
-                <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                  {t('Welcome')}
-                </Typography>
-                <Typography variant="h6" align="center" color="textSecondary" component="p">
-                  To continue please
-                </Typography>
-                <Grid
-                  container
-                  style={{ marginTop: '1em' }}
-                  direction="row"
-                  spacing={24}
-                  alignContent="center"
-                  alignItems="center"
-                  justify="space-around"
-                >
-                  <Grid item>
-                    <Button
-                      component={(props: any) => <Link to={Routes.login} {...props} />}
-                      fullWidth
-                      variant="outlined"
-                      color="primary"
-                    >
-                      {t('Login')}
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle1">or</Typography>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      component={(props: any) => <Link to={Routes.register} {...props} />}
-                      fullWidth
-                      variant="outlined"
-                      color="primary"
-                    >
-                      {t('Register')}
-                    </Button>
+                    <Grid item>
+                      <Typography variant="subtitle1">or</Typography>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        component={(props: any) => <Link to={Routes.register} {...props} />}
+                        fullWidth
+                        variant="outlined"
+                        color="primary"
+                      >
+                        {t('Register')}
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          )}
+            )}
+          </div>
+          <div className={classes.cardContainer}>
+            <Card>
+              <CardHeader
+                title={t('Top contributors')}
+                titleTypographyProps={{ align: 'center' }}
+                className={classes.cardHeader}
+              />
+              <CardContent>
+                <TopContributors />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

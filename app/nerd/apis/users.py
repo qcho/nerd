@@ -27,6 +27,14 @@ class UserSchema(ModelSchema):
     total_trainings = fields.Integer()
 
 
+class TopContributorSchema(ModelSchema):
+    class Meta:
+        model = User
+        fields = ['name', 'total_trainings']
+
+    total_trainings = fields.Integer(required=True)
+
+
 class UserPayloadSchema(ModelSchema):
     class Meta:
         model = User
@@ -77,6 +85,33 @@ class UserListView(MethodView):
                         }
                     }
                 }
+            }
+        ])
+
+
+@blp.route('/top5')
+class TopTrainers(MethodView):
+    @blp.response(TopContributorSchema(many=True), code=200)
+    @blp.doc(operationId='top5')
+    def get(self):
+        return User.objects.aggregate(*[
+            {
+                '$project': {
+                    'name': 1,
+                    'total_trainings': {
+                        '$cond': {
+                            'if': {'$isArray': "$trainings"},
+                            'then': {'$size': "$trainings"},
+                            'else': 0
+                        }
+                    }
+                }
+            },
+            {
+                '$sort': {'total_trainings': -1}
+            },
+            {
+                '$limit': 5
             }
         ])
 
