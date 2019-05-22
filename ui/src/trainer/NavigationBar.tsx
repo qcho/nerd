@@ -1,7 +1,6 @@
 import React from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Button, LinearProgress } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import useRouteTitle from './hooks/useRouteTitle';
 import useAuthentication from './hooks/useAuthentication';
 import { useTranslation } from 'react-i18next';
 import Home from '@material-ui/icons/Home';
@@ -30,6 +29,7 @@ const link = (to: string) =>
 
 interface NavigationBarProps {
   loading?: boolean;
+  title?: string;
 }
 
 const Separator = () => {
@@ -46,10 +46,9 @@ const Separator = () => {
   );
 };
 
-const NavigationBar = ({ loading }: NavigationBarProps) => {
+const NavigationBar = ({ loading, title }: NavigationBarProps) => {
   const { location } = useRouter();
   const classes = useStyles();
-  const title = useRouteTitle(location);
   const [t] = useTranslation();
   const { loggedIn, logout, isAdmin, isUser } = useAuthentication();
 
