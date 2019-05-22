@@ -65,7 +65,7 @@ class UserListView(MethodView):
             },
             {
                 '$project': {
-                    '_id': 1,
+                    'id': '$_id',
                     'email': 1,
                     'name': 1,
                     'roles': 1,
