@@ -4,8 +4,10 @@ from flask.views import MethodView
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
+from mongoengine import DoesNotExist
+from werkzeug.exceptions import NotFound
 
-from nerd.apis import jwt_and_role_required
+from nerd.apis import jwt_and_role_required, response_error
 from nerd.core.document.snapshot import CURRENT_ID, Snapshot
 from nerd.core.document.user import Role
 from nerd.tasks.corpus import reload as reload_task
@@ -47,7 +49,7 @@ class SnapshotCurrentResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.response(CorpusSnapshotSchema)
-    @blp.doc(operationId="")
+    @blp.doc(operationId="getCurrentSnapshot")
     def get(self):
         return Snapshot.objects.get(id=CURRENT_ID)
 
@@ -66,13 +68,13 @@ class SnapshotCurrentResource(MethodView):
         return current_snapshot
 
 
-@blp.route("/current")
 @blp.route("/<int:snapshot_id>")
 class SnapshotResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(CorpusSnapshotSchema)
-    @blp.doc(operationId="")
+    @blp.response(CorpusSnapshotSchema, code=200)
+    @response_error(NotFound("Could not find snapshot with given id"))
+    @blp.doc(operationId="getSnapshotWithId")
     def get(self, snapshot_id: int = None):
         try:
             return Snapshot.objects.get(id=snapshot_id)
@@ -90,6 +92,7 @@ class ForceTrainingResource(MethodView):
         snapshot = Snapshot.current()
         train_task.apply_async([CURRENT_ID], queue='vCURRENT')
         return "", 204
+
 
 @blp.route("/force-reload")
 class ForceReloadResource(MethodView):
