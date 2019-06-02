@@ -30,7 +30,7 @@ class NewsApi:
         added = 0
         for page in range(1, pages + 1):
             try:
-                response = client.get_top_headlines(country='ar', page_size=100, page=page)
+                response = client.get_top_headlines(sources='google-news-ar', page_size=100, page=page)
                 added = added + add_headlines(response['articles'])
             except NewsAPIException:
                 pass
