@@ -1,22 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import {
-  withStyles,
-  Theme,
-  createStyles,
-  Grid,
-  TextField,
-  Button,
-  Divider,
-  LinearProgress,
-  Snackbar,
-} from '@material-ui/core';
+import React, { useState } from 'react';
+import { withStyles, Theme, createStyles, Grid, TextField, Button, Divider, Snackbar } from '@material-ui/core';
 import NavigationBar from '../NavigationBar';
 import classNames from 'classnames';
 import useAuthentication from '../hooks/useAuthentication';
 import { useTranslation } from 'react-i18next';
 import { MaybeSpacyDocument } from '../types/optionals';
-import { SpacyDocument, Type } from '../apigen';
+import { SpacyDocument, Type, NerApi } from '../apigen';
 import TokenizedEditor from '../widgets/TokenizedEditor';
+import Http from '../helpers/http';
+import { ErrorMessage } from '../widgets/ErrorMessage';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -35,41 +27,32 @@ interface Props {
 const PreviewLayout = ({ classes }: Props) => {
   const [text, setText] = useState<string>('');
   const [entityTypes, setEntityTypes] = useState<{ [key: string]: Type }>({});
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [document, setDocument] = useState<MaybeSpacyDocument>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
   const [t] = useTranslation();
-  const { loggedIn } = useAuthentication();
-  // TODO(jpo): Use new API.
-  // const nerApi = new NerApi(nerModel);
+  const { isUser } = useAuthentication();
+  const nerApi = new NerApi();
 
   async function onParseClick() {
     setLoading(true);
     try {
-      // TODO(jpo): Use new API.
-      // const doc = await nerApi.parseText(text);
-      // setDocument(doc as NerDocument);
+      const response = await nerApi.parseText_1(text);
+      setDocument(response.data.spacy_document);
+      setEntityTypes(response.data.snapshot.types || {});
     } catch (e) {
-      // TODO: correctly handle this
-      console.log('Fuuu', [e]);
+      const message = Http.handleRequestError(e, (statusCode, data) => {
+        if ([404, 500].indexOf(statusCode) < 0) {
+          return t('There was an error while trying to reach the server');
+        }
+        return '';
+      });
+      setErrorMessage(message);
     } finally {
       setLoading(false);
     }
   }
-
-  useEffect(() => {
-    const fetchTypes = async () => {
-      try {
-        // TODO(jpo): Use new API.
-        // const entityTypeApi = new EntityTypeApi();
-        // const availableTypes = await entityTypeApi.availableTypes("noticias");
-        // setEntityTypes(availableTypes);
-      } catch (e) {
-        console.log([e]);
-      }
-    };
-    fetchTypes();
-  }, []);
 
   function onDocumentUpdate(document: SpacyDocument) {
     setDocument(prevState => {
@@ -79,15 +62,9 @@ const PreviewLayout = ({ classes }: Props) => {
 
   function onSaveClick() {
     if (!document) {
-      return; // TODO: Handle this
+      return; // Shouldn't happen
     }
-
-    // TODO(jpo): Use new API.
-    // nerApi.save(document!).then(() => {
-    //   setSnackbarMessage(t("Saved"));
-    // }).catch((error) => {
-    //   // TODO: Handle this.
-    // });
+    // TODO: Implement this
   }
 
   return (
@@ -121,19 +98,21 @@ const PreviewLayout = ({ classes }: Props) => {
             </Grid>
           </Grid>
         </Grid>
+        {errorMessage.length > 0 && <ErrorMessage message={errorMessage} />}
         {document == null || loading ? null : (
           <Grid item>
             <Divider style={{ marginTop: 10, marginBottom: 10 }} />
             <Grid container direction="row" spacing={24} justify="space-between">
               <Grid item xs={10}>
                 <TokenizedEditor
+                  readOnly={!isUser}
                   spacyDocument={{ ...document }}
                   onUpdate={onDocumentUpdate}
                   entityTypes={entityTypes}
                 />
               </Grid>
-              <div>
-                {loggedIn ? (
+              {isUser ? (
+                <div>
                   <Grid
                     item
                     xs={2}
@@ -147,8 +126,8 @@ const PreviewLayout = ({ classes }: Props) => {
                       {t('Save')}
                     </Button>
                   </Grid>
-                ) : null}
-              </div>
+                </div>
+              ) : null}
             </Grid>
           </Grid>
         )}
