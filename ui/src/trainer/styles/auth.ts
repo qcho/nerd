@@ -30,10 +30,6 @@ const authStyles: any = (theme: Theme) => ({
     width: '100%',
     marginTop: theme.spacing.unit * 2,
   },
-  errorMessage: {
-    color: theme.palette.error.main,
-    textAlign: 'center',
-  },
 });
 
 export default authStyles;

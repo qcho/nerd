@@ -16,6 +16,7 @@ import useAuthentication from '../hooks/useAuthentication';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 import authStyles from '../styles/auth';
+import { ErrorMessage } from '../widgets/ErrorMessage';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -101,9 +102,7 @@ const Register = ({ classes }: { classes: any }) => {
         </form>
         {errorMessage.length > 0 ? (
           <div className={classes.errorMessageContainer}>
-            <Typography variant="subtitle2" className={classes.errorMessage}>
-              {errorMessage}
-            </Typography>
+            <ErrorMessage message={errorMessage} center />
           </div>
         ) : null}
       </Paper>
