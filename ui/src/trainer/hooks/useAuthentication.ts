@@ -36,7 +36,7 @@ function useAuthentication() {
         if (status == 401) {
           return t('Invalid credentials');
         }
-        return t("Can't login");
+        return t('There was a problem reaching the login server');
       });
       return { success: false, message: errorMessage };
     }
