@@ -8,7 +8,7 @@ const TopContributors = () => {
   const [t] = useTranslation();
   const headers = [{ id: 'name', label: t('Name') }, { id: 'trained', label: t('Trained') }];
 
-  const buildColumns = (data: TopContributor) => (
+  const buildRow = (data: TopContributor) => (
     <>
       <TableCell>{data.name}</TableCell>
       <TableCell>{data.total_trainings}</TableCell>
@@ -32,7 +32,7 @@ const TopContributors = () => {
       headers={headers}
       datasource={datasource}
       valueToId={(value: TopContributor) => value.name}
-      columnBuilder={buildColumns}
+      rowBuilder={buildRow}
     />
   );
 };

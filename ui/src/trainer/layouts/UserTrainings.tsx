@@ -82,7 +82,7 @@ const UserTrainings = ({ match }: { match: any }) => {
     }
   };
 
-  const buildColumns = (row: TrainedText) => (
+  const buildRow = (row: TrainedText) => (
     <>
       <TableCell>
         <TokenizedEditor readOnly spacyDocument={row.document} entityTypes={(snapshot && snapshot.types) || {}} />
@@ -110,7 +110,7 @@ const UserTrainings = ({ match }: { match: any }) => {
             <RichTable
               headers={headers}
               valueToId={(value: TrainedText) => value.id || ''}
-              columnBuilder={buildColumns}
+              rowBuilder={buildRow}
               datasource={datasource}
               onDelete={onDelete}
               paginatable

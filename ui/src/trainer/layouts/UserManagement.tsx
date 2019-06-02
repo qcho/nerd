@@ -50,7 +50,7 @@ const UserManagement = () => {
     }
   };
 
-  const buildColumns = (value: User) => <UserRow user={value} availableRoles={roles} />;
+  const buildRow = (value: User) => <UserRow user={value} availableRoles={roles} />;
   const datasource = async (params: DatasourceParameters) => {
     try {
       if (unmounted) return;
@@ -84,7 +84,7 @@ const UserManagement = () => {
           title={t('Users')}
           headers={headers}
           valueToId={(value: User) => value.email}
-          columnBuilder={buildColumns}
+          rowBuilder={buildRow}
           datasource={datasource}
           onDelete={onDelete}
           searchable

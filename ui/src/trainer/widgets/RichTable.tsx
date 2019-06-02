@@ -48,20 +48,11 @@ interface Props {
   headers: { id: string; label: string }[];
   valueToId: (value: any) => string;
   datasource: ({ searchText, page, pageSize }: DatasourceParameters) => Promise<DatasourceResult | undefined | void>;
-  columnBuilder: (data: any) => JSX.Element;
+  rowBuilder: (data: any) => JSX.Element;
   onDelete?: (rows: any[]) => Promise<void>;
 }
 
-const RichTable = ({
-  title,
-  headers,
-  valueToId,
-  columnBuilder,
-  datasource,
-  onDelete,
-  searchable,
-  paginatable,
-}: Props) => {
+const RichTable = ({ title, headers, valueToId, rowBuilder, datasource, onDelete, searchable, paginatable }: Props) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
@@ -161,7 +152,7 @@ const RichTable = ({
                     <Checkbox checked={rowSelected} onClick={() => handleRowClick(record)} />
                   </TableCell>
                 )}
-                {columnBuilder(record)}
+                {rowBuilder(record)}
               </TableRow>
             );
           })}
