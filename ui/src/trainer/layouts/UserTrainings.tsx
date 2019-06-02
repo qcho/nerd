@@ -17,8 +17,8 @@ const useStyles = makeStyles(
     },
     content: {
       marginTop: theme.spacing.unit * 2,
-      marginLeft: theme.spacing.unit * 10,
-      marginRight: theme.spacing.unit * 10,
+      marginLeft: theme.spacing.unit * 5,
+      marginRight: theme.spacing.unit * 5,
     },
   }),
   { withTheme: true },
