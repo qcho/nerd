@@ -35,6 +35,12 @@ export interface CorpusSnapshot {
      * @type {number}
      * @memberof CorpusSnapshot
      */
+    id: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CorpusSnapshot
+     */
     semaphore?: number;
     /**
      * 
@@ -42,12 +48,6 @@ export interface CorpusSnapshot {
      * @memberof CorpusSnapshot
      */
     trained_at?: Date;
-    /**
-     * 
-     * @type {number}
-     * @memberof CorpusSnapshot
-     */
-    id: number;
     /**
      * 
      * @type {string}
@@ -78,6 +78,18 @@ export interface HttpError {
 export interface Register {
     /**
      * 
+     * @type {string}
+     * @memberof Register
+     */
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Register
+     */
+    plain_password?: string;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof Register
      */
@@ -87,19 +99,7 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    plain_password?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
     name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
-    id?: string;
     /**
      * 
      * @type {string}
@@ -130,10 +130,10 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
-     * @type {number}
+     * @type {Date}
      * @memberof Snapshot
      */
-    id: number;
+    trained_at?: Date;
     /**
      * 
      * @type {Date}
@@ -142,16 +142,16 @@ export interface Snapshot {
     created_at?: Date;
     /**
      * 
+     * @type {number}
+     * @memberof Snapshot
+     */
+    id: number;
+    /**
+     * 
      * @type {{ [key: string]: Type; }}
      * @memberof Snapshot
      */
     types?: { [key: string]: Type; };
-    /**
-     * 
-     * @type {Date}
-     * @memberof Snapshot
-     */
-    trained_at?: Date;
 }
 
 /**
@@ -166,6 +166,12 @@ export interface SpacyDocument {
      * @memberof SpacyDocument
      */
     tokens?: Array<SpacyToken>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyDocument
+     */
+    text: string;
     /**
      * 
      * @type {Array<SpacyEntity>}
@@ -184,12 +190,6 @@ export interface SpacyDocument {
      * @memberof SpacyDocument
      */
     sents?: Array<SpacySentence>;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyDocument
-     */
-    text: string;
 }
 
 /**
@@ -204,6 +204,12 @@ export interface SpacyDocument1 {
      * @memberof SpacyDocument1
      */
     tokens?: Array<SpacyToken1>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyDocument1
+     */
+    text: string;
     /**
      * 
      * @type {Array<SpacyEntity1>}
@@ -222,12 +228,6 @@ export interface SpacyDocument1 {
      * @memberof SpacyDocument1
      */
     sents?: Array<SpacySentence1>;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyDocument1
-     */
-    text: string;
 }
 
 /**
@@ -333,31 +333,7 @@ export interface SpacyToken {
      * @type {string}
      * @memberof SpacyToken
      */
-    tag?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    start: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
     pos?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    dep?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    end: number;
     /**
      * 
      * @type {number}
@@ -370,6 +346,30 @@ export interface SpacyToken {
      * @memberof SpacyToken
      */
     head?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
+    end: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    dep?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
+    start: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    tag?: string;
 }
 
 /**
@@ -383,31 +383,7 @@ export interface SpacyToken1 {
      * @type {string}
      * @memberof SpacyToken1
      */
-    tag?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken1
-     */
-    start: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
     pos?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
-    dep?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken1
-     */
-    end: number;
     /**
      * 
      * @type {number}
@@ -420,6 +396,30 @@ export interface SpacyToken1 {
      * @memberof SpacyToken1
      */
     head?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken1
+     */
+    end: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    dep?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken1
+     */
+    start: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    tag?: string;
 }
 
 /**
@@ -442,16 +442,16 @@ export interface Text {
     value: string;
     /**
      * 
-     * @type {Date}
-     * @memberof Text
-     */
-    created_at?: Date;
-    /**
-     * 
      * @type {string}
      * @memberof Text
      */
     id?: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof Text
+     */
+    created_at?: Date;
 }
 
 /**
@@ -534,16 +534,16 @@ export interface TrainText {
 export interface TrainedText {
     /**
      * 
-     * @type {string}
-     * @memberof TrainedText
-     */
-    text_id: string;
-    /**
-     * 
      * @type {Date}
      * @memberof TrainedText
      */
     created_at?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof TrainedText
+     */
+    id?: string;
     /**
      * 
      * @type {string}
@@ -555,7 +555,7 @@ export interface TrainedText {
      * @type {string}
      * @memberof TrainedText
      */
-    id?: string;
+    text_id: string;
     /**
      * 
      * @type {SpacyDocument}
@@ -595,6 +595,12 @@ export interface User {
      * @type {string}
      * @memberof User
      */
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
     name: string;
     /**
      * 
@@ -602,12 +608,6 @@ export interface User {
      * @memberof User
      */
     roles?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    id?: string;
     /**
      * 
      * @type {string}
@@ -656,10 +656,10 @@ export interface UserCredentials {
 export interface UserPayload {
     /**
      * 
-     * @type {Array<string>}
+     * @type {string}
      * @memberof UserPayload
      */
-    trainings?: Array<string>;
+    id?: string;
     /**
      * 
      * @type {string}
@@ -671,7 +671,7 @@ export interface UserPayload {
      * @type {Array<string>}
      * @memberof UserPayload
      */
-    roles?: Array<string>;
+    trainings?: Array<string>;
     /**
      * 
      * @type {string}
@@ -680,10 +680,10 @@ export interface UserPayload {
     name?: string;
     /**
      * 
-     * @type {string}
+     * @type {Array<string>}
      * @memberof UserPayload
      */
-    id?: string;
+    roles?: Array<string>;
 }
 
 /**
@@ -1739,6 +1739,208 @@ export class CorpusApi extends BaseAPI {
      */
     public upsertTraining(user_id: string, text_id: string, spacy_document1: SpacyDocument1, options?: any) {
         return CorpusApiFp(this.configuration).upsertTraining(user_id, text_id, spacy_document1, options)(this.axios, this.basePath);
+    }
+
+}
+
+
+/**
+ * NerApi - axios parameter creator
+ * @export
+ */
+export const NerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {string} text 
+         * @param {number} snapshot_id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        parseText(text: string, snapshot_id: number, options: any = {}): RequestArgs {
+            // verify required parameter 'text' is not null or undefined
+            if (text === null || text === undefined) {
+                throw new RequiredError('text','Required parameter text was null or undefined when calling parseText.');
+            }
+            // verify required parameter 'snapshot_id' is not null or undefined
+            if (snapshot_id === null || snapshot_id === undefined) {
+                throw new RequiredError('snapshot_id','Required parameter snapshot_id was null or undefined when calling parseText.');
+            }
+            const localVarPath = `/api/ner/{snapshot_id}`
+                .replace(`{${"snapshot_id"}}`, encodeURIComponent(String(snapshot_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+            if (text !== undefined) {
+                localVarQueryParameter['text'] = text;
+            }
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        parseText_1(text: string, options: any = {}): RequestArgs {
+            // verify required parameter 'text' is not null or undefined
+            if (text === null || text === undefined) {
+                throw new RequiredError('text','Required parameter text was null or undefined when calling parseText_1.');
+            }
+            const localVarPath = `/api/ner/current`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+            if (text !== undefined) {
+                localVarQueryParameter['text'] = text;
+            }
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * NerApi - functional programming interface
+ * @export
+ */
+export const NerApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {string} text 
+         * @param {number} snapshot_id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        parseText(text: string, snapshot_id: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrainText> {
+            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).parseText(text, snapshot_id, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {string} text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        parseText_1(text: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrainText> {
+            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).parseText_1(text, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+    }
+};
+
+/**
+ * NerApi - factory interface
+ * @export
+ */
+export const NerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    return {
+        /**
+         * 
+         * @param {string} text 
+         * @param {number} snapshot_id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        parseText(text: string, snapshot_id: number, options?: any) {
+            return NerApiFp(configuration).parseText(text, snapshot_id, options)(axios, basePath);
+        },
+        /**
+         * 
+         * @param {string} text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        parseText_1(text: string, options?: any) {
+            return NerApiFp(configuration).parseText_1(text, options)(axios, basePath);
+        },
+    };
+};
+
+/**
+ * NerApi - object-oriented interface
+ * @export
+ * @class NerApi
+ * @extends {BaseAPI}
+ */
+export class NerApi extends BaseAPI {
+    /**
+     * 
+     * @param {string} text 
+     * @param {number} snapshot_id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NerApi
+     */
+    public parseText(text: string, snapshot_id: number, options?: any) {
+        return NerApiFp(this.configuration).parseText(text, snapshot_id, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {string} text 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NerApi
+     */
+    public parseText_1(text: string, options?: any) {
+        return NerApiFp(this.configuration).parseText_1(text, options)(this.axios, this.basePath);
     }
 
 }
