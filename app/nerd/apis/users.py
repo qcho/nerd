@@ -12,7 +12,7 @@ from mongoengine.queryset.visitor import Q
 from werkzeug.exceptions import NotFound, UnprocessableEntity
 
 from nerd.apis import jwt_and_role_required, response_error
-from nerd.apis.corpus import TrainedTextSchema
+from nerd.apis.schemas import TrainedTextSchema
 from nerd.core.document.corpus import TrainedText
 from nerd.core.document.user import User, Role
 

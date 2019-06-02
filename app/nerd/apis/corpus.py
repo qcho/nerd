@@ -3,14 +3,14 @@ from flask.views import MethodView
 from flask_jwt_extended import get_jwt_identity
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
-from marshmallow import Schema, fields
 from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
 from werkzeug.exceptions import BadRequest, FailedDependency, NotFound
 
 from nerd.apis import response_error
+from nerd.apis.schemas import TrainTextSchema
 from nerd.core.document.corpus import Text, TrainedText
-from nerd.core.document.snapshot import Snapshot, SnapshotSchema, Type
+from nerd.core.document.snapshot import Snapshot
 from nerd.core.document.spacy import SpacyDocumentSchema
 from nerd.core.document.user import Role, User
 from nerd.tasks.corpus import nlp as nlp_task
@@ -26,29 +26,11 @@ class TextSchema(ModelSchema):
         model = Text
 
 
-class TrainedTextSchema(ModelSchema):
-    class Meta:
-        strict = True
-        model = TrainedText
-
-
-class TypeSchema(ModelSchema):
-    class Meta:
-        strict = True
-        model = Type
-
-
 class ValueOnlyTextSchema(ModelSchema):
     class Meta:
         strict = True
         model = Text
         exclude = ['id', 'trainings', 'created_at']
-
-
-class TrainTextSchema(Schema):
-    text_id = fields.String(required=True)
-    snapshot = fields.Nested(SnapshotSchema, required=True)
-    spacy_document = fields.Nested(SpacyDocumentSchema, required=True)
 
 
 @blp.route("/<string:text_id>")

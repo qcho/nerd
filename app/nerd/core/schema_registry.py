@@ -1,4 +1,4 @@
-from nerd.apis.corpus import TypeSchema, TrainedTextSchema
+from nerd.apis.schemas import TrainedTextSchema, TypeSchema
 
 
 def register_custom_schemas(spec):
