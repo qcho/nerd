@@ -16,7 +16,7 @@ const useStyles = makeStyles(
       flex: 1,
       flexDirection: 'column',
       alignItems: 'center',
-      height: '100vh',
+      height: '90vh',
     },
     paper: {
       display: 'flex',
