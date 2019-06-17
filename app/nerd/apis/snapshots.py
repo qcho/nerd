@@ -89,7 +89,6 @@ class ForceTrainingResource(MethodView):
     @blp.response(None)
     @blp.doc(operationId="forceTrain")
     def post(self):
-        snapshot = Snapshot.current()
         train_task.apply_async([CURRENT_ID], queue='vCURRENT')
         return "", 204
 
