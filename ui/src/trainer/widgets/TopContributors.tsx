@@ -2,7 +2,7 @@ import React from 'react';
 import { RichTable } from './RichTable';
 import { useTranslation } from 'react-i18next';
 import { UsersApi, TopContributor } from '../apigen';
-import { TableCell } from '@material-ui/core';
+import { TableCell, Typography } from '@material-ui/core';
 
 const TopContributors = () => {
   const [t] = useTranslation();
@@ -33,6 +33,12 @@ const TopContributors = () => {
       datasource={datasource}
       valueToId={(value: TopContributor) => value.name}
       rowBuilder={buildRow}
+      emptyView={
+        <div>
+          {/* TODO: Make a nice "empty" view */}
+          <Typography>{'No one has contributed yet!'}</Typography>
+        </div>
+      }
     />
   );
 };
