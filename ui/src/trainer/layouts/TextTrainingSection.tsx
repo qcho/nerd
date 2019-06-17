@@ -12,7 +12,7 @@ import moment from 'moment';
 const TrainingStatus = ({ snapshotInfo }: { snapshotInfo: SnapshotInfo }) => {
   const [t] = useTranslation();
   const { corpus_size, trained_distinct } = snapshotInfo;
-  const trainedPercentage = trained_distinct > 0 ? (corpus_size / trained_distinct) * 100 : 0;
+  const trainedPercentage = trained_distinct > 0 ? (trained_distinct / corpus_size) * 100 : 0;
 
   const progressColor = (percentage: number) => {
     if (percentage < 40) {
