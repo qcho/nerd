@@ -50,9 +50,20 @@ interface Props {
   datasource: ({ searchText, page, pageSize }: DatasourceParameters) => Promise<DatasourceResult | undefined | void>;
   rowBuilder: (data: any) => JSX.Element;
   onDelete?: (rows: any[]) => Promise<void>;
+  emptyView?: JSX.Element;
 }
 
-const RichTable = ({ title, headers, valueToId, rowBuilder, datasource, onDelete, searchable, paginatable }: Props) => {
+const RichTable = ({
+  title,
+  headers,
+  valueToId,
+  rowBuilder,
+  datasource,
+  onDelete,
+  searchable,
+  paginatable,
+  emptyView,
+}: Props) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
@@ -120,6 +131,10 @@ const RichTable = ({ title, headers, valueToId, rowBuilder, datasource, onDelete
         <CircularProgress />
       </div>
     );
+  }
+
+  if (records.length == 0 && emptyView) {
+    return emptyView;
   }
 
   return (
