@@ -14,6 +14,11 @@ const useStyles = makeStyles(
     grow: {
       flexGrow: 1,
     },
+    content: {
+      marginTop: theme.spacing.unit * 2,
+      marginLeft: theme.spacing.unit * 2,
+      marginRight: theme.spacing.unit * 2,
+    },
   }),
   { withTheme: true },
 );
@@ -23,7 +28,7 @@ const Scaffold = ({ children, loading, title }: Props) => {
   return (
     <div className={classes.grow}>
       <NavigationBar title={title} loading={loading} />
-      {children}
+      <div className={classes.content}>{children}</div>
     </div>
   );
 };

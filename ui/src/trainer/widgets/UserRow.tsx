@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User, RoleList, UsersApi } from '../apigen';
-import { TableRow, TableCell, Select, MenuItem, Theme, Chip, InputBase, Checkbox, Link } from '@material-ui/core';
+import { TableCell, Select, MenuItem, Theme, Chip, InputBase, Link } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
 import { apiConfig } from '../helpers/api-config';
