@@ -33,12 +33,13 @@ class IndexResource(MethodView):
     @blp.doc(operationId="listCorpusSnapshots")
     @blp.paginate()
     def get(self, pagination_parameters: PaginationParameters):
-        """List available corpora
+        """List available snapshots
         """
-        pagination_parameters.item_count = Snapshot.objects.count()
+        snapshots = Snapshot.objects(id__gt=0)
+        pagination_parameters.item_count = snapshots.count()
         skip_elements = (pagination_parameters.page - 1) * \
             pagination_parameters.page_size
-        return Snapshot.objects.skip(skip_elements).limit(pagination_parameters.page_size)
+        return snapshots.skip(skip_elements).limit(pagination_parameters.page_size)
 
 
 @blp.route("/current")
