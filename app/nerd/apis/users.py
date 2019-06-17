@@ -110,7 +110,7 @@ class TopTrainers(MethodView):
             {
                 '$match': {
                     'total_trainings': {
-                        '$ge': 1
+                        '$gte': 1
                     }
                 }
             },
