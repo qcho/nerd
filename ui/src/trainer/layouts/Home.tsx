@@ -1,5 +1,4 @@
 import React from 'react';
-import NavigationBar from '../NavigationBar';
 import { Theme, Grid, Card, CardContent, CardHeader, Typography, CardActions, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -7,12 +6,10 @@ import { makeStyles } from '@material-ui/styles';
 import useAuthentication from '../hooks/useAuthentication';
 import { Routes } from '../helpers/routeHelper';
 import { TopContributors } from '../widgets/TopContributors';
+import { Scaffold } from '../widgets/Scaffold';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
-    grow: {
-      flexGrow: 1,
-    },
     container: {
       marginTop: -(theme.mixins.toolbar.minHeight || 0),
       display: 'flex',
@@ -81,8 +78,7 @@ const Home = () => {
   ];
 
   return (
-    <div className={classes.grow}>
-      <NavigationBar title={'Home'} />
+    <Scaffold title={'Home'}>
       <div className={classes.container}>
         <div className={classes.content}>
           <div>
@@ -178,7 +174,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Scaffold>
   );
 };
 

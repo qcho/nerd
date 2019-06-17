@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Theme, Paper } from '@material-ui/core';
-import NavigationBar from '../NavigationBar';
 import { useTranslation } from 'react-i18next';
 import { UsersApi, User, RoleList, RolesApi } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
@@ -8,12 +7,10 @@ import Http from '../helpers/http';
 import { makeStyles } from '@material-ui/styles';
 import { RichTable, DatasourceParameters } from '../widgets/RichTable';
 import UserRow from '../widgets/UserRow';
+import { Scaffold } from '../widgets/Scaffold';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
-    grow: {
-      flexGrow: 1,
-    },
     content: {
       marginTop: theme.spacing.unit * 2,
       marginLeft: theme.spacing.unit * 10,
@@ -77,8 +74,7 @@ const UserManagement = () => {
   };
 
   return (
-    <div className={classes.grow}>
-      <NavigationBar title={t('User management')} loading={loading} />
+    <Scaffold title={t('User management')} loading={loading}>
       <Paper className={classes.content}>
         <RichTable
           title={t('Users')}
@@ -91,7 +87,7 @@ const UserManagement = () => {
           paginatable
         />
       </Paper>
-    </div>
+    </Scaffold>
   );
 };
 

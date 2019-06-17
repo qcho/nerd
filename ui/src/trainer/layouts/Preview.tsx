@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { withStyles, Theme, createStyles, Grid, TextField, Button, Divider, Snackbar } from '@material-ui/core';
-import NavigationBar from '../NavigationBar';
 import classNames from 'classnames';
 import useAuthentication from '../hooks/useAuthentication';
 import { useTranslation } from 'react-i18next';
@@ -9,12 +8,10 @@ import { SpacyDocument, Type, NerApi } from '../apigen';
 import TokenizedEditor from '../widgets/TokenizedEditor';
 import Http from '../helpers/http';
 import { ErrorMessage } from '../widgets/ErrorMessage';
+import { Scaffold } from '../widgets/Scaffold';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-    },
     content: {
       padding: theme.spacing.unit * 2,
     },
@@ -68,9 +65,8 @@ const PreviewLayout = ({ classes }: Props) => {
   }
 
   return (
-    <div>
-      <NavigationBar title={t('NER sandbox')} loading={loading} />
-      <Grid container className={classNames(classes.content, classes.root)} direction="column" justify="space-around">
+    <Scaffold title={t('NER sandbox')} loading={loading}>
+      <Grid container className={classes.content} direction="column" justify="space-around">
         <Grid item>
           <Grid container direction="row" spacing={24} alignItems="center">
             <Grid item xs={10}>
@@ -142,7 +138,7 @@ const PreviewLayout = ({ classes }: Props) => {
         onClose={() => setSnackbarMessage('')}
         message={<span>{snackbarMessage}</span>}
       />
-    </div>
+    </Scaffold>
   );
 };
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Button, LinearProgress } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import useAuthentication from './hooks/useAuthentication';
+import useAuthentication from '../hooks/useAuthentication';
 import { useTranslation } from 'react-i18next';
 import Home from '@material-ui/icons/Home';
 import useRouter from 'use-react-router';
 import { makeStyles } from '@material-ui/styles';
-import { Routes } from './helpers/routeHelper';
+import { Routes } from '../helpers/routeHelper';
 
 const useStyles = makeStyles(() => ({
   menuButton: {
@@ -104,4 +104,4 @@ const NavigationBar = ({ loading, title }: NavigationBarProps) => {
   );
 };
 
-export default NavigationBar;
+export { NavigationBar };

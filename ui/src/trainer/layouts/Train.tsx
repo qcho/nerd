@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Paper, Theme, Toolbar, Typography, AppBar, Button } from '@material-ui/core';
-import NavigationBar from '../NavigationBar';
 import { makeStyles } from '@material-ui/styles';
 import { useTranslation } from 'react-i18next';
 import { CorpusApi, SpacyDocument } from '../apigen';
@@ -8,6 +7,7 @@ import { apiConfig } from '../helpers/api-config';
 import { MaybeTrainText, MaybeSpacyDocument } from '../types/optionals';
 import TokenizedEditor from '../widgets/TokenizedEditor';
 import { clone } from '../helpers/utils';
+import { Scaffold } from '../widgets/Scaffold';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -118,11 +118,11 @@ const Train = () => {
   }, []);
 
   return (
-    <div className={classes.container}>
-      <NavigationBar title={t('Train')} loading={loading} />
-      <>
+    <Scaffold title={t('Train')} loading={loading}>
+      <div className={classes.container}>
         {noMoreDocuments && (
           <Paper className={classes.paper}>
+            {/* TODO: Show something nice here */}
             <Typography>{t('No more documents to train!')}</Typography>
           </Paper>
         )}
@@ -162,8 +162,8 @@ const Train = () => {
             />
           </Paper>
         )}
-      </>
-    </div>
+      </div>
+    </Scaffold>
   );
 };
 

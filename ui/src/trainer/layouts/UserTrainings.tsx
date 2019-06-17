@@ -1,20 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import NavigationBar from '../NavigationBar';
 import { UsersApi, TrainedText, SnapshotsApi, User, Snapshot } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
 import { DatasourceParameters, RichTable } from '../widgets/RichTable';
 import Http from '../helpers/http';
-import { Paper, Theme, CircularProgress, TableCell, Typography } from '@material-ui/core';
+import { Paper, Theme, CircularProgress, TableCell } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { MaybeUser, MaybeSnapshot } from '../types/optionals';
 import { useTranslation } from 'react-i18next';
 import TokenizedEditor from '../widgets/TokenizedEditor';
+import { Scaffold } from '../widgets/Scaffold';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
-    grow: {
-      flexGrow: 1,
-    },
     content: {
       marginTop: theme.spacing.unit * 2,
       marginLeft: theme.spacing.unit * 5,
@@ -102,8 +99,7 @@ const UserTrainings = ({ match }: { match: any }) => {
   };
 
   return (
-    <div>
-      <NavigationBar title={(user && t('{{userName}} trained texts', { userName: user.name })) || ''} loading={false} />
+    <Scaffold title={(user && t('{{userName}} trained texts', { userName: user.name })) || ''} loading={loading}>
       {!loading && user ? (
         <div className={classes.content}>
           <Paper>
@@ -122,7 +118,7 @@ const UserTrainings = ({ match }: { match: any }) => {
           <CircularProgress />
         </div>
       )}
-    </div>
+    </Scaffold>
   );
 };
 
