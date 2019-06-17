@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Title } from '../widgets/Title';
-import { Grid, Typography, Button } from '@material-ui/core';
+import { Grid, Typography, Button, Tooltip } from '@material-ui/core';
 import { Line } from 'rc-progress';
 import { apiConfig } from '../helpers/api-config';
 import { SnapshotsApi, SnapshotInfo } from '../apigen';
@@ -35,21 +35,23 @@ const TrainingStatus = ({ snapshotInfo }: { snapshotInfo: SnapshotInfo }) => {
           trained: trained_distinct,
         })}
       </Typography>
-      <div
-        style={{
-          marginTop: '-0.8em',
-          width: '6em',
-          height: '1em',
-          verticalAlign: 'top',
-        }}
-      >
-        <Line
-          percent={trainedPercentage}
-          strokeColor={progressColor(trainedPercentage)}
-          strokeWidth={3}
-          trailWidth={3}
-        />
-      </div>
+      <Tooltip title={`${trainedPercentage}%`} placement="right">
+        <div
+          style={{
+            marginTop: '-0.8em',
+            width: '6em',
+            height: '1em',
+            verticalAlign: 'top',
+          }}
+        >
+          <Line
+            percent={trainedPercentage}
+            strokeColor={progressColor(trainedPercentage)}
+            strokeWidth={3}
+            trailWidth={3}
+          />
+        </div>
+      </Tooltip>
     </div>
   );
 };
