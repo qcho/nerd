@@ -17,9 +17,6 @@ blp = Blueprint("snapshots", "snapshots",
                 description="Corpus snapshot operations")
 
 
-class CorpusSnapshotSchema(ModelSchema):
-    class Meta:
-        model = Snapshot
 
 
 class CreateCorpusSnapshotSchema(ModelSchema):
@@ -32,7 +29,7 @@ class CreateCorpusSnapshotSchema(ModelSchema):
 class IndexResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(CorpusSnapshotSchema(many=True))
+    @blp.response(SnapshotSchema(many=True))
     @blp.doc(operationId="listCorpusSnapshots")
     @blp.paginate()
     def get(self, pagination_parameters: PaginationParameters):
@@ -55,8 +52,8 @@ class SnapshotCurrentResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="createCorpusSnapshot")
-    @blp.arguments(CorpusSnapshotSchema)
-    @blp.response(CorpusSnapshotSchema)
+    @blp.arguments(SnapshotSchema)
+    @blp.response(SnapshotSchema)
     def put(self, payload):
         current_snapshot = Snapshot.current()
         new_snapshot = Snapshot(types=current_snapshot.types)
