@@ -75,11 +75,11 @@ const Train = () => {
         setNoMoreDocuments(true);
         setTrainText(null);
         setSpacyDocument(null);
-        return;
+      } else {
+        setNoMoreDocuments(false);
+        setTrainText(trainingInfoResult.data);
+        setSpacyDocument(clone(trainingInfoResult.data.spacy_document));
       }
-      setNoMoreDocuments(false);
-      setTrainText(trainingInfoResult.data);
-      setSpacyDocument(clone(trainingInfoResult.data.spacy_document));
     } catch (e) {
       if (unmounted) return;
       console.log('Error getting training info', e);
