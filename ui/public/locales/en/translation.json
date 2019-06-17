@@ -1,5 +1,13 @@
 {
   "20": "20",
+  "View": "View",
+  "Total trained": "Total trained",
+  "Untrained": "Untrained",
+  "Total trainings": "Total trainings",
+  "Last training": "Last training",
+  "View corpus": "View corpus",
+  "Info": "Info",
+  "Last Training": "Last Training",
   "Created On": "Created On",
   "Actions": "Actions",
   "Snapshots": "Snapshots",

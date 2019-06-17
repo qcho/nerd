@@ -26,10 +26,10 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 export interface EntityList {
     /**
      * 
-     * @type {string}
+     * @type {Array<SpacyEntity2>}
      * @memberof EntityList
      */
-    text: string;
+    entities: Array<SpacyEntity2>;
     /**
      * 
      * @type {Snapshot}
@@ -38,10 +38,10 @@ export interface EntityList {
     snapshot: Snapshot;
     /**
      * 
-     * @type {Array<SpacyEntity2>}
+     * @type {string}
      * @memberof EntityList
      */
-    entities: Array<SpacyEntity2>;
+    text: string;
 }
 
 /**
@@ -80,10 +80,22 @@ export interface RawText {
 export interface Register {
     /**
      * 
+     * @type {string}
+     * @memberof Register
+     */
+    plain_password?: string;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof Register
      */
     trainings?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Register
+     */
+    id?: string;
     /**
      * 
      * @type {string}
@@ -96,18 +108,6 @@ export interface Register {
      * @memberof Register
      */
     email: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
-    plain_password?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
-    id?: string;
 }
 
 /**
@@ -138,10 +138,10 @@ export interface Snapshot {
     types?: { [key: string]: Type; };
     /**
      * 
-     * @type {Date}
+     * @type {number}
      * @memberof Snapshot
      */
-    created_at?: Date;
+    id: number;
     /**
      * 
      * @type {number}
@@ -150,16 +150,16 @@ export interface Snapshot {
     semaphore?: number;
     /**
      * 
-     * @type {number}
+     * @type {Date}
      * @memberof Snapshot
      */
-    id: number;
+    trained_at?: Date;
     /**
      * 
      * @type {Date}
      * @memberof Snapshot
      */
-    trained_at?: Date;
+    created_at?: Date;
 }
 
 /**
@@ -185,13 +185,25 @@ export interface SnapshotInfo {
      * @type {number}
      * @memberof SnapshotInfo
      */
-    trained_texts: number;
+    trained: number;
     /**
      * 
      * @type {number}
      * @memberof SnapshotInfo
      */
-    trainings: number;
+    trained_distinct: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SnapshotInfo
+     */
+    available: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SnapshotInfo
+     */
+    available_distinct: number;
 }
 
 /**
@@ -200,12 +212,6 @@ export interface SnapshotInfo {
  * @interface SpacyDocument
  */
 export interface SpacyDocument {
-    /**
-     * 
-     * @type {Date}
-     * @memberof SpacyDocument
-     */
-    _created_at?: Date;
     /**
      * 
      * @type {Array<SpacySentence>}
@@ -220,16 +226,22 @@ export interface SpacyDocument {
     text: string;
     /**
      * 
-     * @type {Array<SpacyToken>}
+     * @type {Date}
      * @memberof SpacyDocument
      */
-    tokens?: Array<SpacyToken>;
+    _created_at?: Date;
     /**
      * 
      * @type {Array<SpacyEntity>}
      * @memberof SpacyDocument
      */
     ents?: Array<SpacyEntity>;
+    /**
+     * 
+     * @type {Array<SpacyToken>}
+     * @memberof SpacyDocument
+     */
+    tokens?: Array<SpacyToken>;
 }
 
 /**
@@ -238,12 +250,6 @@ export interface SpacyDocument {
  * @interface SpacyDocument1
  */
 export interface SpacyDocument1 {
-    /**
-     * 
-     * @type {Date}
-     * @memberof SpacyDocument1
-     */
-    _created_at?: Date;
     /**
      * 
      * @type {Array<SpacySentence1>}
@@ -258,16 +264,22 @@ export interface SpacyDocument1 {
     text: string;
     /**
      * 
-     * @type {Array<SpacyToken1>}
+     * @type {Date}
      * @memberof SpacyDocument1
      */
-    tokens?: Array<SpacyToken1>;
+    _created_at?: Date;
     /**
      * 
      * @type {Array<SpacyEntity1>}
      * @memberof SpacyDocument1
      */
     ents?: Array<SpacyEntity1>;
+    /**
+     * 
+     * @type {Array<SpacyToken1>}
+     * @memberof SpacyDocument1
+     */
+    tokens?: Array<SpacyToken1>;
 }
 
 /**
@@ -281,6 +293,12 @@ export interface SpacyEntity {
      * @type {number}
      * @memberof SpacyEntity
      */
+    start: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity
+     */
     end: number;
     /**
      * 
@@ -288,12 +306,6 @@ export interface SpacyEntity {
      * @memberof SpacyEntity
      */
     label: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyEntity
-     */
-    start: number;
 }
 
 /**
@@ -307,6 +319,12 @@ export interface SpacyEntity1 {
      * @type {number}
      * @memberof SpacyEntity1
      */
+    start: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity1
+     */
     end: number;
     /**
      * 
@@ -314,12 +332,6 @@ export interface SpacyEntity1 {
      * @memberof SpacyEntity1
      */
     label: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyEntity1
-     */
-    start: number;
 }
 
 /**
@@ -333,6 +345,12 @@ export interface SpacyEntity2 {
      * @type {number}
      * @memberof SpacyEntity2
      */
+    start: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity2
+     */
     end: number;
     /**
      * 
@@ -340,12 +358,6 @@ export interface SpacyEntity2 {
      * @memberof SpacyEntity2
      */
     label: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyEntity2
-     */
-    start: number;
 }
 
 /**
@@ -359,13 +371,13 @@ export interface SpacySentence {
      * @type {number}
      * @memberof SpacySentence
      */
-    end: number;
+    start: number;
     /**
      * 
      * @type {number}
      * @memberof SpacySentence
      */
-    start: number;
+    end: number;
 }
 
 /**
@@ -379,13 +391,13 @@ export interface SpacySentence1 {
      * @type {number}
      * @memberof SpacySentence1
      */
-    end: number;
+    start: number;
     /**
      * 
      * @type {number}
      * @memberof SpacySentence1
      */
-    start: number;
+    end: number;
 }
 
 /**
@@ -399,7 +411,13 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
-    end: number;
+    start: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    pos?: string;
     /**
      * 
      * @type {string}
@@ -411,13 +429,13 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
-    head?: number;
+    id: number;
     /**
      * 
      * @type {number}
      * @memberof SpacyToken
      */
-    start: number;
+    head?: number;
     /**
      * 
      * @type {string}
@@ -429,13 +447,7 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
-    id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    pos?: string;
+    end: number;
 }
 
 /**
@@ -449,7 +461,13 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
-    end: number;
+    start: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    pos?: string;
     /**
      * 
      * @type {string}
@@ -461,13 +479,13 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
-    head?: number;
+    id: number;
     /**
      * 
      * @type {number}
      * @memberof SpacyToken1
      */
-    start: number;
+    head?: number;
     /**
      * 
      * @type {string}
@@ -479,13 +497,7 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
-    id: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
-    pos?: string;
+    end: number;
 }
 
 /**
@@ -554,16 +566,16 @@ export interface Token {
 export interface TopContributor {
     /**
      * 
-     * @type {number}
-     * @memberof TopContributor
-     */
-    total_trainings: number;
-    /**
-     * 
      * @type {string}
      * @memberof TopContributor
      */
     name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TopContributor
+     */
+    total_trainings: number;
 }
 
 /**
@@ -572,6 +584,12 @@ export interface TopContributor {
  * @interface TrainText
  */
 export interface TrainText {
+    /**
+     * 
+     * @type {SpacyDocument1}
+     * @memberof TrainText
+     */
+    spacy_document: SpacyDocument1;
     /**
      * 
      * @type {Snapshot}
@@ -584,12 +602,6 @@ export interface TrainText {
      * @memberof TrainText
      */
     text_id: string;
-    /**
-     * 
-     * @type {SpacyDocument1}
-     * @memberof TrainText
-     */
-    spacy_document: SpacyDocument1;
 }
 
 /**
@@ -606,18 +618,6 @@ export interface TrainedText {
     user_id: string;
     /**
      * 
-     * @type {Date}
-     * @memberof TrainedText
-     */
-    created_at?: Date;
-    /**
-     * 
-     * @type {string}
-     * @memberof TrainedText
-     */
-    text_id: string;
-    /**
-     * 
      * @type {string}
      * @memberof TrainedText
      */
@@ -628,6 +628,18 @@ export interface TrainedText {
      * @memberof TrainedText
      */
     document: SpacyDocument;
+    /**
+     * 
+     * @type {string}
+     * @memberof TrainedText
+     */
+    text_id: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof TrainedText
+     */
+    created_at?: Date;
 }
 
 /**
@@ -641,13 +653,13 @@ export interface Type {
      * @type {string}
      * @memberof Type
      */
-    label: string;
+    color: string;
     /**
      * 
      * @type {string}
      * @memberof Type
      */
-    color: string;
+    label: string;
 }
 
 /**
@@ -667,6 +679,12 @@ export interface User {
      * @type {string}
      * @memberof User
      */
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
     name: string;
     /**
      * 
@@ -674,12 +692,6 @@ export interface User {
      * @memberof User
      */
     email: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    id?: string;
     /**
      * 
      * @type {number}
@@ -722,6 +734,12 @@ export interface UserCredentials {
 export interface UserPayload {
     /**
      * 
+     * @type {string}
+     * @memberof UserPayload
+     */
+    plain_password?: string;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof UserPayload
      */
@@ -737,19 +755,13 @@ export interface UserPayload {
      * @type {string}
      * @memberof UserPayload
      */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserPayload
-     */
-    plain_password?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserPayload
-     */
     id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPayload
+     */
+    name?: string;
 }
 
 /**

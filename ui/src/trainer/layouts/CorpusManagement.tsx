@@ -22,14 +22,14 @@ const CorpusManagement = () => {
 
   return (
     <Scaffold title={t('Corpus Management')}>
-      <div style={{ width: '60vw' }}>
-        <div className={classes.section}>
+      <Grid container spacing={40} style={{ paddingLeft: '2em', paddingRight: '2em', paddingTop: '1em' }}>
+        <Grid item className={classes.section} xs={2}>
           <TextTrainingSection />
-        </div>
-        <div className={classes.section}>
+        </Grid>
+        <Grid item className={classes.section} xs={10}>
           <SnapshotSection />
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     </Scaffold>
   );
 };
