@@ -108,6 +108,13 @@ class TopTrainers(MethodView):
                 }
             },
             {
+                '$match': {
+                    'total_trainings': {
+                        '$ge': 1
+                    }
+                }
+            },
+            {
                 '$sort': {'total_trainings': -1}
             },
             {
