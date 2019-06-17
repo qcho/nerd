@@ -54,7 +54,7 @@ def snapshot_info(snapshot_id):
     is_current = snapshot_id is CURRENT_ID
     snapshot: Snapshot = Snapshot.objects.get(id=snapshot_id)
     corpus_size = Text.objects().count() if is_current else Text.objects(created_at__lte=snapshot.created_at).count()
-    trained = TrainedText.objects() if is_current else TrainedText.objects(created_at__lte=snapshot.trained_at)
+    trained = TrainedText.objects(created_at__lte=snapshot.trained_at)
     available = TrainedText.objects() if is_current else TrainedText.objects(created_at__lte=snapshot.created_at)
     # TODO: Not sure if distinct brings all of the documents to memory.
     #   We may need a better way of doing this if so.
