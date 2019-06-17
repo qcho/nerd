@@ -21,8 +21,10 @@ blp = Blueprint("snapshots", "snapshots",
 class SnapshotInfoSchema(BaseSchema):
     snapshot = fields.Nested(SnapshotSchema, required=True)
     corpus_size = fields.Integer(required=True)
-    trained_texts = fields.Integer(required=True)
-    trainings = fields.Integer(required=True)
+    trained = fields.Integer(required=True)
+    trained_distinct = fields.Integer(required=True)
+    available = fields.Integer(required=True)
+    available_distinct = fields.Integer(required=True)
 
 
 class CreateCorpusSnapshotSchema(ModelSchema):
@@ -44,23 +46,27 @@ class IndexResource(MethodView):
         snapshots = Snapshot.objects(id__gt=0)
         pagination_parameters.item_count = snapshots.count()
         skip_elements = (pagination_parameters.page - 1) * \
-            pagination_parameters.page_size
+                        pagination_parameters.page_size
         return snapshots.skip(skip_elements).limit(pagination_parameters.page_size)
 
 
 def snapshot_info(snapshot_id):
+    is_current = snapshot_id is CURRENT_ID
     snapshot: Snapshot = Snapshot.objects.get(id=snapshot_id)
-    corpus_size = Text.objects(created_at__lte=snapshot.created_at).count()
-    tt = TrainedText.objects(created_at__lte=snapshot.created_at)
-    trained = tt.count()
+    corpus_size = Text.objects().count() if is_current else Text.objects(created_at__lte=snapshot.created_at).count()
+    trained = TrainedText.objects() if is_current else TrainedText.objects(created_at__lte=snapshot.trained_at)
+    available = TrainedText.objects() if is_current else TrainedText.objects(created_at__lte=snapshot.created_at)
     # TODO: Not sure if distinct brings all of the documents to memory.
     #   We may need a better way of doing this if so.
-    trained_texts = len(tt.distinct(field="text_id"))
+    trained_texts = len(trained.distinct(field="text_id"))
+    available_trainings = len(available.distinct(field="text_id"))
     return dict(
         snapshot=snapshot,
         corpus_size=corpus_size,
-        trainings=trained,
-        trained_texts=trained_texts
+        trained=trained.count(),  # Trainings included up until snapshot.trained_at
+        trained_distinct=trained_texts,  # Same as above but distinct
+        available=available.count(),  # Total available trainings
+        available_distinct=available_trainings  # Total distinct available trainings
     )
 
 
