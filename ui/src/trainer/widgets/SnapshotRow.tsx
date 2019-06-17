@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
-import { CorpusSnapshot } from '../apigen';
+import { Snapshot } from '../apigen';
 import { TableCell, Tab } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
 interface Props {
-  snapshot: CorpusSnapshot;
+  snapshot: Snapshot;
 }
 
 const SnapshotRow = ({ snapshot }: Props) => {

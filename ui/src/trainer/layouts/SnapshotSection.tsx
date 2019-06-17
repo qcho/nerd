@@ -1,7 +1,7 @@
 import React from 'react';
 import { DatasourceParameters, RichTable } from '../widgets/RichTable';
 import { useTranslation } from 'react-i18next';
-import { SnapshotsApi, CorpusSnapshot } from '../apigen';
+import { SnapshotsApi, Snapshot } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
 import { SnapshotRow } from '../widgets/SnapshotRow';
 import { Title } from '../widgets/Title';
@@ -16,7 +16,7 @@ const SnapshotSection = () => {
     } catch (e) {}
   };
 
-  const buildRow = (snapshot: CorpusSnapshot) => <SnapshotRow snapshot={snapshot} />;
+  const buildRow = (snapshot: Snapshot) => <SnapshotRow snapshot={snapshot} />;
   const headers = [
     {
       id: 'version',
@@ -48,7 +48,7 @@ const SnapshotSection = () => {
           datasource={snapshotDatasource}
           rowBuilder={buildRow}
           headers={headers}
-          valueToId={(value: CorpusSnapshot) => `${value.id}`}
+          valueToId={(value: Snapshot) => `${value.id}`}
         />
       </Paper>
     </div>

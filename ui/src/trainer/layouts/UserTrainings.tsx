@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { UsersApi, TrainedText, SnapshotsApi, User, Snapshot } from '../apigen';
+import { UsersApi, TrainedText, SnapshotsApi, User, Snapshot, SnapshotInfo } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
 import { DatasourceParameters, RichTable } from '../widgets/RichTable';
 import Http from '../helpers/http';
@@ -56,7 +56,7 @@ const UserTrainings = ({ match }: { match: any }) => {
       if (!userAndSnapshot) return;
       const [user, snapshot] = userAndSnapshot;
       setUser(user as User);
-      setSnapshot(snapshot as Snapshot);
+      setSnapshot((snapshot as SnapshotInfo).snapshot);
     }
     loadUser();
   }, [fetchUserAndSnapshot]);

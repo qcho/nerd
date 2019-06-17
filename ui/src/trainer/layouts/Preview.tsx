@@ -35,7 +35,7 @@ const PreviewLayout = ({ classes }: Props) => {
   async function onParseClick() {
     setLoading(true);
     try {
-      const response = await nerApi.parseText_1(text);
+      const response = await nerApi.textParse_2({ text });
       setDocument(response.data.spacy_document);
       setEntityTypes(response.data.snapshot.types || {});
     } catch (e) {

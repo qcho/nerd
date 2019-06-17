@@ -21,39 +21,27 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
- * @interface CorpusSnapshot
+ * @interface EntityList
  */
-export interface CorpusSnapshot {
-    /**
-     * 
-     * @type {Date}
-     * @memberof CorpusSnapshot
-     */
-    created_at?: Date;
-    /**
-     * 
-     * @type {number}
-     * @memberof CorpusSnapshot
-     */
-    id: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof CorpusSnapshot
-     */
-    semaphore?: number;
-    /**
-     * 
-     * @type {Date}
-     * @memberof CorpusSnapshot
-     */
-    trained_at?: Date;
+export interface EntityList {
     /**
      * 
      * @type {string}
-     * @memberof CorpusSnapshot
+     * @memberof EntityList
      */
-    types?: string;
+    text: string;
+    /**
+     * 
+     * @type {Snapshot}
+     * @memberof EntityList
+     */
+    snapshot: Snapshot;
+    /**
+     * 
+     * @type {Array<SpacyEntity2>}
+     * @memberof EntityList
+     */
+    entities: Array<SpacyEntity2>;
 }
 
 /**
@@ -73,21 +61,23 @@ export interface HttpError {
 /**
  * 
  * @export
+ * @interface RawText
+ */
+export interface RawText {
+    /**
+     * 
+     * @type {string}
+     * @memberof RawText
+     */
+    text: string;
+}
+
+/**
+ * 
+ * @export
  * @interface Register
  */
 export interface Register {
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
-    plain_password?: string;
     /**
      * 
      * @type {Array<string>}
@@ -106,6 +96,18 @@ export interface Register {
      * @memberof Register
      */
     email: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Register
+     */
+    plain_password?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Register
+     */
+    id?: string;
 }
 
 /**
@@ -130,10 +132,10 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
-     * @type {Date}
+     * @type {{ [key: string]: Type; }}
      * @memberof Snapshot
      */
-    trained_at?: Date;
+    types?: { [key: string]: Type; };
     /**
      * 
      * @type {Date}
@@ -145,13 +147,51 @@ export interface Snapshot {
      * @type {number}
      * @memberof Snapshot
      */
+    semaphore?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Snapshot
+     */
     id: number;
     /**
      * 
-     * @type {{ [key: string]: Type; }}
+     * @type {Date}
      * @memberof Snapshot
      */
-    types?: { [key: string]: Type; };
+    trained_at?: Date;
+}
+
+/**
+ * 
+ * @export
+ * @interface SnapshotInfo
+ */
+export interface SnapshotInfo {
+    /**
+     * 
+     * @type {Snapshot}
+     * @memberof SnapshotInfo
+     */
+    snapshot: Snapshot;
+    /**
+     * 
+     * @type {number}
+     * @memberof SnapshotInfo
+     */
+    corpus_size: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SnapshotInfo
+     */
+    trained_texts: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SnapshotInfo
+     */
+    trainings: number;
 }
 
 /**
@@ -160,24 +200,6 @@ export interface Snapshot {
  * @interface SpacyDocument
  */
 export interface SpacyDocument {
-    /**
-     * 
-     * @type {Array<SpacyToken>}
-     * @memberof SpacyDocument
-     */
-    tokens?: Array<SpacyToken>;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyDocument
-     */
-    text: string;
-    /**
-     * 
-     * @type {Array<SpacyEntity>}
-     * @memberof SpacyDocument
-     */
-    ents?: Array<SpacyEntity>;
     /**
      * 
      * @type {Date}
@@ -190,6 +212,24 @@ export interface SpacyDocument {
      * @memberof SpacyDocument
      */
     sents?: Array<SpacySentence>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyDocument
+     */
+    text: string;
+    /**
+     * 
+     * @type {Array<SpacyToken>}
+     * @memberof SpacyDocument
+     */
+    tokens?: Array<SpacyToken>;
+    /**
+     * 
+     * @type {Array<SpacyEntity>}
+     * @memberof SpacyDocument
+     */
+    ents?: Array<SpacyEntity>;
 }
 
 /**
@@ -198,24 +238,6 @@ export interface SpacyDocument {
  * @interface SpacyDocument1
  */
 export interface SpacyDocument1 {
-    /**
-     * 
-     * @type {Array<SpacyToken1>}
-     * @memberof SpacyDocument1
-     */
-    tokens?: Array<SpacyToken1>;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyDocument1
-     */
-    text: string;
-    /**
-     * 
-     * @type {Array<SpacyEntity1>}
-     * @memberof SpacyDocument1
-     */
-    ents?: Array<SpacyEntity1>;
     /**
      * 
      * @type {Date}
@@ -228,6 +250,24 @@ export interface SpacyDocument1 {
      * @memberof SpacyDocument1
      */
     sents?: Array<SpacySentence1>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyDocument1
+     */
+    text: string;
+    /**
+     * 
+     * @type {Array<SpacyToken1>}
+     * @memberof SpacyDocument1
+     */
+    tokens?: Array<SpacyToken1>;
+    /**
+     * 
+     * @type {Array<SpacyEntity1>}
+     * @memberof SpacyDocument1
+     */
+    ents?: Array<SpacyEntity1>;
 }
 
 /**
@@ -238,6 +278,12 @@ export interface SpacyDocument1 {
 export interface SpacyEntity {
     /**
      * 
+     * @type {number}
+     * @memberof SpacyEntity
+     */
+    end: number;
+    /**
+     * 
      * @type {string}
      * @memberof SpacyEntity
      */
@@ -248,12 +294,6 @@ export interface SpacyEntity {
      * @memberof SpacyEntity
      */
     start: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyEntity
-     */
-    end: number;
 }
 
 /**
@@ -264,6 +304,12 @@ export interface SpacyEntity {
 export interface SpacyEntity1 {
     /**
      * 
+     * @type {number}
+     * @memberof SpacyEntity1
+     */
+    end: number;
+    /**
+     * 
      * @type {string}
      * @memberof SpacyEntity1
      */
@@ -274,12 +320,32 @@ export interface SpacyEntity1 {
      * @memberof SpacyEntity1
      */
     start: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface SpacyEntity2
+ */
+export interface SpacyEntity2 {
     /**
      * 
      * @type {number}
-     * @memberof SpacyEntity1
+     * @memberof SpacyEntity2
      */
     end: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyEntity2
+     */
+    label: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity2
+     */
+    start: number;
 }
 
 /**
@@ -293,13 +359,13 @@ export interface SpacySentence {
      * @type {number}
      * @memberof SpacySentence
      */
-    start: number;
+    end: number;
     /**
      * 
      * @type {number}
      * @memberof SpacySentence
      */
-    end: number;
+    start: number;
 }
 
 /**
@@ -313,13 +379,13 @@ export interface SpacySentence1 {
      * @type {number}
      * @memberof SpacySentence1
      */
-    start: number;
+    end: number;
     /**
      * 
      * @type {number}
      * @memberof SpacySentence1
      */
-    end: number;
+    start: number;
 }
 
 /**
@@ -330,16 +396,16 @@ export interface SpacySentence1 {
 export interface SpacyToken {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    pos?: string;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyToken
      */
-    id: number;
+    end: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    tag?: string;
     /**
      * 
      * @type {number}
@@ -351,7 +417,7 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
-    end: number;
+    start: number;
     /**
      * 
      * @type {string}
@@ -363,13 +429,13 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
-    start: number;
+    id: number;
     /**
      * 
      * @type {string}
      * @memberof SpacyToken
      */
-    tag?: string;
+    pos?: string;
 }
 
 /**
@@ -380,16 +446,16 @@ export interface SpacyToken {
 export interface SpacyToken1 {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
-    pos?: string;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyToken1
      */
-    id: number;
+    end: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    tag?: string;
     /**
      * 
      * @type {number}
@@ -401,7 +467,7 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
-    end: number;
+    start: number;
     /**
      * 
      * @type {string}
@@ -413,13 +479,13 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
-    start: number;
+    id: number;
     /**
      * 
      * @type {string}
      * @memberof SpacyToken1
      */
-    tag?: string;
+    pos?: string;
 }
 
 /**
@@ -430,16 +496,16 @@ export interface SpacyToken1 {
 export interface Text {
     /**
      * 
-     * @type {Array<string>}
-     * @memberof Text
-     */
-    trainings?: Array<string>;
-    /**
-     * 
      * @type {string}
      * @memberof Text
      */
     value: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof Text
+     */
+    created_at?: Date;
     /**
      * 
      * @type {string}
@@ -448,10 +514,10 @@ export interface Text {
     id?: string;
     /**
      * 
-     * @type {Date}
+     * @type {Array<string>}
      * @memberof Text
      */
-    created_at?: Date;
+    trainings?: Array<string>;
 }
 
 /**
@@ -488,16 +554,16 @@ export interface Token {
 export interface TopContributor {
     /**
      * 
-     * @type {string}
-     * @memberof TopContributor
-     */
-    name: string;
-    /**
-     * 
      * @type {number}
      * @memberof TopContributor
      */
     total_trainings: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof TopContributor
+     */
+    name: string;
 }
 
 /**
@@ -506,12 +572,6 @@ export interface TopContributor {
  * @interface TrainText
  */
 export interface TrainText {
-    /**
-     * 
-     * @type {SpacyDocument1}
-     * @memberof TrainText
-     */
-    spacy_document: SpacyDocument1;
     /**
      * 
      * @type {Snapshot}
@@ -524,6 +584,12 @@ export interface TrainText {
      * @memberof TrainText
      */
     text_id: string;
+    /**
+     * 
+     * @type {SpacyDocument1}
+     * @memberof TrainText
+     */
+    spacy_document: SpacyDocument1;
 }
 
 /**
@@ -532,6 +598,12 @@ export interface TrainText {
  * @interface TrainedText
  */
 export interface TrainedText {
+    /**
+     * 
+     * @type {string}
+     * @memberof TrainedText
+     */
+    user_id: string;
     /**
      * 
      * @type {Date}
@@ -543,19 +615,13 @@ export interface TrainedText {
      * @type {string}
      * @memberof TrainedText
      */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TrainedText
-     */
-    user_id: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TrainedText
-     */
     text_id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TrainedText
+     */
+    id?: string;
     /**
      * 
      * @type {SpacyDocument}
@@ -592,18 +658,6 @@ export interface Type {
 export interface User {
     /**
      * 
-     * @type {string}
-     * @memberof User
-     */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    name: string;
-    /**
-     * 
      * @type {Array<string>}
      * @memberof User
      */
@@ -613,7 +667,19 @@ export interface User {
      * @type {string}
      * @memberof User
      */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
     email: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    id?: string;
     /**
      * 
      * @type {number}
@@ -656,22 +722,16 @@ export interface UserCredentials {
 export interface UserPayload {
     /**
      * 
-     * @type {string}
+     * @type {Array<string>}
      * @memberof UserPayload
      */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserPayload
-     */
-    plain_password?: string;
+    trainings?: Array<string>;
     /**
      * 
      * @type {Array<string>}
      * @memberof UserPayload
      */
-    trainings?: Array<string>;
+    roles?: Array<string>;
     /**
      * 
      * @type {string}
@@ -680,10 +740,16 @@ export interface UserPayload {
     name?: string;
     /**
      * 
-     * @type {Array<string>}
+     * @type {string}
      * @memberof UserPayload
      */
-    roles?: Array<string>;
+    plain_password?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPayload
+     */
+    id?: string;
 }
 
 /**
@@ -1098,25 +1164,25 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * 
-         * @param {string} user_id 
          * @param {string} text_id 
+         * @param {string} user_id 
          * @param {number} [page] 
          * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTraining(user_id: string, text_id: string, page?: number, page_size?: number, options: any = {}): RequestArgs {
-            // verify required parameter 'user_id' is not null or undefined
-            if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getTraining.');
-            }
+        getTraining(text_id: string, user_id: string, page?: number, page_size?: number, options: any = {}): RequestArgs {
             // verify required parameter 'text_id' is not null or undefined
             if (text_id === null || text_id === undefined) {
                 throw new RequiredError('text_id','Required parameter text_id was null or undefined when calling getTraining.');
             }
+            // verify required parameter 'user_id' is not null or undefined
+            if (user_id === null || user_id === undefined) {
+                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling getTraining.');
+            }
             const localVarPath = `/api/corpus/{text_id}/trainings/{user_id}`
-                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)))
-                .replace(`{${"text_id"}}`, encodeURIComponent(String(text_id)));
+                .replace(`{${"text_id"}}`, encodeURIComponent(String(text_id)))
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             let baseOptions;
             if (configuration) {
@@ -1337,28 +1403,28 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * 
-         * @param {string} user_id 
          * @param {string} text_id 
+         * @param {string} user_id 
          * @param {SpacyDocument1} spacy_document1 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        upsertTraining(user_id: string, text_id: string, spacy_document1: SpacyDocument1, options: any = {}): RequestArgs {
-            // verify required parameter 'user_id' is not null or undefined
-            if (user_id === null || user_id === undefined) {
-                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling upsertTraining.');
-            }
+        upsertTraining(text_id: string, user_id: string, spacy_document1: SpacyDocument1, options: any = {}): RequestArgs {
             // verify required parameter 'text_id' is not null or undefined
             if (text_id === null || text_id === undefined) {
                 throw new RequiredError('text_id','Required parameter text_id was null or undefined when calling upsertTraining.');
+            }
+            // verify required parameter 'user_id' is not null or undefined
+            if (user_id === null || user_id === undefined) {
+                throw new RequiredError('user_id','Required parameter user_id was null or undefined when calling upsertTraining.');
             }
             // verify required parameter 'spacy_document1' is not null or undefined
             if (spacy_document1 === null || spacy_document1 === undefined) {
                 throw new RequiredError('spacy_document1','Required parameter spacy_document1 was null or undefined when calling upsertTraining.');
             }
             const localVarPath = `/api/corpus/{text_id}/trainings/{user_id}`
-                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)))
-                .replace(`{${"text_id"}}`, encodeURIComponent(String(text_id)));
+                .replace(`{${"text_id"}}`, encodeURIComponent(String(text_id)))
+                .replace(`{${"user_id"}}`, encodeURIComponent(String(user_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             let baseOptions;
             if (configuration) {
@@ -1443,15 +1509,15 @@ export const CorpusApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} user_id 
          * @param {string} text_id 
+         * @param {string} user_id 
          * @param {number} [page] 
          * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTraining(user_id: string, text_id: string, page?: number, page_size?: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Text>> {
-            const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).getTraining(user_id, text_id, page, page_size, options);
+        getTraining(text_id: string, user_id: string, page?: number, page_size?: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Text>> {
+            const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).getTraining(text_id, user_id, page, page_size, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1513,14 +1579,14 @@ export const CorpusApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} user_id 
          * @param {string} text_id 
+         * @param {string} user_id 
          * @param {SpacyDocument1} spacy_document1 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        upsertTraining(user_id: string, text_id: string, spacy_document1: SpacyDocument1, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
-            const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).upsertTraining(user_id, text_id, spacy_document1, options);
+        upsertTraining(text_id: string, user_id: string, spacy_document1: SpacyDocument1, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).upsertTraining(text_id, user_id, spacy_document1, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1565,15 +1631,15 @@ export const CorpusApiFactory = function (configuration?: Configuration, basePat
         },
         /**
          * 
-         * @param {string} user_id 
          * @param {string} text_id 
+         * @param {string} user_id 
          * @param {number} [page] 
          * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTraining(user_id: string, text_id: string, page?: number, page_size?: number, options?: any) {
-            return CorpusApiFp(configuration).getTraining(user_id, text_id, page, page_size, options)(axios, basePath);
+        getTraining(text_id: string, user_id: string, page?: number, page_size?: number, options?: any) {
+            return CorpusApiFp(configuration).getTraining(text_id, user_id, page, page_size, options)(axios, basePath);
         },
         /**
          * 
@@ -1615,14 +1681,14 @@ export const CorpusApiFactory = function (configuration?: Configuration, basePat
         },
         /**
          * 
-         * @param {string} user_id 
          * @param {string} text_id 
+         * @param {string} user_id 
          * @param {SpacyDocument1} spacy_document1 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        upsertTraining(user_id: string, text_id: string, spacy_document1: SpacyDocument1, options?: any) {
-            return CorpusApiFp(configuration).upsertTraining(user_id, text_id, spacy_document1, options)(axios, basePath);
+        upsertTraining(text_id: string, user_id: string, spacy_document1: SpacyDocument1, options?: any) {
+            return CorpusApiFp(configuration).upsertTraining(text_id, user_id, spacy_document1, options)(axios, basePath);
         },
     };
 };
@@ -1670,16 +1736,16 @@ export class CorpusApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} user_id 
      * @param {string} text_id 
+     * @param {string} user_id 
      * @param {number} [page] 
      * @param {number} [page_size] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorpusApi
      */
-    public getTraining(user_id: string, text_id: string, page?: number, page_size?: number, options?: any) {
-        return CorpusApiFp(this.configuration).getTraining(user_id, text_id, page, page_size, options)(this.axios, this.basePath);
+    public getTraining(text_id: string, user_id: string, page?: number, page_size?: number, options?: any) {
+        return CorpusApiFp(this.configuration).getTraining(text_id, user_id, page, page_size, options)(this.axios, this.basePath);
     }
 
     /**
@@ -1730,15 +1796,15 @@ export class CorpusApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} user_id 
      * @param {string} text_id 
+     * @param {string} user_id 
      * @param {SpacyDocument1} spacy_document1 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorpusApi
      */
-    public upsertTraining(user_id: string, text_id: string, spacy_document1: SpacyDocument1, options?: any) {
-        return CorpusApiFp(this.configuration).upsertTraining(user_id, text_id, spacy_document1, options)(this.axios, this.basePath);
+    public upsertTraining(text_id: string, user_id: string, spacy_document1: SpacyDocument1, options?: any) {
+        return CorpusApiFp(this.configuration).upsertTraining(text_id, user_id, spacy_document1, options)(this.axios, this.basePath);
     }
 
 }
@@ -1752,21 +1818,21 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
     return {
         /**
          * 
-         * @param {string} text 
          * @param {number} snapshot_id 
+         * @param {RawText} raw_text 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        parseText(text: string, snapshot_id: number, options: any = {}): RequestArgs {
-            // verify required parameter 'text' is not null or undefined
-            if (text === null || text === undefined) {
-                throw new RequiredError('text','Required parameter text was null or undefined when calling parseText.');
-            }
+        textEntities(snapshot_id: number, raw_text: RawText, options: any = {}): RequestArgs {
             // verify required parameter 'snapshot_id' is not null or undefined
             if (snapshot_id === null || snapshot_id === undefined) {
-                throw new RequiredError('snapshot_id','Required parameter snapshot_id was null or undefined when calling parseText.');
+                throw new RequiredError('snapshot_id','Required parameter snapshot_id was null or undefined when calling textEntities.');
             }
-            const localVarPath = `/api/ner/{snapshot_id}`
+            // verify required parameter 'raw_text' is not null or undefined
+            if (raw_text === null || raw_text === undefined) {
+                throw new RequiredError('raw_text','Required parameter raw_text was null or undefined when calling textEntities.');
+            }
+            const localVarPath = `/api/ner/{snapshot_id}/entities`
                 .replace(`{${"snapshot_id"}}`, encodeURIComponent(String(snapshot_id)));
             const localVarUrlObj = url.parse(localVarPath, true);
             let baseOptions;
@@ -1786,15 +1852,15 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
 
-            if (text !== undefined) {
-                localVarQueryParameter['text'] = text;
-            }
 
+                localVarHeaderParameter['Content-Type'] = 'application/json';
 
-                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"RawText" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(raw_text !== undefined ? raw_text : {}) : (raw_text || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1803,16 +1869,16 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} text 
+         * @param {RawText} raw_text 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        parseText_1(text: string, options: any = {}): RequestArgs {
-            // verify required parameter 'text' is not null or undefined
-            if (text === null || text === undefined) {
-                throw new RequiredError('text','Required parameter text was null or undefined when calling parseText_1.');
+        textEntities_1(raw_text: RawText, options: any = {}): RequestArgs {
+            // verify required parameter 'raw_text' is not null or undefined
+            if (raw_text === null || raw_text === undefined) {
+                throw new RequiredError('raw_text','Required parameter raw_text was null or undefined when calling textEntities_1.');
             }
-            const localVarPath = `/api/ner/current`;
+            const localVarPath = `/api/ner/current/entities`;
             const localVarUrlObj = url.parse(localVarPath, true);
             let baseOptions;
             if (configuration) {
@@ -1831,15 +1897,111 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
 
-            if (text !== undefined) {
-                localVarQueryParameter['text'] = text;
-            }
 
+                localVarHeaderParameter['Content-Type'] = 'application/json';
 
-                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"RawText" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(raw_text !== undefined ? raw_text : {}) : (raw_text || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} snapshot_id 
+         * @param {RawText} raw_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        textParse(snapshot_id: number, raw_text: RawText, options: any = {}): RequestArgs {
+            // verify required parameter 'snapshot_id' is not null or undefined
+            if (snapshot_id === null || snapshot_id === undefined) {
+                throw new RequiredError('snapshot_id','Required parameter snapshot_id was null or undefined when calling textParse.');
+            }
+            // verify required parameter 'raw_text' is not null or undefined
+            if (raw_text === null || raw_text === undefined) {
+                throw new RequiredError('raw_text','Required parameter raw_text was null or undefined when calling textParse.');
+            }
+            const localVarPath = `/api/ner/{snapshot_id}/parse`
+                .replace(`{${"snapshot_id"}}`, encodeURIComponent(String(snapshot_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"RawText" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(raw_text !== undefined ? raw_text : {}) : (raw_text || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {RawText} raw_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        textParse_2(raw_text: RawText, options: any = {}): RequestArgs {
+            // verify required parameter 'raw_text' is not null or undefined
+            if (raw_text === null || raw_text === undefined) {
+                throw new RequiredError('raw_text','Required parameter raw_text was null or undefined when calling textParse_2.');
+            }
+            const localVarPath = `/api/ner/current/parse`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"RawText" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(raw_text !== undefined ? raw_text : {}) : (raw_text || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1857,13 +2019,13 @@ export const NerApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {string} text 
          * @param {number} snapshot_id 
+         * @param {RawText} raw_text 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        parseText(text: string, snapshot_id: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrainText> {
-            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).parseText(text, snapshot_id, options);
+        textEntities(snapshot_id: number, raw_text: RawText, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<EntityList> {
+            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).textEntities(snapshot_id, raw_text, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1871,12 +2033,39 @@ export const NerApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} text 
+         * @param {RawText} raw_text 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        parseText_1(text: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrainText> {
-            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).parseText_1(text, options);
+        textEntities_1(raw_text: RawText, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<EntityList> {
+            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).textEntities_1(raw_text, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {number} snapshot_id 
+         * @param {RawText} raw_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        textParse(snapshot_id: number, raw_text: RawText, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrainText> {
+            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).textParse(snapshot_id, raw_text, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {RawText} raw_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        textParse_2(raw_text: RawText, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrainText> {
+            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).textParse_2(raw_text, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1893,22 +2082,41 @@ export const NerApiFactory = function (configuration?: Configuration, basePath?:
     return {
         /**
          * 
-         * @param {string} text 
          * @param {number} snapshot_id 
+         * @param {RawText} raw_text 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        parseText(text: string, snapshot_id: number, options?: any) {
-            return NerApiFp(configuration).parseText(text, snapshot_id, options)(axios, basePath);
+        textEntities(snapshot_id: number, raw_text: RawText, options?: any) {
+            return NerApiFp(configuration).textEntities(snapshot_id, raw_text, options)(axios, basePath);
         },
         /**
          * 
-         * @param {string} text 
+         * @param {RawText} raw_text 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        parseText_1(text: string, options?: any) {
-            return NerApiFp(configuration).parseText_1(text, options)(axios, basePath);
+        textEntities_1(raw_text: RawText, options?: any) {
+            return NerApiFp(configuration).textEntities_1(raw_text, options)(axios, basePath);
+        },
+        /**
+         * 
+         * @param {number} snapshot_id 
+         * @param {RawText} raw_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        textParse(snapshot_id: number, raw_text: RawText, options?: any) {
+            return NerApiFp(configuration).textParse(snapshot_id, raw_text, options)(axios, basePath);
+        },
+        /**
+         * 
+         * @param {RawText} raw_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        textParse_2(raw_text: RawText, options?: any) {
+            return NerApiFp(configuration).textParse_2(raw_text, options)(axios, basePath);
         },
     };
 };
@@ -1922,25 +2130,48 @@ export const NerApiFactory = function (configuration?: Configuration, basePath?:
 export class NerApi extends BaseAPI {
     /**
      * 
-     * @param {string} text 
      * @param {number} snapshot_id 
+     * @param {RawText} raw_text 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NerApi
      */
-    public parseText(text: string, snapshot_id: number, options?: any) {
-        return NerApiFp(this.configuration).parseText(text, snapshot_id, options)(this.axios, this.basePath);
+    public textEntities(snapshot_id: number, raw_text: RawText, options?: any) {
+        return NerApiFp(this.configuration).textEntities(snapshot_id, raw_text, options)(this.axios, this.basePath);
     }
 
     /**
      * 
-     * @param {string} text 
+     * @param {RawText} raw_text 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NerApi
      */
-    public parseText_1(text: string, options?: any) {
-        return NerApiFp(this.configuration).parseText_1(text, options)(this.axios, this.basePath);
+    public textEntities_1(raw_text: RawText, options?: any) {
+        return NerApiFp(this.configuration).textEntities_1(raw_text, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {number} snapshot_id 
+     * @param {RawText} raw_text 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NerApi
+     */
+    public textParse(snapshot_id: number, raw_text: RawText, options?: any) {
+        return NerApiFp(this.configuration).textParse(snapshot_id, raw_text, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {RawText} raw_text 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NerApi
+     */
+    public textParse_2(raw_text: RawText, options?: any) {
+        return NerApiFp(this.configuration).textParse_2(raw_text, options)(this.axios, this.basePath);
     }
 
 }
@@ -2061,14 +2292,14 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
     return {
         /**
          * 
-         * @param {CorpusSnapshot} corpus_snapshot 
+         * @param {Snapshot} snapshot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createCorpusSnapshot(corpus_snapshot: CorpusSnapshot, options: any = {}): RequestArgs {
-            // verify required parameter 'corpus_snapshot' is not null or undefined
-            if (corpus_snapshot === null || corpus_snapshot === undefined) {
-                throw new RequiredError('corpus_snapshot','Required parameter corpus_snapshot was null or undefined when calling createCorpusSnapshot.');
+        createCorpusSnapshot(snapshot: Snapshot, options: any = {}): RequestArgs {
+            // verify required parameter 'snapshot' is not null or undefined
+            if (snapshot === null || snapshot === undefined) {
+                throw new RequiredError('snapshot','Required parameter snapshot was null or undefined when calling createCorpusSnapshot.');
             }
             const localVarPath = `/api/snapshots/current`;
             const localVarUrlObj = url.parse(localVarPath, true);
@@ -2096,8 +2327,8 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
-            const needsSerialization = (<any>"CorpusSnapshot" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(corpus_snapshot !== undefined ? corpus_snapshot : {}) : (corpus_snapshot || "");
+            const needsSerialization = (<any>"Snapshot" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(snapshot !== undefined ? snapshot : {}) : (snapshot || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2256,7 +2487,7 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
         },
         /**
          * 
-         * @summary List available corpora
+         * @summary List available snapshots
          * @param {number} [page] 
          * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
@@ -2312,12 +2543,12 @@ export const SnapshotsApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {CorpusSnapshot} corpus_snapshot 
+         * @param {Snapshot} snapshot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createCorpusSnapshot(corpus_snapshot: CorpusSnapshot, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<CorpusSnapshot> {
-            const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).createCorpusSnapshot(corpus_snapshot, options);
+        createCorpusSnapshot(snapshot: Snapshot, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Snapshot> {
+            const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).createCorpusSnapshot(snapshot, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -2352,7 +2583,7 @@ export const SnapshotsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCurrentSnapshot(options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<CorpusSnapshot> {
+        getCurrentSnapshot(options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<SnapshotInfo> {
             const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).getCurrentSnapshot(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -2365,7 +2596,7 @@ export const SnapshotsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSnapshotWithId(snapshot_id: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<CorpusSnapshot> {
+        getSnapshotWithId(snapshot_id: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<SnapshotInfo> {
             const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).getSnapshotWithId(snapshot_id, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -2374,13 +2605,13 @@ export const SnapshotsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary List available corpora
+         * @summary List available snapshots
          * @param {number} [page] 
          * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCorpusSnapshots(page?: number, page_size?: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<CorpusSnapshot>> {
+        listCorpusSnapshots(page?: number, page_size?: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Snapshot>> {
             const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).listCorpusSnapshots(page, page_size, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -2398,12 +2629,12 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
     return {
         /**
          * 
-         * @param {CorpusSnapshot} corpus_snapshot 
+         * @param {Snapshot} snapshot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createCorpusSnapshot(corpus_snapshot: CorpusSnapshot, options?: any) {
-            return SnapshotsApiFp(configuration).createCorpusSnapshot(corpus_snapshot, options)(axios, basePath);
+        createCorpusSnapshot(snapshot: Snapshot, options?: any) {
+            return SnapshotsApiFp(configuration).createCorpusSnapshot(snapshot, options)(axios, basePath);
         },
         /**
          * 
@@ -2440,7 +2671,7 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
         },
         /**
          * 
-         * @summary List available corpora
+         * @summary List available snapshots
          * @param {number} [page] 
          * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
@@ -2461,13 +2692,13 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
 export class SnapshotsApi extends BaseAPI {
     /**
      * 
-     * @param {CorpusSnapshot} corpus_snapshot 
+     * @param {Snapshot} snapshot 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SnapshotsApi
      */
-    public createCorpusSnapshot(corpus_snapshot: CorpusSnapshot, options?: any) {
-        return SnapshotsApiFp(this.configuration).createCorpusSnapshot(corpus_snapshot, options)(this.axios, this.basePath);
+    public createCorpusSnapshot(snapshot: Snapshot, options?: any) {
+        return SnapshotsApiFp(this.configuration).createCorpusSnapshot(snapshot, options)(this.axios, this.basePath);
     }
 
     /**
@@ -2513,7 +2744,7 @@ export class SnapshotsApi extends BaseAPI {
 
     /**
      * 
-     * @summary List available corpora
+     * @summary List available snapshots
      * @param {number} [page] 
      * @param {number} [page_size] 
      * @param {*} [options] Override http request option.
