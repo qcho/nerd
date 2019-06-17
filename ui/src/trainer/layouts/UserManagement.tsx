@@ -56,10 +56,7 @@ const UserManagement = () => {
       const rolesResponse = await roleApi.listRoles();
       if (unmounted) return;
       setRoles(rolesResponse.data);
-      return {
-        records: users.data as any[],
-        headers: users.headers,
-      };
+      return users;
     } catch (e) {
       if (unmounted) return;
       // TODO: Set error

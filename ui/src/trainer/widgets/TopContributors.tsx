@@ -18,10 +18,7 @@ const TopContributors = () => {
   const datasource = async () => {
     const api = new UsersApi();
     try {
-      const results = await api.top5();
-      return {
-        records: results.data,
-      };
+      return await api.top5();
     } catch (e) {
       // TODO: Handle errors
     }

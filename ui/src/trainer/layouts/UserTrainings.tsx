@@ -65,11 +65,7 @@ const UserTrainings = ({ match }: { match: any }) => {
     try {
       const { id } = match.params;
       const userApi = new UsersApi(apiConfig());
-      const results = await userApi.userTrainings(id, params.page, params.pageSize);
-      return {
-        records: results.data,
-        headers: results.headers,
-      };
+      return await userApi.userTrainings(id, params.page, params.pageSize);
     } catch (e) {
       // TODO: Handle errors
       const errorMessage = Http.handleRequestError(e, (status, data) => {

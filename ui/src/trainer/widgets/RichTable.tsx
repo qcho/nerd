@@ -32,7 +32,7 @@ function xorSelected<T>(selected: T[], entry: T) {
 
 export interface DatasourceResult {
   headers?: { [id: string]: string } | null;
-  records: any[];
+  data: any[];
 }
 
 export interface DatasourceParameters {
@@ -81,7 +81,7 @@ const RichTable = ({
     if (unmounted) return;
     setLoading(false);
     if (!result) return;
-    setRecords(result.records);
+    setRecords(result.data);
     if (result.headers) {
       setFromHeaders(result.headers);
     }
