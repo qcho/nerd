@@ -74,7 +74,6 @@ class Snapshot(me.Document):
 class SnapshotSchema(ModelSchema):
     class Meta:
         model = Snapshot
-        exclude = ['semaphore']
         model_fields_kwargs = {
             'types': {
                 'metadata': {
