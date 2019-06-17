@@ -65,8 +65,7 @@ const UserManagement = () => {
         return '';
       });
     } finally {
-      if (unmounted) return;
-      setLoading(false);
+      if (!unmounted) setLoading(false);
     }
   };
 
