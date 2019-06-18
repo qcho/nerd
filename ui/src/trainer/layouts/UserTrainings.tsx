@@ -28,7 +28,6 @@ const UserTrainings = ({ match }: { match: any }) => {
   const [user, setUser] = useState<MaybeUser>(null);
   const [snapshot, setSnapshot] = useState<MaybeSnapshot>(null);
   const [t] = useTranslation();
-  console.log(match);
 
   const fetchUserAndSnapshot = useCallback(async () => {
     const { id } = match.params;
