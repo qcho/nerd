@@ -60,7 +60,7 @@ class Model:
             other_pipes = [pipe for pipe in self._nlp.pipe_names if pipe != "ner"]
             with self._nlp.disable_pipes(*other_pipes):  # only train NER
                 optimizer = self._nlp.resume_training()
-                for itn in range(n_iter):
+                for _ in range(n_iter):
                     random.shuffle(training_data)
                     losses = {}
                     # batch up the examples using spaCy's minibatch
