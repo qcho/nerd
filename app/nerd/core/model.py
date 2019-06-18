@@ -47,7 +47,6 @@ class Model:
         ner = self._nlp.get_pipe("ner")
         for type_code, _ in self.snapshot.types.items():
             ner.add_label(type_code)
-        pass
 
     def _fetch_training_data(self) -> Generator[SpacyDocument, None, None]:
         for trained_text in TrainedText.objects.filter(created_at__lte=self.snapshot.created_at):
