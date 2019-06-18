@@ -196,8 +196,7 @@ class IndexResource(MethodView):
     def get(self, pagination_parameters: PaginationParameters):
         results = Text.objects
         pagination_parameters.item_count = results.count()
-        skip_elements = (pagination_parameters.page - 1) * \
-                        pagination_parameters.page_size
+        skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
         return results.skip(skip_elements).limit(pagination_parameters.page_size)
 
     @jwt_and_role_required(Role.ADMIN)
