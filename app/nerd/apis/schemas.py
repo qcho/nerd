@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 from marshmallow_mongoengine import ModelSchema
 
-from nerd.core.document.corpus import TrainedText
+from nerd.core.document.corpus import Training
 from nerd.core.document.snapshot import SnapshotSchema, Type
 from nerd.core.document.spacy import SpacyDocumentSchema, SpacyEntity
 
@@ -23,10 +23,10 @@ class TrainTextSchema(Schema):
     spacy_document = fields.Nested(SpacyDocumentSchema, required=True)
 
 
-class TrainedTextSchema(ModelSchema):
+class TrainingSchema(ModelSchema):
     class Meta:
         strict = True
-        model = TrainedText
+        model = Training
 
 
 class TypeSchema(ModelSchema):

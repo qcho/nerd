@@ -8,10 +8,10 @@ class Text(me.Document):
     value = me.StringField(unique=True, required=True)
     created_at = me.DateTimeField(default=datetime.now(), required=True)
     # This is a mapping between user_id and document
-    trainings = me.ListField(me.LazyReferenceField('TrainedText'))
+    trainings = me.ListField(me.LazyReferenceField('Training'))
 
 
-class TrainedText(me.Document):
+class Training(me.Document):
     meta = {
         'indexes': [[('text_id', 1), ('user_id', 1)]],
         'cascade': True

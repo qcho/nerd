@@ -9,7 +9,7 @@ from spacy.language import Language
 from spacy.tokens import Doc
 from spacy.util import minibatch, compounding
 
-from nerd.core.document.corpus import Text, TrainedText
+from nerd.core.document.corpus import Text, Training
 from nerd.core.document.spacy import SpacyDocument
 from nerd.core.util import log_perf, get_logger
 from nerd.core.document.snapshot import Snapshot
@@ -49,10 +49,10 @@ class Model:
             ner.add_label(type_code)
 
     def _fetch_training_data(self) -> Generator[SpacyDocument, None, None]:
-        for trained_text in TrainedText.objects.filter(created_at__lte=self.snapshot.created_at):
-            trained_text.document: SpacyDocument
+        for training in Training.objects.filter(created_at__lte=self.snapshot.created_at):
+            training.document: SpacyDocument
             # TODO: Should only yield for texts that have entities
-            yield trained_text.document.text, trained_text.document.ents
+            yield training.document.text, training.document.ents
 
     def _train_snapshot_texts(self, n_iter: int = 30):
         training_data = list(self._fetch_training_data())

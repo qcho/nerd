@@ -1,4 +1,4 @@
-from nerd.core.document.corpus import Text, TrainedText
+from nerd.core.document.corpus import Text, Training
 from nerd.core.document.snapshot import Snapshot, Type, CURRENT_ID
 from nerd.core.document.user import User
 from nerd.core.model import Model
@@ -18,7 +18,7 @@ class NERdSetup:
 
         if drop:
             Text.drop_collection()
-            TrainedText.drop_collection()
+            Training.drop_collection()
 
         if drop:
             Snapshot.drop_collection()

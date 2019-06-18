@@ -9,7 +9,7 @@ from werkzeug.exceptions import BadRequest, FailedDependency, NotFound
 
 from nerd.apis import response_error
 from nerd.apis.schemas import TrainTextSchema
-from nerd.core.document.corpus import Text, TrainedText
+from nerd.core.document.corpus import Text, Training
 from nerd.core.document.snapshot import Snapshot
 from nerd.core.document.spacy import SpacyDocumentSchema
 from nerd.core.document.user import Role, User
@@ -68,7 +68,7 @@ class TrainingView(MethodView):
     def get(self, text_id, pagination_parameters: PaginationParameters):
         user = User.objects.get(email=get_jwt_identity())
         user_id = str(user.pk)
-        trainings = TrainedText.objects.filter(text_id=text_id, user_id=user_id)
+        trainings = Training.objects.filter(text_id=text_id, user_id=user_id)
         pagination_parameters.item_count = trainings.count()
         skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
         return trainings.skip(skip_elements).limit(pagination_parameters.page_size)
@@ -80,16 +80,16 @@ class TrainingView(MethodView):
     def put(self, payload, text_id):
         user = User.objects.get(email=get_jwt_identity())
         text = Text.objects.get(id=text_id)
-        trained_text = TrainedText.objects(user_id=user.pk, text_id=text.pk).update_one(
+        training = Training.objects(user_id=user.pk, text_id=text.pk).update_one(
             upsert=True,
             full_result=True,
             user_id=user.pk,
             text_id=text.pk,
             set__document=payload,
             set__created_at=datetime.now())
-        trained_text_pk = trained_text.upserted_id
-        user.update(add_to_set__trainings=trained_text_pk)
-        text.update(add_to_set__trainings=trained_text_pk)
+        training_pk = training.upserted_id
+        user.update(add_to_set__trainings=training_pk)
+        text.update(add_to_set__trainings=training_pk)
         return
 
 
@@ -100,7 +100,7 @@ class TrainingAdminView(MethodView):
     @blp.doc(operationId="getTraining")
     @blp.response(TextSchema(many=True), code=200)
     def get(self, text_id, user_id, pagination_parameters: PaginationParameters):
-        trainings = TrainedText.objects.filter(text_id=text_id, user_id=user_id)
+        trainings = Training.objects.filter(text_id=text_id, user_id=user_id)
         pagination_parameters.item_count = trainings.count()
         skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
         return trainings.skip(skip_elements).limit(pagination_parameters.page_size)
@@ -136,18 +136,18 @@ class TrainResource(MethodView):
                 Text.objects.aggregate(*[
                     {
                         '$lookup': {
-                            'from': TrainedText._get_collection_name(),
+                            'from': Training._get_collection_name(),
                             'localField': '_id',
                             'foreignField': 'text_id',
-                            'as': 'trained_texts'
+                            'as': 'trainings'
                         }
                     }, {
                         '$project': {
                             '_id': 1,
                             'value': 1,
-                            'trained_texts': {
+                            'trainings': {
                                 '$filter': {
-                                    'input': '$trained_texts',
+                                    'input': '$trainings',
                                     'cond': {
                                         'user_id': {
                                             '$eq': [
@@ -160,7 +160,7 @@ class TrainResource(MethodView):
                         }
                     }, {
                         '$match': {
-                            'trained_texts.0': {
+                            'trainings.0': {
                                 '$exists': False
                             }
                         }

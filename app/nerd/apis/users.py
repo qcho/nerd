@@ -12,8 +12,8 @@ from mongoengine.queryset.visitor import Q
 from werkzeug.exceptions import NotFound, UnprocessableEntity
 
 from nerd.apis import jwt_and_role_required, response_error
-from nerd.apis.schemas import TrainedTextSchema
-from nerd.core.document.corpus import TrainedText
+from nerd.apis.schemas import TrainingSchema
+from nerd.core.document.corpus import Training
 from nerd.core.document.user import User, Role
 
 blp = Blueprint('users', 'users', description='User management')
@@ -124,7 +124,7 @@ class TopTrainers(MethodView):
 
 
 def _get_user_trainings(user: User, pagination_params: PaginationParameters):
-    texts = TrainedText.objects.filter(user_id=user.pk)
+    texts = Training.objects.filter(user_id=user.pk)
     pagination_params.item_count = texts.count()
     skip_elements = (pagination_params.page - 1) * pagination_params.page_size
     return texts.skip(skip_elements).limit(pagination_params.page_size)
@@ -136,7 +136,7 @@ class MyTrainings(MethodView):
     @jwt_and_role_required(Role.USER)
     @blp.paginate()
     @blp.doc(operationId="myTrainings")
-    @blp.response(TrainedTextSchema(many=True), code=200)
+    @blp.response(TrainingSchema(many=True), code=200)
     @response_error(NotFound('User does not exist'))
     def get(self, pagination_parameters: PaginationParameters):
         try:
@@ -150,7 +150,7 @@ class MyTrainings(MethodView):
 class UserTrainings(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="userTrainings")
-    @blp.response(TrainedTextSchema(many=True), code=200)
+    @blp.response(TrainingSchema(many=True), code=200)
     @response_error(NotFound('User does not exist'))
     @blp.paginate()
     def get(self, user_id, pagination_parameters: PaginationParameters):
@@ -187,7 +187,7 @@ class UserView(MethodView):
             user.delete()
             return user
         except (DoesNotExist, ValidationError):
-            raise NotFound('User {} does not exist'.format(user_id))
+            raise NotFound('User with id {} does not exist'.format(user_id))
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.arguments(UserPayloadSchema(partial=True))
