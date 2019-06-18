@@ -35,6 +35,7 @@ const UserTrainings = ({ match }: { match: any }) => {
     const userApi = new UsersApi(apiConfig());
     const snapshotApi = new SnapshotsApi(apiConfig());
     try {
+      setLoading(true);
       const [userResponse, snapshotResponse] = await Promise.all([
         userApi.userDetails(id),
         snapshotApi.getCurrentSnapshot(),
@@ -44,11 +45,16 @@ const UserTrainings = ({ match }: { match: any }) => {
       // TODO: Correct error message
       const errorMessage = Http.handleRequestError(e, (status, data) => {
         console.log('Error loading user', data);
-        return '';
+        if (status === 404) {
+          return t("User doesn't exist");
+        }
+        return t('Unknown error');
       });
       setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
-  }, [match.params]);
+  }, [match.params, t]);
 
   useEffect(() => {
     async function loadUser() {
@@ -69,9 +75,12 @@ const UserTrainings = ({ match }: { match: any }) => {
     } catch (e) {
       // TODO: Handle errors
       const errorMessage = Http.handleRequestError(e, (status, data) => {
-        console.log('Error loading users', data);
-        return '';
+        if (status === 404) {
+          return t("User doesn't exist");
+        }
+        return t('Unknown error');
       });
+      setError(errorMessage);
     }
   };
 
@@ -95,8 +104,12 @@ const UserTrainings = ({ match }: { match: any }) => {
   };
 
   return (
-    <Scaffold title={(user && t('{{userName}} trained texts', { userName: user.name })) || ''} loading={loading}>
-      {!loading && user ? (
+    <Scaffold
+      title={(user && t('{{userName}} trained texts', { userName: user.name })) || ''}
+      loading={loading}
+      errorMessage={error}
+    >
+      {!loading && error.length == 0 && user ? (
         <div className={classes.content}>
           <Paper>
             <RichTable
