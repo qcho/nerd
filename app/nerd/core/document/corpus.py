@@ -7,7 +7,7 @@ from nerd.core.document.spacy import SpacyDocument
 class Text(me.Document):
     value = me.StringField(unique=True, required=True)
     created_at = me.DateTimeField(default=datetime.now(), required=True)
-    ## This is a mapping between user_id and document
+    # This is a mapping between user_id and document
     trainings = me.ListField(me.LazyReferenceField('TrainedText'))
 
 
