@@ -9,8 +9,8 @@ import { Paper } from '@material-ui/core';
 
 const SnapshotSection = () => {
   const [t] = useTranslation();
+  const api = new SnapshotsApi(apiConfig());
   const snapshotDatasource = async (params: DatasourceParameters) => {
-    const api = new SnapshotsApi(apiConfig());
     try {
       return await api.listCorpusSnapshots(params.page, params.pageSize);
     } catch (e) {}
@@ -40,6 +40,14 @@ const SnapshotSection = () => {
     },
   ];
 
+  const onDelete = async (rows: any[]) => {
+    try {
+      await Promise.all(rows.map((snapshot: Snapshot) => api.deleteSnapshot(snapshot.id)));
+    } catch (e) {
+      // TODO: Handle error
+    }
+  };
+
   return (
     <div>
       <Title>{t('Snapshots')}</Title>
@@ -49,6 +57,7 @@ const SnapshotSection = () => {
           rowBuilder={buildRow}
           headers={headers}
           valueToId={(value: Snapshot) => `${value.id}`}
+          onDelete={onDelete}
         />
       </Paper>
     </div>

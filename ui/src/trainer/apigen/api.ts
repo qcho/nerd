@@ -80,10 +80,10 @@ export interface RawText {
 export interface Register {
     /**
      * 
-     * @type {Array<string>}
+     * @type {string}
      * @memberof Register
      */
-    trainings?: Array<string>;
+    email: string;
     /**
      * 
      * @type {string}
@@ -104,10 +104,10 @@ export interface Register {
     name: string;
     /**
      * 
-     * @type {string}
+     * @type {Array<string>}
      * @memberof Register
      */
-    email: string;
+    trainings?: Array<string>;
 }
 
 /**
@@ -141,13 +141,13 @@ export interface Snapshot {
      * @type {number}
      * @memberof Snapshot
      */
-    id: number;
+    semaphore?: number;
     /**
      * 
      * @type {number}
      * @memberof Snapshot
      */
-    semaphore?: number;
+    id: number;
     /**
      * 
      * @type {{ [key: string]: Type; }}
@@ -214,28 +214,28 @@ export interface SnapshotInfo {
 export interface SpacyDocument {
     /**
      * 
-     * @type {Array<SpacyToken>}
-     * @memberof SpacyDocument
-     */
-    tokens?: Array<SpacyToken>;
-    /**
-     * 
      * @type {Array<SpacyEntity>}
      * @memberof SpacyDocument
      */
     ents?: Array<SpacyEntity>;
     /**
      * 
-     * @type {Date}
-     * @memberof SpacyDocument
-     */
-    _created_at?: Date;
-    /**
-     * 
      * @type {Array<SpacySentence>}
      * @memberof SpacyDocument
      */
     sents?: Array<SpacySentence>;
+    /**
+     * 
+     * @type {Array<SpacyToken>}
+     * @memberof SpacyDocument
+     */
+    tokens?: Array<SpacyToken>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof SpacyDocument
+     */
+    _created_at?: Date;
     /**
      * 
      * @type {string}
@@ -252,28 +252,28 @@ export interface SpacyDocument {
 export interface SpacyDocument1 {
     /**
      * 
-     * @type {Array<SpacyToken1>}
-     * @memberof SpacyDocument1
-     */
-    tokens?: Array<SpacyToken1>;
-    /**
-     * 
      * @type {Array<SpacyEntity1>}
      * @memberof SpacyDocument1
      */
     ents?: Array<SpacyEntity1>;
     /**
      * 
-     * @type {Date}
-     * @memberof SpacyDocument1
-     */
-    _created_at?: Date;
-    /**
-     * 
      * @type {Array<SpacySentence1>}
      * @memberof SpacyDocument1
      */
     sents?: Array<SpacySentence1>;
+    /**
+     * 
+     * @type {Array<SpacyToken1>}
+     * @memberof SpacyDocument1
+     */
+    tokens?: Array<SpacyToken1>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof SpacyDocument1
+     */
+    _created_at?: Date;
     /**
      * 
      * @type {string}
@@ -417,18 +417,6 @@ export interface SpacyToken {
      * @type {string}
      * @memberof SpacyToken
      */
-    dep?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    end: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
     tag?: string;
     /**
      * 
@@ -442,6 +430,18 @@ export interface SpacyToken {
      * @memberof SpacyToken
      */
     head?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
+    end: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    dep?: string;
     /**
      * 
      * @type {number}
@@ -467,18 +467,6 @@ export interface SpacyToken1 {
      * @type {string}
      * @memberof SpacyToken1
      */
-    dep?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken1
-     */
-    end: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
     tag?: string;
     /**
      * 
@@ -497,6 +485,18 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
+    end: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    dep?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken1
+     */
     start: number;
 }
 
@@ -508,16 +508,16 @@ export interface SpacyToken1 {
 export interface Text {
     /**
      * 
-     * @type {string}
-     * @memberof Text
-     */
-    value: string;
-    /**
-     * 
      * @type {Date}
      * @memberof Text
      */
     created_at?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof Text
+     */
+    value: string;
     /**
      * 
      * @type {Array<string>}
@@ -566,16 +566,16 @@ export interface Token {
 export interface TopContributor {
     /**
      * 
-     * @type {number}
-     * @memberof TopContributor
-     */
-    total_trainings: number;
-    /**
-     * 
      * @type {string}
      * @memberof TopContributor
      */
     name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TopContributor
+     */
+    total_trainings: number;
 }
 
 /**
@@ -584,12 +584,6 @@ export interface TopContributor {
  * @interface TrainText
  */
 export interface TrainText {
-    /**
-     * 
-     * @type {string}
-     * @memberof TrainText
-     */
-    text_id: string;
     /**
      * 
      * @type {SpacyDocument1}
@@ -602,6 +596,12 @@ export interface TrainText {
      * @memberof TrainText
      */
     snapshot: Snapshot;
+    /**
+     * 
+     * @type {string}
+     * @memberof TrainText
+     */
+    text_id: string;
 }
 
 /**
@@ -610,12 +610,6 @@ export interface TrainText {
  * @interface Training
  */
 export interface Training {
-    /**
-     * 
-     * @type {string}
-     * @memberof Training
-     */
-    user_id: string;
     /**
      * 
      * @type {Date}
@@ -628,6 +622,12 @@ export interface Training {
      * @memberof Training
      */
     id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Training
+     */
+    user_id: string;
     /**
      * 
      * @type {SpacyDocument}
@@ -653,13 +653,13 @@ export interface Type {
      * @type {string}
      * @memberof Type
      */
-    color: string;
+    label: string;
     /**
      * 
      * @type {string}
      * @memberof Type
      */
-    label: string;
+    color: string;
 }
 
 /**
@@ -673,13 +673,13 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    id?: string;
+    email: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof User
      */
-    total_trainings?: number;
+    id?: string;
     /**
      * 
      * @type {Array<string>}
@@ -694,10 +694,10 @@ export interface User {
     name: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof User
      */
-    email: string;
+    total_trainings?: number;
 }
 
 /**
@@ -734,22 +734,10 @@ export interface UserCredentials {
 export interface UserPayload {
     /**
      * 
-     * @type {Array<string>}
-     * @memberof UserPayload
-     */
-    trainings?: Array<string>;
-    /**
-     * 
      * @type {string}
      * @memberof UserPayload
      */
     id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserPayload
-     */
-    plain_password?: string;
     /**
      * 
      * @type {Array<string>}
@@ -761,7 +749,19 @@ export interface UserPayload {
      * @type {string}
      * @memberof UserPayload
      */
+    plain_password?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPayload
+     */
     name?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof UserPayload
+     */
+    trainings?: Array<string>;
 }
 
 /**
@@ -2349,6 +2349,48 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
         },
         /**
          * 
+         * @param {number} snapshot_id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteSnapshot(snapshot_id: number, options: any = {}): RequestArgs {
+            // verify required parameter 'snapshot_id' is not null or undefined
+            if (snapshot_id === null || snapshot_id === undefined) {
+                throw new RequiredError('snapshot_id','Required parameter snapshot_id was null or undefined when calling deleteSnapshot.');
+            }
+            const localVarPath = `/api/snapshots/{snapshot_id}`
+                .replace(`{${"snapshot_id"}}`, encodeURIComponent(String(snapshot_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2461,10 +2503,10 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSnapshotWithId(snapshot_id: number, options: any = {}): RequestArgs {
+        getSnapshot(snapshot_id: number, options: any = {}): RequestArgs {
             // verify required parameter 'snapshot_id' is not null or undefined
             if (snapshot_id === null || snapshot_id === undefined) {
-                throw new RequiredError('snapshot_id','Required parameter snapshot_id was null or undefined when calling getSnapshotWithId.');
+                throw new RequiredError('snapshot_id','Required parameter snapshot_id was null or undefined when calling getSnapshot.');
             }
             const localVarPath = `/api/snapshots/{snapshot_id}`
                 .replace(`{${"snapshot_id"}}`, encodeURIComponent(String(snapshot_id)));
@@ -2568,6 +2610,19 @@ export const SnapshotsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} snapshot_id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteSnapshot(snapshot_id: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<SnapshotInfo> {
+            const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).deleteSnapshot(snapshot_id, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2608,8 +2663,8 @@ export const SnapshotsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSnapshotWithId(snapshot_id: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<SnapshotInfo> {
-            const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).getSnapshotWithId(snapshot_id, options);
+        getSnapshot(snapshot_id: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<SnapshotInfo> {
+            const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).getSnapshot(snapshot_id, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -2650,6 +2705,15 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
         },
         /**
          * 
+         * @param {number} snapshot_id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteSnapshot(snapshot_id: number, options?: any) {
+            return SnapshotsApiFp(configuration).deleteSnapshot(snapshot_id, options)(axios, basePath);
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2678,8 +2742,8 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSnapshotWithId(snapshot_id: number, options?: any) {
-            return SnapshotsApiFp(configuration).getSnapshotWithId(snapshot_id, options)(axios, basePath);
+        getSnapshot(snapshot_id: number, options?: any) {
+            return SnapshotsApiFp(configuration).getSnapshot(snapshot_id, options)(axios, basePath);
         },
         /**
          * 
@@ -2711,6 +2775,17 @@ export class SnapshotsApi extends BaseAPI {
      */
     public createCorpusSnapshot(snapshot: Snapshot, options?: any) {
         return SnapshotsApiFp(this.configuration).createCorpusSnapshot(snapshot, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {number} snapshot_id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SnapshotsApi
+     */
+    public deleteSnapshot(snapshot_id: number, options?: any) {
+        return SnapshotsApiFp(this.configuration).deleteSnapshot(snapshot_id, options)(this.axios, this.basePath);
     }
 
     /**
@@ -2750,8 +2825,8 @@ export class SnapshotsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SnapshotsApi
      */
-    public getSnapshotWithId(snapshot_id: number, options?: any) {
-        return SnapshotsApiFp(this.configuration).getSnapshotWithId(snapshot_id, options)(this.axios, this.basePath);
+    public getSnapshot(snapshot_id: number, options?: any) {
+        return SnapshotsApiFp(this.configuration).getSnapshot(snapshot_id, options)(this.axios, this.basePath);
     }
 
     /**

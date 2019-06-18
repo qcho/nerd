@@ -4,7 +4,7 @@ from flask.views import MethodView
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema, fields
-from mongoengine import DoesNotExist
+from mongoengine import DoesNotExist, ValidationError
 from werkzeug.exceptions import NotFound
 
 from nerd.apis import jwt_and_role_required, response_error, BaseSchema
@@ -76,11 +76,25 @@ class SnapshotResource(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.response(SnapshotInfoSchema, code=200)
     @response_error(NotFound("Could not find snapshot with given id"))
-    @blp.doc(operationId="getSnapshotWithId")
-    def get(self, snapshot_id: int = None):
+    @blp.doc(operationId="getSnapshot")
+    def get(self, snapshot_id: int):
         try:
             return snapshot_info(snapshot_id)
-        except DoesNotExist:
+        except (ValidationError, DoesNotExist):
+            raise NotFound()
+
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.response(SnapshotInfoSchema, code=200)
+    @response_error(NotFound("Could not find snapshot with given id"))
+    @blp.doc(operationId="deleteSnapshot")
+    def delete(self, snapshot_id: int):
+        try:
+            snapshot = Snapshot.objects.get(id=snapshot_id)
+            #  TODO: We need to stop the related worker (if there's one)
+            #        And remove everything from the hard drive
+            snapshot.delete()
+            return snapshot
+        except (ValidationError, DoesNotExist):
             raise NotFound()
 
 
