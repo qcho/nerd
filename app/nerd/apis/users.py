@@ -7,7 +7,7 @@ from flask_rest_api.pagination import PaginationParameters
 from marshmallow import Schema
 from marshmallow import fields
 from marshmallow_mongoengine import ModelSchema
-from mongoengine import DoesNotExist
+from mongoengine import DoesNotExist, ValidationError
 from mongoengine.queryset.visitor import Q
 from werkzeug.exceptions import NotFound, UnprocessableEntity
 
@@ -137,9 +137,13 @@ class MyTrainings(MethodView):
     @blp.paginate()
     @blp.doc(operationId="myTrainings")
     @blp.response(TrainedTextSchema(many=True), code=200)
+    @response_error(NotFound('User does not exist'))
     def get(self, pagination_parameters: PaginationParameters):
-        user = User.objects.get(email=get_jwt_identity())
-        return _get_user_trainings(user, pagination_parameters)
+        try:
+            user = User.objects.get(email=get_jwt_identity())
+            return _get_user_trainings(user, pagination_parameters)
+        except (DoesNotExist, ValidationError):
+            raise NotFound()
 
 
 @blp.route('/<string:user_id>/trainings')
@@ -147,10 +151,14 @@ class UserTrainings(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="userTrainings")
     @blp.response(TrainedTextSchema(many=True), code=200)
+    @response_error(NotFound('User does not exist'))
     @blp.paginate()
     def get(self, user_id, pagination_parameters: PaginationParameters):
-        user = User.objects.get(id=user_id)
-        return _get_user_trainings(user, pagination_parameters)
+        try:
+            user = User.objects.get(id=user_id)
+            return _get_user_trainings(user, pagination_parameters)
+        except (DoesNotExist, ValidationError):
+            raise NotFound()
 
 
 @blp.route('/<string:user_id>')
@@ -165,7 +173,7 @@ class UserView(MethodView):
         """
         try:
             return User.objects.get(id=user_id)
-        except DoesNotExist:
+        except (DoesNotExist, ValidationError):
             raise NotFound('User {} does not exist'.format(user_id))
 
     @jwt_and_role_required(Role.ADMIN)
@@ -178,7 +186,7 @@ class UserView(MethodView):
             user = User.objects.get(id=user_id)
             user.delete()
             return user
-        except DoesNotExist:
+        except (DoesNotExist, ValidationError):
             raise NotFound('User {} does not exist'.format(user_id))
 
     @jwt_and_role_required(Role.ADMIN)
