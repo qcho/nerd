@@ -55,7 +55,7 @@ class NERdSetup:
 
         NERdSetup.setup(drop)
 
-        for i in range(100):
+        for _ in range(100):
             User(
                 name=fake.name(),
                 email=fake.safe_email(),
