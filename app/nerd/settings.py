@@ -14,7 +14,6 @@ class BaseConfig(object):
     TESTING = False
     PREFERRED_URL_SCHEME = os.environ.get('NERD_URL_SCHEME', 'http')
     NERD_SERVER_NAME = os.environ.get('NERD_SERVER_NAME', 'localhost')
-    # SERVER_NAME = os.environ.get('NERD_SERVER_NAME', '127.0.0.1:5000')
 
     JWT_TOKEN_LOCATION = ('headers', 'json')
     JWT_ERROR_MESSAGE_KEY = "message"
