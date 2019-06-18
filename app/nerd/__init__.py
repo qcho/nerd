@@ -11,6 +11,7 @@ from .apis.ner import blp as ner
 from .apis.roles import blp as roles
 from .apis.snapshots import blp as snapshots
 from .apis.users import blp as users
+from .apis.trainings import blp as trainings
 from .core.cli import setup_cli
 from .core.security import jwt
 from .core.util import get_logger
@@ -35,5 +36,6 @@ api.register_blueprint(roles, url_prefix='/api/roles')
 api.register_blueprint(corpus, url_prefix='/api/corpus')
 api.register_blueprint(snapshots, url_prefix='/api/snapshots')
 api.register_blueprint(ner, url_prefix='/api/ner')
+api.register_blueprint(trainings, url_prefix='/api/trainings')
 
 setup_cli(app)
