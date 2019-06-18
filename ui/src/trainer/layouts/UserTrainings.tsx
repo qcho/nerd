@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { UsersApi, Training, SnapshotsApi, User, SnapshotInfo } from '../apigen';
+import { UsersApi, Training, SnapshotsApi, User, SnapshotInfo, TrainingsApi } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
 import { DatasourceParameters, RichTable } from '../widgets/RichTable';
 import Http from '../helpers/http';
@@ -99,7 +99,15 @@ const UserTrainings = ({ match }: { match: any }) => {
   ];
 
   const onDelete = async (rows: Training[]) => {
-    // TODO
+    const api = new TrainingsApi(apiConfig());
+    try {
+      setLoading(true);
+      await Promise.all((rows.map(training => training.id) as (string)[]).map(id => api.deleteTraining(id)));
+    } catch (e) {
+      // TODO: Handle errors
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
