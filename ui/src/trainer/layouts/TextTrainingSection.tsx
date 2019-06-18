@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Title } from '../widgets/Title';
-import { Grid, Typography, Button, Tooltip } from '@material-ui/core';
+import { Grid, Typography, Button, Tooltip, CircularProgress } from '@material-ui/core';
 import { Line } from 'rc-progress';
 import { apiConfig } from '../helpers/api-config';
 import { SnapshotsApi, SnapshotInfo } from '../apigen';
@@ -98,6 +98,7 @@ const TextTrainingSection = () => {
           </Button>
         </Grid>
       </Grid>
+      {loading && <CircularProgress />}
       {snapshotInfo && (
         <Grid container direction="column">
           <SubSection title={t('Status')}>
