@@ -3,8 +3,9 @@ import { makeStyles } from '@material-ui/styles';
 import { Theme, Snackbar, SnackbarContent, IconButton } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 import CloseIcon from '@material-ui/icons/Close';
+import WarningIcon from '@material-ui/icons/Warning';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { green } from '@material-ui/core/colors';
+import { green, amber } from '@material-ui/core/colors';
 
 interface SnackbarProps {
   message: string;
@@ -14,17 +15,20 @@ interface SnackbarProps {
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
-    snackbarError: {
+    error: {
       backgroundColor: theme.palette.error.dark,
     },
-    snackbarSuccess: {
+    success: {
       backgroundColor: green[600],
     },
-    snackbarMessage: {
+    warning: {
+      backgroundColor: amber[600],
+    },
+    message: {
       display: 'flex',
       alignItems: 'center',
     },
-    snackIcon: {
+    icon: {
       fontSize: 20,
       opacity: 0.9,
       marginRight: theme.spacing.unit,
@@ -32,66 +36,51 @@ const useStyles = makeStyles(
   }),
   { withTheme: true },
 );
-const SuccessSnackbar = ({ message, onClose, duration = 2000 }: SnackbarProps) => {
-  const classes = useStyles();
 
-  return (
-    <Snackbar
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left',
-      }}
-      open={message != ''}
-      autoHideDuration={duration}
-      onClose={onClose}
-    >
-      <SnackbarContent
-        className={classes.snackbarSuccess}
-        message={
-          <span className={classes.snackbarMessage}>
-            <CheckCircleIcon className={classes.snackIcon} />
-            {message}
-          </span>
-        }
-        action={[
-          <IconButton key="close" aria-label="Close" color="inherit" onClick={onClose}>
-            <CloseIcon />
-          </IconButton>,
-        ]}
-      />
-    </Snackbar>
-  );
+type SnackbarVariant = 'success' | 'warning' | 'error';
+
+const variantIcon = {
+  success: CheckCircleIcon,
+  warning: WarningIcon,
+  error: ErrorIcon,
 };
 
-const ErrorSnackbar = ({ message, onClose, duration = 5000 }: SnackbarProps) => {
-  const classes = useStyles();
+const SnackbarBuilder = (variant: SnackbarVariant, showTime: number = 2000) => {
+  return function FancySnack({ message, onClose, duration = showTime }: SnackbarProps) {
+    const classes = useStyles();
+    const Icon = variantIcon[variant];
 
-  return (
-    <Snackbar
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left',
-      }}
-      open={message != ''}
-      autoHideDuration={duration}
-      onClose={onClose}
-    >
-      <SnackbarContent
-        className={classes.snackbarError}
-        message={
-          <span className={classes.snackbarMessage}>
-            <ErrorIcon className={classes.snackIcon} />
-            {message}
-          </span>
-        }
-        action={[
-          <IconButton key="close" aria-label="Close" color="inherit" onClick={onClose}>
-            <CloseIcon />
-          </IconButton>,
-        ]}
-      />
-    </Snackbar>
-  );
+    return (
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open={message != ''}
+        autoHideDuration={duration}
+        onClose={onClose}
+      >
+        <SnackbarContent
+          className={classes[variant]}
+          message={
+            <span className={classes.message}>
+              <Icon className={classes.icon} />
+              {message}
+            </span>
+          }
+          action={[
+            <IconButton key="close" aria-label="Close" color="inherit" onClick={onClose}>
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
+      </Snackbar>
+    );
+  };
 };
 
-export { ErrorSnackbar, SuccessSnackbar };
+const SuccessSnackbar = SnackbarBuilder('success');
+const WarningSnackbar = SnackbarBuilder('warning', 5000);
+const ErrorSnackbar = SnackbarBuilder('error');
+
+export { ErrorSnackbar, SuccessSnackbar, WarningSnackbar };
