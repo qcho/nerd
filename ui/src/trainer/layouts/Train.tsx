@@ -82,7 +82,6 @@ const Train = () => {
       }
     } catch (e) {
       if (unmounted) return;
-      console.log('Error getting training info', e);
       setTrainText(null);
       setSpacyDocument(null);
     }

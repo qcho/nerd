@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { withStyles, Theme, createStyles, Grid, TextField, Button, Divider, Snackbar } from '@material-ui/core';
-import classNames from 'classnames';
+import { withStyles, Theme, createStyles, Grid, TextField, Button, Divider } from '@material-ui/core';
 import useAuthentication from '../hooks/useAuthentication';
 import { useTranslation } from 'react-i18next';
 import { MaybeSpacyDocument } from '../types/optionals';
-import { SpacyDocument, Type, NerApi } from '../apigen';
+import { SpacyDocument, Type, NerApi, CorpusApi } from '../apigen';
 import TokenizedEditor from '../widgets/TokenizedEditor';
 import Http from '../helpers/http';
-import { ErrorMessage } from '../widgets/ErrorMessage';
 import { Scaffold } from '../widgets/Scaffold';
+import { apiConfig } from '../helpers/api-config';
+import { SuccessSnackbar, ErrorSnackbar } from '../widgets/Snackbars';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -25,19 +25,22 @@ const PreviewLayout = ({ classes }: Props) => {
   const [text, setText] = useState<string>('');
   const [entityTypes, setEntityTypes] = useState<{ [key: string]: Type }>({});
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
   const [document, setDocument] = useState<MaybeSpacyDocument>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
+  const [saveEnabled, setSaveEnabled] = useState<boolean>(false);
   const [t] = useTranslation();
   const { isUser } = useAuthentication();
-  const nerApi = new NerApi();
+  const nerApi = new NerApi(apiConfig());
 
   async function onParseClick() {
     setLoading(true);
     try {
-      const response = await nerApi.textParse_2({ text });
+      console.log(text);
+      const response = await nerApi.textParse_2(text);
       setDocument(response.data.spacy_document);
       setEntityTypes(response.data.snapshot.types || {});
+      setSaveEnabled(true);
     } catch (e) {
       const message = Http.handleRequestError(e, (statusCode, data) => {
         if ([404, 500].indexOf(statusCode) < 0) {
@@ -57,11 +60,28 @@ const PreviewLayout = ({ classes }: Props) => {
     });
   }
 
-  function onSaveClick() {
-    if (!document) {
-      return; // Shouldn't happen
-    }
-    // TODO: Implement this
+  async function onSaveClick() {
+    setErrorMessage('Whoops!');
+    // setSaveEnabled(false);
+    // if (!document) {
+    //   return; // Shouldn't happen
+    // }
+    // const api = new CorpusApi(apiConfig());
+    // try {
+    //   const textResponse = await api.addNewText({ value: document.text });
+    //   if (textResponse.data.id === undefined) {
+    //     return; // Shouldn't happen
+    //   }
+    //   await api.upsertMyTraining(textResponse.data.id, document);
+    //   setSnackbarMessage(t('Saved'));
+    // } catch (e) {
+    //   setErrorMessage(
+    //     Http.handleRequestError(e, (status, data) => {
+    //       // TODO: Handle error message
+    //       return '';
+    //     }),
+    //   );
+    // }
   }
 
   return (
@@ -94,7 +114,6 @@ const PreviewLayout = ({ classes }: Props) => {
             </Grid>
           </Grid>
         </Grid>
-        {errorMessage.length > 0 && <ErrorMessage message={errorMessage} />}
         {document == null || loading ? null : (
           <Grid item>
             <Divider style={{ marginTop: 10, marginBottom: 10 }} />
@@ -118,7 +137,7 @@ const PreviewLayout = ({ classes }: Props) => {
                       padding: '0.5em',
                     }}
                   >
-                    <Button variant="contained" fullWidth color="primary" onClick={onSaveClick}>
+                    <Button variant="contained" fullWidth color="primary" onClick={onSaveClick} disabled={!saveEnabled}>
                       {t('Save')}
                     </Button>
                   </Grid>
@@ -128,16 +147,8 @@ const PreviewLayout = ({ classes }: Props) => {
           </Grid>
         )}
       </Grid>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        open={snackbarMessage != ''}
-        autoHideDuration={1000}
-        onClose={() => setSnackbarMessage('')}
-        message={<span>{snackbarMessage}</span>}
-      />
+      <SuccessSnackbar message={snackbarMessage} onClose={() => setSnackbarMessage('')} />
+      <ErrorSnackbar message={errorMessage} onClose={() => setErrorMessage('')} />
     </Scaffold>
   );
 };

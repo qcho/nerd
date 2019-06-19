@@ -1,8 +1,7 @@
 import React from 'react';
 import { NavigationBar } from './NavigationBar';
 import { makeStyles } from '@material-ui/styles';
-import { Theme, Typography, Paper } from '@material-ui/core';
-import ErrorIcon from '@material-ui/icons/Error';
+import { Theme } from '@material-ui/core';
 
 interface Props {
   children: React.ReactNode;
@@ -33,26 +32,12 @@ const useStyles = makeStyles(
   { withTheme: true },
 );
 
-const ErrorContainer = ({ message }: { message: string }) => {
+const Scaffold = ({ children, loading, title }: Props) => {
   const classes = useStyles();
-  return (
-    <Paper className={classes.errorContainer} style={{ color: 'white' }}>
-      <ErrorIcon style={{ marginRight: '0.5em' }} />
-      <Typography variant="subtitle1" color="inherit">
-        {message}
-      </Typography>
-    </Paper>
-  );
-};
-
-const Scaffold = ({ children, loading, title, errorMessage = '' }: Props) => {
-  const classes = useStyles();
-  const hasError = errorMessage.length > 0;
   return (
     <div className={classes.grow}>
       <NavigationBar title={title} loading={loading} />
-      {hasError && <ErrorContainer message={errorMessage} />}
-      {!hasError && <div className={classes.content}>{children}</div>}
+      <div className={classes.content}>{children}</div>
     </div>
   );
 };
