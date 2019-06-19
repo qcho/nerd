@@ -27,10 +27,10 @@ def parse_text(snapshot_id, text: str):
 class NerResource(MethodView):
     @jwt_and_role_required(Role.USER)
     @blp.doc(operationId="textParse")
-    # @response_error(NotFound("Could not ner")) TODO: Find out what to return here
     @blp.arguments(RawText)
     @blp.response(TrainTextSchema, code=200, description="Ner")
     def get(self, raw_text: RawText, snapshot_id=None):
+        # TODO: Error handling
         snapshot, document = parse_text(snapshot_id, raw_text['text'])
         return {
             'text_id': None,
@@ -44,10 +44,10 @@ class NerResource(MethodView):
 class NerResource(MethodView):
     @jwt_and_role_required(Role.USER)
     @blp.doc(operationId="textEntities")
-    # @response_error(NotFound("Could not ner")) TODO: Find out what to return here
     @blp.arguments(RawText)
     @blp.response(EntityListSchema, code=200, description="Ner")
     def get(self, raw_text: RawText, snapshot_id=None):
+        # TODO: Error handling
         snapshot, document = parse_text(snapshot_id, raw_text['text'])
         return {
             'text': raw_text,
