@@ -177,9 +177,10 @@ class IndexResource(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="addNewText")
     @blp.arguments(ValueOnlyTextSchema)
-    @blp.response(code=200, description="Ok")
+    @blp.response(TextSchema, code=200, description="Ok")
     def post(self, payload: ValueOnlyTextSchema):
         # TODO: We should avoid adding equal texts
-        Text(
+        text = Text(
             value=payload.value,
         ).save()
+        return text
