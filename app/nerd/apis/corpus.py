@@ -93,31 +93,6 @@ class TrainingView(MethodView):
         return
 
 
-@blp.route("/<string:text_id>/trainings/<string:user_id>")
-class TrainingAdminView(MethodView):
-    @jwt_and_role_required(Role.ADMIN)
-    @blp.paginate()
-    @blp.doc(operationId="getTraining")
-    @blp.response(TextSchema(many=True), code=200)
-    def get(self, text_id, user_id, pagination_parameters: PaginationParameters):
-        trainings = Training.objects.filter(text_id=text_id, user_id=user_id)
-        pagination_parameters.item_count = trainings.count()
-        skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
-        return trainings.skip(skip_elements).limit(pagination_parameters.page_size)
-
-    @jwt_and_role_required(Role.ADMIN)
-    @blp.arguments(SpacyDocumentSchema)
-    @blp.doc(operationId="upsertTraining")
-    @blp.response(code=200)
-    def put(self, payload, text_id, user_id=None):
-        if user_id is None:
-            user = User.objects.get(email=get_jwt_identity())
-            user_id = str(user.pk)
-        text = Text.objects.get(id=text_id)
-        text.trainings[user_id] = payload
-        text.save()
-
-
 @blp.route("/train")
 class TrainResource(MethodView):
     """Returns a random text"""
