@@ -8,7 +8,7 @@ import TokenizedEditor from '../widgets/TokenizedEditor';
 import Http from '../helpers/http';
 import { Scaffold } from '../widgets/Scaffold';
 import { apiConfig } from '../helpers/api-config';
-import { SuccessSnackbar, ErrorSnackbar } from '../widgets/Snackbars';
+import { SuccessSnackbar, ErrorSnackbar, WarningSnackbar } from '../widgets/Snackbars';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -25,7 +25,8 @@ const PreviewLayout = ({ classes }: Props) => {
   const [text, setText] = useState<string>('');
   const [entityTypes, setEntityTypes] = useState<{ [key: string]: Type }>({});
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [warningMessage, setWarningMessage] = useState<string>('');
   const [document, setDocument] = useState<MaybeSpacyDocument>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [saveEnabled, setSaveEnabled] = useState<boolean>(false);
@@ -34,6 +35,10 @@ const PreviewLayout = ({ classes }: Props) => {
   const nerApi = new NerApi(apiConfig());
 
   async function onParseClick() {
+    if (text.trim().length == 0) {
+      setWarningMessage(t('Please write some text'));
+      return;
+    }
     setLoading(true);
     try {
       const response = await nerApi.textParse_2(text);
@@ -60,27 +65,26 @@ const PreviewLayout = ({ classes }: Props) => {
   }
 
   async function onSaveClick() {
-    setErrorMessage('Whoops!');
-    // setSaveEnabled(false);
-    // if (!document) {
-    //   return; // Shouldn't happen
-    // }
-    // const api = new CorpusApi(apiConfig());
-    // try {
-    //   const textResponse = await api.addNewText({ value: document.text });
-    //   if (textResponse.data.id === undefined) {
-    //     return; // Shouldn't happen
-    //   }
-    //   await api.upsertMyTraining(textResponse.data.id, document);
-    //   setSnackbarMessage(t('Saved'));
-    // } catch (e) {
-    //   setErrorMessage(
-    //     Http.handleRequestError(e, (status, data) => {
-    //       // TODO: Handle error message
-    //       return '';
-    //     }),
-    //   );
-    // }
+    setSaveEnabled(false);
+    if (!document) {
+      return; // Shouldn't happen
+    }
+    const api = new CorpusApi(apiConfig());
+    try {
+      const textResponse = await api.addNewText({ value: document.text });
+      if (textResponse.data.id === undefined) {
+        return; // Shouldn't happen
+      }
+      await api.upsertMyTraining(textResponse.data.id, document);
+      setSuccessMessage(t('Saved'));
+    } catch (e) {
+      setErrorMessage(
+        Http.handleRequestError(e, (status, data) => {
+          // TODO: Handle specific error codes
+          return '';
+        }),
+      );
+    }
   }
 
   return (
@@ -146,8 +150,9 @@ const PreviewLayout = ({ classes }: Props) => {
           </Grid>
         )}
       </Grid>
-      <SuccessSnackbar message={snackbarMessage} onClose={() => setSnackbarMessage('')} />
+      <SuccessSnackbar message={successMessage} onClose={() => setSuccessMessage('')} />
       <ErrorSnackbar message={errorMessage} onClose={() => setErrorMessage('')} />
+      <WarningSnackbar message={warningMessage} onClose={() => setWarningMessage('')} />
     </Scaffold>
   );
 };
