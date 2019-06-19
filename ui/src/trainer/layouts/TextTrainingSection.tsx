@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Title } from '../widgets/Title';
 import { Grid, Typography, Button, Tooltip, CircularProgress } from '@material-ui/core';
 import { Line } from 'rc-progress';
-import { apiConfig } from '../helpers/api-config';
-import { SnapshotsApi, SnapshotInfo } from '../apigen';
-import { MaybeSnapshotInfo } from '../types/optionals';
+import { SnapshotInfo } from '../apigen';
+import useCurrentSnapshot from '../hooks/useCurrentSnapshot';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
+import { Routes } from '../helpers/routeHelper';
 
 const TrainingStatus = ({ snapshotInfo }: { snapshotInfo: SnapshotInfo }) => {
   const [t] = useTranslation();
@@ -66,25 +67,8 @@ const SubSection = ({ title, children }: { title: string; children?: React.React
 );
 
 const TextTrainingSection = () => {
-  const [snapshotInfo, setSnapshotInfo] = useState<MaybeSnapshotInfo>(null);
-  const [loading, setLoading] = useState<boolean>(false);
   const [t] = useTranslation();
-
-  useEffect(() => {
-    setLoading(true);
-    async function fetchSnapshot() {
-      const api = new SnapshotsApi(apiConfig());
-      try {
-        const result = await api.getCurrentSnapshot();
-        console.log(result.data);
-        setSnapshotInfo(result.data);
-      } catch (e) {
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchSnapshot();
-  }, []);
+  const { currentSnapshot, loading, error } = useCurrentSnapshot();
 
   return (
     <div>
@@ -93,25 +77,30 @@ const TextTrainingSection = () => {
           <Title>{t('Corpus')}</Title>
         </Grid>
         <Grid item>
-          <Button size="small" color="primary" variant="contained">
+          <Button
+            size="small"
+            color="primary"
+            variant="contained"
+            component={(props: any) => <Link to={Routes.corpus} {...props} />}
+          >
             {t('View')}
           </Button>
         </Grid>
       </Grid>
       {loading && <CircularProgress />}
-      {snapshotInfo && (
+      {currentSnapshot && (
         <Grid container direction="column">
           <SubSection title={t('Status')}>
-            <TrainingStatus snapshotInfo={snapshotInfo} />
+            <TrainingStatus snapshotInfo={currentSnapshot} />
           </SubSection>
           <SubSection title={t('Last training')}>
-            <Typography variant="body1">{moment(snapshotInfo.snapshot.trained_at).fromNow()}</Typography>
+            <Typography variant="body1">{moment(currentSnapshot.snapshot.trained_at).fromNow()}</Typography>
           </SubSection>
           <SubSection title={t('Total trained')}>
-            <Typography variant="body1">{snapshotInfo.trained}</Typography>
+            <Typography variant="body1">{currentSnapshot.trained}</Typography>
           </SubSection>
           <SubSection title={t('Untrained')}>
-            <Typography variant="body1">{snapshotInfo.available - snapshotInfo.trained}</Typography>
+            <Typography variant="body1">{currentSnapshot.available - currentSnapshot.trained}</Typography>
           </SubSection>
           <Grid item />
         </Grid>

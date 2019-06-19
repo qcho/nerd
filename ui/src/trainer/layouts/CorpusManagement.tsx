@@ -1,20 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Theme, Grid, LinearProgress, Typography, Button, Divider } from '@material-ui/core';
+import React from 'react';
+import { Grid } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
-import { Line } from 'rc-progress';
 import { Scaffold } from '../widgets/Scaffold';
 import { SnapshotSection } from './SnapshotSection';
 import { TextTrainingSection } from './TextTrainingSection';
+import { ManageSnapshot } from './ManageSnapshot';
 
-const useStyles = makeStyles(
-  (theme: Theme) => ({
-    section: {
-      marginBottom: '1em',
-    },
-  }),
-  { withTheme: true },
-);
+const useStyles = makeStyles({
+  section: {
+    marginBottom: '1em',
+  },
+});
 
 const CorpusManagement = () => {
   const [t] = useTranslation();
@@ -27,7 +24,14 @@ const CorpusManagement = () => {
           <TextTrainingSection />
         </Grid>
         <Grid item className={classes.section} xs={10}>
-          <SnapshotSection />
+          <Grid container direction="column">
+            <Grid item>
+              <ManageSnapshot />
+            </Grid>
+            <Grid item style={{ marginTop: '0.5em' }}>
+              <SnapshotSection />
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Scaffold>

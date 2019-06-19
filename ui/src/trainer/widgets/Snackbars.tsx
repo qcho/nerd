@@ -54,7 +54,7 @@ const SnackbarBuilder = (variant: SnackbarVariant, showTime: number = 2000) => {
       <Snackbar
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left',
+          horizontal: 'right',
         }}
         open={message != ''}
         autoHideDuration={duration}

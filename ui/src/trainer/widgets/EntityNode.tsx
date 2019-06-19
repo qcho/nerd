@@ -76,9 +76,12 @@ const EntityNode = ({ text, token, entity, entityType }: EntityNodeProps) => {
   const borderClassName = borderClass(token, entity, entityNodeStyles);
 
   return (
-    <b style={{ color: entityType.color }} className={classNames(nodeStyles.node, borderClassName)}>
+    <span
+      style={{ color: entityType.color, fontFamily: 'Roboto', fontSize: '2em' }}
+      className={classNames(nodeStyles.node, borderClassName)}
+    >
       {contents}
-    </b>
+    </span>
   );
 };
 
