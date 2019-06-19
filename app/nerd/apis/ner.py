@@ -27,7 +27,7 @@ def parse_text(snapshot_id, text: str):
 class NerResource(MethodView):
     @jwt_and_role_required(Role.USER)
     @blp.doc(operationId="textParse")
-    @blp.arguments(RawText)
+    @blp.arguments(RawText, location='query')
     @blp.response(TrainTextSchema, code=200, description="Ner")
     def get(self, raw_text: RawText, snapshot_id=None):
         # TODO: Error handling
@@ -44,7 +44,7 @@ class NerResource(MethodView):
 class NerResource(MethodView):
     @jwt_and_role_required(Role.USER)
     @blp.doc(operationId="textEntities")
-    @blp.arguments(RawText)
+    @blp.arguments(RawText, location='query')
     @blp.response(EntityListSchema, code=200, description="Ner")
     def get(self, raw_text: RawText, snapshot_id=None):
         # TODO: Error handling
