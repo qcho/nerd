@@ -5,7 +5,7 @@ const useNodeStyles = makeStyles(() => ({
   node: {
     display: 'inline-block',
     marginTop: '0.2em',
-    paddingLeft: '0.2em',
+    marginLeft: '0.2em',
   },
   hoverBackground: {
     '&:hover': {
