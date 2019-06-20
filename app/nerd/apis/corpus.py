@@ -11,7 +11,7 @@ from mongoengine import DoesNotExist
 from werkzeug.exceptions import BadRequest, FailedDependency, NotFound
 
 from nerd.apis import response_error
-from nerd.apis.schemas import TrainTextSchema
+from nerd.apis.schemas import TrainTextSchema, TrainingSchema
 from nerd.core.document.corpus import Text, Training
 from nerd.core.document.snapshot import Snapshot
 from nerd.core.document.spacy import SpacyDocumentSchema
@@ -64,14 +64,12 @@ class CorpusTextResource(MethodView):
 
 @blp.route("/<string:text_id>/trainings")
 class TrainingView(MethodView):
-    @jwt_and_role_required(Role.USER)
-    @blp.doc(operationId="getTrainingsForMyself")
-    @blp.response(SpacyDocumentSchema(many=True), code=200)
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.doc(operationId="trainingsForText")
+    @blp.response(TrainingSchema(many=True), code=200)
     @blp.paginate()
     def get(self, text_id, pagination_parameters: PaginationParameters):
-        user = User.objects.get(email=get_jwt_identity())
-        user_id = str(user.pk)
-        trainings = Training.objects.filter(text_id=text_id, user_id=user_id)
+        trainings = Training.objects.filter(text_id=text_id)
         pagination_parameters.item_count = trainings.count()
         skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
         return trainings.skip(skip_elements).limit(pagination_parameters.page_size)
