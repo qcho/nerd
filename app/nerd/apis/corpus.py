@@ -62,8 +62,7 @@ class CorpusTextResource(MethodView):
             raise NotFound()
 
 
-# TODO: Seems that this route isn't necessary since we access own trainings from /users/me/trainings
-@blp.route("/<string:text_id>/trainings/me")
+@blp.route("/<string:text_id>/trainings")
 class TrainingView(MethodView):
     @jwt_and_role_required(Role.USER)
     @blp.doc(operationId="getTrainingsForMyself")
@@ -79,7 +78,7 @@ class TrainingView(MethodView):
 
     @jwt_and_role_required(Role.USER)
     @blp.arguments(SpacyDocumentSchema)
-    @blp.doc(operationId="upsertMyTraining")
+    @blp.doc(operationId="addTextTraining")
     @blp.response(code=200)
     def put(self, payload, text_id):
         user = User.objects.get(email=get_jwt_identity())
