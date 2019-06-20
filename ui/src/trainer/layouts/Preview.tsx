@@ -75,7 +75,7 @@ const PreviewLayout = ({ classes }: Props) => {
       if (textResponse.data.id === undefined) {
         return; // Shouldn't happen
       }
-      await api.upsertMyTraining(textResponse.data.id, document);
+      await api.addTextTraining(textResponse.data.id, document);
       setSuccessMessage(t('Saved'));
     } catch (e) {
       setErrorMessage(

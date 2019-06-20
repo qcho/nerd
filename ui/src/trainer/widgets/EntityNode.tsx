@@ -64,9 +64,10 @@ interface EntityNodeProps {
   token: SpacyToken;
   entity: SpacyEntity;
   entityType: Type;
+  editable: boolean;
 }
 
-const EntityNode = ({ text, token, entity, entityType }: EntityNodeProps) => {
+const EntityNode = ({ text, token, entity, entityType, editable }: EntityNodeProps) => {
   const nodeStyles = useNodeStyles();
   const entityNodeStyles = useEntityNodeStyles();
   var contents = text;
@@ -80,7 +81,7 @@ const EntityNode = ({ text, token, entity, entityType }: EntityNodeProps) => {
       style={{ color: entityType.color, fontFamily: 'Roboto', fontSize: '2em' }}
       className={classNames(
         nodeStyles.node,
-        nodeStyles.hoverCursor,
+        editable ? nodeStyles.hoverCursor : nodeStyles.arrowCursor,
         borderClassName,
         entity.start == token.start ? nodeStyles.leftMargin : nodeStyles.leftPadding,
       )}

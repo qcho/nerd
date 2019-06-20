@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Scaffold } from '../widgets/Scaffold';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
-import { Theme, TableCell, Button, Paper } from '@material-ui/core';
+import { Theme, TableCell, Button, Paper, Link } from '@material-ui/core';
 import { RichTable, DatasourceParameters } from '../widgets/RichTable';
 import { apiConfig } from '../helpers/api-config';
 import { CorpusApi } from '../apigen';
@@ -12,6 +12,8 @@ import { Title } from '../widgets/Title';
 import Http from '../helpers/http';
 import { SuccessSnackbar, ErrorSnackbar } from '../widgets/Snackbars';
 import { FileUploadDialog } from '../widgets/FileUploadDialog';
+import { Link as RRDLink } from 'react-router-dom';
+import { Routes } from '../helpers/routeHelper';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -60,7 +62,11 @@ const CorpusView = () => {
       <>
         <TableCell>{row.value}</TableCell>
         <TableCell>{moment(row.created_at).format('LLL')}</TableCell>
-        <TableCell>{(row.trainings || []).length}</TableCell>
+        <TableCell>
+          <Link component={(props: any) => <RRDLink to={Routes.trainingsForText.buildRoute(row)} {...props} />}>
+            {(row.trainings || []).length}
+          </Link>
+        </TableCell>
       </>
     );
   };

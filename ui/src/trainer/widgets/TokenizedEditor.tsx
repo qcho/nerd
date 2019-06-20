@@ -81,8 +81,6 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, 
     const startToken = tokens.filter(it => it.start <= startPosition && it.end > startPosition)[0];
     const endToken = tokens.filter(it => it.start < endPosition && it.end >= endPosition)[0];
     const entity = { label: 'MISC', start: startToken.start, end: endToken.end };
-    console.log('no, overlap adding:');
-    console.log(entity);
     entities.push(entity);
     spacyDocument.ents = entities;
     onUpdate(spacyDocument);

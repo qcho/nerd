@@ -83,13 +83,7 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    email: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
-    id?: string;
+    plain_password?: string;
     /**
      * 
      * @type {Array<string>}
@@ -101,7 +95,13 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    plain_password?: string;
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Register
+     */
+    email: string;
     /**
      * 
      * @type {string}
@@ -132,12 +132,6 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
-     * @type {Date}
-     * @memberof Snapshot
-     */
-    created_at?: Date;
-    /**
-     * 
      * @type {number}
      * @memberof Snapshot
      */
@@ -150,16 +144,22 @@ export interface Snapshot {
     semaphore?: number;
     /**
      * 
-     * @type {{ [key: string]: Type; }}
+     * @type {Date}
      * @memberof Snapshot
      */
-    types?: { [key: string]: Type; };
+    trained_at?: Date;
     /**
      * 
      * @type {Date}
      * @memberof Snapshot
      */
-    trained_at?: Date;
+    created_at?: Date;
+    /**
+     * 
+     * @type {{ [key: string]: Type; }}
+     * @memberof Snapshot
+     */
+    types?: { [key: string]: Type; };
 }
 
 /**
@@ -214,16 +214,16 @@ export interface SnapshotInfo {
 export interface SpacyDocument {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyDocument
-     */
-    text: string;
-    /**
-     * 
      * @type {Date}
      * @memberof SpacyDocument
      */
     _created_at?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyDocument
+     */
+    text: string;
     /**
      * 
      * @type {Array<SpacyEntity>}
@@ -252,16 +252,16 @@ export interface SpacyDocument {
 export interface SpacyDocument1 {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyDocument1
-     */
-    text: string;
-    /**
-     * 
      * @type {Date}
      * @memberof SpacyDocument1
      */
     _created_at?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyDocument1
+     */
+    text: string;
     /**
      * 
      * @type {Array<SpacyEntity1>}
@@ -290,6 +290,12 @@ export interface SpacyDocument1 {
 export interface SpacyEntity {
     /**
      * 
+     * @type {string}
+     * @memberof SpacyEntity
+     */
+    label: string;
+    /**
+     * 
      * @type {number}
      * @memberof SpacyEntity
      */
@@ -300,12 +306,6 @@ export interface SpacyEntity {
      * @memberof SpacyEntity
      */
     start: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyEntity
-     */
-    label: string;
 }
 
 /**
@@ -316,6 +316,12 @@ export interface SpacyEntity {
 export interface SpacyEntity1 {
     /**
      * 
+     * @type {string}
+     * @memberof SpacyEntity1
+     */
+    label: string;
+    /**
+     * 
      * @type {number}
      * @memberof SpacyEntity1
      */
@@ -326,12 +332,6 @@ export interface SpacyEntity1 {
      * @memberof SpacyEntity1
      */
     start: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyEntity1
-     */
-    label: string;
 }
 
 /**
@@ -342,6 +342,12 @@ export interface SpacyEntity1 {
 export interface SpacyEntity2 {
     /**
      * 
+     * @type {string}
+     * @memberof SpacyEntity2
+     */
+    label: string;
+    /**
+     * 
      * @type {number}
      * @memberof SpacyEntity2
      */
@@ -352,12 +358,6 @@ export interface SpacyEntity2 {
      * @memberof SpacyEntity2
      */
     start: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyEntity2
-     */
-    label: string;
 }
 
 /**
@@ -411,13 +411,19 @@ export interface SpacyToken {
      * @type {string}
      * @memberof SpacyToken
      */
-    pos?: string;
+    tag?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof SpacyToken
      */
-    id: number;
+    dep?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    pos?: string;
     /**
      * 
      * @type {number}
@@ -429,25 +435,19 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
-    end: number;
+    id: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SpacyToken
      */
-    dep?: string;
+    end: number;
     /**
      * 
      * @type {number}
      * @memberof SpacyToken
      */
     head?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    tag?: string;
 }
 
 /**
@@ -461,13 +461,19 @@ export interface SpacyToken1 {
      * @type {string}
      * @memberof SpacyToken1
      */
-    pos?: string;
+    tag?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof SpacyToken1
      */
-    id: number;
+    dep?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    pos?: string;
     /**
      * 
      * @type {number}
@@ -479,25 +485,19 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
-    end: number;
+    id: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SpacyToken1
      */
-    dep?: string;
+    end: number;
     /**
      * 
      * @type {number}
      * @memberof SpacyToken1
      */
     head?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
-    tag?: string;
 }
 
 /**
@@ -514,16 +514,16 @@ export interface Text {
     id?: string;
     /**
      * 
-     * @type {Date}
-     * @memberof Text
-     */
-    created_at?: Date;
-    /**
-     * 
      * @type {string}
      * @memberof Text
      */
     value: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof Text
+     */
+    created_at?: Date;
     /**
      * 
      * @type {Array<string>}
@@ -566,16 +566,16 @@ export interface Token {
 export interface TopContributor {
     /**
      * 
-     * @type {number}
-     * @memberof TopContributor
-     */
-    total_trainings: number;
-    /**
-     * 
      * @type {string}
      * @memberof TopContributor
      */
     name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TopContributor
+     */
+    total_trainings: number;
 }
 
 /**
@@ -586,10 +586,10 @@ export interface TopContributor {
 export interface TrainText {
     /**
      * 
-     * @type {string}
+     * @type {SpacyDocument1}
      * @memberof TrainText
      */
-    text_id: string;
+    spacy_document: SpacyDocument1;
     /**
      * 
      * @type {Snapshot}
@@ -598,10 +598,10 @@ export interface TrainText {
     snapshot: Snapshot;
     /**
      * 
-     * @type {SpacyDocument1}
+     * @type {string}
      * @memberof TrainText
      */
-    spacy_document: SpacyDocument1;
+    text_id: string;
 }
 
 /**
@@ -618,10 +618,10 @@ export interface Training {
     text_id: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof Training
      */
-    created_at?: Date;
+    id?: string;
     /**
      * 
      * @type {string}
@@ -630,10 +630,10 @@ export interface Training {
     user_id: string;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof Training
      */
-    id?: string;
+    created_at?: Date;
     /**
      * 
      * @type {SpacyDocument}
@@ -653,13 +653,13 @@ export interface Type {
      * @type {string}
      * @memberof Type
      */
-    color: string;
+    label: string;
     /**
      * 
      * @type {string}
      * @memberof Type
      */
-    label: string;
+    color: string;
 }
 
 /**
@@ -670,16 +670,10 @@ export interface Type {
 export interface User {
     /**
      * 
-     * @type {string}
+     * @type {Array<string>}
      * @memberof User
      */
-    email: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    id?: string;
+    roles?: Array<string>;
     /**
      * 
      * @type {number}
@@ -688,10 +682,16 @@ export interface User {
     total_trainings?: number;
     /**
      * 
-     * @type {Array<string>}
+     * @type {string}
      * @memberof User
      */
-    roles?: Array<string>;
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    email: string;
     /**
      * 
      * @type {string}
@@ -734,16 +734,10 @@ export interface UserCredentials {
 export interface UserPayload {
     /**
      * 
-     * @type {string}
-     * @memberof UserPayload
-     */
-    id?: string;
-    /**
-     * 
      * @type {Array<string>}
      * @memberof UserPayload
      */
-    trainings?: Array<string>;
+    roles?: Array<string>;
     /**
      * 
      * @type {string}
@@ -755,7 +749,13 @@ export interface UserPayload {
      * @type {Array<string>}
      * @memberof UserPayload
      */
-    roles?: Array<string>;
+    trainings?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPayload
+     */
+    id?: string;
     /**
      * 
      * @type {string}
@@ -1088,6 +1088,57 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * 
+         * @param {string} text_id 
+         * @param {SpacyDocument1} spacy_document1 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addTextTraining(text_id: string, spacy_document1: SpacyDocument1, options: any = {}): RequestArgs {
+            // verify required parameter 'text_id' is not null or undefined
+            if (text_id === null || text_id === undefined) {
+                throw new RequiredError('text_id','Required parameter text_id was null or undefined when calling addTextTraining.');
+            }
+            // verify required parameter 'spacy_document1' is not null or undefined
+            if (spacy_document1 === null || spacy_document1 === undefined) {
+                throw new RequiredError('spacy_document1','Required parameter spacy_document1 was null or undefined when calling addTextTraining.');
+            }
+            const localVarPath = `/api/corpus/{text_id}/trainings`
+                .replace(`{${"text_id"}}`, encodeURIComponent(String(text_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"SpacyDocument1" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(spacy_document1 !== undefined ? spacy_document1 : {}) : (spacy_document1 || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} [page] 
          * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
@@ -1161,58 +1212,6 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
                     ? configuration.accessToken("oAuth2Password", ["user", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
-            }
-
-
-                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete localVarUrlObj.search;
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} text_id 
-         * @param {number} [page] 
-         * @param {number} [page_size] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTrainingsForMyself(text_id: string, page?: number, page_size?: number, options: any = {}): RequestArgs {
-            // verify required parameter 'text_id' is not null or undefined
-            if (text_id === null || text_id === undefined) {
-                throw new RequiredError('text_id','Required parameter text_id was null or undefined when calling getTrainingsForMyself.');
-            }
-            const localVarPath = `/api/corpus/{text_id}/trainings/me`
-                .replace(`{${"text_id"}}`, encodeURIComponent(String(text_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication oAuth2Password required
-            // oauth required
-            if (configuration && configuration.accessToken) {
-                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
-                    : configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
-            }
-
-            if (page !== undefined) {
-                localVarQueryParameter['page'] = page;
-            }
-
-            if (page_size !== undefined) {
-                localVarQueryParameter['page_size'] = page_size;
             }
 
 
@@ -1306,6 +1305,58 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * 
+         * @param {string} text_id 
+         * @param {number} [page] 
+         * @param {number} [page_size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        trainingsForText(text_id: string, page?: number, page_size?: number, options: any = {}): RequestArgs {
+            // verify required parameter 'text_id' is not null or undefined
+            if (text_id === null || text_id === undefined) {
+                throw new RequiredError('text_id','Required parameter text_id was null or undefined when calling trainingsForText.');
+            }
+            const localVarPath = `/api/corpus/{text_id}/trainings`
+                .replace(`{${"text_id"}}`, encodeURIComponent(String(text_id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (page_size !== undefined) {
+                localVarQueryParameter['page_size'] = page_size;
+            }
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {any} [file] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1322,6 +1373,15 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarQueryParameter = {} as any;
             const localVarFormParams = new FormData();
 
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
 
             if (file !== undefined) { 
                 localVarFormParams.append('file', file as any);
@@ -1333,57 +1393,6 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
             localVarRequestOptions.data = localVarFormParams;
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} text_id 
-         * @param {SpacyDocument1} spacy_document1 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        upsertMyTraining(text_id: string, spacy_document1: SpacyDocument1, options: any = {}): RequestArgs {
-            // verify required parameter 'text_id' is not null or undefined
-            if (text_id === null || text_id === undefined) {
-                throw new RequiredError('text_id','Required parameter text_id was null or undefined when calling upsertMyTraining.');
-            }
-            // verify required parameter 'spacy_document1' is not null or undefined
-            if (spacy_document1 === null || spacy_document1 === undefined) {
-                throw new RequiredError('spacy_document1','Required parameter spacy_document1 was null or undefined when calling upsertMyTraining.');
-            }
-            const localVarPath = `/api/corpus/{text_id}/trainings/me`
-                .replace(`{${"text_id"}}`, encodeURIComponent(String(text_id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication oAuth2Password required
-            // oauth required
-            if (configuration && configuration.accessToken) {
-                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
-                    : configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
-            }
-
-
-                localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete localVarUrlObj.search;
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
-            const needsSerialization = (<any>"SpacyDocument1" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(spacy_document1 !== undefined ? spacy_document1 : {}) : (spacy_document1 || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1407,6 +1416,20 @@ export const CorpusApiFp = function(configuration?: Configuration) {
          */
         addNewText(value_only_text: ValueOnlyText, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text> {
             const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).addNewText(value_only_text, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {string} text_id 
+         * @param {SpacyDocument1} spacy_document1 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addTextTraining(text_id: string, spacy_document1: SpacyDocument1, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).addTextTraining(text_id, spacy_document1, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1442,21 +1465,6 @@ export const CorpusApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} text_id 
-         * @param {number} [page] 
-         * @param {number} [page_size] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTrainingsForMyself(text_id: string, page?: number, page_size?: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SpacyDocument1>> {
-            const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).getTrainingsForMyself(text_id, page, page_size, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @param {string} text_id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1481,12 +1489,14 @@ export const CorpusApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {any} [file] 
+         * @param {string} text_id 
+         * @param {number} [page] 
+         * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadFile(file?: any, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
-            const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).uploadFile(file, options);
+        trainingsForText(text_id: string, page?: number, page_size?: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Training>> {
+            const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).trainingsForText(text_id, page, page_size, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1494,13 +1504,12 @@ export const CorpusApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} text_id 
-         * @param {SpacyDocument1} spacy_document1 
+         * @param {any} [file] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        upsertMyTraining(text_id: string, spacy_document1: SpacyDocument1, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
-            const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).upsertMyTraining(text_id, spacy_document1, options);
+        uploadFile(file?: any, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).uploadFile(file, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1526,6 +1535,16 @@ export const CorpusApiFactory = function (configuration?: Configuration, basePat
         },
         /**
          * 
+         * @param {string} text_id 
+         * @param {SpacyDocument1} spacy_document1 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addTextTraining(text_id: string, spacy_document1: SpacyDocument1, options?: any) {
+            return CorpusApiFp(configuration).addTextTraining(text_id, spacy_document1, options)(axios, basePath);
+        },
+        /**
+         * 
          * @param {number} [page] 
          * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
@@ -1546,17 +1565,6 @@ export const CorpusApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @param {string} text_id 
-         * @param {number} [page] 
-         * @param {number} [page_size] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTrainingsForMyself(text_id: string, page?: number, page_size?: number, options?: any) {
-            return CorpusApiFp(configuration).getTrainingsForMyself(text_id, page, page_size, options)(axios, basePath);
-        },
-        /**
-         * 
-         * @param {string} text_id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1573,22 +1581,23 @@ export const CorpusApiFactory = function (configuration?: Configuration, basePat
         },
         /**
          * 
+         * @param {string} text_id 
+         * @param {number} [page] 
+         * @param {number} [page_size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        trainingsForText(text_id: string, page?: number, page_size?: number, options?: any) {
+            return CorpusApiFp(configuration).trainingsForText(text_id, page, page_size, options)(axios, basePath);
+        },
+        /**
+         * 
          * @param {any} [file] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         uploadFile(file?: any, options?: any) {
             return CorpusApiFp(configuration).uploadFile(file, options)(axios, basePath);
-        },
-        /**
-         * 
-         * @param {string} text_id 
-         * @param {SpacyDocument1} spacy_document1 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        upsertMyTraining(text_id: string, spacy_document1: SpacyDocument1, options?: any) {
-            return CorpusApiFp(configuration).upsertMyTraining(text_id, spacy_document1, options)(axios, basePath);
         },
     };
 };
@@ -1609,6 +1618,18 @@ export class CorpusApi extends BaseAPI {
      */
     public addNewText(value_only_text: ValueOnlyText, options?: any) {
         return CorpusApiFp(this.configuration).addNewText(value_only_text, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {string} text_id 
+     * @param {SpacyDocument1} spacy_document1 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorpusApi
+     */
+    public addTextTraining(text_id: string, spacy_document1: SpacyDocument1, options?: any) {
+        return CorpusApiFp(this.configuration).addTextTraining(text_id, spacy_document1, options)(this.axios, this.basePath);
     }
 
     /**
@@ -1637,19 +1658,6 @@ export class CorpusApi extends BaseAPI {
     /**
      * 
      * @param {string} text_id 
-     * @param {number} [page] 
-     * @param {number} [page_size] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CorpusApi
-     */
-    public getTrainingsForMyself(text_id: string, page?: number, page_size?: number, options?: any) {
-        return CorpusApiFp(this.configuration).getTrainingsForMyself(text_id, page, page_size, options)(this.axios, this.basePath);
-    }
-
-    /**
-     * 
-     * @param {string} text_id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CorpusApi
@@ -1670,6 +1678,19 @@ export class CorpusApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} text_id 
+     * @param {number} [page] 
+     * @param {number} [page_size] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorpusApi
+     */
+    public trainingsForText(text_id: string, page?: number, page_size?: number, options?: any) {
+        return CorpusApiFp(this.configuration).trainingsForText(text_id, page, page_size, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
      * @param {any} [file] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1677,18 +1698,6 @@ export class CorpusApi extends BaseAPI {
      */
     public uploadFile(file?: any, options?: any) {
         return CorpusApiFp(this.configuration).uploadFile(file, options)(this.axios, this.basePath);
-    }
-
-    /**
-     * 
-     * @param {string} text_id 
-     * @param {SpacyDocument1} spacy_document1 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CorpusApi
-     */
-    public upsertMyTraining(text_id: string, spacy_document1: SpacyDocument1, options?: any) {
-        return CorpusApiFp(this.configuration).upsertMyTraining(text_id, spacy_document1, options)(this.axios, this.basePath);
     }
 
 }

@@ -103,7 +103,7 @@ const Train = () => {
   const onSave = async () => {
     try {
       if (!(trainText && spacyDocument)) return;
-      await api.upsertMyTraining(trainText.text_id, spacyDocument);
+      await api.addTextTraining(trainText.text_id, spacyDocument);
       loadNewDocument();
     } catch (e) {}
   };

@@ -13,6 +13,7 @@ import useAuthentication from './hooks/useAuthentication';
 import UserManagement from './layouts/UserManagement';
 import { MyTrainings } from './layouts/MyTrainings';
 import { UserTrainings } from './layouts/UserTrainings';
+import { TextTrainings } from './layouts/TextTrainings';
 import { CorpusView } from './layouts/CorpusView';
 import Train from './layouts/Train';
 import { Routes } from './helpers/routeHelper';
@@ -35,6 +36,7 @@ const Navigation = () => {
       {isAdmin && <Route exact path={Routes.corpusAdmin} component={CorpusManagement} />}
       {isAdmin && <Route exact path={Routes.userAdmin} component={UserManagement} />}
       {isAdmin && <Route exact path={Routes.trainingsByUser.route} component={UserTrainings} />}
+      {isAdmin && <Route exact path={Routes.trainingsForText.route} component={TextTrainings} />}
       {isAdmin && <Route exact path={Routes.corpus} component={CorpusView} />}
       {isUser && <Route exact path={Routes.train} component={Train} />}
       <Route component={FourOhFour} />

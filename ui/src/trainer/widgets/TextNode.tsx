@@ -15,6 +15,7 @@ interface TextNodeProps {
 // eslint-disable-next-line react/display-name
 const TextNode = React.forwardRef(
   ({ text, token, onClick, entity, entityType }: TextNodeProps, ref: Ref<HTMLSpanElement>) => {
+    const editable = !!onClick;
     const _onClick = () => {
       if (onClick) {
         onClick(token, entity);
@@ -23,9 +24,9 @@ const TextNode = React.forwardRef(
 
     var component =
       entity && entityType ? (
-        <EntityNode {...{ text, token, entity, entityType }} />
+        <EntityNode {...{ text, token, entity, entityType, editable }} />
       ) : (
-        <PlainNode {...{ text, token }} />
+        <PlainNode {...{ text, token, editable }} />
       );
 
     return (

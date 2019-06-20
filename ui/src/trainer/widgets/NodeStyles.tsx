@@ -25,6 +25,11 @@ const useNodeStyles = makeStyles(() => ({
       cursor: 'pointer',
     },
   },
+  arrowCursor: {
+    '&:hover': {
+      cursor: 'default',
+    },
+  },
 }));
 
 export { useNodeStyles };
