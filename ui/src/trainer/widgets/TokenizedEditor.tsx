@@ -38,6 +38,48 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, 
     throw new Error('Widget needs an onUpdate callback in editor mode');
   }
 
+  const onMouseUp = () => {
+    if (!onUpdate) return;
+    var selection = window.getSelection();
+    if (selection === null) {
+      return;
+    }
+    let text = selection.toString();
+    if (!text || text.length == 0) {
+      return;
+    }
+    console.log(text);
+    let startPosition = spacyDocument.text.indexOf(text);
+    if (startPosition < 0) {
+      return; // Selection outside of document text
+    }
+    let endPosition = startPosition + text.length;
+
+    function overlapsSelection({ start, end }: SpacyEntity) {
+      if (end < startPosition || start > endPosition) {
+        return false;
+      }
+      return end < endPosition || start > startPosition;
+    }
+
+    let entities = spacyDocument.ents || [];
+    if (entities.length > 0) {
+      let hasOverlap = entities
+        .map(entity => overlapsSelection(entity))
+        .reduce((prev: boolean, curr: boolean) => prev || curr);
+      if (hasOverlap) {
+        selection.removeAllRanges();
+        // TODO: Set error
+        return;
+      }
+    }
+    selection.removeAllRanges();
+    const entity = { label: 'Misc', end: endPosition, start: startPosition };
+    entities.push(entity);
+    spacyDocument.ents = entities;
+    onUpdate(spacyDocument);
+  };
+
   const onTokenClick = (token: SpacyToken, entity: MaybeSpacyEntity = null) => {
     if (!onUpdate) return;
     var entities = spacyDocument.ents || [];
@@ -173,7 +215,7 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, 
 
   return (
     <div>
-      <div>{mapNodes(spacyDocument, entityTypes, onTokenClick)}</div>
+      <div onMouseUp={onMouseUp}>{mapNodes(spacyDocument, entityTypes, onTokenClick)}</div>
       <Popover
         id="entity-popover"
         open={currentToken != null}
