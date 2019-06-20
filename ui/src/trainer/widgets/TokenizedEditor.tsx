@@ -44,16 +44,20 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, 
     if (selection === null) {
       return;
     }
-    let text = selection.toString();
-    if (!text || text.length == 0) {
+    const tokens = spacyDocument.tokens || [];
+    const onlyTokenText = tokens.map(it => spacyDocument.text.substring(it.start, it.end)).join('');
+    if (selection.toString().length == 0) {
       return;
     }
-    console.log(text);
-    let startPosition = spacyDocument.text.indexOf(text);
-    if (startPosition < 0) {
-      return; // Selection outside of document text
+    let range = selection.getRangeAt(0);
+    let startContainer = range.startContainer;
+    let endContainer = range.endContainer;
+    if (startContainer.parentElement == null || endContainer.parentElement == null) {
+      // TODO: Shouldn't happen
+      return;
     }
-    let endPosition = startPosition + text.length;
+    let startPosition = Number(startContainer.parentElement.id.split('-')[0]);
+    let endPosition = Number(endContainer.parentElement.id.split('-')[1]);
 
     function overlapsSelection({ start, end }: SpacyEntity) {
       if (end < startPosition || start > endPosition) {
@@ -74,7 +78,11 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, 
       }
     }
     selection.removeAllRanges();
-    const entity = { label: 'Misc', end: endPosition, start: startPosition };
+    const startToken = tokens.filter(it => it.start <= startPosition && it.end > startPosition)[0];
+    const endToken = tokens.filter(it => it.start < endPosition && it.end >= endPosition)[0];
+    const entity = { label: 'MISC', start: startToken.start, end: endToken.end };
+    console.log('no, overlap adding:');
+    console.log(entity);
     entities.push(entity);
     spacyDocument.ents = entities;
     onUpdate(spacyDocument);

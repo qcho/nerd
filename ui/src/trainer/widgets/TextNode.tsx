@@ -22,7 +22,11 @@ const TextNode = React.forwardRef(
     };
 
     var component =
-      entity && entityType ? <EntityNode {...{ text, token, entity, entityType }} /> : <PlainNode {...{ text }} />;
+      entity && entityType ? (
+        <EntityNode {...{ text, token, entity, entityType }} />
+      ) : (
+        <PlainNode {...{ text, token }} />
+      );
 
     return (
       <span ref={ref} onClick={() => _onClick()}>

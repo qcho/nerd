@@ -16,6 +16,9 @@ const useNodeStyles = makeStyles(() => ({
     '&:hover': {
       background: grey[400],
     },
+    '&::selection': {
+      background: grey[400],
+    },
   },
   hoverCursor: {
     '&:hover': {
