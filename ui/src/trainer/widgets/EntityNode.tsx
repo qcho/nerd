@@ -78,7 +78,12 @@ const EntityNode = ({ text, token, entity, entityType }: EntityNodeProps) => {
   return (
     <span
       style={{ color: entityType.color, fontFamily: 'Roboto', fontSize: '2em' }}
-      className={classNames(nodeStyles.node, nodeStyles.hoverCursor, borderClassName)}
+      className={classNames(
+        nodeStyles.node,
+        nodeStyles.hoverCursor,
+        borderClassName,
+        entity.start == token.start ? nodeStyles.leftMargin : nodeStyles.leftPadding,
+      )}
     >
       {contents}
     </span>

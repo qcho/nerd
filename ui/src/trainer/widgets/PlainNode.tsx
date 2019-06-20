@@ -11,7 +11,7 @@ const PlainNode = ({ text }: PlainNodeProps) => {
 
   return (
     <span
-      className={classNames(nodeStyles.node, nodeStyles.hoverBackground, nodeStyles.hoverCursor)}
+      className={classNames(nodeStyles.node, nodeStyles.hoverBackground, nodeStyles.hoverCursor, nodeStyles.leftMargin)}
       style={{ fontFamily: 'Roboto', fontSize: '2em' }}
     >
       {text}
