@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Scaffold } from '../widgets/Scaffold';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
-import { Theme, Paper, TableCell, Button } from '@material-ui/core';
+import { Theme, TableCell, Button, Paper } from '@material-ui/core';
 import { RichTable, DatasourceParameters } from '../widgets/RichTable';
 import { apiConfig } from '../helpers/api-config';
 import { CorpusApi } from '../apigen';
@@ -27,7 +27,7 @@ const useStyles = makeStyles(
 
 const CorpusView = () => {
   const [t] = useTranslation();
-  const classes = useStyles({});
+  const classes = useStyles();
   const [loading, setLoading] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -80,33 +80,35 @@ const CorpusView = () => {
 
   return (
     <Scaffold title={t('Corpus')} loading={loading}>
-      <Title>{t('Upload')}</Title>
-      <Button color="primary" onClick={() => setDropzoneOpen(true)}>
-        {t('Upload File')}
-      </Button>
-      <div style={{ paddingBottom: '1em' }} />
-      <Title>{t('Texts')}</Title>
-      <RichTable
-        headers={[
-          {
-            id: 'text',
-            label: t('Text'),
-          },
-          {
-            id: 'added',
-            label: t('Added'),
-          },
-          {
-            id: 'trainings',
-            label: t('Trainings'),
-          },
-        ]}
-        valueToId={(value: Text) => value.id || ''}
-        datasource={datasource}
-        rowBuilder={rowBuilder}
-        onDelete={onDelete}
-        paginatable
-      />
+      <Paper className={classes.content}>
+        <Title>{t('Upload')}</Title>
+        <Button color="primary" onClick={() => setDropzoneOpen(true)}>
+          {t('Upload File')}
+        </Button>
+        <div style={{ paddingBottom: '1em' }} />
+        <Title>{t('Texts')}</Title>
+        <RichTable
+          headers={[
+            {
+              id: 'text',
+              label: t('Text'),
+            },
+            {
+              id: 'added',
+              label: t('Added'),
+            },
+            {
+              id: 'trainings',
+              label: t('Trainings'),
+            },
+          ]}
+          valueToId={(value: Text) => value.id || ''}
+          datasource={datasource}
+          rowBuilder={rowBuilder}
+          onDelete={onDelete}
+          paginatable
+        />
+      </Paper>
       <SuccessSnackbar message={successMessage} onClose={() => setSuccessMessage('')} />
       <ErrorSnackbar message={errorMessage} onClose={() => setErrorMessage('')} />
       <FileUploadDialog open={dropzoneOpen} onClose={() => setDropzoneOpen(false)} onSave={onDropzoneUpload} />
