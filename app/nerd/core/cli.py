@@ -4,6 +4,7 @@ from pprint import pprint
 import click
 from flask import Flask
 
+from nerd.core.importer.text_importer import TextImporter
 from nerd.core.news import NewsApi
 from nerd.core.setup import NERdSetup
 from nerd.tasks import celery
@@ -20,6 +21,12 @@ def setup_cli(app: Flask):
     @click.option('--drop/--no-drop', help='Drop old database information before setup', default=False)
     def dev_setup(drop):
         NERdSetup.dev_setup(drop)
+
+    @app.cli.command()
+    @click.argument('filename')
+    def import_file(filename):
+        with open(filename, 'rb') as file:
+            TextImporter(file).run()
 
     @app.cli.command()
     @click.option('--api-key', type=str)

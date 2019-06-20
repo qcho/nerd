@@ -1,6 +1,9 @@
 from datetime import datetime
+from io import TextIOWrapper
+
 from flask.views import MethodView
 from flask_jwt_extended import get_jwt_identity
+import flask
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
@@ -13,6 +16,7 @@ from nerd.core.document.corpus import Text, Training
 from nerd.core.document.snapshot import Snapshot
 from nerd.core.document.spacy import SpacyDocumentSchema
 from nerd.core.document.user import Role, User
+from nerd.core.importer.text_importer import TextImporter
 from nerd.tasks.corpus import nlp as nlp_task
 
 from .roles import jwt_and_role_required
@@ -91,6 +95,33 @@ class TrainingView(MethodView):
         user.update(add_to_set__trainings=training_pk)
         text.update(add_to_set__trainings=training_pk)
         return
+
+
+@blp.route("/upload")
+class UploadCsvResource(MethodView):
+    """Upload text file"""
+
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.doc(operationId="uploadFile", requestBody={
+        "content": {
+            "multipart/form-data": {
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "file": {
+                            "format": "binary",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    })
+    def post(self):
+        imported = 0
+        for f in flask.request.files.getlist('file'):
+            imported = imported + TextImporter(TextIOWrapper(f, encoding='utf-8')).run()
+        return '', 200
 
 
 @blp.route("/train")

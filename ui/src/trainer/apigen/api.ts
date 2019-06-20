@@ -61,6 +61,20 @@ export interface HttpError {
 /**
  * 
  * @export
+ * @interface InlineObject
+ */
+export interface InlineObject {
+    /**
+     * 
+     * @type {any}
+     * @memberof InlineObject
+     */
+    file?: any;
+}
+
+/**
+ * 
+ * @export
  * @interface Register
  */
 export interface Register {
@@ -69,7 +83,19 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
+    email: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Register
+     */
     id?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Register
+     */
+    trainings?: Array<string>;
     /**
      * 
      * @type {string}
@@ -82,18 +108,6 @@ export interface Register {
      * @memberof Register
      */
     name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
-    email: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Register
-     */
-    trainings?: Array<string>;
 }
 
 /**
@@ -118,18 +132,6 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
-     * @type {{ [key: string]: Type; }}
-     * @memberof Snapshot
-     */
-    types?: { [key: string]: Type; };
-    /**
-     * 
-     * @type {number}
-     * @memberof Snapshot
-     */
-    id: number;
-    /**
-     * 
      * @type {Date}
      * @memberof Snapshot
      */
@@ -139,7 +141,19 @@ export interface Snapshot {
      * @type {number}
      * @memberof Snapshot
      */
+    id: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Snapshot
+     */
     semaphore?: number;
+    /**
+     * 
+     * @type {{ [key: string]: Type; }}
+     * @memberof Snapshot
+     */
+    types?: { [key: string]: Type; };
     /**
      * 
      * @type {Date}
@@ -200,6 +214,12 @@ export interface SnapshotInfo {
 export interface SpacyDocument {
     /**
      * 
+     * @type {string}
+     * @memberof SpacyDocument
+     */
+    text: string;
+    /**
+     * 
      * @type {Date}
      * @memberof SpacyDocument
      */
@@ -212,22 +232,16 @@ export interface SpacyDocument {
     ents?: Array<SpacyEntity>;
     /**
      * 
-     * @type {Array<SpacySentence>}
-     * @memberof SpacyDocument
-     */
-    sents?: Array<SpacySentence>;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyDocument
-     */
-    text: string;
-    /**
-     * 
      * @type {Array<SpacyToken>}
      * @memberof SpacyDocument
      */
     tokens?: Array<SpacyToken>;
+    /**
+     * 
+     * @type {Array<SpacySentence>}
+     * @memberof SpacyDocument
+     */
+    sents?: Array<SpacySentence>;
 }
 
 /**
@@ -236,6 +250,12 @@ export interface SpacyDocument {
  * @interface SpacyDocument1
  */
 export interface SpacyDocument1 {
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyDocument1
+     */
+    text: string;
     /**
      * 
      * @type {Date}
@@ -250,22 +270,16 @@ export interface SpacyDocument1 {
     ents?: Array<SpacyEntity1>;
     /**
      * 
-     * @type {Array<SpacySentence1>}
-     * @memberof SpacyDocument1
-     */
-    sents?: Array<SpacySentence1>;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyDocument1
-     */
-    text: string;
-    /**
-     * 
      * @type {Array<SpacyToken1>}
      * @memberof SpacyDocument1
      */
     tokens?: Array<SpacyToken1>;
+    /**
+     * 
+     * @type {Array<SpacySentence1>}
+     * @memberof SpacyDocument1
+     */
+    sents?: Array<SpacySentence1>;
 }
 
 /**
@@ -276,10 +290,10 @@ export interface SpacyDocument1 {
 export interface SpacyEntity {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SpacyEntity
      */
-    label: string;
+    end: number;
     /**
      * 
      * @type {number}
@@ -288,10 +302,10 @@ export interface SpacyEntity {
     start: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof SpacyEntity
      */
-    end: number;
+    label: string;
 }
 
 /**
@@ -302,10 +316,10 @@ export interface SpacyEntity {
 export interface SpacyEntity1 {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SpacyEntity1
      */
-    label: string;
+    end: number;
     /**
      * 
      * @type {number}
@@ -314,10 +328,10 @@ export interface SpacyEntity1 {
     start: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof SpacyEntity1
      */
-    end: number;
+    label: string;
 }
 
 /**
@@ -328,10 +342,10 @@ export interface SpacyEntity1 {
 export interface SpacyEntity2 {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SpacyEntity2
      */
-    label: string;
+    end: number;
     /**
      * 
      * @type {number}
@@ -340,10 +354,10 @@ export interface SpacyEntity2 {
     start: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof SpacyEntity2
      */
-    end: number;
+    label: string;
 }
 
 /**
@@ -357,13 +371,13 @@ export interface SpacySentence {
      * @type {number}
      * @memberof SpacySentence
      */
-    start: number;
+    end: number;
     /**
      * 
      * @type {number}
      * @memberof SpacySentence
      */
-    end: number;
+    start: number;
 }
 
 /**
@@ -377,13 +391,13 @@ export interface SpacySentence1 {
      * @type {number}
      * @memberof SpacySentence1
      */
-    start: number;
+    end: number;
     /**
      * 
      * @type {number}
      * @memberof SpacySentence1
      */
-    end: number;
+    start: number;
 }
 
 /**
@@ -394,6 +408,12 @@ export interface SpacySentence1 {
 export interface SpacyToken {
     /**
      * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    pos?: string;
+    /**
+     * 
      * @type {number}
      * @memberof SpacyToken
      */
@@ -403,7 +423,7 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
-    head?: number;
+    start: number;
     /**
      * 
      * @type {number}
@@ -415,25 +435,19 @@ export interface SpacyToken {
      * @type {string}
      * @memberof SpacyToken
      */
-    pos?: string;
+    dep?: string;
     /**
      * 
      * @type {number}
      * @memberof SpacyToken
      */
-    start: number;
+    head?: number;
     /**
      * 
      * @type {string}
      * @memberof SpacyToken
      */
     tag?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    dep?: string;
 }
 
 /**
@@ -444,6 +458,12 @@ export interface SpacyToken {
 export interface SpacyToken1 {
     /**
      * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    pos?: string;
+    /**
+     * 
      * @type {number}
      * @memberof SpacyToken1
      */
@@ -453,7 +473,7 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
-    head?: number;
+    start: number;
     /**
      * 
      * @type {number}
@@ -465,25 +485,19 @@ export interface SpacyToken1 {
      * @type {string}
      * @memberof SpacyToken1
      */
-    pos?: string;
+    dep?: string;
     /**
      * 
      * @type {number}
      * @memberof SpacyToken1
      */
-    start: number;
+    head?: number;
     /**
      * 
      * @type {string}
      * @memberof SpacyToken1
      */
     tag?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
-    dep?: string;
 }
 
 /**
@@ -506,16 +520,16 @@ export interface Text {
     created_at?: Date;
     /**
      * 
-     * @type {Array<string>}
-     * @memberof Text
-     */
-    trainings?: Array<string>;
-    /**
-     * 
      * @type {string}
      * @memberof Text
      */
     value: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Text
+     */
+    trainings?: Array<string>;
 }
 
 /**
@@ -578,16 +592,16 @@ export interface TrainText {
     text_id: string;
     /**
      * 
-     * @type {SpacyDocument1}
-     * @memberof TrainText
-     */
-    spacy_document: SpacyDocument1;
-    /**
-     * 
      * @type {Snapshot}
      * @memberof TrainText
      */
     snapshot: Snapshot;
+    /**
+     * 
+     * @type {SpacyDocument1}
+     * @memberof TrainText
+     */
+    spacy_document: SpacyDocument1;
 }
 
 /**
@@ -601,13 +615,7 @@ export interface Training {
      * @type {string}
      * @memberof Training
      */
-    id?: string;
-    /**
-     * 
-     * @type {SpacyDocument}
-     * @memberof Training
-     */
-    document: SpacyDocument;
+    text_id: string;
     /**
      * 
      * @type {Date}
@@ -619,13 +627,19 @@ export interface Training {
      * @type {string}
      * @memberof Training
      */
-    text_id: string;
+    user_id: string;
     /**
      * 
      * @type {string}
      * @memberof Training
      */
-    user_id: string;
+    id?: string;
+    /**
+     * 
+     * @type {SpacyDocument}
+     * @memberof Training
+     */
+    document: SpacyDocument;
 }
 
 /**
@@ -639,13 +653,13 @@ export interface Type {
      * @type {string}
      * @memberof Type
      */
-    label: string;
+    color: string;
     /**
      * 
      * @type {string}
      * @memberof Type
      */
-    color: string;
+    label: string;
 }
 
 /**
@@ -659,7 +673,19 @@ export interface User {
      * @type {string}
      * @memberof User
      */
+    email: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
     id?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof User
+     */
+    total_trainings?: number;
     /**
      * 
      * @type {Array<string>}
@@ -672,18 +698,6 @@ export interface User {
      * @memberof User
      */
     name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    email: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof User
-     */
-    total_trainings?: number;
 }
 
 /**
@@ -729,7 +743,7 @@ export interface UserPayload {
      * @type {Array<string>}
      * @memberof UserPayload
      */
-    roles?: Array<string>;
+    trainings?: Array<string>;
     /**
      * 
      * @type {string}
@@ -738,16 +752,16 @@ export interface UserPayload {
     plain_password?: string;
     /**
      * 
+     * @type {Array<string>}
+     * @memberof UserPayload
+     */
+    roles?: Array<string>;
+    /**
+     * 
      * @type {string}
      * @memberof UserPayload
      */
     name?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof UserPayload
-     */
-    trainings?: Array<string>;
 }
 
 /**
@@ -1292,6 +1306,41 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * 
+         * @param {any} [file] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadFile(file?: any, options: any = {}): RequestArgs {
+            const localVarPath = `/api/corpus/upload`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new FormData();
+
+
+            if (file !== undefined) { 
+                localVarFormParams.append('file', file as any);
+            }
+    
+    
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} text_id 
          * @param {SpacyDocument1} spacy_document1 
          * @param {*} [options] Override http request option.
@@ -1432,6 +1481,19 @@ export const CorpusApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {any} [file] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadFile(file?: any, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = CorpusApiAxiosParamCreator(configuration).uploadFile(file, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @param {string} text_id 
          * @param {SpacyDocument1} spacy_document1 
          * @param {*} [options] Override http request option.
@@ -1508,6 +1570,15 @@ export const CorpusApiFactory = function (configuration?: Configuration, basePat
          */
         train(options?: any) {
             return CorpusApiFp(configuration).train(options)(axios, basePath);
+        },
+        /**
+         * 
+         * @param {any} [file] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadFile(file?: any, options?: any) {
+            return CorpusApiFp(configuration).uploadFile(file, options)(axios, basePath);
         },
         /**
          * 
@@ -1595,6 +1666,17 @@ export class CorpusApi extends BaseAPI {
      */
     public train(options?: any) {
         return CorpusApiFp(this.configuration).train(options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {any} [file] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CorpusApi
+     */
+    public uploadFile(file?: any, options?: any) {
+        return CorpusApiFp(this.configuration).uploadFile(file, options)(this.axios, this.basePath);
     }
 
     /**
