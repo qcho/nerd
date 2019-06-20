@@ -77,8 +77,11 @@ const NavigationBar = ({ loading, title }: NavigationBarProps) => {
               <Button color="inherit" component={link(Routes.userAdmin)}>
                 {t('Users')}
               </Button>
-              <Button color="inherit" component={link(Routes.corpusAdmin)}>
+              <Button color="inherit" component={link(Routes.corpus)}>
                 {t('Corpus')}
+              </Button>
+              <Button color="inherit" component={link(Routes.corpusAdmin)}>
+                {t('Status')}
               </Button>
               <Separator />
             </>
