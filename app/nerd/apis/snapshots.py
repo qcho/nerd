@@ -118,7 +118,6 @@ class SnapshotCurrentResource(MethodView):
         current_snapshot.types = payload.types
         current_snapshot.created_at = datetime.now()
         current_snapshot.save()
-        train_task.apply_async([current_snapshot.id])
         return current_snapshot
 
 
