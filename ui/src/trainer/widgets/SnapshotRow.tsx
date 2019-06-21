@@ -13,9 +13,9 @@ const SnapshotRow = ({ snapshot }: Props) => {
   const [t] = useTranslation();
   const { id, trained_at, semaphore, created_at } = snapshot;
   const name = id === 0 ? t('Current') : `${id}`;
-  // TODO: We should i18n moment.fromNow()
 
   const statusFromSemaphore = (semaphore: number | undefined) => {
+    // TODO(Qcho): This isn't correct. We have to use celery's control API
     if (semaphore === undefined || semaphore === 0) {
       return t('Unknown');
     }
