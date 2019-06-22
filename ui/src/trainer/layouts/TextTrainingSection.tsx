@@ -94,7 +94,16 @@ const TextTrainingSection = () => {
             <TrainingStatus snapshotInfo={currentSnapshot} />
           </SubSection>
           <SubSection title={t('Last training')}>
-            <Typography variant="body1">{moment(currentSnapshot.snapshot.trained_at).fromNow()}</Typography>
+            <Grid container spacing={8}>
+              <Grid item>
+                <Typography variant="body1">{moment(currentSnapshot.snapshot.trained_at).fromNow()}</Typography>
+              </Grid>
+              <Grid item>
+                <Button size="small" color="primary">
+                  {t('Train now')}
+                </Button>
+              </Grid>
+            </Grid>
           </SubSection>
           <SubSection title={t('Total trained')}>
             <Typography variant="body1">{currentSnapshot.trained}</Typography>
