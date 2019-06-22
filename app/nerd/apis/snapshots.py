@@ -43,6 +43,9 @@ class IndexResource(MethodView):
     def get(self, pagination_parameters: PaginationParameters):
         """List available snapshots
         """
+        # TODO(Qcho): It would be great to have a way to get worker status with information such as:
+        #               - What snapshot is inside each worker
+        #               - What's the status of that worker (loading/training/online/offline/etc.)
         snapshots = Snapshot.objects(id__gt=0)
         pagination_parameters.item_count = snapshots.count()
         skip_elements = (pagination_parameters.page - 1) * \
@@ -54,7 +57,7 @@ def snapshot_info(snapshot_id):
     is_current = snapshot_id is CURRENT_ID
     snapshot: Snapshot = Snapshot.objects.get(id=snapshot_id)
     corpus_size = Text.objects().count() if is_current else Text.objects(created_at__lte=snapshot.created_at).count()
-    trained = Training.objects(created_at__lte=snapshot.trained_at)
+    trained = Training.objects()
     available = Training.objects() if is_current else Training.objects(created_at__lte=snapshot.created_at)
     # TODO: Not sure if distinct brings all of the documents to memory.
     #   We may need a better way of doing this if so.
