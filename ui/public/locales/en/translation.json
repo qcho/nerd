@@ -1,4 +1,6 @@
 {
+  "Select a .txt file": "Select a .txt file",
+  "Train now": "Train now",
   "Label": "Label",
   "Code": "Code",
   "Colour": "Colour",
@@ -10,7 +12,6 @@
   "Create": "Create",
   "Close": "Close",
   "Update type": "Update type",
-  "Select a .txt file": "Select a .txt file",
   "Upload File": "Upload File",
   "There was a problem uploading the file": "There was a problem uploading the file",
   "Upload file": "Upload file",
