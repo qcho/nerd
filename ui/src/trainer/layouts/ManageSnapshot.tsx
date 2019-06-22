@@ -99,7 +99,6 @@ const TypeUpsertDialog = ({
             <Typography variant="subheading">{t('Colour')}</Typography>
             <CirclePicker color={colour} onChangeComplete={selected => setColour(selected.hex)} />
           </Grid>
-          <Grid item>{colour}</Grid>
         </Grid>
       </MuiDialogContent>
       <DialogActions>
