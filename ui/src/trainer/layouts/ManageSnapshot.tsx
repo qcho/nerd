@@ -16,8 +16,9 @@ import {
   Divider,
 } from '@material-ui/core';
 import useCurrentSnapshot from '../hooks/useCurrentSnapshot';
-import { SnapshotInfo, Type } from '../apigen';
+import { SnapshotInfo, Type, SnapshotsApi } from '../apigen';
 import { MaybeType } from '../types/optionals';
+import { apiConfig } from '../helpers/api-config';
 
 const TypeAvatar = ({ code, color }: { code: string; color: string }) => {
   return (
@@ -61,14 +62,14 @@ const TypeUpsertDialog = ({
   startingType: Type;
   startingTypeCode: string;
   open: boolean;
-  onSave: (code: string, label: string, color: string) => void;
+  onSave: (code: string, label: string, color: string, isCreating: boolean) => void;
   onClose: () => void;
 }) => {
   const [t] = useTranslation();
   const [label, setLabel] = useState<string>(startingType.label);
   const [typeCode, setTypeCode] = useState<string>(startingTypeCode);
   const [colour, setColour] = useState<string>(startingType.color);
-  const isCreating = startingTypeCode != '';
+  const isCreating = startingTypeCode == '';
   return (
     <Dialog open={open} onClose={onClose} style={{ height: '1000px' }}>
       <DialogTitle>{(!isCreating && t('Update type')) || t('Create type')}</DialogTitle>
@@ -103,7 +104,7 @@ const TypeUpsertDialog = ({
       </MuiDialogContent>
       <DialogActions>
         <Button onClick={onClose}>{t('Close')}</Button>
-        <Button onClick={() => onSave(typeCode, label, colour)} color="primary">
+        <Button onClick={() => onSave(typeCode, label, colour, isCreating)} color="primary">
           {t('Save')}
         </Button>
       </DialogActions>
@@ -113,7 +114,7 @@ const TypeUpsertDialog = ({
 
 const ManageSnapshot = () => {
   const [t] = useTranslation();
-  const { currentSnapshot, loading, error } = useCurrentSnapshot();
+  const { currentSnapshot, loading, error, createSnapshot, updateCurrentSnapshot } = useCurrentSnapshot();
   const [currentType, setCurrentType] = useState<MaybeType>(null);
   const [currentTypeCode, setCurrentTypeCode] = useState<string>('');
 
@@ -148,7 +149,26 @@ const ManageSnapshot = () => {
     setCurrentTypeCode(code);
   }
 
-  function onTypeSave(code: string, label: string, colour: string) {}
+  async function onTypeSave(code: string, label: string, color: string, isCreating: boolean) {
+    setCurrentType(null);
+    setCurrentTypeCode('');
+    if (!currentSnapshot) return;
+    const upperCaseCode = code.toUpperCase();
+    const types = currentSnapshot.snapshot.types || {};
+    if (isCreating) {
+      if (types[upperCaseCode] !== undefined) {
+        // TODO: Error since `code` is being used
+        return;
+      }
+    }
+    types[upperCaseCode] = { label, color };
+    const snapshot = currentSnapshot.snapshot;
+    snapshot.types = types;
+  }
+
+  function onCreateSnapshotClick() {
+    createSnapshot();
+  }
 
   function onTypeCreateClick() {
     setCurrentType({ label: '', color: '' });
@@ -157,19 +177,24 @@ const ManageSnapshot = () => {
 
   return (
     <div>
-      <Grid container spacing={8}>
+      <Grid container spacing={8} direction="column">
         <Grid item>
-          <Title>{t('Types')}</Title>
-        </Grid>
-        <Grid item>
-          <Button size="small" color="primary" style={{ paddingTop: '5px' }} onClick={onTypeCreateClick}>
-            {t('New')}
-          </Button>
+          <Title>{t('Create snapshot')}</Title>
         </Grid>
       </Grid>
       {!loading && !error && currentSnapshot && (
-        <Paper style={{ padding: '1em' }}>{mapSnapshotTypes(currentSnapshot, onTypeDelete, onTypeClick)}</Paper>
+        <Paper style={{ padding: '1em', marginTop: '1em', marginBottom: '1em' }}>
+          {mapSnapshotTypes(currentSnapshot, onTypeDelete, onTypeClick)}
+          <Button color="primary" size="small" variant="outlined" onClick={onTypeCreateClick}>
+            {t('New')}
+          </Button>
+        </Paper>
       )}
+      <Grid item>
+        <Button color="secondary" variant="outlined" onClick={onCreateSnapshotClick}>
+          {t('Create')}
+        </Button>
+      </Grid>
       {currentType && (
         <TypeUpsertDialog
           open={currentType != null}

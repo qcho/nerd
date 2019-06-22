@@ -70,6 +70,7 @@ const SubSection = ({ title, children }: { title: string; children?: React.React
 async function onForceTrain() {
   const api = new SnapshotsApi(apiConfig());
   try {
+    // TODO: We need to block force train if semaphore is greater or equal than... 1?
     await api.forceTrain();
   } catch (e) {
     console.log(e);
