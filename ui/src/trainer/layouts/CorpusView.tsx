@@ -73,14 +73,17 @@ const CorpusView = () => {
 
   const onDropzoneUpload = async (files: any[]) => {
     try {
-      const result = await api.uploadFile(files[0]);
       setDropzoneOpen(false);
+      setLoading(true);
+      await api.uploadFile(files[0]);
     } catch (e) {
       setErrorMessage(
         Http.handleRequestError(e, (status, data) => {
           return t('There was a problem uploading the file');
         }),
       );
+    } finally {
+      setLoading(false);
     }
   };
 
