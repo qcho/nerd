@@ -220,7 +220,9 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, 
 
   return (
     <div>
-      <div onMouseUp={onMouseUp}>{mapNodes(spacyDocument, entityTypes, onTokenClick)}</div>
+      <div onMouseUp={onMouseUp} style={{ alignItems: 'center' }}>
+        {mapNodes(spacyDocument, entityTypes, onTokenClick)}
+      </div>
       <Popover
         id="entity-popover"
         open={currentToken != null}

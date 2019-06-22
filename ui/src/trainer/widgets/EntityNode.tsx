@@ -5,9 +5,9 @@ import { useNodeStyles } from './NodeStyles';
 import classNames from 'classnames';
 
 const borderStyle = '1px solid black';
-const borderRadius = '12px';
+const borderRadius = '20px';
 const entityMargin = '2px';
-const entityPadding = '5px';
+const entityPadding = '10px';
 
 const useEntityNodeStyles = makeStyles(() => ({
   borderComplete: {
@@ -71,14 +71,11 @@ const EntityNode = ({ text, token, entity, entityType, editable }: EntityNodePro
   const nodeStyles = useNodeStyles();
   const entityNodeStyles = useEntityNodeStyles();
   var contents = text;
-  if (token.end == entity.end) {
-    contents += ` ${entity.label}`;
-  }
   const borderClassName = borderClass(token, entity, entityNodeStyles);
 
   return (
-    <span
-      style={{ color: entityType.color, fontFamily: 'Roboto', fontSize: '2em' }}
+    <div
+      style={{ fontFamily: 'Roboto', fontSize: '2em', display: 'inline-flex', alignItems: 'center' }}
       className={classNames(
         nodeStyles.node,
         editable ? nodeStyles.hoverCursor : nodeStyles.arrowCursor,
@@ -86,8 +83,19 @@ const EntityNode = ({ text, token, entity, entityType, editable }: EntityNodePro
         entity.start == token.start ? nodeStyles.leftMargin : nodeStyles.leftPadding,
       )}
     >
-      {contents}
-    </span>
+      {token.start == entity.start && (
+        <span
+          style={{
+            fontWeight: 'bold',
+            paddingRight: '10px',
+            color: entityType.color,
+          }}
+        >
+          {entity.label}
+        </span>
+      )}
+      <span>{contents}</span>
+    </div>
   );
 };
 

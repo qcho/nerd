@@ -21,7 +21,7 @@ const PlainNode = ({ text, token, editable }: PlainNodeProps) => {
         editable ? nodeStyles.hoverCursor : nodeStyles.arrowCursor,
         nodeStyles.leftMargin,
       )}
-      style={{ fontFamily: 'Roboto', fontSize: '2em' }}
+      style={{ fontFamily: 'Roboto', fontSize: '2em', paddingTop: '10px' }}
     >
       {text}
     </span>
