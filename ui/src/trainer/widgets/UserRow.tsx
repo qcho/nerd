@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User, RoleList, UsersApi } from '../apigen';
-import { TableCell, Select, MenuItem, Theme, Chip, InputBase, Link } from '@material-ui/core';
+import { TableCell, Select, MenuItem, Theme, Chip, InputBase, Link, Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
 import { apiConfig } from '../helpers/api-config';
@@ -84,7 +84,7 @@ const UserRow = ({ user, availableRoles: roles }: Props) => {
       {roles.roles &&
         roles.roles.map(name => (
           <MenuItem key={name} value={name}>
-            {name}
+            <Typography>{name}</Typography>
           </MenuItem>
         ))}
     </Select>
@@ -92,13 +92,19 @@ const UserRow = ({ user, availableRoles: roles }: Props) => {
 
   return (
     <>
-      <TableCell>{user.name}</TableCell>
-      <TableCell>{user.email}</TableCell>
+      <TableCell>
+        <Typography>{user.name}</Typography>
+      </TableCell>
+      <TableCell>
+        <Typography>{user.email}</Typography>
+      </TableCell>
       <TableCell>{roles.roles !== undefined && <SelectRoles />}</TableCell>
       <TableCell>
-        <Link component={(props: any) => <RRDLink to={Routes.trainingsByUser.buildRoute(user)} {...props} />}>
-          {user.total_trainings || 0}
-        </Link>
+        <Typography>
+          <Link component={(props: any) => <RRDLink to={Routes.trainingsByUser.buildRoute(user)} {...props} />}>
+            {user.total_trainings || 0}
+          </Link>
+        </Typography>
       </TableCell>
     </>
   );

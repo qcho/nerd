@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { Snapshot } from '../apigen';
-import { TableCell, Tab } from '@material-ui/core';
+import { TableCell, Tab, Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
@@ -15,7 +15,6 @@ const SnapshotRow = ({ snapshot }: Props) => {
   const name = id === 0 ? t('Current') : `${id}`;
 
   const statusFromSemaphore = (semaphore: number | undefined) => {
-    // TODO(Qcho): This isn't correct. We have to use celery's control API
     if (semaphore === undefined || semaphore === 0) {
       return t('Unknown');
     }
@@ -30,11 +29,21 @@ const SnapshotRow = ({ snapshot }: Props) => {
 
   return (
     <>
-      <TableCell>{name}</TableCell>
-      <TableCell>{moment(created_at).format('LLL')}</TableCell>
-      <TableCell>{(trained_at && moment(trained_at).fromNow()) || t('Never')}</TableCell>
-      <TableCell>{statusFromSemaphore(semaphore)}</TableCell>
-      <TableCell>{'TODO'}</TableCell>
+      <TableCell>
+        <Typography>{name}</Typography>
+      </TableCell>
+      <TableCell>
+        <Typography>{moment(created_at).format('LLL')}</Typography>
+      </TableCell>
+      <TableCell>
+        <Typography>{(trained_at && moment(trained_at).fromNow()) || t('Never')}</Typography>
+      </TableCell>
+      <TableCell>
+        <Typography>{statusFromSemaphore(semaphore)}</Typography>
+      </TableCell>
+      <TableCell>
+        <Typography>{'TODO'}</Typography>
+      </TableCell>
     </>
   );
 };

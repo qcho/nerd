@@ -13,7 +13,7 @@ import { Routes } from '../helpers/routeHelper';
 const TrainingStatus = ({ snapshotInfo }: { snapshotInfo: SnapshotInfo }) => {
   const [t] = useTranslation();
   const { corpus_size, trained_distinct } = snapshotInfo;
-  const trainedPercentage = trained_distinct > 0 ? (trained_distinct / corpus_size) * 100 : 0;
+  const trainedPercentage = Math.ceil((trained_distinct > 0 ? (trained_distinct / corpus_size) * 100 : 0) * 100) / 100;
 
   const progressColor = (percentage: number) => {
     if (percentage < 40) {

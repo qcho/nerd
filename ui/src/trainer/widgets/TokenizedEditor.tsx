@@ -45,7 +45,6 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, 
       return;
     }
     const tokens = spacyDocument.tokens || [];
-    const onlyTokenText = tokens.map(it => spacyDocument.text.substring(it.start, it.end)).join('');
     if (selection.toString().length == 0) {
       return;
     }
