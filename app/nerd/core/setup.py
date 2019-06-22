@@ -24,16 +24,16 @@ class NERdSetup:
             Snapshot.drop_collection()
             Snapshot.id.set_next_value(0)
         types = {
-            "PER": Type(label="Person", color="#903d3d"),
-            "LOC": Type(label="Location", color="#b83ca6"),
-            "ORG": Type(label="Organization", color="#e1d458"),
-            "MISC": Type(label="Miscellaneous", color="#38dd9e"),
+            "PER": Type(label="Person", color="#f44336"),
+            "LOC": Type(label="Location", color="#9c27b0"),
+            "ORG": Type(label="Organization", color="#3f51b5"),
+            "MISC": Type(label="Miscellaneous", color="#00bcd4"),
         }
         current = Snapshot(
             id=CURRENT_ID,
             types={
                 **types,
-                **{"DATE": Type(label="Date", color="#e56262")}
+                **{"DATE": Type(label="Date", color="#ff9800")}
             }
         ).save()
         Model(current).train()
