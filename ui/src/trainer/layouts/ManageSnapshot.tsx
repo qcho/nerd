@@ -97,7 +97,7 @@ const TypeUpsertDialog = ({
           </Grid>
           <Grid item>
             <Typography variant="subheading">{t('Colour')}</Typography>
-            <CirclePicker onChangeComplete={selected => setColour(selected.hex)} />
+            <CirclePicker color={colour} onChangeComplete={selected => setColour(selected.hex)} />
           </Grid>
           <Grid item>{colour}</Grid>
         </Grid>
