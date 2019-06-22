@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Title } from '../widgets/Title';
-import { MaterialPicker } from 'react-color';
+import { CirclePicker } from 'react-color';
 import {
   Paper,
   Chip,
   Button,
   Typography,
-  DialogContent,
+  DialogContent as MuiDialogContent,
   Dialog,
   DialogTitle,
   DialogActions,
   Grid,
+  TextField,
+  Divider,
 } from '@material-ui/core';
 import useCurrentSnapshot from '../hooks/useCurrentSnapshot';
 import { SnapshotInfo, Type } from '../apigen';
@@ -59,25 +61,50 @@ const TypeUpsertDialog = ({
   startingType: Type;
   startingTypeCode: string;
   open: boolean;
-  onSave: (type: Type, code: string) => void;
+  onSave: (code: string, label: string, color: string) => void;
   onClose: () => void;
 }) => {
   const [t] = useTranslation();
-  const [type, setType] = useState<Type>(startingType);
+  const [label, setLabel] = useState<string>(startingType.label);
   const [typeCode, setTypeCode] = useState<string>(startingTypeCode);
+  const [colour, setColour] = useState<string>(startingType.color);
+  const isCreating = startingTypeCode != '';
   return (
     <Dialog open={open} onClose={onClose} style={{ height: '1000px' }}>
-      <DialogTitle>{(startingTypeCode != '' && t('Update type')) || t('Create type')}</DialogTitle>
-      <DialogContent>
-        <Grid container>
+      <DialogTitle>{(!isCreating && t('Update type')) || t('Create type')}</DialogTitle>
+      <MuiDialogContent>
+        <Divider style={{ marginBottom: '0.5em' }} />
+        <Grid container direction="column" spacing={16}>
           <Grid item>
-            <MaterialPicker />
+            <TextField
+              required
+              label={t('Code')}
+              id="type-code"
+              defaultValue={typeCode}
+              margin="none"
+              onChange={event => setTypeCode(event.target.value)}
+            />
           </Grid>
+          <Grid item>
+            <TextField
+              required
+              label={t('Label')}
+              id="type-label"
+              defaultValue={label}
+              margin="none"
+              onChange={event => setLabel(event.target.value)}
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="subheading">{t('Colour')}</Typography>
+            <CirclePicker onChangeComplete={selected => setColour(selected.hex)} />
+          </Grid>
+          <Grid item>{colour}</Grid>
         </Grid>
-      </DialogContent>
+      </MuiDialogContent>
       <DialogActions>
         <Button onClick={onClose}>{t('Close')}</Button>
-        <Button onClick={() => onSave(type, typeCode)} color="primary">
+        <Button onClick={() => onSave(typeCode, label, colour)} color="primary">
           {t('Save')}
         </Button>
       </DialogActions>
@@ -122,7 +149,7 @@ const ManageSnapshot = () => {
     setCurrentTypeCode(code);
   }
 
-  function onTypeSave(type: Type, code: string) {}
+  function onTypeSave(code: string, label: string, colour: string) {}
 
   function onTypeCreateClick() {
     setCurrentType({ label: '', color: '' });
