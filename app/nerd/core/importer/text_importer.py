@@ -1,4 +1,5 @@
 from mongoengine import NotUniqueError
+from pymongo.errors import DuplicateKeyError
 
 from nerd.core.document.corpus import Text
 
@@ -13,6 +14,6 @@ class TextImporter:
             for line in self.file:
                 Text(value=line).save()
                 added = added + 1
-        except NotUniqueError:
+        except (NotUniqueError, DuplicateKeyError):
             pass
         return added
