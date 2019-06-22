@@ -64,6 +64,7 @@ const ManageSnapshot = () => {
 
   async function onCreateSnapshotClick() {
     await createSnapshot();
+    location.reload();
   }
 
   function onTypeCreateClick() {
