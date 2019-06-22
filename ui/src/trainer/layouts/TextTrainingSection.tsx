@@ -4,11 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { Title } from '../widgets/Title';
 import { Grid, Typography, Button, Tooltip, CircularProgress } from '@material-ui/core';
 import { Line } from 'rc-progress';
-import { SnapshotInfo } from '../apigen';
+import { SnapshotInfo, SnapshotsApi } from '../apigen';
 import useCurrentSnapshot from '../hooks/useCurrentSnapshot';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { Routes } from '../helpers/routeHelper';
+import { apiConfig } from '../helpers/api-config';
 
 const TrainingStatus = ({ snapshotInfo }: { snapshotInfo: SnapshotInfo }) => {
   const [t] = useTranslation();
@@ -66,6 +67,15 @@ const SubSection = ({ title, children }: { title: string; children?: React.React
   </Grid>
 );
 
+async function onForceTrain() {
+  const api = new SnapshotsApi(apiConfig());
+  try {
+    await api.forceTrain();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 const TextTrainingSection = () => {
   const [t] = useTranslation();
   const { currentSnapshot, loading, error } = useCurrentSnapshot();
@@ -99,7 +109,7 @@ const TextTrainingSection = () => {
                 <Typography variant="body1">{moment(currentSnapshot.snapshot.trained_at).fromNow()}</Typography>
               </Grid>
               <Grid item>
-                <Button size="small" color="primary">
+                <Button size="small" color="primary" onClick={onForceTrain}>
                   {t('Train now')}
                 </Button>
               </Grid>
