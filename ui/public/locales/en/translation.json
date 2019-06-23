@@ -1,4 +1,11 @@
 {
+  "Reset": "Reset",
+  "Save and create": "Save and create",
+  "Are you sure you want to delete the type with code {{typeCode}}?": "Are you sure you want to delete the type with code {{typeCode}}?",
+  "Cancel": "Cancel",
+  "Ok": "Ok",
+  "Are you sure you want to delete the type with code {{code}}?": "DATE",
+  "Delete type?": "Delete type?",
   "Select a .txt file": "Select a .txt file",
   "New type": "New type",
   "Create snapshot": "Create snapshot",

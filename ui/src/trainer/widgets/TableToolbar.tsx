@@ -132,7 +132,7 @@ const TableToolbar = ({
       <div className={classes.spacer} />
       <div className={classes.actions}>
         {onDelete && numSelected > 0 ? (
-          <Tooltip title="Delete">
+          <Tooltip title={<Typography color="inherit">{'Delete'}</Typography>}>
             <IconButton aria-label="Delete" onClick={onDelete}>
               <DeleteIcon />
             </IconButton>

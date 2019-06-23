@@ -31,7 +31,7 @@ const TrainingStatus = ({ snapshotInfo }: { snapshotInfo: SnapshotInfo }) => {
           trained: trained_distinct,
         })}
       </Typography>
-      <Tooltip title={`${trainedPercentage}%`} placement="right">
+      <Tooltip title={<Typography color="inherit">{`${trainedPercentage}%`}</Typography>} placement="right">
         <div
           style={{
             marginTop: '-0.8em',
