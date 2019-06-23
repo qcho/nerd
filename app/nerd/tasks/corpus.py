@@ -51,8 +51,6 @@ def train(snapshot_id: int = 0):
         return snapshot
     train.model: Model
     train.model.train()
-    # TODO: Emit a reload event
-    reload.apply_async([], queue='broadcast_tasks')
     return snapshot.id
 
 
