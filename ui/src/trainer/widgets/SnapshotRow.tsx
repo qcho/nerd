@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { Snapshot } from '../apigen';
-import { TableCell, Tab, Typography } from '@material-ui/core';
+import { TableCell, Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
-import moment from 'moment';
+import { moment, snapshotStatus, snapshotStatusToText } from '../helpers/utils';
 
 interface Props {
   snapshot: Snapshot;
@@ -13,19 +13,6 @@ const SnapshotRow = ({ snapshot }: Props) => {
   const [t] = useTranslation();
   const { id, trained_at, semaphore, created_at } = snapshot;
   const name = id === 0 ? t('Current') : `${id}`;
-
-  const statusFromSemaphore = (semaphore: number | undefined) => {
-    if (semaphore === undefined || semaphore === 0) {
-      return t('Unknown');
-    }
-    // if (semaphore === 0) {
-    //   return t('Live');
-    // }
-    if (semaphore < 0) {
-      return t('Training...');
-    }
-    return t('Loading...');
-  };
 
   return (
     <>
@@ -39,7 +26,7 @@ const SnapshotRow = ({ snapshot }: Props) => {
         <Typography>{(trained_at && moment(trained_at).fromNow()) || t('Never')}</Typography>
       </TableCell>
       <TableCell>
-        <Typography>{statusFromSemaphore(semaphore)}</Typography>
+        <Typography>{t(snapshotStatusToText(snapshotStatus(snapshot)))}</Typography>
       </TableCell>
       <TableCell>
         <Typography>{'TODO'}</Typography>

@@ -13,25 +13,24 @@ import {
 } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { Type } from '../apigen';
+import { CompleteType, MaybeCompleteType } from '../types/CompleteType';
 
 const TypeUpsertDialog = ({
   startingType,
-  startingTypeCode,
   open,
   onSave,
   onClose,
 }: {
-  startingType: Type;
-  startingTypeCode: string;
+  startingType: CompleteType;
   open: boolean;
-  onSave: (code: string, label: string, color: string, isCreating: boolean) => void;
+  onSave: (newType: CompleteType, originalType: MaybeCompleteType) => void;
   onClose: () => void;
 }) => {
   const [t] = useTranslation();
-  const [label, setLabel] = useState<string>(startingType.label);
-  const [typeCode, setTypeCode] = useState<string>(startingTypeCode);
-  const [colour, setColour] = useState<string>(startingType.color);
-  const isCreating = startingTypeCode == '';
+  const [label, setLabel] = useState<string>(startingType.type.label);
+  const [typeCode, setTypeCode] = useState<string>(startingType.code);
+  const [color, setColour] = useState<string>(startingType.type.color);
+  const isCreating = startingType.code == '';
   return (
     <Dialog open={open} onClose={onClose} style={{ height: '1000px' }}>
       <DialogTitle>{(!isCreating && t('Update type')) || t('Create type')}</DialogTitle>
@@ -59,15 +58,20 @@ const TypeUpsertDialog = ({
             />
           </Grid>
           <Grid item>
-            <Typography variant="subheading">{t('Colour')}</Typography>
-            <CirclePicker color={colour} onChangeComplete={selected => setColour(selected.hex)} />
+            <Typography variant="subtitle1">{t('Colour')}</Typography>
+            <CirclePicker color={color} onChangeComplete={selected => setColour(selected.hex)} />
           </Grid>
         </Grid>
       </MuiDialogContent>
       <DialogActions>
         <Button onClick={onClose}>{t('Close')}</Button>
-        <Button onClick={() => onSave(typeCode, label, colour, isCreating)} color="primary">
-          {t('Save')}
+        <Button
+          onClick={() =>
+            onSave({ code: typeCode.toUpperCase(), type: { label, color } }, isCreating ? null : startingType)
+          }
+          color="primary"
+        >
+          {t('Ok')}
         </Button>
       </DialogActions>
     </Dialog>

@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Scaffold } from '../widgets/Scaffold';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
-import { Theme, TableCell, Button, Paper, Link } from '@material-ui/core';
+import { Theme, TableCell, Button, Paper, Link, Typography } from '@material-ui/core';
 import { RichTable, DatasourceParameters } from '../widgets/RichTable';
 import { apiConfig } from '../helpers/api-config';
 import { CorpusApi } from '../apigen';
 import { Text } from '../apigen/api';
-import moment from 'moment';
+import { moment } from '../helpers/utils';
 import { Title } from '../widgets/Title';
 import Http from '../helpers/http';
 import { SuccessSnackbar, ErrorSnackbar } from '../widgets/Snackbars';
@@ -91,9 +91,12 @@ const CorpusView = () => {
     <Scaffold title={t('Corpus')} loading={loading}>
       <Paper className={classes.content}>
         <Title>{t('Upload')}</Title>
-        <Button color="primary" onClick={() => setDropzoneOpen(true)}>
-          {t('Upload File')}
-        </Button>
+        {!loading && (
+          <Button color="primary" onClick={() => setDropzoneOpen(true)}>
+            {t('Upload File')}
+          </Button>
+        )}
+        {loading && <Typography>{t('Uploading')}</Typography>}
         <div style={{ paddingBottom: '1em' }} />
         <Title>{t('Texts')}</Title>
         <RichTable
