@@ -23,34 +23,47 @@ def parse_text(snapshot_id, text: str):
 
 
 @blp.route("/current/parse")
-@blp.route("/<int:snapshot_id>/parse")
-class NerResource(MethodView):
+class NerParserResource(MethodView):
     @jwt_and_role_required(Role.USER)
-    @blp.doc(operationId="textParse")
-    @blp.arguments(RawText, location='query')
+    @blp.doc(operationId="currentSnapshotTextParse")
+    # @response_error(NotFound("Could not ner")) TODO: Find out what to return here
+    @blp.arguments(RawText)
     @blp.response(TrainTextSchema, code=200, description="Ner")
-    def get(self, raw_text: RawText, snapshot_id=None):
+    def post(self, raw_text: RawText):
+        snapshot, document = parse_text(None, raw_text['text'])
+        return {'text_id': None, 'snapshot': snapshot, 'spacy_document': document}
+
+
+@blp.route("/<int:snapshot_id>/parse")
+class NerParserResource(MethodView):
+    @jwt_and_role_required(Role.USER)
+    @blp.doc(operationId="snapshotTextParse")
+    @blp.arguments(RawText)
+    @blp.response(TrainTextSchema, code=200, description="Ner")
+    def post(self, raw_text: RawText, snapshot_id: int):
         # TODO: Error handling
         snapshot, document = parse_text(snapshot_id, raw_text['text'])
-        return {
-            'text_id': None,
-            'snapshot': snapshot,
-            'spacy_document': document
-        }
-
+        return {'text_id': None, 'snapshot': snapshot, 'spacy_document': document}
 
 @blp.route("/current/entities")
-@blp.route("/<int:snapshot_id>/entities")
-class NerResource(MethodView):
+class NerEntitiesResource(MethodView):
     @jwt_and_role_required(Role.USER)
-    @blp.doc(operationId="textEntities")
-    @blp.arguments(RawText, location='query')
+    @blp.doc(operationId="currentSnapshotTextEntities")
+    # @response_error(NotFound("Could not ner")) TODO: Find out what to return here
+    @blp.arguments(RawText)
     @blp.response(EntityListSchema, code=200, description="Ner")
-    def get(self, raw_text: RawText, snapshot_id=None):
+    def post(self, raw_text: RawText):
+        snapshot, document = parse_text(None, raw_text['text'])
+        return {'text': raw_text, 'entities': document['ents'], 'snapshot': snapshot}
+
+
+@blp.route("/<int:snapshot_id>/entities")
+class NerEntitiesResource(MethodView):
+    @jwt_and_role_required(Role.USER)
+    @blp.doc(operationId="snapshotTextEntities")
+    @blp.arguments(RawText)
+    @blp.response(EntityListSchema, code=200, description="Ner")
+    def post(self, raw_text: RawText, snapshot_id: int):
         # TODO: Error handling
         snapshot, document = parse_text(snapshot_id, raw_text['text'])
-        return {
-            'text': raw_text,
-            'entities': document['ents'],
-            'snapshot': snapshot
-        }
+        return {'text': raw_text, 'entities': document['ents'], 'snapshot': snapshot}

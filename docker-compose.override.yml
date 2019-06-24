@@ -1,0 +1,59 @@
+version: "3.7"
+
+services:
+#  nginx:
+#   ports:
+#      - "${NGINX_HTTP_PORT_NUMBER}:${NGINX_HTTP_PORT_NUMBER}"
+#      - "${NGINX_HTTPS_PORT_NUMBER}:${NGINX_HTTPS_PORT_NUMBER}"
+#    env_file:
+#      - .env.development
+#      - .env.development.local
+
+  mongodb:
+    ports:
+      - "${MONGODB_PORT_NUMBER}:${MONGODB_PORT_NUMBER}"
+    env_file:
+      - .env.development
+      - .env.development.local
+  rabbitmq:
+    ports:
+      - "${RABBITMQ_NODE_PORT_NUMBER}:${RABBITMQ_NODE_PORT_NUMBER}"
+      - "${RABBITMQ_MANAGER_PORT_NUMBER}:${RABBITMQ_MANAGER_PORT_NUMBER}"
+    env_file: 
+      - .env.development
+      - .env.development.local
+  app:
+    image: nerd/app:dev
+    build:
+      args:
+        PIPENV_ARGS: --dev
+    volumes:
+      - ./app:/app
+    ports:
+      - "${PORT}:${PORT}" 
+    env_file:
+      - .env.development
+      - .env.development.local
+    command: ["web"]
+
+  worker:
+    image: nerd/app:dev
+    build:
+      args:
+        PIPENV_ARGS: --dev
+    volumes:
+      - ./app:/app
+    env_file:
+      - .env.development
+      - .env.development.local
+
+  flower:
+    image: nerd/app:dev
+    build:
+      args:
+        PIPENV_ARGS: --dev
+    ports:
+      - "${FLOWER_PORT}:${FLOWER_PORT}"
+    env_file:
+      - .env.development
+      - .env.development.local

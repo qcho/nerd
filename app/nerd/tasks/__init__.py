@@ -5,37 +5,21 @@ from celery import Celery
 from flask import Flask
 from kombu.common import Broadcast
 
-
-def assert_redis_env(env_var: str):
-    value = os.environ.get(env_var, '')
-    if value and not value.startswith('redis://'):
-        raise EnvironmentError('{} is not redis. Got "{}"'.format(env_var, value))
-
-def assert_amqp_env(env_var: str):
-    value = os.environ.get(env_var, '')
-    if value and not value.startswith('amqp://'):
-        raise EnvironmentError('{} is not AMQP. Got "{}"'.format(env_var, value))
-
-
-assert_redis_env('NERD_REDIS_BROKER_URL')
-assert_redis_env('NERD_REDIS_RESULT_URL')
-assert_amqp_env('NERD_AMQP_BROKER_URL')
-assert_amqp_env('NERD_AMQP_RESULT_URL')
-
-BROKER = os.environ.get('NERD_AMQP_BROKER_URL') or os.environ.get(
-    'NERD_REDIS_BROKER_URL')
-
-BACKEND = os.environ.get('NERD_AMQP_RESULT_URL') or os.environ.get(
-    'NERD_REDIS_RESULT_URL')
-
 celery = Celery(
     __name__,
-    broker=os.environ.get('NERD_REDIS_BROKER_URL'),
-    backend=os.environ.get('NERD_REDIS_RESULT_URL')
+    broker="amqp://{}:{}@{}:{}/{}".format(
+        os.environ.get('RABBITMQ_USERNAME'),
+        os.environ.get('RABBITMQ_PASSWORD'),
+        os.environ.get('NERD_AMQP_HOST'),
+        os.environ.get('RABBITMQ_NODE_PORT_NUMBER'),
+        os.environ.get('RABBITMQ_VHOST'),
+    ),
+    backend="rpc://"
 )
 
 
 def init_app(self, app: Flask):
+    self.conf.task_result_expires = 18000  # 5 hours.
     self.conf.task_default_queue = 'nerd'
     self.conf.task_queues = (Broadcast('broadcast_tasks'), )
     self.conf.task_routes = {'corpus.reload': {'queue': 'broadcast_tasks'}}

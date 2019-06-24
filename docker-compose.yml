@@ -1,0 +1,92 @@
+version: "3.7"
+
+services:
+#  nginx:
+#    image: bitnami/nginx:1.6
+#    restart: on-failure
+#    init: true
+#    stdin_open: true
+#    tty: true
+#    env_file:
+#      - .env
+
+  mongodb:
+    image: bitnami/mongodb:4.0
+    restart: on-failure
+    init: true
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    volumes:
+      - mongodb-data:/bitnami
+
+  rabbitmq:
+    image: bitnami/rabbitmq:3.7
+    restart: on-failure
+    init: true
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    volumes:
+      - rabbitmq-data:/bitnami
+
+  app:
+    image: nerd/app:latest
+    build:
+      context: .
+    restart: on-failure
+    init: true
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    environment:
+      - NERD_SERVER_NAME=${HOST}:${PORT}
+      - CELERY_BROKER_URL=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_NODE_PORT_NUMBER}/${RABBITMQ_VHOST}
+      - FLOWER_BROKER_API=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_NODE_PORT_NUMBER}/${RABBITMQ_VHOST}
+    depends_on:
+      - mongodb
+      - rabbitmq
+    command: ["web"]
+
+  worker:
+    image: nerd/app:latest
+    build:
+      context: .
+    restart: on-failure
+    init: true
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    environment:  
+      - NERD_SERVER_NAME=${HOST}:${PORT}
+      - CELERY_BROKER_URL=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_NODE_PORT_NUMBER}/${RABBITMQ_VHOST}
+      - FLOWER_BROKER_API=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_NODE_PORT_NUMBER}/${RABBITMQ_VHOST}
+    depends_on:
+      - app
+    command: ["worker"]
+
+  flower:
+    image: nerd/app:latest
+    build:
+      context: .
+    restart: on-failure
+    init: true
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    environment:
+      - NERD_SERVER_NAME=${HOST}:${PORT}
+      - CELERY_BROKER_URL=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_NODE_PORT_NUMBER}/${RABBITMQ_VHOST}
+      - FLOWER_BROKER_API=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_NODE_PORT_NUMBER}/${RABBITMQ_VHOST}
+    depends_on:
+      - app
+    command: ["flower"]
+
+volumes:
+  mongodb-data:
+  rabbitmq-data:

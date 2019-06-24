@@ -44,7 +44,7 @@ def setup_cli(app: Flask):
     @worker.command()
     @click.pass_context
     def ping(ctx):
-        pprint(ping_task.apply_async(queue=ctx.obj['QUEUE']).wait())
+        pprint(celery.control.ping())
 
     @worker.command()
     @click.pass_context
@@ -58,3 +58,8 @@ def setup_cli(app: Flask):
         result = nlp_task.apply_async([text], queue=ctx.obj['QUEUE']).wait()
         json_result = json.dumps(result)
         print(json_result)
+
+    @worker.command()
+    @click.pass_context
+    def train(ctx):
+        pprint(celery.control.inspect().active_queues())

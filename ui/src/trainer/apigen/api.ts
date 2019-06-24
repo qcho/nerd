@@ -26,6 +26,12 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 export interface EntityList {
     /**
      * 
+     * @type {string}
+     * @memberof EntityList
+     */
+    text: string;
+    /**
+     * 
      * @type {Array<SpacyEntity2>}
      * @memberof EntityList
      */
@@ -36,12 +42,6 @@ export interface EntityList {
      * @memberof EntityList
      */
     snapshot: Snapshot;
-    /**
-     * 
-     * @type {string}
-     * @memberof EntityList
-     */
-    text: string;
 }
 
 /**
@@ -75,6 +75,20 @@ export interface InlineObject {
 /**
  * 
  * @export
+ * @interface RawText
+ */
+export interface RawText {
+    /**
+     * 
+     * @type {string}
+     * @memberof RawText
+     */
+    text: string;
+}
+
+/**
+ * 
+ * @export
  * @interface Register
  */
 export interface Register {
@@ -83,13 +97,7 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    plain_password?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Register
-     */
-    trainings?: Array<string>;
+    name: string;
     /**
      * 
      * @type {string}
@@ -104,10 +112,16 @@ export interface Register {
     email: string;
     /**
      * 
+     * @type {Array<string>}
+     * @memberof Register
+     */
+    trainings?: Array<string>;
+    /**
+     * 
      * @type {string}
      * @memberof Register
      */
-    name: string;
+    plain_password?: string;
 }
 
 /**
@@ -132,22 +146,22 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
+     * @type {Date}
+     * @memberof Snapshot
+     */
+    trained_at?: Date;
+    /**
+     * 
      * @type {number}
      * @memberof Snapshot
      */
     id: number;
     /**
      * 
-     * @type {number}
+     * @type {{ [key: string]: Type; }}
      * @memberof Snapshot
      */
-    semaphore?: number;
-    /**
-     * 
-     * @type {Date}
-     * @memberof Snapshot
-     */
-    trained_at?: Date;
+    types?: { [key: string]: Type; };
     /**
      * 
      * @type {Date}
@@ -156,10 +170,10 @@ export interface Snapshot {
     created_at?: Date;
     /**
      * 
-     * @type {{ [key: string]: Type; }}
+     * @type {number}
      * @memberof Snapshot
      */
-    types?: { [key: string]: Type; };
+    semaphore?: number;
 }
 
 /**
@@ -214,6 +228,18 @@ export interface SnapshotInfo {
 export interface SpacyDocument {
     /**
      * 
+     * @type {Array<SpacySentence>}
+     * @memberof SpacyDocument
+     */
+    sents?: Array<SpacySentence>;
+    /**
+     * 
+     * @type {Array<SpacyToken>}
+     * @memberof SpacyDocument
+     */
+    tokens?: Array<SpacyToken>;
+    /**
+     * 
      * @type {Date}
      * @memberof SpacyDocument
      */
@@ -230,18 +256,6 @@ export interface SpacyDocument {
      * @memberof SpacyDocument
      */
     ents?: Array<SpacyEntity>;
-    /**
-     * 
-     * @type {Array<SpacyToken>}
-     * @memberof SpacyDocument
-     */
-    tokens?: Array<SpacyToken>;
-    /**
-     * 
-     * @type {Array<SpacySentence>}
-     * @memberof SpacyDocument
-     */
-    sents?: Array<SpacySentence>;
 }
 
 /**
@@ -250,6 +264,18 @@ export interface SpacyDocument {
  * @interface SpacyDocument1
  */
 export interface SpacyDocument1 {
+    /**
+     * 
+     * @type {Array<SpacySentence1>}
+     * @memberof SpacyDocument1
+     */
+    sents?: Array<SpacySentence1>;
+    /**
+     * 
+     * @type {Array<SpacyToken1>}
+     * @memberof SpacyDocument1
+     */
+    tokens?: Array<SpacyToken1>;
     /**
      * 
      * @type {Date}
@@ -268,18 +294,6 @@ export interface SpacyDocument1 {
      * @memberof SpacyDocument1
      */
     ents?: Array<SpacyEntity1>;
-    /**
-     * 
-     * @type {Array<SpacyToken1>}
-     * @memberof SpacyDocument1
-     */
-    tokens?: Array<SpacyToken1>;
-    /**
-     * 
-     * @type {Array<SpacySentence1>}
-     * @memberof SpacyDocument1
-     */
-    sents?: Array<SpacySentence1>;
 }
 
 /**
@@ -290,6 +304,12 @@ export interface SpacyDocument1 {
 export interface SpacyEntity {
     /**
      * 
+     * @type {number}
+     * @memberof SpacyEntity
+     */
+    start: number;
+    /**
+     * 
      * @type {string}
      * @memberof SpacyEntity
      */
@@ -300,12 +320,6 @@ export interface SpacyEntity {
      * @memberof SpacyEntity
      */
     end: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyEntity
-     */
-    start: number;
 }
 
 /**
@@ -316,6 +330,12 @@ export interface SpacyEntity {
 export interface SpacyEntity1 {
     /**
      * 
+     * @type {number}
+     * @memberof SpacyEntity1
+     */
+    start: number;
+    /**
+     * 
      * @type {string}
      * @memberof SpacyEntity1
      */
@@ -326,12 +346,6 @@ export interface SpacyEntity1 {
      * @memberof SpacyEntity1
      */
     end: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyEntity1
-     */
-    start: number;
 }
 
 /**
@@ -342,6 +356,12 @@ export interface SpacyEntity1 {
 export interface SpacyEntity2 {
     /**
      * 
+     * @type {number}
+     * @memberof SpacyEntity2
+     */
+    start: number;
+    /**
+     * 
      * @type {string}
      * @memberof SpacyEntity2
      */
@@ -352,12 +372,6 @@ export interface SpacyEntity2 {
      * @memberof SpacyEntity2
      */
     end: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyEntity2
-     */
-    start: number;
 }
 
 /**
@@ -371,13 +385,13 @@ export interface SpacySentence {
      * @type {number}
      * @memberof SpacySentence
      */
-    end: number;
+    start: number;
     /**
      * 
      * @type {number}
      * @memberof SpacySentence
      */
-    start: number;
+    end: number;
 }
 
 /**
@@ -391,13 +405,13 @@ export interface SpacySentence1 {
      * @type {number}
      * @memberof SpacySentence1
      */
-    end: number;
+    start: number;
     /**
      * 
      * @type {number}
      * @memberof SpacySentence1
      */
-    start: number;
+    end: number;
 }
 
 /**
@@ -408,28 +422,10 @@ export interface SpacySentence1 {
 export interface SpacyToken {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    tag?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    dep?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    pos?: string;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyToken
      */
-    start: number;
+    end: number;
     /**
      * 
      * @type {number}
@@ -441,13 +437,31 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
-    end: number;
+    start: number;
     /**
      * 
      * @type {number}
      * @memberof SpacyToken
      */
     head?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    pos?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    tag?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    dep?: string;
 }
 
 /**
@@ -458,28 +472,10 @@ export interface SpacyToken {
 export interface SpacyToken1 {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
-    tag?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
-    dep?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
-    pos?: string;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyToken1
      */
-    start: number;
+    end: number;
     /**
      * 
      * @type {number}
@@ -491,13 +487,31 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
-    end: number;
+    start: number;
     /**
      * 
      * @type {number}
      * @memberof SpacyToken1
      */
     head?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    pos?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    tag?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    dep?: string;
 }
 
 /**
@@ -508,28 +522,28 @@ export interface SpacyToken1 {
 export interface Text {
     /**
      * 
-     * @type {string}
-     * @memberof Text
-     */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Text
-     */
-    value: string;
-    /**
-     * 
      * @type {Date}
      * @memberof Text
      */
     created_at?: Date;
     /**
      * 
+     * @type {string}
+     * @memberof Text
+     */
+    id?: string;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof Text
      */
     trainings?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Text
+     */
+    value: string;
 }
 
 /**
@@ -592,16 +606,16 @@ export interface TrainText {
     spacy_document: SpacyDocument1;
     /**
      * 
-     * @type {Snapshot}
-     * @memberof TrainText
-     */
-    snapshot: Snapshot;
-    /**
-     * 
      * @type {string}
      * @memberof TrainText
      */
     text_id: string;
+    /**
+     * 
+     * @type {Snapshot}
+     * @memberof TrainText
+     */
+    snapshot: Snapshot;
 }
 
 /**
@@ -615,19 +629,7 @@ export interface Training {
      * @type {string}
      * @memberof Training
      */
-    text_id: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Training
-     */
     id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Training
-     */
-    user_id: string;
     /**
      * 
      * @type {Date}
@@ -636,10 +638,22 @@ export interface Training {
     created_at?: Date;
     /**
      * 
+     * @type {string}
+     * @memberof Training
+     */
+    text_id: string;
+    /**
+     * 
      * @type {SpacyDocument}
      * @memberof Training
      */
     document: SpacyDocument;
+    /**
+     * 
+     * @type {string}
+     * @memberof Training
+     */
+    user_id: string;
 }
 
 /**
@@ -653,13 +667,13 @@ export interface Type {
      * @type {string}
      * @memberof Type
      */
-    label: string;
+    color: string;
     /**
      * 
      * @type {string}
      * @memberof Type
      */
-    color: string;
+    label: string;
 }
 
 /**
@@ -670,16 +684,16 @@ export interface Type {
 export interface User {
     /**
      * 
+     * @type {string}
+     * @memberof User
+     */
+    name: string;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof User
      */
     roles?: Array<string>;
-    /**
-     * 
-     * @type {number}
-     * @memberof User
-     */
-    total_trainings?: number;
     /**
      * 
      * @type {string}
@@ -694,10 +708,10 @@ export interface User {
     email: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof User
      */
-    name: string;
+    total_trainings?: number;
 }
 
 /**
@@ -734,6 +748,12 @@ export interface UserCredentials {
 export interface UserPayload {
     /**
      * 
+     * @type {string}
+     * @memberof UserPayload
+     */
+    name?: string;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof UserPayload
      */
@@ -743,7 +763,7 @@ export interface UserPayload {
      * @type {string}
      * @memberof UserPayload
      */
-    plain_password?: string;
+    id?: string;
     /**
      * 
      * @type {Array<string>}
@@ -755,13 +775,7 @@ export interface UserPayload {
      * @type {string}
      * @memberof UserPayload
      */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserPayload
-     */
-    name?: string;
+    plain_password?: string;
 }
 
 /**
@@ -1711,19 +1725,109 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
     return {
         /**
          * 
-         * @param {string} text 
-         * @param {number} snapshot_id 
+         * @param {RawText} raw_text 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        textEntities(text: string, snapshot_id: number, options: any = {}): RequestArgs {
-            // verify required parameter 'text' is not null or undefined
-            if (text === null || text === undefined) {
-                throw new RequiredError('text','Required parameter text was null or undefined when calling textEntities.');
+        currentSnapshotTextEntities(raw_text: RawText, options: any = {}): RequestArgs {
+            // verify required parameter 'raw_text' is not null or undefined
+            if (raw_text === null || raw_text === undefined) {
+                throw new RequiredError('raw_text','Required parameter raw_text was null or undefined when calling currentSnapshotTextEntities.');
             }
+            const localVarPath = `/api/ner/current/entities`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"RawText" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(raw_text !== undefined ? raw_text : {}) : (raw_text || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {RawText} raw_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentSnapshotTextParse(raw_text: RawText, options: any = {}): RequestArgs {
+            // verify required parameter 'raw_text' is not null or undefined
+            if (raw_text === null || raw_text === undefined) {
+                throw new RequiredError('raw_text','Required parameter raw_text was null or undefined when calling currentSnapshotTextParse.');
+            }
+            const localVarPath = `/api/ner/current/parse`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+            }
+
+
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"RawText" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(raw_text !== undefined ? raw_text : {}) : (raw_text || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} snapshot_id 
+         * @param {RawText} raw_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        snapshotTextEntities(snapshot_id: number, raw_text: RawText, options: any = {}): RequestArgs {
             // verify required parameter 'snapshot_id' is not null or undefined
             if (snapshot_id === null || snapshot_id === undefined) {
-                throw new RequiredError('snapshot_id','Required parameter snapshot_id was null or undefined when calling textEntities.');
+                throw new RequiredError('snapshot_id','Required parameter snapshot_id was null or undefined when calling snapshotTextEntities.');
+            }
+            // verify required parameter 'raw_text' is not null or undefined
+            if (raw_text === null || raw_text === undefined) {
+                throw new RequiredError('raw_text','Required parameter raw_text was null or undefined when calling snapshotTextEntities.');
             }
             const localVarPath = `/api/ner/{snapshot_id}/entities`
                 .replace(`{${"snapshot_id"}}`, encodeURIComponent(String(snapshot_id)));
@@ -1732,7 +1836,7 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -1745,15 +1849,15 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
 
-            if (text !== undefined) {
-                localVarQueryParameter['text'] = text;
-            }
 
+                localVarHeaderParameter['Content-Type'] = 'application/json';
 
-                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"RawText" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(raw_text !== undefined ? raw_text : {}) : (raw_text || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1762,64 +1866,19 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} text 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        textEntities_1(text: string, options: any = {}): RequestArgs {
-            // verify required parameter 'text' is not null or undefined
-            if (text === null || text === undefined) {
-                throw new RequiredError('text','Required parameter text was null or undefined when calling textEntities_1.');
-            }
-            const localVarPath = `/api/ner/current/entities`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication oAuth2Password required
-            // oauth required
-            if (configuration && configuration.accessToken) {
-                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
-                    : configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
-            }
-
-            if (text !== undefined) {
-                localVarQueryParameter['text'] = text;
-            }
-
-
-                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete localVarUrlObj.search;
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} text 
          * @param {number} snapshot_id 
+         * @param {RawText} raw_text 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        textParse(text: string, snapshot_id: number, options: any = {}): RequestArgs {
-            // verify required parameter 'text' is not null or undefined
-            if (text === null || text === undefined) {
-                throw new RequiredError('text','Required parameter text was null or undefined when calling textParse.');
-            }
+        snapshotTextParse(snapshot_id: number, raw_text: RawText, options: any = {}): RequestArgs {
             // verify required parameter 'snapshot_id' is not null or undefined
             if (snapshot_id === null || snapshot_id === undefined) {
-                throw new RequiredError('snapshot_id','Required parameter snapshot_id was null or undefined when calling textParse.');
+                throw new RequiredError('snapshot_id','Required parameter snapshot_id was null or undefined when calling snapshotTextParse.');
+            }
+            // verify required parameter 'raw_text' is not null or undefined
+            if (raw_text === null || raw_text === undefined) {
+                throw new RequiredError('raw_text','Required parameter raw_text was null or undefined when calling snapshotTextParse.');
             }
             const localVarPath = `/api/ner/{snapshot_id}/parse`
                 .replace(`{${"snapshot_id"}}`, encodeURIComponent(String(snapshot_id)));
@@ -1828,7 +1887,7 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -1841,60 +1900,15 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
 
-            if (text !== undefined) {
-                localVarQueryParameter['text'] = text;
-            }
 
+                localVarHeaderParameter['Content-Type'] = 'application/json';
 
-                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} text 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        textParse_2(text: string, options: any = {}): RequestArgs {
-            // verify required parameter 'text' is not null or undefined
-            if (text === null || text === undefined) {
-                throw new RequiredError('text','Required parameter text was null or undefined when calling textParse_2.');
-            }
-            const localVarPath = `/api/ner/current/parse`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication oAuth2Password required
-            // oauth required
-            if (configuration && configuration.accessToken) {
-                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
-                    : configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
-            }
-
-            if (text !== undefined) {
-                localVarQueryParameter['text'] = text;
-            }
-
-
-                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete localVarUrlObj.search;
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"RawText" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(raw_text !== undefined ? raw_text : {}) : (raw_text || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -1912,13 +1926,39 @@ export const NerApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {string} text 
+         * @param {RawText} raw_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentSnapshotTextEntities(raw_text: RawText, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<EntityList> {
+            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).currentSnapshotTextEntities(raw_text, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {RawText} raw_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentSnapshotTextParse(raw_text: RawText, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrainText> {
+            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).currentSnapshotTextParse(raw_text, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @param {number} snapshot_id 
+         * @param {RawText} raw_text 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        textEntities(text: string, snapshot_id: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<EntityList> {
-            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).textEntities(text, snapshot_id, options);
+        snapshotTextEntities(snapshot_id: number, raw_text: RawText, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<EntityList> {
+            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).snapshotTextEntities(snapshot_id, raw_text, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1926,39 +1966,13 @@ export const NerApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} text 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        textEntities_1(text: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<EntityList> {
-            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).textEntities_1(text, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @param {string} text 
          * @param {number} snapshot_id 
+         * @param {RawText} raw_text 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        textParse(text: string, snapshot_id: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrainText> {
-            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).textParse(text, snapshot_id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @param {string} text 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        textParse_2(text: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrainText> {
-            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).textParse_2(text, options);
+        snapshotTextParse(snapshot_id: number, raw_text: RawText, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrainText> {
+            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).snapshotTextParse(snapshot_id, raw_text, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1975,41 +1989,41 @@ export const NerApiFactory = function (configuration?: Configuration, basePath?:
     return {
         /**
          * 
-         * @param {string} text 
+         * @param {RawText} raw_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentSnapshotTextEntities(raw_text: RawText, options?: any) {
+            return NerApiFp(configuration).currentSnapshotTextEntities(raw_text, options)(axios, basePath);
+        },
+        /**
+         * 
+         * @param {RawText} raw_text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        currentSnapshotTextParse(raw_text: RawText, options?: any) {
+            return NerApiFp(configuration).currentSnapshotTextParse(raw_text, options)(axios, basePath);
+        },
+        /**
+         * 
          * @param {number} snapshot_id 
+         * @param {RawText} raw_text 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        textEntities(text: string, snapshot_id: number, options?: any) {
-            return NerApiFp(configuration).textEntities(text, snapshot_id, options)(axios, basePath);
+        snapshotTextEntities(snapshot_id: number, raw_text: RawText, options?: any) {
+            return NerApiFp(configuration).snapshotTextEntities(snapshot_id, raw_text, options)(axios, basePath);
         },
         /**
          * 
-         * @param {string} text 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        textEntities_1(text: string, options?: any) {
-            return NerApiFp(configuration).textEntities_1(text, options)(axios, basePath);
-        },
-        /**
-         * 
-         * @param {string} text 
          * @param {number} snapshot_id 
+         * @param {RawText} raw_text 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        textParse(text: string, snapshot_id: number, options?: any) {
-            return NerApiFp(configuration).textParse(text, snapshot_id, options)(axios, basePath);
-        },
-        /**
-         * 
-         * @param {string} text 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        textParse_2(text: string, options?: any) {
-            return NerApiFp(configuration).textParse_2(text, options)(axios, basePath);
+        snapshotTextParse(snapshot_id: number, raw_text: RawText, options?: any) {
+            return NerApiFp(configuration).snapshotTextParse(snapshot_id, raw_text, options)(axios, basePath);
         },
     };
 };
@@ -2023,48 +2037,48 @@ export const NerApiFactory = function (configuration?: Configuration, basePath?:
 export class NerApi extends BaseAPI {
     /**
      * 
-     * @param {string} text 
+     * @param {RawText} raw_text 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NerApi
+     */
+    public currentSnapshotTextEntities(raw_text: RawText, options?: any) {
+        return NerApiFp(this.configuration).currentSnapshotTextEntities(raw_text, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {RawText} raw_text 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NerApi
+     */
+    public currentSnapshotTextParse(raw_text: RawText, options?: any) {
+        return NerApiFp(this.configuration).currentSnapshotTextParse(raw_text, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
      * @param {number} snapshot_id 
+     * @param {RawText} raw_text 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NerApi
      */
-    public textEntities(text: string, snapshot_id: number, options?: any) {
-        return NerApiFp(this.configuration).textEntities(text, snapshot_id, options)(this.axios, this.basePath);
+    public snapshotTextEntities(snapshot_id: number, raw_text: RawText, options?: any) {
+        return NerApiFp(this.configuration).snapshotTextEntities(snapshot_id, raw_text, options)(this.axios, this.basePath);
     }
 
     /**
      * 
-     * @param {string} text 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof NerApi
-     */
-    public textEntities_1(text: string, options?: any) {
-        return NerApiFp(this.configuration).textEntities_1(text, options)(this.axios, this.basePath);
-    }
-
-    /**
-     * 
-     * @param {string} text 
      * @param {number} snapshot_id 
+     * @param {RawText} raw_text 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NerApi
      */
-    public textParse(text: string, snapshot_id: number, options?: any) {
-        return NerApiFp(this.configuration).textParse(text, snapshot_id, options)(this.axios, this.basePath);
-    }
-
-    /**
-     * 
-     * @param {string} text 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof NerApi
-     */
-    public textParse_2(text: string, options?: any) {
-        return NerApiFp(this.configuration).textParse_2(text, options)(this.axios, this.basePath);
+    public snapshotTextParse(snapshot_id: number, raw_text: RawText, options?: any) {
+        return NerApiFp(this.configuration).snapshotTextParse(snapshot_id, raw_text, options)(this.axios, this.basePath);
     }
 
 }

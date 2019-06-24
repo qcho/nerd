@@ -41,7 +41,7 @@ const PreviewLayout = ({ classes }: Props) => {
     }
     setLoading(true);
     try {
-      const response = await nerApi.textParse_2(text);
+      const response = await nerApi.currentSnapshotTextParse({ text });
       setDocument(response.data.spacy_document);
       setEntityTypes(response.data.snapshot.types || {});
       setSaveEnabled(true);

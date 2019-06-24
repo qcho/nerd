@@ -10,14 +10,12 @@ marshmallow-mongoengine = {editable = true,git = "https://github.com/MongoEngine
 blinker = "*"
 flask-jwt-extended = "*"
 spacy = "~=2.1"
-celery = {extras = ["redis"],version = "*"}
-redis = "*"
+celery = "*"
 flower = "*"
 meinheld = "*"
 gunicorn = "*"
 marshmallow-enum = "*"
 newsapi-python = "*"
-es_core_news_md = {file = 'https://github.com/explosion/spacy-models/releases/download/es_core_news_md-2.1.0/es_core_news_md-2.1.0.tar.gz'}
 
 [dev-packages]
 faker = "*"
@@ -32,9 +30,9 @@ python_version = "3.7"
 [scripts]
 setup = "flask setup --drop"
 dev-setup = "flask dev-setup --drop"
-download-model = "python -m spacy download ${NERD_SPACY_MODEL}"
 worker = "celery worker -A nerd:celery -l info -E --pool solo -n cli -Q nerd,vCURRENT,broadcast_tasks"
 ping = "flask worker ping"
 nlp = "flask worker nlp"
 flower = "celery flower -A nerd:celery"
 serve = "flask run"
+train = "flask worker train"
