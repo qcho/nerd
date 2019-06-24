@@ -78,12 +78,13 @@ class Model:
                 print("Losses", losses)
 
     def train(self):
-        with log_perf(f'{self.snapshot} TRAINING'):
-            self._nlp = spacy.load(os.environ.get('NERD_SPACY_MODEL'))
-            self._add_types()
-            self._train_snapshot_texts()
+        # TODO: we should make it so that locked workers due to training should only reload recently trained model
         with self.snapshot.training_lock():
-            """ Only locking when saving to disk after training is done in memory """
+            with log_perf(f'{self.snapshot} TRAINING'):
+                self._nlp = spacy.load(os.environ.get('NERD_SPACY_MODEL'))
+                self._add_types()
+                self._train_snapshot_texts()
+                """ Only locking when saving to disk after training is done in memory """
             with log_perf(f'{self.snapshot} SAVING_TO_DISK'):
                 if os.path.exists(self._path):
                     shutil.rmtree(self._path)
