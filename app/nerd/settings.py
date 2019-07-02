@@ -81,6 +81,6 @@ MONGO_CONFIG = {
     'db': os.environ.get('MONGODB_DATABASE'),
     'host': os.environ.get('NERD_MONGO_DB_HOST', None),
     'port': int(os.environ.get('MONGODB_PORT_NUMBER')),
-    # 'username': os.environ.get('MONGODB_USERNAME', None),
-    # 'password': os.environ.get('MONGODB_PASSWORD', None),
+    'username': os.environ.get('MONGODB_USERNAME', None),
+    'password': os.environ.get('MONGODB_PASSWORD', None),
 }
