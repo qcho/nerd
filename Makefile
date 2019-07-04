@@ -6,7 +6,7 @@ nerd-setup-force:
 	docker-compose exec app flask setup --drop
 up:
 	cd ui && yarn build
-	docker-compose up --build -d
+	docker-compose up --build --scale worker=2 -d
 	docker-compose exec app flask setup
 down:
 	docker-compose down --volumes --rmi local --remove-orphans
