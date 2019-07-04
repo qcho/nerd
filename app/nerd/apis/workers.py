@@ -50,8 +50,8 @@ class Worker(MethodView):
     # @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="updateWorkerSnapshot")
     @blp.arguments(WorkerQueue)
-    def post(self, worker_name, new_queue: WorkerQueue):
+    def post(self, new_queue: WorkerQueue, worker_name):
         celery.current_app.control.cancel_consumer(queue=get_current_snapshot(worker_name), destination=[worker_name])
-        celery.current_app.control.add_consumer(queue=new_queue.version, destination=[worker_name])
+        celery.current_app.control.add_consumer(queue=new_queue['version'], destination=[worker_name])
         # TODO: Send reload to the worker so that it reloads the models
         return '', 200
