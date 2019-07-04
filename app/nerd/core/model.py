@@ -81,7 +81,6 @@ class Model:
         # TODO: we should make it so that locked workers due to training should only reload recently trained model
         with self.snapshot.training_lock():
             with log_perf(f'{self.snapshot} TRAINING'):
-                spacy.cli.download(os.environ.get('NERD_SPACY_MODEL'))
                 self._nlp = spacy.load(os.environ.get('NERD_SPACY_MODEL'))
                 self._add_types()
                 self._train_snapshot_texts()

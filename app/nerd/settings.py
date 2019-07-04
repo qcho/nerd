@@ -2,18 +2,20 @@ import os
 
 from nerd.core.document.user import Role
 
-SERVERS = {
-    3000: 'UI endpoint',
-    80: 'Production endpoint',
-    5000: 'Development endpoint'
-}
-
-
 class BaseConfig(object):
     DEBUG = False
     TESTING = False
     PREFERRED_URL_SCHEME = os.environ.get('NERD_URL_SCHEME', 'http')
-    NERD_SERVER_NAME = os.environ.get('NERD_SERVER_NAME')
+    NERD_WEB_SERVER_NAME = "{}:{}".format(
+        os.environ.get('NERD_WEB_HOST'),
+        os.environ.get('NERD_WEB_HTTP_PORT'),
+    )
+    NERD_APP_SERVER_NAME = "{}:{}".format(
+        os.environ.get('NERD_APP_HOST'),
+        os.environ.get('NERD_APP_HTTP_PORT'),
+    )
+
+    SERVER_NAME = NERD_WEB_SERVER_NAME
 
     JWT_TOKEN_LOCATION = ('headers', 'json')
     JWT_ERROR_MESSAGE_KEY = "message"
@@ -33,23 +35,9 @@ class BaseConfig(object):
             {
                 'url': '{}://{}'.format(
                     PREFERRED_URL_SCHEME,
-                    'localhost:3000'
+                    NERD_WEB_SERVER_NAME,
                 ),
                 'description': 'UI endpoint'
-            },
-            {
-                'url': '{}://{}'.format(
-                    PREFERRED_URL_SCHEME,
-                    os.environ.get('NERD_SERVER_NAME', '0.0.0.0:80')
-                ),
-                'description': 'Docker endpoint'
-            },
-            {
-                'url': '{}://{}'.format(
-                    PREFERRED_URL_SCHEME,
-                    os.environ.get('NERD_SERVER_NAME', '127.0.0.1:5000')
-                ),
-                'description': 'Local endpoint'
             }
         ],
         'components': {
@@ -79,8 +67,8 @@ def setup_settings(app):
 
 MONGO_CONFIG = {
     'db': os.environ.get('MONGODB_DATABASE'),
-    'host': os.environ.get('NERD_MONGO_DB_HOST', None),
+    'host': os.environ.get('NERD_MONGO_DB_HOST'),
     'port': int(os.environ.get('MONGODB_PORT_NUMBER')),
-    'username': os.environ.get('MONGODB_USERNAME', None),
-    'password': os.environ.get('MONGODB_PASSWORD', None),
+    'username': os.environ.get('MONGODB_USERNAME'),
+    'password': os.environ.get('MONGODB_PASSWORD'),
 }

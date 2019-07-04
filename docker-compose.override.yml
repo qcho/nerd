@@ -1,27 +1,17 @@
 version: "3.7"
 
 services:
-#  nginx:
-#   ports:
-#      - "${NGINX_HTTP_PORT_NUMBER}:${NGINX_HTTP_PORT_NUMBER}"
-#      - "${NGINX_HTTPS_PORT_NUMBER}:${NGINX_HTTPS_PORT_NUMBER}"
-#    env_file:
-#      - .env.development
-#      - .env.development.local
+  nginx:
+   ports:
+      - "${NERD_WEB_HTTP_PORT}:${NERD_WEB_HTTP_PORT}"
 
   mongodb:
     ports:
       - "${MONGODB_PORT_NUMBER}:${MONGODB_PORT_NUMBER}"
-    env_file:
-      - .env.development
-      - .env.development.local
   rabbitmq:
     ports:
       - "${RABBITMQ_NODE_PORT_NUMBER}:${RABBITMQ_NODE_PORT_NUMBER}"
       - "${RABBITMQ_MANAGER_PORT_NUMBER}:${RABBITMQ_MANAGER_PORT_NUMBER}"
-    env_file: 
-      - .env.development
-      - .env.development.local
   app:
     image: nerd/app:dev
     build:
@@ -30,10 +20,7 @@ services:
     volumes:
       - ./app:/app
     ports:
-      - "${PORT}:${PORT}" 
-    env_file:
-      - .env.development
-      - .env.development.local
+      - "${NERD_APP_HTTP_PORT}:${NERD_APP_HTTP_PORT}"
     command: ["web"]
 
   worker:
@@ -43,9 +30,6 @@ services:
         PIPENV_ARGS: --dev
     volumes:
       - ./app:/app
-    env_file:
-      - .env.development
-      - .env.development.local
 
   flower:
     image: nerd/app:dev
@@ -54,6 +38,3 @@ services:
         PIPENV_ARGS: --dev
     ports:
       - "${FLOWER_PORT}:${FLOWER_PORT}"
-    env_file:
-      - .env.development
-      - .env.development.local

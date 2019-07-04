@@ -1,14 +1,17 @@
 version: "3.7"
 
 services:
-#  nginx:
-#    image: bitnami/nginx:1.6
-#    restart: on-failure
-#    init: true
-#    stdin_open: true
-#    tty: true
-#    env_file:
-#      - .env
+  nginx:
+    image: bitnami/nginx:1.16
+    restart: on-failure
+    init: true
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    volumes:
+      - ./ui/build:/app
+      - ./docker/nginx/nerd.conf:/opt/bitnami/nginx/conf/server_blocks/nerd.conf:ro
 
   mongodb:
     image: bitnami/mongodb:4.0
@@ -32,57 +35,31 @@ services:
     volumes:
       - rabbitmq-data:/bitnami
 
-  app:
+  app: &app
     image: nerd/app:latest
     build:
       context: .
+      args:
+        NERD_SPACY_MODEL: "${NERD_SPACY_MODEL}"
     restart: on-failure
     init: true
     stdin_open: true
     tty: true
     env_file:
       - .env
-    environment:
-      - NERD_SERVER_NAME=${HOST}:${PORT}
-      - CELERY_BROKER_URL=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_NODE_PORT_NUMBER}/${RABBITMQ_VHOST}
-      - FLOWER_BROKER_API=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_NODE_PORT_NUMBER}/${RABBITMQ_VHOST}
     depends_on:
       - mongodb
       - rabbitmq
     command: ["web"]
 
   worker:
-    image: nerd/app:latest
-    build:
-      context: .
-    restart: on-failure
-    init: true
-    stdin_open: true
-    tty: true
-    env_file:
-      - .env
-    environment:  
-      - NERD_SERVER_NAME=${HOST}:${PORT}
-      - CELERY_BROKER_URL=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_NODE_PORT_NUMBER}/${RABBITMQ_VHOST}
-      - FLOWER_BROKER_API=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_NODE_PORT_NUMBER}/${RABBITMQ_VHOST}
+    <<: *app
     depends_on:
       - app
-    command: ["worker"]
+    command: ["worker", "vCURRENT"]
 
   flower:
-    image: nerd/app:latest
-    build:
-      context: .
-    restart: on-failure
-    init: true
-    stdin_open: true
-    tty: true
-    env_file:
-      - .env
-    environment:
-      - NERD_SERVER_NAME=${HOST}:${PORT}
-      - CELERY_BROKER_URL=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_NODE_PORT_NUMBER}/${RABBITMQ_VHOST}
-      - FLOWER_BROKER_API=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_NODE_PORT_NUMBER}/${RABBITMQ_VHOST}
+    <<: *app
     depends_on:
       - app
     command: ["flower"]

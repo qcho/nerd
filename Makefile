@@ -1,16 +1,14 @@
-serve:
-	docker-compose up --remove-orphans
-
-setup:
-	docker-compose exec app flask setup
-
-setup-force:
-	docker-compose exec app flask setup --drop
-
+start:
+	docker-compose start
 stop:
-	docker-compose down -v
+	docker-compose stop
+nerd-setup-force:
+	docker-compose exec app flask setup --drop
+up:
+	cd ui && yarn build
+	docker-compose up --build -d
+	docker-compose exec app flask setup
+down:
+	docker-compose down --volumes --rmi local --remove-orphans
 
-purge: stop
-	docker-compose rm --force
-
-.PHONY: setup setup-force serve stop purge
+.PHONY: start stop nerd-setup nerd-setup-force up down

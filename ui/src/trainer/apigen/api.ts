@@ -32,16 +32,16 @@ export interface EntityList {
     text: string;
     /**
      * 
-     * @type {Array<SpacyEntity2>}
-     * @memberof EntityList
-     */
-    entities: Array<SpacyEntity2>;
-    /**
-     * 
      * @type {Snapshot}
      * @memberof EntityList
      */
     snapshot: Snapshot;
+    /**
+     * 
+     * @type {Array<SpacyEntity2>}
+     * @memberof EntityList
+     */
+    entities: Array<SpacyEntity2>;
 }
 
 /**
@@ -97,19 +97,13 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    name: string;
+    plain_password?: string;
     /**
      * 
      * @type {string}
      * @memberof Register
      */
     id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
-    email: string;
     /**
      * 
      * @type {Array<string>}
@@ -121,7 +115,13 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    plain_password?: string;
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Register
+     */
+    email: string;
 }
 
 /**
@@ -146,16 +146,22 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
-     * @type {Date}
+     * @type {number}
      * @memberof Snapshot
      */
-    trained_at?: Date;
+    semaphore?: number;
     /**
      * 
      * @type {number}
      * @memberof Snapshot
      */
     id: number;
+    /**
+     * 
+     * @type {Date}
+     * @memberof Snapshot
+     */
+    created_at?: Date;
     /**
      * 
      * @type {{ [key: string]: Type; }}
@@ -167,13 +173,7 @@ export interface Snapshot {
      * @type {Date}
      * @memberof Snapshot
      */
-    created_at?: Date;
-    /**
-     * 
-     * @type {number}
-     * @memberof Snapshot
-     */
-    semaphore?: number;
+    trained_at?: Date;
 }
 
 /**
@@ -228,6 +228,24 @@ export interface SnapshotInfo {
 export interface SpacyDocument {
     /**
      * 
+     * @type {Date}
+     * @memberof SpacyDocument
+     */
+    _created_at?: Date;
+    /**
+     * 
+     * @type {Array<SpacyEntity>}
+     * @memberof SpacyDocument
+     */
+    ents?: Array<SpacyEntity>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyDocument
+     */
+    text: string;
+    /**
+     * 
      * @type {Array<SpacySentence>}
      * @memberof SpacyDocument
      */
@@ -238,24 +256,6 @@ export interface SpacyDocument {
      * @memberof SpacyDocument
      */
     tokens?: Array<SpacyToken>;
-    /**
-     * 
-     * @type {Date}
-     * @memberof SpacyDocument
-     */
-    _created_at?: Date;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyDocument
-     */
-    text: string;
-    /**
-     * 
-     * @type {Array<SpacyEntity>}
-     * @memberof SpacyDocument
-     */
-    ents?: Array<SpacyEntity>;
 }
 
 /**
@@ -264,6 +264,24 @@ export interface SpacyDocument {
  * @interface SpacyDocument1
  */
 export interface SpacyDocument1 {
+    /**
+     * 
+     * @type {Date}
+     * @memberof SpacyDocument1
+     */
+    _created_at?: Date;
+    /**
+     * 
+     * @type {Array<SpacyEntity1>}
+     * @memberof SpacyDocument1
+     */
+    ents?: Array<SpacyEntity1>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyDocument1
+     */
+    text: string;
     /**
      * 
      * @type {Array<SpacySentence1>}
@@ -276,24 +294,6 @@ export interface SpacyDocument1 {
      * @memberof SpacyDocument1
      */
     tokens?: Array<SpacyToken1>;
-    /**
-     * 
-     * @type {Date}
-     * @memberof SpacyDocument1
-     */
-    _created_at?: Date;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyDocument1
-     */
-    text: string;
-    /**
-     * 
-     * @type {Array<SpacyEntity1>}
-     * @memberof SpacyDocument1
-     */
-    ents?: Array<SpacyEntity1>;
 }
 
 /**
@@ -425,6 +425,18 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
+    head?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    tag?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
     end: number;
     /**
      * 
@@ -434,28 +446,16 @@ export interface SpacyToken {
     id: number;
     /**
      * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    start: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    head?: number;
-    /**
-     * 
      * @type {string}
      * @memberof SpacyToken
      */
     pos?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SpacyToken
      */
-    tag?: string;
+    start: number;
     /**
      * 
      * @type {string}
@@ -475,6 +475,18 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
+    head?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    tag?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken1
+     */
     end: number;
     /**
      * 
@@ -484,28 +496,16 @@ export interface SpacyToken1 {
     id: number;
     /**
      * 
-     * @type {number}
-     * @memberof SpacyToken1
-     */
-    start: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken1
-     */
-    head?: number;
-    /**
-     * 
      * @type {string}
      * @memberof SpacyToken1
      */
     pos?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SpacyToken1
      */
-    tag?: string;
+    start: number;
     /**
      * 
      * @type {string}
@@ -522,6 +522,12 @@ export interface SpacyToken1 {
 export interface Text {
     /**
      * 
+     * @type {Array<string>}
+     * @memberof Text
+     */
+    trainings?: Array<string>;
+    /**
+     * 
      * @type {Date}
      * @memberof Text
      */
@@ -532,12 +538,6 @@ export interface Text {
      * @memberof Text
      */
     id?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Text
-     */
-    trainings?: Array<string>;
     /**
      * 
      * @type {string}
@@ -580,16 +580,16 @@ export interface Token {
 export interface TopContributor {
     /**
      * 
-     * @type {string}
-     * @memberof TopContributor
-     */
-    name: string;
-    /**
-     * 
      * @type {number}
      * @memberof TopContributor
      */
     total_trainings: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof TopContributor
+     */
+    name: string;
 }
 
 /**
@@ -632,16 +632,16 @@ export interface Training {
     id?: string;
     /**
      * 
+     * @type {string}
+     * @memberof Training
+     */
+    user_id: string;
+    /**
+     * 
      * @type {Date}
      * @memberof Training
      */
     created_at?: Date;
-    /**
-     * 
-     * @type {string}
-     * @memberof Training
-     */
-    text_id: string;
     /**
      * 
      * @type {SpacyDocument}
@@ -653,7 +653,7 @@ export interface Training {
      * @type {string}
      * @memberof Training
      */
-    user_id: string;
+    text_id: string;
 }
 
 /**
@@ -687,7 +687,7 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    name: string;
+    id?: string;
     /**
      * 
      * @type {Array<string>}
@@ -699,19 +699,19 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    email: string;
+    name: string;
     /**
      * 
      * @type {number}
      * @memberof User
      */
     total_trainings?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    email: string;
 }
 
 /**
@@ -751,13 +751,7 @@ export interface UserPayload {
      * @type {string}
      * @memberof UserPayload
      */
-    name?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof UserPayload
-     */
-    roles?: Array<string>;
+    plain_password?: string;
     /**
      * 
      * @type {string}
@@ -772,10 +766,16 @@ export interface UserPayload {
     trainings?: Array<string>;
     /**
      * 
+     * @type {Array<string>}
+     * @memberof UserPayload
+     */
+    roles?: Array<string>;
+    /**
+     * 
      * @type {string}
      * @memberof UserPayload
      */
-    plain_password?: string;
+    name?: string;
 }
 
 /**
@@ -790,6 +790,20 @@ export interface ValueOnlyText {
      * @memberof ValueOnlyText
      */
     value: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface Worker
+ */
+export interface Worker {
+    /**
+     * 
+     * @type {string}
+     * @memberof Worker
+     */
+    name?: string;
 }
 
 
@@ -3457,6 +3471,232 @@ export class UsersApi extends BaseAPI {
      */
     public userTrainings(user_id: string, page?: number, page_size?: number, options?: any) {
         return UsersApiFp(this.configuration).userTrainings(user_id, page, page_size, options)(this.axios, this.basePath);
+    }
+
+}
+
+
+/**
+ * WorkersApi - axios parameter creator
+ * @export
+ */
+export const WorkersApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listWorkers(options: any = {}): RequestArgs {
+            const localVarPath = `/api/workers/`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} worker_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateWorker(worker_name: string, options: any = {}): RequestArgs {
+            // verify required parameter 'worker_name' is not null or undefined
+            if (worker_name === null || worker_name === undefined) {
+                throw new RequiredError('worker_name','Required parameter worker_name was null or undefined when calling updateWorker.');
+            }
+            const localVarPath = `/api/workers/{worker_name}`
+                .replace(`{${"worker_name"}}`, encodeURIComponent(String(worker_name)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} worker_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        workerInfo(worker_name: string, options: any = {}): RequestArgs {
+            // verify required parameter 'worker_name' is not null or undefined
+            if (worker_name === null || worker_name === undefined) {
+                throw new RequiredError('worker_name','Required parameter worker_name was null or undefined when calling workerInfo.');
+            }
+            const localVarPath = `/api/workers/{worker_name}`
+                .replace(`{${"worker_name"}}`, encodeURIComponent(String(worker_name)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * WorkersApi - functional programming interface
+ * @export
+ */
+export const WorkersApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listWorkers(options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Worker>> {
+            const localVarAxiosArgs = WorkersApiAxiosParamCreator(configuration).listWorkers(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {string} worker_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateWorker(worker_name: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = WorkersApiAxiosParamCreator(configuration).updateWorker(worker_name, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {string} worker_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        workerInfo(worker_name: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = WorkersApiAxiosParamCreator(configuration).workerInfo(worker_name, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+    }
+};
+
+/**
+ * WorkersApi - factory interface
+ * @export
+ */
+export const WorkersApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listWorkers(options?: any) {
+            return WorkersApiFp(configuration).listWorkers(options)(axios, basePath);
+        },
+        /**
+         * 
+         * @param {string} worker_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateWorker(worker_name: string, options?: any) {
+            return WorkersApiFp(configuration).updateWorker(worker_name, options)(axios, basePath);
+        },
+        /**
+         * 
+         * @param {string} worker_name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        workerInfo(worker_name: string, options?: any) {
+            return WorkersApiFp(configuration).workerInfo(worker_name, options)(axios, basePath);
+        },
+    };
+};
+
+/**
+ * WorkersApi - object-oriented interface
+ * @export
+ * @class WorkersApi
+ * @extends {BaseAPI}
+ */
+export class WorkersApi extends BaseAPI {
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WorkersApi
+     */
+    public listWorkers(options?: any) {
+        return WorkersApiFp(this.configuration).listWorkers(options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {string} worker_name 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WorkersApi
+     */
+    public updateWorker(worker_name: string, options?: any) {
+        return WorkersApiFp(this.configuration).updateWorker(worker_name, options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {string} worker_name 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WorkersApi
+     */
+    public workerInfo(worker_name: string, options?: any) {
+        return WorkersApiFp(this.configuration).workerInfo(worker_name, options)(this.axios, this.basePath);
     }
 
 }

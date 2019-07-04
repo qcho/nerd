@@ -10,23 +10,25 @@ main() {
     func="$1"
     shift 1
 
-    echo "Running ${HUPPER} ${func}"
+    echo "Running ${HUPPER} ${func} $@"
     case "${func}" in
         "web")
             export GUNICORN_CONF=""
             exec $HUPPER gunicorn.app.wsgiapp -k egg:meinheld#gunicorn_worker -c "/gunicorn_conf.py" "nerd:app"
             return;;
         "worker")
-            exec $HUPPER celery worker -A "nerd:celery" -n worker@%h --queues nerd,vCURRENT
+            queue="$1"
+            shift 1
+            exec $HUPPER celery worker -A "nerd:celery" -E --pool "solo" -Q "nerd,${queue},broadcast_tasks" $@
             return;;
         "flower")
-            exec $HUPPER celery flower -A "nerd:celery"
+            exec $HUPPER celery flower -A "nerd:celery" $@
             return;;
         "setup")
-            exec flask setup "$@"
+            exec flask setup $@
             return;;
         *)
-            exec "$@"
+            exec $@
             return;;
     esac
 }
