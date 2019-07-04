@@ -13,15 +13,26 @@ logger = get_logger(__name__)
 
 class WorkerSchema(Schema):
     name = fields.String(required=False)
+    snapshot = fields.String()
 
 
-def get_queues(worker_name):
-    return celery.current_app.control.inspect([worker_name]).active_queues()
+class WorkerQueue(Schema):
+    version = fields.String(required=False)
+
+
+def get_current_snapshot(worker_name):
+    queues = celery.current_app.control.inspect([worker_name]).active_queues()
+    if worker_name not in queues:
+        # Shouldn't happen
+        return None
+
+    for queue in queues[worker_name]:
+        if queue["name"].startswith("v"):
+            return queue["name"]
+    return None
 
 
 # TODO: Uncomment @jwt_and_role_required(Role.ADMIN)
-
-
 @blp.route('/')
 class Workers(MethodView):
 
@@ -30,27 +41,17 @@ class Workers(MethodView):
     @blp.response(WorkerSchema(many=True))
     def get(self):
         workers = celery.current_app.control.inspect().ping()
-        return [{'name': key} for key, value in workers.items()]
+        return [{'name': key, "snapshot": get_current_snapshot(key)} for key, value in workers.items()]
 
 
 @blp.route("/<string:worker_name>")
 class Worker(MethodView):
 
     # @jwt_and_role_required(Role.ADMIN)
-    @blp.doc(operationId="workerInfo")
-    def get(self, worker_name):
-        queues = get_queues(worker_name)
-        logger.warning(queues)
-        # TODO: Create a model for queues
-        return queues, 200
-
-    # @jwt_and_role_required(Role.ADMIN)
-    @blp.doc(operationId="updateWorker")
-    def post(self, worker_name):
-        # TODO: Call cancel_consumer on current queue (get_queues and filter with the ones starting with v*)
-        celery.current_app.control.add_consumer(
-            queue="vCURRENT",  # TODO: queue should come from the request
-            destination=[worker_name]
-        )
-        # TODO: Send reload to the worker so that it reloads the model
+    @blp.doc(operationId="updateWorkerSnapshot")
+    @blp.arguments(WorkerQueue)
+    def post(self, worker_name, new_queue: WorkerQueue):
+        celery.current_app.control.cancel_consumer(queue=get_current_snapshot(worker_name), destination=[worker_name])
+        celery.current_app.control.add_consumer(queue=new_queue.version, destination=[worker_name])
+        # TODO: Send reload to the worker so that it reloads the models
         return '', 200
