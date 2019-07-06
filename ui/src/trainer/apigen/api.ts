@@ -26,10 +26,10 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 export interface EntityList {
     /**
      * 
-     * @type {string}
+     * @type {Array<SpacyEntity2>}
      * @memberof EntityList
      */
-    text: string;
+    entities: Array<SpacyEntity2>;
     /**
      * 
      * @type {Snapshot}
@@ -38,10 +38,10 @@ export interface EntityList {
     snapshot: Snapshot;
     /**
      * 
-     * @type {Array<SpacyEntity2>}
+     * @type {string}
      * @memberof EntityList
      */
-    entities: Array<SpacyEntity2>;
+    text: string;
 }
 
 /**
@@ -103,25 +103,25 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
     plain_password?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
-    name: string;
     /**
      * 
      * @type {Array<string>}
      * @memberof Register
      */
     trainings?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Register
+     */
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Register
+     */
+    name: string;
 }
 
 /**
@@ -146,10 +146,10 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
-     * @type {number}
+     * @type {{ [key: string]: Type; }}
      * @memberof Snapshot
      */
-    semaphore?: number;
+    types?: { [key: string]: Type; };
     /**
      * 
      * @type {Date}
@@ -161,19 +161,19 @@ export interface Snapshot {
      * @type {number}
      * @memberof Snapshot
      */
-    id: number;
-    /**
-     * 
-     * @type {{ [key: string]: Type; }}
-     * @memberof Snapshot
-     */
-    types?: { [key: string]: Type; };
+    semaphore?: number;
     /**
      * 
      * @type {Date}
      * @memberof Snapshot
      */
     trained_at?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof Snapshot
+     */
+    id: number;
 }
 
 /**
@@ -228,22 +228,22 @@ export interface SnapshotInfo {
 export interface SpacyDocument {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyDocument
-     */
-    text: string;
-    /**
-     * 
      * @type {Date}
      * @memberof SpacyDocument
      */
     _created_at?: Date;
     /**
      * 
-     * @type {Array<SpacyEntity>}
+     * @type {string}
      * @memberof SpacyDocument
      */
-    ents?: Array<SpacyEntity>;
+    text: string;
+    /**
+     * 
+     * @type {Array<SpacyToken>}
+     * @memberof SpacyDocument
+     */
+    tokens?: Array<SpacyToken>;
     /**
      * 
      * @type {Array<SpacySentence>}
@@ -252,10 +252,10 @@ export interface SpacyDocument {
     sents?: Array<SpacySentence>;
     /**
      * 
-     * @type {Array<SpacyToken>}
+     * @type {Array<SpacyEntity>}
      * @memberof SpacyDocument
      */
-    tokens?: Array<SpacyToken>;
+    ents?: Array<SpacyEntity>;
 }
 
 /**
@@ -266,22 +266,22 @@ export interface SpacyDocument {
 export interface SpacyDocument1 {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyDocument1
-     */
-    text: string;
-    /**
-     * 
      * @type {Date}
      * @memberof SpacyDocument1
      */
     _created_at?: Date;
     /**
      * 
-     * @type {Array<SpacyEntity1>}
+     * @type {string}
      * @memberof SpacyDocument1
      */
-    ents?: Array<SpacyEntity1>;
+    text: string;
+    /**
+     * 
+     * @type {Array<SpacyToken1>}
+     * @memberof SpacyDocument1
+     */
+    tokens?: Array<SpacyToken1>;
     /**
      * 
      * @type {Array<SpacySentence1>}
@@ -290,10 +290,10 @@ export interface SpacyDocument1 {
     sents?: Array<SpacySentence1>;
     /**
      * 
-     * @type {Array<SpacyToken1>}
+     * @type {Array<SpacyEntity1>}
      * @memberof SpacyDocument1
      */
-    tokens?: Array<SpacyToken1>;
+    ents?: Array<SpacyEntity1>;
 }
 
 /**
@@ -425,7 +425,13 @@ export interface SpacyToken {
      * @type {string}
      * @memberof SpacyToken
      */
-    pos?: string;
+    dep?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
+    start: number;
     /**
      * 
      * @type {string}
@@ -437,13 +443,13 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
-    end: number;
+    head?: number;
     /**
      * 
      * @type {number}
      * @memberof SpacyToken
      */
-    head?: number;
+    end: number;
     /**
      * 
      * @type {number}
@@ -455,13 +461,7 @@ export interface SpacyToken {
      * @type {string}
      * @memberof SpacyToken
      */
-    dep?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    start: number;
+    pos?: string;
 }
 
 /**
@@ -475,7 +475,13 @@ export interface SpacyToken1 {
      * @type {string}
      * @memberof SpacyToken1
      */
-    pos?: string;
+    dep?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken1
+     */
+    start: number;
     /**
      * 
      * @type {string}
@@ -487,13 +493,13 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
-    end: number;
+    head?: number;
     /**
      * 
      * @type {number}
      * @memberof SpacyToken1
      */
-    head?: number;
+    end: number;
     /**
      * 
      * @type {number}
@@ -505,13 +511,7 @@ export interface SpacyToken1 {
      * @type {string}
      * @memberof SpacyToken1
      */
-    dep?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken1
-     */
-    start: number;
+    pos?: string;
 }
 
 /**
@@ -528,10 +528,10 @@ export interface Text {
     value: string;
     /**
      * 
-     * @type {Date}
+     * @type {Array<string>}
      * @memberof Text
      */
-    created_at?: Date;
+    trainings?: Array<string>;
     /**
      * 
      * @type {string}
@@ -540,10 +540,10 @@ export interface Text {
     id?: string;
     /**
      * 
-     * @type {Array<string>}
+     * @type {Date}
      * @memberof Text
      */
-    trainings?: Array<string>;
+    created_at?: Date;
 }
 
 /**
@@ -626,10 +626,10 @@ export interface TrainText {
 export interface Training {
     /**
      * 
-     * @type {string}
+     * @type {SpacyDocument}
      * @memberof Training
      */
-    user_id: string;
+    document: SpacyDocument;
     /**
      * 
      * @type {Date}
@@ -641,7 +641,7 @@ export interface Training {
      * @type {string}
      * @memberof Training
      */
-    id?: string;
+    user_id: string;
     /**
      * 
      * @type {string}
@@ -650,10 +650,10 @@ export interface Training {
     text_id: string;
     /**
      * 
-     * @type {SpacyDocument}
+     * @type {string}
      * @memberof Training
      */
-    document: SpacyDocument;
+    id?: string;
 }
 
 /**
@@ -757,25 +757,25 @@ export interface UserPayload {
      * @type {string}
      * @memberof UserPayload
      */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserPayload
-     */
     plain_password?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserPayload
-     */
-    name?: string;
     /**
      * 
      * @type {Array<string>}
      * @memberof UserPayload
      */
     trainings?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPayload
+     */
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPayload
+     */
+    name?: string;
 }
 
 /**
@@ -795,6 +795,20 @@ export interface ValueOnlyText {
 /**
  * 
  * @export
+ * @interface Version
+ */
+export interface Version {
+    /**
+     * 
+     * @type {string}
+     * @memberof Version
+     */
+    version: string;
+}
+
+/**
+ * 
+ * @export
  * @interface Worker
  */
 export interface Worker {
@@ -803,27 +817,13 @@ export interface Worker {
      * @type {string}
      * @memberof Worker
      */
-    name: string;
+    snapshot: string;
     /**
      * 
      * @type {string}
      * @memberof Worker
      */
-    snapshot: string;
-}
-
-/**
- * 
- * @export
- * @interface WorkerQueue
- */
-export interface WorkerQueue {
-    /**
-     * 
-     * @type {string}
-     * @memberof WorkerQueue
-     */
-    snapshot: string;
+    name: string;
 }
 
 
@@ -2320,46 +2320,15 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
         },
         /**
          * 
+         * @param {Version} version 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        forceReload(options: any = {}): RequestArgs {
-            const localVarPath = `/api/snapshots/force-reload`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
+        forceTrain(version: Version, options: any = {}): RequestArgs {
+            // verify required parameter 'version' is not null or undefined
+            if (version === null || version === undefined) {
+                throw new RequiredError('version','Required parameter version was null or undefined when calling forceTrain.');
             }
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication oAuth2Password required
-            // oauth required
-            if (configuration && configuration.accessToken) {
-                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
-                    : configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
-            }
-
-
-                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete localVarUrlObj.search;
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        forceTrain(options: any = {}): RequestArgs {
             const localVarPath = `/api/snapshots/force-train`;
             const localVarUrlObj = url.parse(localVarPath, true);
             let baseOptions;
@@ -2380,10 +2349,14 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
             }
 
 
-                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+                localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+            const needsSerialization = (<any>"Version" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(version !== undefined ? version : {}) : (version || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -2552,23 +2525,12 @@ export const SnapshotsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {Version} version 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        forceReload(options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
-            const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).forceReload(options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        forceTrain(options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
-            const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).forceTrain(options);
+        forceTrain(version: Version, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = SnapshotsApiAxiosParamCreator(configuration).forceTrain(version, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -2643,19 +2605,12 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
         },
         /**
          * 
+         * @param {Version} version 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        forceReload(options?: any) {
-            return SnapshotsApiFp(configuration).forceReload(options)(axios, basePath);
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        forceTrain(options?: any) {
-            return SnapshotsApiFp(configuration).forceTrain(options)(axios, basePath);
+        forceTrain(version: Version, options?: any) {
+            return SnapshotsApiFp(configuration).forceTrain(version, options)(axios, basePath);
         },
         /**
          * 
@@ -2719,22 +2674,13 @@ export class SnapshotsApi extends BaseAPI {
 
     /**
      * 
+     * @param {Version} version 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SnapshotsApi
      */
-    public forceReload(options?: any) {
-        return SnapshotsApiFp(this.configuration).forceReload(options)(this.axios, this.basePath);
-    }
-
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SnapshotsApi
-     */
-    public forceTrain(options?: any) {
-        return SnapshotsApiFp(this.configuration).forceTrain(options)(this.axios, this.basePath);
+    public forceTrain(version: Version, options?: any) {
+        return SnapshotsApiFp(this.configuration).forceTrain(version, options)(this.axios, this.basePath);
     }
 
     /**
@@ -3532,18 +3478,18 @@ export const WorkersApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @param {string} worker_name 
-         * @param {WorkerQueue} worker_queue 
+         * @param {Version} version 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateWorkerSnapshot(worker_name: string, worker_queue: WorkerQueue, options: any = {}): RequestArgs {
+        updateWorkerSnapshot(worker_name: string, version: Version, options: any = {}): RequestArgs {
             // verify required parameter 'worker_name' is not null or undefined
             if (worker_name === null || worker_name === undefined) {
                 throw new RequiredError('worker_name','Required parameter worker_name was null or undefined when calling updateWorkerSnapshot.');
             }
-            // verify required parameter 'worker_queue' is not null or undefined
-            if (worker_queue === null || worker_queue === undefined) {
-                throw new RequiredError('worker_queue','Required parameter worker_queue was null or undefined when calling updateWorkerSnapshot.');
+            // verify required parameter 'version' is not null or undefined
+            if (version === null || version === undefined) {
+                throw new RequiredError('version','Required parameter version was null or undefined when calling updateWorkerSnapshot.');
             }
             const localVarPath = `/api/workers/{worker_name}`
                 .replace(`{${"worker_name"}}`, encodeURIComponent(String(worker_name)));
@@ -3563,8 +3509,8 @@ export const WorkersApiAxiosParamCreator = function (configuration?: Configurati
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
-            const needsSerialization = (<any>"WorkerQueue" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(worker_queue !== undefined ? worker_queue : {}) : (worker_queue || "");
+            const needsSerialization = (<any>"Version" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(version !== undefined ? version : {}) : (version || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -3595,12 +3541,12 @@ export const WorkersApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} worker_name 
-         * @param {WorkerQueue} worker_queue 
+         * @param {Version} version 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateWorkerSnapshot(worker_name: string, worker_queue: WorkerQueue, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
-            const localVarAxiosArgs = WorkersApiAxiosParamCreator(configuration).updateWorkerSnapshot(worker_name, worker_queue, options);
+        updateWorkerSnapshot(worker_name: string, version: Version, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = WorkersApiAxiosParamCreator(configuration).updateWorkerSnapshot(worker_name, version, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -3626,12 +3572,12 @@ export const WorkersApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @param {string} worker_name 
-         * @param {WorkerQueue} worker_queue 
+         * @param {Version} version 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateWorkerSnapshot(worker_name: string, worker_queue: WorkerQueue, options?: any) {
-            return WorkersApiFp(configuration).updateWorkerSnapshot(worker_name, worker_queue, options)(axios, basePath);
+        updateWorkerSnapshot(worker_name: string, version: Version, options?: any) {
+            return WorkersApiFp(configuration).updateWorkerSnapshot(worker_name, version, options)(axios, basePath);
         },
     };
 };
@@ -3656,13 +3602,13 @@ export class WorkersApi extends BaseAPI {
     /**
      * 
      * @param {string} worker_name 
-     * @param {WorkerQueue} worker_queue 
+     * @param {Version} version 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof WorkersApi
      */
-    public updateWorkerSnapshot(worker_name: string, worker_queue: WorkerQueue, options?: any) {
-        return WorkersApiFp(this.configuration).updateWorkerSnapshot(worker_name, worker_queue, options)(this.axios, this.basePath);
+    public updateWorkerSnapshot(worker_name: string, version: Version, options?: any) {
+        return WorkersApiFp(this.configuration).updateWorkerSnapshot(worker_name, version, options)(this.axios, this.basePath);
     }
 
 }
