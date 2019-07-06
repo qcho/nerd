@@ -6,6 +6,7 @@ import { Scaffold } from '../widgets/Scaffold';
 import { SnapshotSection } from './SnapshotSection';
 import { TextTrainingSection } from './TextTrainingSection';
 import { ManageSnapshot } from './ManageSnapshot';
+import { WorkerSection } from './WorkerSection';
 
 const useStyles = makeStyles({
   section: {
@@ -30,6 +31,9 @@ const CorpusManagement = () => {
             </Grid>
             <Grid item style={{ marginTop: '0.5em' }}>
               <SnapshotSection />
+            </Grid>
+            <Grid item style={{ marginTop: '0.5em' }}>
+              <WorkerSection />
             </Grid>
           </Grid>
         </Grid>
