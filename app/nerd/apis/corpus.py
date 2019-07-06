@@ -71,7 +71,8 @@ class TrainingView(MethodView):
     def get(self, text_id, pagination_parameters: PaginationParameters):
         trainings = Training.objects.filter(text_id=text_id)
         pagination_parameters.item_count = trainings.count()
-        skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
+        skip_elements = (pagination_parameters.page - 1) * \
+            pagination_parameters.page_size
         return trainings.skip(skip_elements).limit(pagination_parameters.page_size)
 
     @jwt_and_role_required(Role.USER)
@@ -117,16 +118,17 @@ class UploadCsvResource(MethodView):
     def post(self):
         imported = 0
         for f in flask.request.files.getlist('file'):
-            imported = imported + TextImporter(TextIOWrapper(f, encoding='utf-8')).run()
+            imported = imported + \
+                TextImporter(TextIOWrapper(f, encoding='utf-8')).run()
         return '', 200
 
 
-@blp.route("/train")
+@blp.route("/train-new")
 class TrainResource(MethodView):
     """Returns a random text"""
 
     @jwt_and_role_required(Role.USER)
-    @blp.doc(operationId="train", responses={
+    @blp.doc(operationId="trainNew", responses={
         '204': {'description': "No documents left to train"}
     })
     @blp.response(TrainTextSchema, code=200, description="Training entity")
@@ -199,7 +201,8 @@ class IndexResource(MethodView):
     def get(self, pagination_parameters: PaginationParameters):
         results = Text.objects
         pagination_parameters.item_count = results.count()
-        skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
+        skip_elements = (pagination_parameters.page - 1) * \
+            pagination_parameters.page_size
         return results.skip(skip_elements).limit(pagination_parameters.page_size)
 
     @jwt_and_role_required(Role.ADMIN)
