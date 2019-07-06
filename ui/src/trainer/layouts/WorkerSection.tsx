@@ -1,24 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Title } from '../widgets/Title';
-import { Paper, Typography, TableCell } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import { RichTable } from '../widgets/RichTable';
+import { WorkerRow } from '../widgets/WorkerRow';
 import { WorkersApi, Worker } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
-import { async } from 'q';
-
-const WorkerRow = ({ worker }: { worker: Worker }) => {
-  return (
-    <>
-      <TableCell>
-        <Typography>{worker.name}</Typography>
-      </TableCell>
-      <TableCell>
-        <Typography>{worker.snapshot}</Typography>
-      </TableCell>
-    </>
-  );
-};
 
 const WorkerSection = () => {
   const [t] = useTranslation();
