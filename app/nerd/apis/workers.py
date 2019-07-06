@@ -53,5 +53,5 @@ class Worker(MethodView):
     def post(self, new_queue: WorkerQueue, worker_name):
         celery.current_app.control.cancel_consumer(queue=get_current_snapshot(worker_name), destination=[worker_name])
         celery.current_app.control.add_consumer(queue=new_queue['snapshot'], destination=[worker_name])
-        # TODO: Send reload to the worker so that it reloads the models
+        # TODO: Send reload to the worker so that it reloads the model
         return '', 200
