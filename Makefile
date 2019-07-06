@@ -1,3 +1,7 @@
+WORKERS := $(shell echo $$(docker ps | grep nerd_worker | wc -l | tr -d ' '))
+MORE_WORKERS := $(shell echo $$(($(WORKERS) + 1)))
+LESS_WORKERS := $(shell echo $$(($(WORKERS) - 1)))
+
 start:
 	docker-compose start
 stop:
@@ -10,5 +14,11 @@ up:
 	docker-compose exec app flask setup
 down:
 	docker-compose down --volumes --rmi local --remove-orphans
+
+scale-up:
+	docker-compose up --scale worker=$(MORE_WORKERS) --no-recreate -d worker
+
+scale-down:
+	docker-compose up --scale worker=$(LESS_WORKERS) --no-recreate -d worker
 
 .PHONY: start stop nerd-setup nerd-setup-force up down
