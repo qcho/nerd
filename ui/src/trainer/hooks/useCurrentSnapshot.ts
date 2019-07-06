@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { MaybeSnapshotInfo } from '../types/optionals';
 import { SnapshotsApi, Snapshot } from '../apigen';
 import { apiConfig } from '../helpers/api-config';

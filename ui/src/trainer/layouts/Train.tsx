@@ -68,7 +68,7 @@ const Train = () => {
   const loadNewDocument = async () => {
     setLoading(true);
     try {
-      const trainingInfoResult = await api.train();
+      const trainingInfoResult = await api.trainNew();
       if (unmounted) return;
       if (trainingInfoResult.status == 204) {
         setNoMoreDocuments(true);

@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
-import { Snapshot } from '../apigen';
-import { TableCell, Typography } from '@material-ui/core';
+import { Snapshot, SnapshotsApi } from '../apigen';
+import { TableCell, Typography, Grid, IconButton, Tooltip } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
+import ArchiveIcon from '@material-ui/icons/Archive';
+import UpdateIcon from '@material-ui/icons/Update';
 import { moment, snapshotStatus, snapshotStatusToText } from '../helpers/utils';
+import { apiConfig } from '../helpers/api-config';
 
 interface Props {
   snapshot: Snapshot;
@@ -11,8 +14,24 @@ interface Props {
 
 const SnapshotRow = ({ snapshot }: Props) => {
   const [t] = useTranslation();
-  const { id, trained_at, semaphore, created_at } = snapshot;
+  const { id, trained_at, created_at } = snapshot;
   const name = id === 0 ? t('Current') : `${id}`;
+  const api = new SnapshotsApi(apiConfig());
+
+  async function onUntrain() {
+    try {
+      await api.forceUntrain(id);
+    } catch (e) {
+      // TODO
+    }
+  }
+  async function onTrain() {
+    try {
+      await api.forceTrain(id);
+    } catch (e) {
+      // TODO
+    }
+  }
 
   return (
     <>
@@ -29,7 +48,24 @@ const SnapshotRow = ({ snapshot }: Props) => {
         <Typography>{t(snapshotStatusToText(snapshotStatus(snapshot)))}</Typography>
       </TableCell>
       <TableCell>
-        <Typography>{'TODO'}</Typography>
+        <Grid container alignContent="space-between">
+          <Grid item>
+            <Tooltip title={<Typography color="inherit">{t('Train')}</Typography>} placement="left">
+              <IconButton aria-label={t('Train')} onClick={onTrain} color="primary">
+                <UpdateIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+          {trained_at && id > 0 && (
+            <Grid item>
+              <Tooltip title={<Typography color="inherit">{t('Untrain')}</Typography>} placement="right">
+                <IconButton aria-label={t('Untrain')} onClick={onUntrain}>
+                  <ArchiveIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          )}
+        </Grid>
       </TableCell>
     </>
   );

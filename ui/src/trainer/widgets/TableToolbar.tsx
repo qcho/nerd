@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Typography, Tooltip, IconButton, Theme, Toolbar, InputBase, Button, Grid } from '@material-ui/core';
 import { lighten, fade } from '@material-ui/core/styles/colorManipulator';
