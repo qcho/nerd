@@ -32,8 +32,6 @@ services:
     tty: true
     env_file:
       - .env
-    volumes:
-      - rabbitmq-data:/bitnami
 
   app: &app
     image: nerd/app:latest
@@ -66,4 +64,3 @@ services:
 
 volumes:
   mongodb-data:
-  rabbitmq-data:
