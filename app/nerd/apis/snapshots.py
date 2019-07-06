@@ -13,6 +13,7 @@ from nerd.core.document.snapshot import CURRENT_ID, Snapshot, SnapshotSchema
 from nerd.core.document.user import Role
 from nerd.tasks.corpus import reload as reload_task
 from nerd.tasks.corpus import train as train_task
+from nerd.apis.schemas import VersionSchema
 
 blp = Blueprint("snapshots", "snapshots",
                 description="Corpus snapshot operations")
@@ -127,18 +128,8 @@ class ForceTrainingResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.response(None)
+    @blp.arguments(VersionSchema)
     @blp.doc(operationId="forceTrain")
-    def post(self):
-        train_task.apply_async([CURRENT_ID], queue='vCURRENT')
-        return "", 204
-
-
-@blp.route("/force-reload")
-class ForceReloadResource(MethodView):
-
-    @jwt_and_role_required(Role.ADMIN)
-    @blp.response(None)
-    @blp.doc(operationId="forceReload")
-    def post(self):
-        reload_task.apply_async([CURRENT_ID], queue='broadcast_tasks')
+    def post(self, version: VersionSchema):
+        train_task.apply_async([CURRENT_ID], queue=version['version'])
         return "", 204

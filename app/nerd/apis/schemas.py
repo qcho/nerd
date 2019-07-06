@@ -33,3 +33,7 @@ class TypeSchema(ModelSchema):
     class Meta:
         strict = True
         model = Type
+
+
+class VersionSchema(Schema):
+    version = fields.String(required=True)
