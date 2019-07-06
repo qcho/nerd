@@ -45,6 +45,7 @@ class NerParserResource(MethodView):
         snapshot, document = parse_text(snapshot_id, raw_text['text'])
         return {'text_id': None, 'snapshot': snapshot, 'spacy_document': document}
 
+
 @blp.route("/current/entities")
 class NerEntitiesResource(MethodView):
     @jwt_and_role_required(Role.USER)
