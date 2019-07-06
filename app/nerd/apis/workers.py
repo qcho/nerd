@@ -12,12 +12,12 @@ logger = get_logger(__name__)
 
 
 class WorkerSchema(Schema):
-    name = fields.String(required=False)
-    snapshot = fields.String()
+    name = fields.String(required=True)
+    snapshot = fields.String(required=True)
 
 
 class WorkerQueue(Schema):
-    version = fields.String(required=False)
+    snapshot = fields.String(required=True)
 
 
 def get_current_snapshot(worker_name):
@@ -52,6 +52,6 @@ class Worker(MethodView):
     @blp.arguments(WorkerQueue)
     def post(self, new_queue: WorkerQueue, worker_name):
         celery.current_app.control.cancel_consumer(queue=get_current_snapshot(worker_name), destination=[worker_name])
-        celery.current_app.control.add_consumer(queue=new_queue['version'], destination=[worker_name])
+        celery.current_app.control.add_consumer(queue=new_queue['snapshot'], destination=[worker_name])
         # TODO: Send reload to the worker so that it reloads the models
         return '', 200
