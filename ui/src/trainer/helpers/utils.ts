@@ -5,7 +5,6 @@ const isString = (x: any): x is string => typeof x === 'string';
 
 const clone = (obj: any) => JSON.parse(JSON.stringify(obj));
 const momenttz = (value: any) => {
-  value = isString(value) ? value.replace('+00:00', '') : value;
   return moment(value);
 };
 
