@@ -16,7 +16,7 @@ const WorkerSection = () => {
   return (
     <div>
       <Title>{t('Workers')}</Title>
-      <Paper>
+      <Paper style={{ width: 600, padding: '1em', marginTop: '1em', marginBottom: '1em' }}>
         <RichTable
           datasource={async () => await api.listWorkers()}
           rowBuilder={(worker: Worker) => <WorkerRow worker={worker} />}

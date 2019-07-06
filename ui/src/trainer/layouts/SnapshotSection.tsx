@@ -51,7 +51,7 @@ const SnapshotSection = () => {
   return (
     <div>
       <Title>{t('Snapshots')}</Title>
-      <Paper>
+      <Paper style={{ padding: '1em', marginTop: '1em', marginBottom: '1em' }}>
         <RichTable
           datasource={snapshotDatasource}
           rowBuilder={buildRow}

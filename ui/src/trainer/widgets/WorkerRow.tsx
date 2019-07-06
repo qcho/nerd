@@ -34,14 +34,16 @@ const WorkerRow = ({ worker }: { worker: Worker }) => {
       <TableCell>
         <Typography>{worker.name}</Typography>
       </TableCell>
-      <TableCell style={{ width: 400 }}>
-        <AsyncSelect
-          loadOptions={loadOptions}
-          onInputChange={handleInputChange}
-          cacheOptions
-          defaultOptions
-          defaultValue={{ value: worker.snapshot, label: worker.snapshot }}
-        />
+      <TableCell>
+        <div>
+          <AsyncSelect
+            loadOptions={loadOptions}
+            onInputChange={handleInputChange}
+            cacheOptions
+            defaultOptions
+            defaultValue={{ value: worker.snapshot, label: worker.snapshot }}
+          />
+        </div>
       </TableCell>
     </>
   );
