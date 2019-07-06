@@ -44,12 +44,10 @@ class IndexResource(MethodView):
         """List available snapshots
         """
         # TODO(Qcho): It would be great to have a way to get worker status with information such as:
-        #               - What snapshot is inside each worker
         #               - What's the status of that worker (loading/training/online/offline/etc.)
-        snapshots = Snapshot.objects(id__gt=0)
+        snapshots = Snapshot.objects
         pagination_parameters.item_count = snapshots.count()
-        skip_elements = (pagination_parameters.page - 1) * \
-                        pagination_parameters.page_size
+        skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
         return snapshots.skip(skip_elements).limit(pagination_parameters.page_size)
 
 
