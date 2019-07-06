@@ -1,4 +1,6 @@
 {
+  "Workers": "Workers",
+  "Snapshot": "Snapshot",
   "Select a .txt file": "Select a .txt file",
   "Uploading": "Uploading",
   "Loading from disk": "Loading from disk",
