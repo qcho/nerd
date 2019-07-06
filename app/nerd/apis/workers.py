@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask_rest_api import Blueprint
-import celery
+from nerd.tasks import celery
 from marshmallow import Schema, fields
 
 from nerd.core.util import get_logger
@@ -18,7 +18,7 @@ class WorkerSchema(Schema):
 
 
 def get_current_snapshot(worker_name):
-    queues = celery.current_app.control.inspect([worker_name]).active_queues()
+    queues = celery.control.inspect([worker_name]).active_queues()
     if worker_name not in queues:
         # Shouldn't happen
         return None
@@ -37,7 +37,7 @@ class Workers(MethodView):
     @blp.doc(operationId="listWorkers")
     @blp.response(WorkerSchema(many=True))
     def get(self):
-        workers = celery.current_app.control.inspect().ping()
+        workers = celery.control.inspect().ping()
         return [{'name': key, "snapshot": get_current_snapshot(key)} for key, value in workers.items()]
 
 
