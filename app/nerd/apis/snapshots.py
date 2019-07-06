@@ -11,7 +11,9 @@ from nerd.apis import jwt_and_role_required, response_error, BaseSchema
 from nerd.core.document.corpus import Text, Training
 from nerd.core.document.snapshot import CURRENT_ID, Snapshot, SnapshotSchema
 from nerd.core.document.user import Role
+from werkzeug.exceptions import Forbidden
 from nerd.tasks.corpus import train as train_task
+from nerd.tasks.corpus import un_train as un_train_task
 from nerd.apis.schemas import VersionSchema
 
 blp = Blueprint("snapshots", "snapshots",
@@ -102,6 +104,33 @@ class SnapshotResource(MethodView):
             raise NotFound()
 
 
+@blp.route("/<int:snapshot_id>/force-train")
+class ForceTrainingResource(MethodView):
+
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.response(None)
+    @blp.doc(operationId="forceTrain")
+    def post(self, snapshot_id: int):
+        snapshot = Snapshot.objects.get(id=snapshot_id)
+        train_task.apply_async([snapshot_id], queue=str(snapshot))
+        return "", 204
+
+
+@blp.route("/<int:snapshot_id>/force-untrain")
+class ForceUntrainResource(MethodView):
+
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.response(None)  # TODO
+    @response_error(Forbidden("Can't untrain current snapshot"))
+    @blp.doc(operationId="forceUntrain")
+    def post(self, snapshot_id: int):
+        if snapshot_id == CURRENT_ID:
+            raise Forbidden("Can't untrain current snapshot")
+        snapshot = Snapshot.objects.get(id=snapshot_id)
+        un_train_task.apply_async([snapshot_id], queue=str(snapshot))
+        return "", 204
+
+
 @blp.route("/current")
 class SnapshotCurrentResource(MethodView):
 
@@ -123,15 +152,3 @@ class SnapshotCurrentResource(MethodView):
         current_snapshot.created_at = datetime.now()
         current_snapshot.save()
         return current_snapshot
-
-
-@blp.route("/force-train")
-class ForceTrainingResource(MethodView):
-
-    @jwt_and_role_required(Role.ADMIN)
-    @blp.response(None)
-    @blp.arguments(VersionSchema)
-    @blp.doc(operationId="forceTrain")
-    def post(self, version: VersionSchema):
-        train_task.apply_async([CURRENT_ID], queue=version['version'])
-        return "", 204
