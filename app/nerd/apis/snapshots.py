@@ -108,11 +108,11 @@ class SnapshotResource(MethodView):
 class ForceTrainingResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(None)
+    @blp.response(None)  # TODO: Document response
     @blp.doc(operationId="forceTrain")
     def post(self, snapshot_id: int):
         snapshot = Snapshot.objects.get(id=snapshot_id)
-        train_task.apply_async([snapshot_id], queue=str(snapshot))
+        train_task.apply_async(queue=str(snapshot))
         return "", 204
 
 
@@ -120,14 +120,14 @@ class ForceTrainingResource(MethodView):
 class ForceUntrainResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(None)  # TODO
+    @blp.response(None)  # TODO: Document response
     @response_error(Forbidden("Can't untrain current snapshot"))
     @blp.doc(operationId="forceUntrain")
     def post(self, snapshot_id: int):
         if snapshot_id == CURRENT_ID:
             raise Forbidden("Can't untrain current snapshot")
         snapshot = Snapshot.objects.get(id=snapshot_id)
-        un_train_task.apply_async([snapshot_id], queue=str(snapshot))
+        un_train_task.apply_async(queue=str(snapshot))
         return "", 204
 
 

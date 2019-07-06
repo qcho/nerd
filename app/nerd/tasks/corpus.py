@@ -44,10 +44,11 @@ class IsTrainingError(Exception):
 
 
 @celery.task(base=CorpusTask)
-def train(snapshot_id: int = 0):
-    snapshot = Snapshot.objects.get(id=snapshot_id)
+def train():
+    snapshot = Snapshot.objects.get(id=train.model.id)
+    # TODO(QCHO): WTF is with this condition? Shouldn't it be greater?
     if snapshot.trained_at < train.model.snapshot.trained_at:
-        # TODO: we could restrict training if it was done x time ago
+        # TODO(QCHO): we could restrict training if it was done x time ago
         return snapshot
     train.model: Model
     train.model.train()
@@ -63,8 +64,8 @@ def un_train():
     base=CorpusTask,
     autoretry_for=(IsTrainingError,), retry_backoff=True
 )
-def reload(snapshot_id: int = 0):
-    snapshot = Snapshot.objects.get(id=snapshot_id)
+def reload():
+    snapshot = Snapshot.objects.get(id=reload.model.snapshot.id)
     reload.model = None
     gc.collect()
     reload.model.warm_up()
