@@ -65,7 +65,6 @@ const WorkerSection = () => {
           t('Reassignment from snapshot {{from}} to {{to}} sent to server.', { from: fromSnapshot, to: toSnapshot }),
         );
       }
-      console.log(response);
     } catch (e) {
       setErrorMessage(
         Http.handleRequestError(e, (status, data) => {
