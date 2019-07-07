@@ -12,7 +12,7 @@ class TextImporter:
         added = 0
         try:
             for line in self.file:
-                Text(value=line).save()
+                Text(value=line.rstrip()).save()
                 added = added + 1
         except (NotUniqueError, DuplicateKeyError):
             pass
