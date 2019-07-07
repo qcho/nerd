@@ -14,7 +14,6 @@ const ManageSnapshot = () => {
   const [currentType, setCurrentType] = useState<MaybeCompleteType>(null);
   const [typesToAdd, setTypesToAdd] = useState<CompleteType[]>([]);
   const [typesToDelete, setTypesToDelete] = useState<CompleteType[]>([]);
-  const [codeToDelete, setCodeToDelete] = useState<string>('');
 
   function mapTypesToChips(
     types: CompleteType[],

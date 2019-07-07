@@ -48,7 +48,6 @@ const CorpusView = () => {
     } catch (e) {
       setErrorMessage(
         Http.handleRequestError(e, (status, data) => {
-          // TODO: Handle different http status codes
           return t('There was an error while removing texts');
         }),
       );

@@ -5,7 +5,7 @@ import { DatasourceParameters, RichTable } from '../widgets/RichTable';
 import Http from '../helpers/http';
 import { Paper, Theme, CircularProgress, TableCell, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { MaybeUser, MaybeSnapshot, MaybeText } from '../types/optionals';
+import { MaybeSnapshot, MaybeText } from '../types/optionals';
 import { useTranslation } from 'react-i18next';
 import TokenizedEditor from '../widgets/TokenizedEditor';
 import { Scaffold } from '../widgets/Scaffold';
