@@ -38,7 +38,7 @@ def get_current_snapshot(worker_name):
 
 def get_worker_snapshots():
     workers = celery.control.inspect().ping()
-    return [{'name': key, "snapshot": get_current_snapshot(key)} for key, value in workers.items()]
+    return [{'name': key, "snapshot": get_current_snapshot(key)} for key, value in workers.items() or []]
 
 
 # TODO: Uncomment @jwt_and_role_required(Role.ADMIN)
