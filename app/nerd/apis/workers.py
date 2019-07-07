@@ -1,11 +1,10 @@
 from flask.views import MethodView
 from flask_rest_api import Blueprint
 from nerd.tasks import celery
+from nerd.tasks.corpus import reload as reload_task
 from marshmallow import Schema, fields
 
 from nerd.core.util import get_logger
-from nerd.apis import jwt_and_role_required
-from nerd.core.document.user import Role
 from nerd.apis.schemas import VersionSchema
 
 blp = Blueprint('workers', 'workers', description='Worker management')
@@ -51,6 +50,7 @@ class Worker(MethodView):
         celery.control.cancel_consumer(
             queue=get_current_snapshot(worker_name), destination=[worker_name])
         celery.control.add_consumer(
-            queue=new_queue['snapshot'], destination=[worker_name])
+            queue=new_queue.snapshot, destination=[worker_name])
+        reload_task(new_queue.snapshot.id).apply_async()
         # TODO: Send reload to the worker so that it reloads the model
         return '', 200

@@ -8,7 +8,7 @@ from nerd.core.importer.text_importer import TextImporter
 from nerd.core.news import NewsApi
 from nerd.core.setup import NERdSetup
 from nerd.tasks import celery
-from nerd.tasks.corpus import ping as ping_task, nlp as nlp_task
+from nerd.tasks.corpus import change_snapshot as change_snapshot_task, nlp as nlp_task, reload as reload_task
 
 
 def setup_cli(app: Flask):
@@ -54,7 +54,7 @@ def setup_cli(app: Flask):
     @worker.command()
     @click.pass_context
     @click.argument('text')
-    def nlp(ctx, text):
+    def nlp(ctx, text: str):
         result = nlp_task.apply_async([text], queue=ctx.obj['QUEUE']).wait()
         json_result = json.dumps(result)
         print(json_result)
@@ -63,3 +63,13 @@ def setup_cli(app: Flask):
     @click.pass_context
     def train(ctx):
         pprint(celery.control.inspect().active_queues())
+
+    @worker.command()
+    def reload_all():
+        reload_task.apply_async([None]).wait()
+
+    @worker.command()
+    @click.pass_context
+    @click.argument('code')
+    def change_snapshot(ctx, code: str):
+        change_snapshot_task.apply_async([code], queue=ctx.obj['QUEUE']).wait()

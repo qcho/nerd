@@ -32,7 +32,7 @@ python_version = "3.7"
 [scripts]
 setup = "flask setup --drop"
 dev-setup = "flask dev-setup --drop"
-worker = "celery worker -A nerd:celery -l info -E --pool solo -n cli -Q nerd,vCURRENT,broadcast_tasks"
+worker = "celery worker -A nerd:celery -l info -E --pool solo -n cli -Q nerd,nerd_broadcast,vCURRENT"
 ping = "flask worker ping"
 nlp = "flask worker nlp"
 flower = "celery flower -A nerd:celery"

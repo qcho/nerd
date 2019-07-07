@@ -2,20 +2,15 @@ import os
 
 from nerd.core.document.user import Role
 
+
 class BaseConfig(object):
     DEBUG = False
     TESTING = False
     PREFERRED_URL_SCHEME = os.environ.get('NERD_URL_SCHEME', 'http')
-    NERD_WEB_SERVER_NAME = "{}:{}".format(
+    SERVER_NAME = "{}:{}".format(
         os.environ.get('NERD_WEB_HOST'),
         os.environ.get('NERD_WEB_HTTP_PORT'),
     )
-    NERD_APP_SERVER_NAME = "{}:{}".format(
-        os.environ.get('NERD_APP_HOST'),
-        os.environ.get('NERD_APP_HTTP_PORT'),
-    )
-
-    SERVER_NAME = NERD_WEB_SERVER_NAME
 
     JWT_TOKEN_LOCATION = ('headers', 'json')
     JWT_ERROR_MESSAGE_KEY = "message"
@@ -35,7 +30,7 @@ class BaseConfig(object):
             {
                 'url': '{}://{}'.format(
                     PREFERRED_URL_SCHEME,
-                    NERD_WEB_SERVER_NAME,
+                    SERVER_NAME,
                 ),
                 'description': 'UI endpoint'
             }

@@ -17,13 +17,14 @@
       <option name="IS_SUBST" value="false" />
       <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
       <option name="IS_IGNORE_MISSING_FILES" value="false" />
+      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
       <ENTRIES>
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
         <ENTRY IS_ENABLED="true" PARSER="env" PATH=".env" />
       </ENTRIES>
     </EXTENSION>
     <option name="SCRIPT_NAME" value="celery" />
-    <option name="PARAMETERS" value="worker --pool=solo --task-events --app nerd:celery --queues nerd,vCURRENT -l debug -n pycharm" />
+    <option name="PARAMETERS" value="worker --pool=solo --task-events --app nerd:celery --queues nerd,nerd_broadcast,vCURRENT -l debug -n pycharm" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="true" />

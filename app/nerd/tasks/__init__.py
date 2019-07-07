@@ -21,8 +21,8 @@ celery = Celery(
 def init_app(self, app: Flask):
     self.conf.task_result_expires = 18000  # 5 hours.
     self.conf.task_default_queue = 'nerd'
-    self.conf.task_queues = (Broadcast('broadcast_tasks'), )
-    self.conf.task_routes = {'corpus.reload': {'queue': 'broadcast_tasks'}}
+    self.conf.task_queues = (Broadcast('nerd_broadcast'), )
+    self.conf.task_routes = {'nerd.tasks.corpus.reload': {'queue': 'nerd_broadcast'}}
     self.conf.update(app.config)
 
     class ContextTask(self.Task):
@@ -34,7 +34,3 @@ def init_app(self, app: Flask):
 
 
 celery.init_app = types.MethodType(init_app, celery)
-
-# TODO: warmup model load on init based on queues being listened
-# @worker_init.connect
-# def setup_snapshot_queue(sender, instance, **kwargs):

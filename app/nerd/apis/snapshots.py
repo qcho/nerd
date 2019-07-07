@@ -126,8 +126,7 @@ class ForceUntrainResource(MethodView):
     def post(self, snapshot_id: int):
         if snapshot_id == CURRENT_ID:
             raise Forbidden("Can't untrain current snapshot")
-        snapshot = Snapshot.objects.get(id=snapshot_id)
-        un_train_task.apply_async(queue=str(snapshot))
+        un_train_task(snapshot_id).apply_async()
         return "", 204
 
 

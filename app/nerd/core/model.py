@@ -38,7 +38,7 @@ class Model:
         self._path = FS_PATH / str(snapshot)
 
     def warm_up(self):
-        self._nlp()
+        _ = self._nlp
 
     def nlp(self, text: str) -> Doc:
         return self._nlp(text)

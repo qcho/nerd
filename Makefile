@@ -9,7 +9,7 @@ stop:
 nerd-setup-force:
 	docker-compose exec app flask setup --drop
 up:
-	cd ui && yarn build
+	cd ui && yarn install && yarn build
 	docker-compose up --build --scale worker=2 -d
 	docker-compose exec app flask setup
 down:
