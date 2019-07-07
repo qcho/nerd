@@ -83,6 +83,10 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, 
     entities.push(entity);
     spacyDocument.ents = entities;
     onUpdate(spacyDocument);
+    setCurrentToken({
+      token: startToken,
+      entity: entity || undefined,
+    });
   };
 
   const onTokenClick = (token: SpacyToken, entity: MaybeSpacyEntity = null) => {
