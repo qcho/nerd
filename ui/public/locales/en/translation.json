@@ -1,4 +1,5 @@
 {
+  "Error while retrieving workers": "Error while retrieving workers",
   "Reassignment from snapshot {{from}} to {{to}} sent to server.": "Reassignment from snapshot {{from}} to {{to}} sent to server.",
   "Can't reassign last worker for current": "Can't reassign last worker for current",
   "None": "None",

@@ -5,7 +5,7 @@ import { TableCell, Typography, Grid, IconButton, Tooltip } from '@material-ui/c
 import { useTranslation } from 'react-i18next';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import UpdateIcon from '@material-ui/icons/Update';
-import { moment, snapshotStatus, snapshotStatusToText } from '../helpers/utils';
+import { moment, snapshotStatus, snapshotStatusToText, SnapshotStatus } from '../helpers/utils';
 import { apiConfig } from '../helpers/api-config';
 
 interface Props {
@@ -35,6 +35,8 @@ const SnapshotRow = ({ snapshot, workers }: Props) => {
     }
   }
 
+  const status = snapshotStatus(snapshot);
+
   return (
     <>
       <TableCell>
@@ -47,7 +49,7 @@ const SnapshotRow = ({ snapshot, workers }: Props) => {
         <Typography>{(trained_at && moment(trained_at).fromNow()) || t('Never')}</Typography>
       </TableCell>
       <TableCell>
-        <Typography>{t(snapshotStatusToText(snapshotStatus(snapshot)))}</Typography>
+        <Typography>{t(snapshotStatusToText(status))}</Typography>
       </TableCell>
       <TableCell>
         <Typography>{workers[snapshotVersion] || t('None')}</Typography>
@@ -56,7 +58,12 @@ const SnapshotRow = ({ snapshot, workers }: Props) => {
         <Grid container alignContent="space-between">
           <Grid item>
             <Tooltip title={<Typography color="inherit">{t('Train')}</Typography>} placement="left">
-              <IconButton aria-label={t('Train')} onClick={onTrain} color="primary">
+              <IconButton
+                aria-label={t('Train')}
+                onClick={onTrain}
+                color="primary"
+                disabled={status == SnapshotStatus.TRAINING}
+              >
                 <UpdateIcon />
               </IconButton>
             </Tooltip>

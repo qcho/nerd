@@ -22,7 +22,7 @@ class CorpusTask(Task, ABC):
     def model(self) -> Model:
         global snapshot
         db_snapshot = Snapshot.objects.get(id=snapshot.id)
-        if db_snapshot.trained_at > snapshot.trained_at:
+        if db_snapshot.trained_at is not None and db_snapshot.trained_at > snapshot.trained_at:
             self._model = None
             snapshot = db_snapshot
         if self._model is None or snapshot.id != self._model.snapshot.id:
@@ -41,9 +41,9 @@ class IsTrainingError(Exception):
 @celery.task(base=CorpusTask)
 def train():
     global snapshot
-    db_snapshot = Snapshot.objects.get(id=snapshot)
+    db_snapshot = Snapshot.objects.get(id=snapshot.id)
     # TODO(QCHO): WTF is with this condition? Shouldn't it be greater?
-    if db_snapshot.trained_at < train.model.snapshot.trained_at:
+    if db_snapshot.trained_at is not None and db_snapshot.trained_at < train.model.snapshot.trained_at:
         # TODO(QCHO): we could restrict training if it was done x time ago
         return
     train.model: Model
@@ -82,13 +82,16 @@ def configure_workers(sender, instance, **kwargs):
             snapshot = Snapshot.from_string(queue)
             logger.info('Worker initialized for {}'.format(queue))
             return
-    logger.error('Error initializing worker! It should be listening to a vXXXX queue')
+    logger.error(
+        'Error initializing worker! It should be listening to a vXXXX queue')
 
 
 @celery.task(bind=True, base=CorpusTask)
 def change_snapshot(self, snapshot_code: str):
     global snapshot
     new_snapshot = Snapshot.from_string(snapshot_code)
-    celery.control.cancel_consumer(queue=str(snapshot), destination=[self.request.hostname])
+    celery.control.cancel_consumer(
+        queue=str(snapshot), destination=[self.request.hostname])
     snapshot = new_snapshot
-    celery.control.add_consumer(queue=str(new_snapshot), destination=[self.request.hostname])
+    celery.control.add_consumer(queue=str(new_snapshot), destination=[
+                                self.request.hostname])
