@@ -1,5 +1,13 @@
 {
+  "Reassignment from snapshot {{from}} to {{to}} sent to server.": "Reassignment from snapshot {{from}} to {{to}} sent to server.",
+  "Can't reassign last worker for current": "Can't reassign last worker for current",
+  "None": "None",
+  "Apply": "Apply",
+  "From": "From",
+  "to": "to",
   "Select a .txt file": "Select a .txt file",
+  "No available workers": "No available workers",
+  "Reassign worker": "Reassign worker",
   "Join with next >": "Join with next >",
   "< Join with previous": "< Join with previous",
   "Untrain": "Untrain",

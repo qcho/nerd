@@ -10,11 +10,13 @@ import { apiConfig } from '../helpers/api-config';
 
 interface Props {
   snapshot: Snapshot;
+  workers: { [key: string]: number };
 }
 
-const SnapshotRow = ({ snapshot }: Props) => {
+const SnapshotRow = ({ snapshot, workers }: Props) => {
   const [t] = useTranslation();
   const { id, trained_at, created_at } = snapshot;
+  const snapshotVersion = `v${snapshot.id == 0 ? 'CURRENT' : snapshot.id}`;
   const name = id === 0 ? t('Current') : `${id}`;
   const api = new SnapshotsApi(apiConfig());
 
@@ -46,6 +48,9 @@ const SnapshotRow = ({ snapshot }: Props) => {
       </TableCell>
       <TableCell>
         <Typography>{t(snapshotStatusToText(snapshotStatus(snapshot)))}</Typography>
+      </TableCell>
+      <TableCell>
+        <Typography>{workers[snapshotVersion] || t('None')}</Typography>
       </TableCell>
       <TableCell>
         <Grid container alignContent="space-between">

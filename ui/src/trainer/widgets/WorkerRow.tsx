@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Typography, TableCell } from '@material-ui/core';
-import { Worker, SnapshotsApi } from '../apigen';
+import { Worker, SnapshotsApi, WorkersApi } from '../apigen';
 import AsyncSelect from 'react-select/async';
 import { apiConfig } from '../helpers/api-config';
 

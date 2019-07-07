@@ -21,21 +21,41 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
- * @interface EntityList
+ * @interface ChangeSnapshot
  */
-export interface EntityList {
+export interface ChangeSnapshot {
     /**
      * 
      * @type {string}
-     * @memberof EntityList
+     * @memberof ChangeSnapshot
      */
-    text: string;
+    from_version: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ChangeSnapshot
+     */
+    to_version: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface EntityList
+ */
+export interface EntityList {
     /**
      * 
      * @type {Array<SpacyEntity2>}
      * @memberof EntityList
      */
     entities: Array<SpacyEntity2>;
+    /**
+     * 
+     * @type {string}
+     * @memberof EntityList
+     */
+    text: string;
     /**
      * 
      * @type {Snapshot}
@@ -97,7 +117,7 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    id?: string;
+    plain_password?: string;
     /**
      * 
      * @type {Array<string>}
@@ -109,7 +129,7 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    plain_password?: string;
+    id?: string;
     /**
      * 
      * @type {string}
@@ -146,16 +166,16 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
+     * @type {Date}
+     * @memberof Snapshot
+     */
+    created_at?: Date;
+    /**
+     * 
      * @type {number}
      * @memberof Snapshot
      */
     id: number;
-    /**
-     * 
-     * @type {Date}
-     * @memberof Snapshot
-     */
-    trained_at?: Date;
     /**
      * 
      * @type {number}
@@ -164,16 +184,16 @@ export interface Snapshot {
     semaphore?: number;
     /**
      * 
-     * @type {Date}
-     * @memberof Snapshot
-     */
-    created_at?: Date;
-    /**
-     * 
      * @type {{ [key: string]: Type; }}
      * @memberof Snapshot
      */
     types?: { [key: string]: Type; };
+    /**
+     * 
+     * @type {Date}
+     * @memberof Snapshot
+     */
+    trained_at?: Date;
 }
 
 /**
@@ -228,22 +248,10 @@ export interface SnapshotInfo {
 export interface SpacyDocument {
     /**
      * 
-     * @type {Date}
+     * @type {Array<SpacyEntity>}
      * @memberof SpacyDocument
      */
-    _created_at?: Date;
-    /**
-     * 
-     * @type {Array<SpacyToken>}
-     * @memberof SpacyDocument
-     */
-    tokens?: Array<SpacyToken>;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyDocument
-     */
-    text: string;
+    ents?: Array<SpacyEntity>;
     /**
      * 
      * @type {Array<SpacySentence>}
@@ -252,10 +260,22 @@ export interface SpacyDocument {
     sents?: Array<SpacySentence>;
     /**
      * 
-     * @type {Array<SpacyEntity>}
+     * @type {Array<SpacyToken>}
      * @memberof SpacyDocument
      */
-    ents?: Array<SpacyEntity>;
+    tokens?: Array<SpacyToken>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof SpacyDocument
+     */
+    _created_at?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyDocument
+     */
+    text: string;
 }
 
 /**
@@ -266,22 +286,10 @@ export interface SpacyDocument {
 export interface SpacyDocument1 {
     /**
      * 
-     * @type {Date}
+     * @type {Array<SpacyEntity1>}
      * @memberof SpacyDocument1
      */
-    _created_at?: Date;
-    /**
-     * 
-     * @type {Array<SpacyToken1>}
-     * @memberof SpacyDocument1
-     */
-    tokens?: Array<SpacyToken1>;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyDocument1
-     */
-    text: string;
+    ents?: Array<SpacyEntity1>;
     /**
      * 
      * @type {Array<SpacySentence1>}
@@ -290,10 +298,22 @@ export interface SpacyDocument1 {
     sents?: Array<SpacySentence1>;
     /**
      * 
-     * @type {Array<SpacyEntity1>}
+     * @type {Array<SpacyToken1>}
      * @memberof SpacyDocument1
      */
-    ents?: Array<SpacyEntity1>;
+    tokens?: Array<SpacyToken1>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof SpacyDocument1
+     */
+    _created_at?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyDocument1
+     */
+    text: string;
 }
 
 /**
@@ -304,10 +324,10 @@ export interface SpacyDocument1 {
 export interface SpacyEntity {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof SpacyEntity
      */
-    start: number;
+    label: string;
     /**
      * 
      * @type {number}
@@ -316,10 +336,10 @@ export interface SpacyEntity {
     end: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SpacyEntity
      */
-    label: string;
+    start: number;
 }
 
 /**
@@ -330,10 +350,10 @@ export interface SpacyEntity {
 export interface SpacyEntity1 {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof SpacyEntity1
      */
-    start: number;
+    label: string;
     /**
      * 
      * @type {number}
@@ -342,10 +362,10 @@ export interface SpacyEntity1 {
     end: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SpacyEntity1
      */
-    label: string;
+    start: number;
 }
 
 /**
@@ -356,10 +376,10 @@ export interface SpacyEntity1 {
 export interface SpacyEntity2 {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof SpacyEntity2
      */
-    start: number;
+    label: string;
     /**
      * 
      * @type {number}
@@ -368,10 +388,10 @@ export interface SpacyEntity2 {
     end: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SpacyEntity2
      */
-    label: string;
+    start: number;
 }
 
 /**
@@ -385,13 +405,13 @@ export interface SpacySentence {
      * @type {number}
      * @memberof SpacySentence
      */
-    start: number;
+    end: number;
     /**
      * 
      * @type {number}
      * @memberof SpacySentence
      */
-    end: number;
+    start: number;
 }
 
 /**
@@ -405,13 +425,13 @@ export interface SpacySentence1 {
      * @type {number}
      * @memberof SpacySentence1
      */
-    start: number;
+    end: number;
     /**
      * 
      * @type {number}
      * @memberof SpacySentence1
      */
-    end: number;
+    start: number;
 }
 
 /**
@@ -422,22 +442,10 @@ export interface SpacySentence1 {
 export interface SpacyToken {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    pos?: string;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyToken
      */
     id: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    head?: number;
     /**
      * 
      * @type {number}
@@ -450,6 +458,18 @@ export interface SpacyToken {
      * @memberof SpacyToken
      */
     dep?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
+    head?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    pos?: string;
     /**
      * 
      * @type {number}
@@ -472,22 +492,10 @@ export interface SpacyToken {
 export interface SpacyToken1 {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
-    pos?: string;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyToken1
      */
     id: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken1
-     */
-    head?: number;
     /**
      * 
      * @type {number}
@@ -500,6 +508,18 @@ export interface SpacyToken1 {
      * @memberof SpacyToken1
      */
     dep?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken1
+     */
+    head?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    pos?: string;
     /**
      * 
      * @type {number}
@@ -528,10 +548,10 @@ export interface Text {
     id?: string;
     /**
      * 
-     * @type {string}
+     * @type {Array<string>}
      * @memberof Text
      */
-    value: string;
+    trainings?: Array<string>;
     /**
      * 
      * @type {Date}
@@ -540,10 +560,10 @@ export interface Text {
     created_at?: Date;
     /**
      * 
-     * @type {Array<string>}
+     * @type {string}
      * @memberof Text
      */
-    trainings?: Array<string>;
+    value: string;
 }
 
 /**
@@ -600,16 +620,16 @@ export interface TopContributor {
 export interface TrainText {
     /**
      * 
-     * @type {string}
-     * @memberof TrainText
-     */
-    text_id: string;
-    /**
-     * 
      * @type {SpacyDocument1}
      * @memberof TrainText
      */
     spacy_document: SpacyDocument1;
+    /**
+     * 
+     * @type {string}
+     * @memberof TrainText
+     */
+    text_id: string;
     /**
      * 
      * @type {Snapshot}
@@ -626,22 +646,22 @@ export interface TrainText {
 export interface Training {
     /**
      * 
-     * @type {string}
-     * @memberof Training
-     */
-    id?: string;
-    /**
-     * 
      * @type {SpacyDocument}
      * @memberof Training
      */
     document: SpacyDocument;
     /**
      * 
+     * @type {Date}
+     * @memberof Training
+     */
+    created_at?: Date;
+    /**
+     * 
      * @type {string}
      * @memberof Training
      */
-    user_id: string;
+    id?: string;
     /**
      * 
      * @type {string}
@@ -650,10 +670,10 @@ export interface Training {
     text_id: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof Training
      */
-    created_at?: Date;
+    user_id: string;
 }
 
 /**
@@ -667,13 +687,13 @@ export interface Type {
      * @type {string}
      * @memberof Type
      */
-    color: string;
+    label: string;
     /**
      * 
      * @type {string}
      * @memberof Type
      */
-    label: string;
+    color: string;
 }
 
 /**
@@ -751,7 +771,7 @@ export interface UserPayload {
      * @type {string}
      * @memberof UserPayload
      */
-    id?: string;
+    plain_password?: string;
     /**
      * 
      * @type {Array<string>}
@@ -763,7 +783,7 @@ export interface UserPayload {
      * @type {string}
      * @memberof UserPayload
      */
-    plain_password?: string;
+    id?: string;
     /**
      * 
      * @type {string}
@@ -790,20 +810,6 @@ export interface ValueOnlyText {
      * @memberof ValueOnlyText
      */
     value: string;
-}
-
-/**
- * 
- * @export
- * @interface Version
- */
-export interface Version {
-    /**
-     * 
-     * @type {string}
-     * @memberof Version
-     */
-    version: string;
 }
 
 /**
@@ -3549,22 +3555,16 @@ export const WorkersApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @param {string} worker_name 
-         * @param {Version} version 
+         * @param {ChangeSnapshot} change_snapshot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateWorkerSnapshot(worker_name: string, version: Version, options: any = {}): RequestArgs {
-            // verify required parameter 'worker_name' is not null or undefined
-            if (worker_name === null || worker_name === undefined) {
-                throw new RequiredError('worker_name','Required parameter worker_name was null or undefined when calling updateWorkerSnapshot.');
+        reassignWorker(change_snapshot: ChangeSnapshot, options: any = {}): RequestArgs {
+            // verify required parameter 'change_snapshot' is not null or undefined
+            if (change_snapshot === null || change_snapshot === undefined) {
+                throw new RequiredError('change_snapshot','Required parameter change_snapshot was null or undefined when calling reassignWorker.');
             }
-            // verify required parameter 'version' is not null or undefined
-            if (version === null || version === undefined) {
-                throw new RequiredError('version','Required parameter version was null or undefined when calling updateWorkerSnapshot.');
-            }
-            const localVarPath = `/api/workers/{worker_name}`
-                .replace(`{${"worker_name"}}`, encodeURIComponent(String(worker_name)));
+            const localVarPath = `/api/workers/reassign`;
             const localVarUrlObj = url.parse(localVarPath, true);
             let baseOptions;
             if (configuration) {
@@ -3581,8 +3581,8 @@ export const WorkersApiAxiosParamCreator = function (configuration?: Configurati
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
-            const needsSerialization = (<any>"Version" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(version !== undefined ? version : {}) : (version || "");
+            const needsSerialization = (<any>"ChangeSnapshot" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(change_snapshot !== undefined ? change_snapshot : {}) : (change_snapshot || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -3612,13 +3612,12 @@ export const WorkersApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} worker_name 
-         * @param {Version} version 
+         * @param {ChangeSnapshot} change_snapshot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateWorkerSnapshot(worker_name: string, version: Version, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
-            const localVarAxiosArgs = WorkersApiAxiosParamCreator(configuration).updateWorkerSnapshot(worker_name, version, options);
+        reassignWorker(change_snapshot: ChangeSnapshot, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = WorkersApiAxiosParamCreator(configuration).reassignWorker(change_snapshot, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -3643,13 +3642,12 @@ export const WorkersApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
-         * @param {string} worker_name 
-         * @param {Version} version 
+         * @param {ChangeSnapshot} change_snapshot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateWorkerSnapshot(worker_name: string, version: Version, options?: any) {
-            return WorkersApiFp(configuration).updateWorkerSnapshot(worker_name, version, options)(axios, basePath);
+        reassignWorker(change_snapshot: ChangeSnapshot, options?: any) {
+            return WorkersApiFp(configuration).reassignWorker(change_snapshot, options)(axios, basePath);
         },
     };
 };
@@ -3673,14 +3671,13 @@ export class WorkersApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} worker_name 
-     * @param {Version} version 
+     * @param {ChangeSnapshot} change_snapshot 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof WorkersApi
      */
-    public updateWorkerSnapshot(worker_name: string, version: Version, options?: any) {
-        return WorkersApiFp(this.configuration).updateWorkerSnapshot(worker_name, version, options)(this.axios, this.basePath);
+    public reassignWorker(change_snapshot: ChangeSnapshot, options?: any) {
+        return WorkersApiFp(this.configuration).reassignWorker(change_snapshot, options)(this.axios, this.basePath);
     }
 
 }

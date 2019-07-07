@@ -165,7 +165,7 @@ const ManageSnapshot = () => {
           onClose={() => setCurrentType(null)}
         />
       )}
-      {/* {typesToDelete.length > 0 && (
+      {/* TODO: {typesToDelete.length > 0 && (
         <ConfirmActionDialog
           title={t('Delete type?')}
           content={

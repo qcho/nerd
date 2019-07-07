@@ -1,7 +1,7 @@
 class Http {
   public static handleRequestError(error: any, onResponseReceived: (status: number, data: any) => string) {
     const serverUnreachable = "Couldn't reach the server";
-    const serverError = 'Server error';
+    const serverError = 'There was a server error while processing a request';
     if (error.response) {
       const { status, data } = error.response;
       if (status == 504) {
