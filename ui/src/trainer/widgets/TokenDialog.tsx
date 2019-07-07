@@ -1,7 +1,39 @@
 import React, { useState } from 'react';
-import { MenuItem, DialogContent, Select, Divider, Button } from '@material-ui/core';
+import { MenuItem, DialogContent, Divider, Typography, Theme, Button } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { Type } from '../apigen';
+import { makeStyles } from '@material-ui/styles';
+
+interface ActionWidgetProps {
+  selected?: boolean;
+  key?: string | number;
+  value?: string | number | string[];
+  onClick: () => void;
+  label: string;
+  color?: 'default' | 'secondary';
+  style?: React.CSSProperties;
+  variant?: 'outlined' | 'raised';
+}
+
+const useActionStyles = makeStyles(
+  (theme: Theme) => ({
+    action: {
+      fontSize: '1.5em',
+    },
+  }),
+  { withTheme: true },
+);
+
+const ActionWidget = ({ onClick, label, color, style, key, variant }: ActionWidgetProps) => {
+  const classes = useActionStyles();
+  return (
+    <Button key={key} onClick={onClick} variant={variant} color={color}>
+      <Typography className={classes.action} style={style} color="inherit">
+        {label}
+      </Typography>
+    </Button>
+  );
+};
 
 interface Props {
   value: string;
@@ -13,11 +45,6 @@ interface Props {
   typeOptions: { [key: string]: Type };
 }
 
-const joinLeftAction = 'action-join-left';
-const joinRightAction = 'action-join-Right';
-const removeAction = 'action-remove';
-const deleteAction = 'action-delete';
-
 const TokenDialog = ({
   value,
   typeOptions,
@@ -28,75 +55,33 @@ const TokenDialog = ({
   onRemove = null,
 }: Props) => {
   const [t] = useTranslation();
-  const [open, setOpen] = useState<boolean>(true);
-  const actions = [
-    onJoinLeft && (
-      <MenuItem key={joinLeftAction} value={joinLeftAction}>
-        {t('< Join')}
-      </MenuItem>
-    ),
-    onJoinRight && (
-      <MenuItem key={joinRightAction} value={joinRightAction}>
-        {t('Join >')}
-      </MenuItem>
-    ),
-    onRemove && (
-      <MenuItem key={removeAction} value={removeAction}>
-        {t('Remove')}
-      </MenuItem>
-    ),
-    onDelete && (
-      <MenuItem key={deleteAction} value={deleteAction}>
-        {t('Delete')}
-      </MenuItem>
-    ),
-  ].filter(value => value);
+
   const options = Object.keys(typeOptions).map((code: string) => (
-    <MenuItem key={code} value={code}>
-      {<span style={{ color: typeOptions[code].color }}>{typeOptions[code].label}</span>}
-    </MenuItem>
+    <ActionWidget
+      key={code}
+      value={code}
+      onClick={() => onTypeChange(code)}
+      selected={code == value}
+      style={{ color: typeOptions[code].color }}
+      label={typeOptions[code].label}
+      variant={value == code ? 'outlined' : undefined}
+    />
   ));
-
-  const selectWidgets = [...options, actions.length > 0 && <Divider key="divider" />, ...actions];
-
-  const onSelect = (value: string) => {
-    if (value == joinRightAction && onJoinRight) {
-      onJoinRight();
-      return;
-    }
-    if (value == joinLeftAction && onJoinLeft) {
-      onJoinLeft();
-      return;
-    }
-    if (value == deleteAction && onDelete) {
-      onDelete();
-      return;
-    }
-    if (value == removeAction && onRemove) {
-      onRemove();
-      return;
-    }
-    if (onTypeChange) {
-      onTypeChange(value);
-    }
-  };
 
   return (
     <DialogContent>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
-          <Select
-            onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)}
-            open={open}
-            value={value || 'MISC'}
-            onChange={(event: any) => onSelect(event.target.value)}
-          >
-            {selectWidgets}
-          </Select>
-          <Button style={{ marginLeft: '1em' }} color="secondary" onClick={() => onDelete()}>
-            Remove
-          </Button>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', flexDirection: 'row' }}>{options}</div>
+          <Divider style={{ marginTop: '0.5em', marginBottom: '0.5em' }} />
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            {onJoinLeft && <ActionWidget onClick={onJoinLeft} label={t('< Join with previous')} />}
+            {onJoinRight && <ActionWidget onClick={onJoinRight} label={t('Join with next >')} />}
+          </div>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', marginLeft: '2em' }}>
+          {onRemove && <ActionWidget onClick={onRemove} label={t('Remove')} color="secondary" />}
+          {onDelete && <ActionWidget onClick={onDelete} label={t('Delete')} color="secondary" variant="raised" />}
         </div>
       </div>
     </DialogContent>
