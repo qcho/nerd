@@ -96,7 +96,7 @@ class TrainingView(MethodView):
 
 
 @blp.route("/upload")
-class UploadCsvResource(MethodView):
+class UploadFileResource(MethodView):
     """Upload text file"""
 
     @jwt_and_role_required(Role.ADMIN)
