@@ -155,7 +155,7 @@ const Train = () => {
                       variant="h6"
                       id="tableTitle"
                     >
-                      {t(hasChanges ? 'SAVE' : 'SKIP')}
+                      {t('ACCEPT')}
                     </Typography>
                   </Button>
                 </div>
