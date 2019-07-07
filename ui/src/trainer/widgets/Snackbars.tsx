@@ -81,6 +81,6 @@ const SnackbarBuilder = (variant: SnackbarVariant, showTime: number = 2000) => {
 
 const SuccessSnackbar = SnackbarBuilder('success');
 const WarningSnackbar = SnackbarBuilder('warning', 5000);
-const ErrorSnackbar = SnackbarBuilder('error');
+const ErrorSnackbar = SnackbarBuilder('error', 100000);
 
 export { ErrorSnackbar, SuccessSnackbar, WarningSnackbar };
