@@ -1,6 +1,8 @@
 {
-  "Untrain": "Untrain",
   "Select a .txt file": "Select a .txt file",
+  "Join with next >": "Join with next >",
+  "< Join with previous": "< Join with previous",
+  "Untrain": "Untrain",
   "Workers": "Workers",
   "Snapshot": "Snapshot",
   "Uploading": "Uploading",
