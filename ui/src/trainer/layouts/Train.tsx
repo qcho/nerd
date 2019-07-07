@@ -8,6 +8,8 @@ import { MaybeTrainText, MaybeSpacyDocument } from '../types/optionals';
 import TokenizedEditor from '../widgets/TokenizedEditor';
 import { clone } from '../helpers/utils';
 import { Scaffold } from '../widgets/Scaffold';
+import { ErrorSnackbar } from '../widgets/Snackbars';
+import Http from '../helpers/http';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -59,6 +61,7 @@ const Train = () => {
   const [trainText, setTrainText] = useState<MaybeTrainText>(null);
   const [spacyDocument, setSpacyDocument] = useState<MaybeSpacyDocument>(null);
   const [noMoreDocuments, setNoMoreDocuments] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const api = new CorpusApi(apiConfig());
   let unmounted = false;
 
@@ -83,6 +86,11 @@ const Train = () => {
       if (unmounted) return;
       setTrainText(null);
       setSpacyDocument(null);
+      setErrorMessage(
+        Http.handleRequestError(e, (status, data) => {
+          return t('There was an error while retrieving a text to train.');
+        }),
+      );
     }
 
     setHasChanges(false);
@@ -160,6 +168,7 @@ const Train = () => {
             />
           </Paper>
         )}
+        <ErrorSnackbar message={errorMessage} onClose={() => setErrorMessage('')} />
       </div>
     </Scaffold>
   );
