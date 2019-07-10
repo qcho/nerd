@@ -7,7 +7,7 @@ from celery import Task
 from celery.signals import celeryd_after_setup
 from celery.utils.log import get_task_logger
 
-from nerd.core.document.snapshot import Snapshot, SnapshotSchema
+from nerd.core.document.snapshot import Snapshot
 from nerd.core.model import Model
 from nerd.tasks import celery
 
@@ -42,9 +42,7 @@ class IsTrainingError(Exception):
 def train():
     global snapshot
     db_snapshot = Snapshot.objects.get(id=snapshot.id)
-    # TODO(QCHO): WTF is with this condition? Shouldn't it be greater?
     if db_snapshot.trained_at is not None and db_snapshot.trained_at < train.model.snapshot.trained_at:
-        # TODO(QCHO): we could restrict training if it was done x time ago
         return
     train.model: Model
     train.model.train()

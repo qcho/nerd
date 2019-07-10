@@ -1,5 +1,4 @@
 version: "3.7"
-
 services:
   nginx:
     image: bitnami/nginx:1.16
@@ -12,7 +11,6 @@ services:
     volumes:
       - ./ui/build:/app
       - ./docker/nginx/nerd.conf:/opt/bitnami/nginx/conf/server_blocks/nerd.conf:ro
-
   mongodb:
     image: bitnami/mongodb:4.0
     restart: on-failure
@@ -23,7 +21,6 @@ services:
       - .env
     volumes:
       - mongodb-data:/bitnami
-
   rabbitmq:
     image: bitnami/rabbitmq:3.7
     restart: on-failure
@@ -32,7 +29,6 @@ services:
     tty: true
     env_file:
       - .env
-
   app: &app
     image: nerd/app:latest
     build:
@@ -49,18 +45,15 @@ services:
       - mongodb
       - rabbitmq
     command: ["web"]
-
   worker:
     <<: *app
     depends_on:
       - app
     command: ["worker", "vCURRENT"]
-
   flower:
     <<: *app
     depends_on:
       - app
     command: ["flower"]
-
 volumes:
   mongodb-data:

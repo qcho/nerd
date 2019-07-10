@@ -1,14 +1,13 @@
 from flask.views import MethodView
 from flask_rest_api import Blueprint
 from nerd.tasks import celery
-from nerd.tasks.corpus import reload as reload_task, change_snapshot as change_snapshot_task
+from nerd.tasks.corpus import change_snapshot as change_snapshot_task
 from marshmallow import Schema, fields
 from werkzeug.exceptions import Forbidden
-from nerd.apis import jwt_and_role_required, response_error, BaseSchema
+from nerd.apis import jwt_and_role_required, response_error
 from nerd.core.document.user import Role
 
 from nerd.core.util import get_logger
-from nerd.apis.schemas import VersionSchema
 
 blp = Blueprint('workers', 'workers', description='Worker management')
 logger = get_logger(__name__)
@@ -41,7 +40,6 @@ def get_worker_snapshots():
     return [{'name': key, "snapshot": get_current_snapshot(key)} for key, value in workers.items() or []]
 
 
-# TODO: Uncomment @jwt_and_role_required(Role.ADMIN)
 @blp.route('/')
 class Workers(MethodView):
 

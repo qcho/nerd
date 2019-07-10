@@ -12,8 +12,6 @@ def add_headlines(headlines):
     added = 0
     for text in texts:
         try:
-            # TODO: Can't use bulk-insert since continue_on_error isn't supported yet:
-            #           Text.objects.insert(texts)
             text.save()
             added = added + 1
         except NotUniqueError:

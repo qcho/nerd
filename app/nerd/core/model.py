@@ -52,7 +52,6 @@ class Model:
         for training in Training.objects.filter(created_at__lte=self.snapshot.created_at):
             training.document: SpacyDocument
             entities = [(ent.start, ent.end, ent.label) for ent in training.document.ents]
-            # if len(entities) > 0: # TODO: should we yield only texts with entities?
             yield training.document.text, {'entities': entities}
 
     def _train_snapshot_texts(self, n_iter: int = 30):
@@ -78,7 +77,6 @@ class Model:
                 print("Losses", losses)
 
     def train(self):
-        # TODO: we should make it so that locked workers due to training should only reload recently trained model
         with self.snapshot.training_lock():
             with log_perf(f'{self.snapshot} TRAINING'):
                 self._nlp = spacy.load(os.environ.get('NERD_SPACY_MODEL'))

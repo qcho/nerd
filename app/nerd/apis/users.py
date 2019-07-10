@@ -201,7 +201,6 @@ class UserView(MethodView):
         try:
             result = UserPayloadSchema().update(
                 User.objects.get(email=user_email),
-                # TODO: update only accepts JSON objects and doesn't accept Documents
                 json.loads(user_payload.to_json())
             )
             if result.errors:

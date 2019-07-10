@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from celery import chain
 from flask.views import MethodView
 from flask_rest_api import Blueprint
 from flask_rest_api.pagination import PaginationParameters
@@ -12,9 +13,9 @@ from nerd.core.document.corpus import Text, Training
 from nerd.core.document.snapshot import CURRENT_ID, Snapshot, SnapshotSchema
 from nerd.core.document.user import Role
 from werkzeug.exceptions import Forbidden
-from nerd.tasks.corpus import train as train_task
-from nerd.tasks.corpus import un_train as un_train_task
-from nerd.apis.schemas import VersionSchema
+
+from nerd.core.model import Model
+from nerd.tasks import corpus as corpus_tasks
 
 blp = Blueprint("snapshots", "snapshots",
                 description="Corpus snapshot operations")
@@ -43,10 +44,7 @@ class IndexResource(MethodView):
     @blp.doc(operationId="listCorpusSnapshots")
     @blp.paginate()
     def get(self, pagination_parameters: PaginationParameters):
-        """List available snapshots
-        """
-        # TODO(Qcho): It would be great to have a way to get worker status with information such as:
-        #               - What's the status of that worker (loading/training/online/offline/etc.)
+        """List available snapshots"""
         snapshots = Snapshot.objects
         pagination_parameters.item_count = snapshots.count()
         skip_elements = (pagination_parameters.page - 1) * \
@@ -62,8 +60,6 @@ def snapshot_info(snapshot_id):
     trained = Training.objects()
     available = Training.objects() if is_current else Training.objects(
         created_at__lte=snapshot.created_at)
-    # TODO: Not sure if distinct brings all of the documents to memory.
-    #   We may need a better way of doing this if so.
     trained_texts = len(trained.distinct(field="text_id"))
     available_trainings = len(available.distinct(field="text_id"))
     return dict(
@@ -96,9 +92,18 @@ class SnapshotResource(MethodView):
     def delete(self, snapshot_id: int):
         try:
             snapshot = Snapshot.objects.get(id=snapshot_id)
+            model = Model(snapshot=snapshot)
+            model.un_train()
             #  TODO: We need to stop the related worker (if there's one)
-            #        And remove everything from the hard drive
+            #        And remove everything from the hard drive.
+            #   - un train model
+            #   - move workers to vCurrent
+            #   ALL ASYNC
             snapshot.delete()
+
+            chain(
+                corpus_tasks.un_train.s(snapshot_id)
+            ).apply_async().wait()
             return snapshot
         except (ValidationError, DoesNotExist):
             raise NotFound()
@@ -108,11 +113,11 @@ class SnapshotResource(MethodView):
 class ForceTrainingResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(None)  # TODO: Document response
+    @blp.response(code=204)
     @blp.doc(operationId="forceTrain")
     def post(self, snapshot_id: int):
         snapshot = Snapshot.objects.get(id=snapshot_id)
-        train_task.apply_async(queue=str(snapshot))
+        corpus_tasks.train.apply_async(queue=str(snapshot))
         return "", 204
 
 
@@ -120,13 +125,13 @@ class ForceTrainingResource(MethodView):
 class ForceUntrainResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(None)  # TODO: Document response
+    @blp.response(code=204)
     @response_error(Forbidden("Can't untrain current snapshot"))
     @blp.doc(operationId="forceUntrain")
     def post(self, snapshot_id: int):
         if snapshot_id == CURRENT_ID:
             raise Forbidden("Can't untrain current snapshot")
-        un_train_task(snapshot_id).apply_async()
+        corpus_tasks.un_train.apply_async([snapshot_id])
         return "", 204
 
 

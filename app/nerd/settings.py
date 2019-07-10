@@ -39,7 +39,7 @@ class BaseConfig(object):
             'securitySchemes': {
                 'oAuth2Password': {
                     'type': 'oauth2',
-                    'description': 'Some documentation',  # TODO: Complete this
+                    'description': 'Oauth endpoint',
                     'flows': {
                         'password': {
                             'tokenUrl': '/api/auth/token',

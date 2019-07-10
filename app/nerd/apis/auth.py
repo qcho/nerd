@@ -70,7 +70,7 @@ class TokenResource(MethodView):
             item['username'] = item['username'].lower().strip()
             return item
 
-    # TODO: Because SWAGGER-UI password-flow doesn't follow the oauth2 RFC it needs location='form' for it to work.
+    # FIXME: Because SWAGGER-UI password-flow doesn't follow the oauth2 RFC it needs location='form' for it to work.
     #       Rewrite is being discussed in https://github.com/swagger-api/swagger-ui/issues/3227
     #       https://www.oauth.com/oauth2-servers/access-tokens/password-grant/
     # @blp.arguments(TokenSchema, location='form')

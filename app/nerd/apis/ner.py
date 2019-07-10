@@ -26,7 +26,6 @@ def parse_text(snapshot_id, text: str):
 class NerParserResource(MethodView):
     @jwt_and_role_required(Role.USER)
     @blp.doc(operationId="currentSnapshotTextParse")
-    # @response_error(NotFound("Could not ner")) TODO: Find out what to return here
     @blp.arguments(RawText)
     @blp.response(TrainTextSchema, code=200, description="Ner")
     def post(self, raw_text: RawText):
@@ -41,7 +40,6 @@ class NerParserResource(MethodView):
     @blp.arguments(RawText)
     @blp.response(TrainTextSchema, code=200, description="Ner")
     def post(self, raw_text: RawText, snapshot_id: int):
-        # TODO: Error handling
         snapshot, document = parse_text(snapshot_id, raw_text['text'])
         return {'text_id': None, 'snapshot': snapshot, 'spacy_document': document}
 
@@ -50,7 +48,6 @@ class NerParserResource(MethodView):
 class NerEntitiesResource(MethodView):
     @jwt_and_role_required(Role.USER)
     @blp.doc(operationId="currentSnapshotTextEntities")
-    # @response_error(NotFound("Could not ner")) TODO: Find out what to return here
     @blp.arguments(RawText)
     @blp.response(EntityListSchema, code=200, description="Ner")
     def post(self, raw_text: RawText):
@@ -65,6 +62,5 @@ class NerEntitiesResource(MethodView):
     @blp.arguments(RawText)
     @blp.response(EntityListSchema, code=200, description="Ner")
     def post(self, raw_text: RawText, snapshot_id: int):
-        # TODO: Error handling
         snapshot, document = parse_text(snapshot_id, raw_text['text'])
         return {'text': raw_text, 'entities': document['ents'], 'snapshot': snapshot}

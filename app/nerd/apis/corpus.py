@@ -210,8 +210,5 @@ class IndexResource(MethodView):
     @blp.arguments(ValueOnlyTextSchema)
     @blp.response(TextSchema, code=200, description="Ok")
     def post(self, payload: ValueOnlyTextSchema):
-        # TODO: We should avoid adding equal texts
-        text = Text(
-            value=payload.value,
-        ).save()
+        text = Text(value=payload.value.strip()).save()
         return text
