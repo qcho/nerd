@@ -17,7 +17,7 @@ class RegisterSchema(ModelSchema):
     class Meta:
         strict = True
         model = User
-        exclude = ['roles', 'password']
+        exclude = ['id', 'roles', 'password', 'trainings']
 
     @post_load
     def sanitize_fields(self, item):
@@ -54,7 +54,6 @@ class RegisterResource(MethodView):
         """
         if User.objects(email=register_payload.email):
             raise Conflict('Email exists')
-
         return UserCredentialsSchema.create(register_payload.save())
 
 

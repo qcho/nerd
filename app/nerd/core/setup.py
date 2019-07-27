@@ -1,6 +1,6 @@
 from nerd.core.document.corpus import Text, Training
 from nerd.core.document.snapshot import Snapshot, Type, CURRENT_ID
-from nerd.core.document.user import User
+from nerd.core.document.user import User, Role
 from nerd.core.model import Model
 
 
@@ -13,7 +13,7 @@ class NERdSetup:
             name='Admin',
             email='admin@example.com',
             plain_password='1',
-            roles=['user', 'admin']
+            roles=map(lambda role: role.value, [Role.USER, Role.TRAINER, Role.ADMIN])
         ).save()
 
         if drop:
@@ -55,6 +55,5 @@ class NERdSetup:
             User(
                 name=fake.name(),
                 email=fake.safe_email(),
-                plain_password='1',
-                roles=['user']
+                plain_password='1'
             ).save()

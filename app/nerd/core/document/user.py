@@ -10,13 +10,14 @@ from nerd.core.document.corpus import Training
 class Role(Enum):
     ADMIN = 'admin'
     USER = 'user'
+    TRAINER = 'trainer'
 
 
 class User(me.Document):
     email = me.EmailField(unique=True, required=True)
     name = me.StringField(required=True)
     password = me.StringField(required=True)
-    roles = me.ListField(me.StringField(), required=True)
+    roles = me.ListField(me.StringField(), required=True, default=[Role.USER.value])
     plain_password = me.StringField(default=None)
     trainings = me.ListField(me.LazyReferenceField(Training))
 

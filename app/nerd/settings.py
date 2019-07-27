@@ -45,7 +45,8 @@ class BaseConfig(object):
                             'tokenUrl': '/api/auth/token',
                             'refreshUrl': '/api/auth/refresh',
                             'scopes': {
-                                Role.USER.value: 'User can perform queries and training',
+                                Role.USER.value: 'User can perform queries',
+                                Role.TRAINER.value: 'User can perform training',
                                 Role.ADMIN.value: 'Admin user'
                             }
                         }

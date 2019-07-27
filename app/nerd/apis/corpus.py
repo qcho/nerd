@@ -75,7 +75,7 @@ class TrainingView(MethodView):
             pagination_parameters.page_size
         return trainings.skip(skip_elements).limit(pagination_parameters.page_size)
 
-    @jwt_and_role_required(Role.USER)
+    @jwt_and_role_required(Role.TRAINER)
     @blp.arguments(SpacyDocumentSchema)
     @blp.doc(operationId="addTextTraining")
     @blp.response(code=200)
@@ -127,7 +127,7 @@ class UploadFileResource(MethodView):
 class TrainResource(MethodView):
     """Returns a random text"""
 
-    @jwt_and_role_required(Role.USER)
+    @jwt_and_role_required(Role.TRAINER)
     @blp.doc(operationId="trainNew", responses={
         '204': {'description': "No documents left to train"}
     })
