@@ -9,7 +9,7 @@ import Register from './auth/Register';
 import Loading from './widgets/Loading';
 import FourOhFour from './layouts/FourOhFour';
 import CorpusManagement from './layouts/CorpusManagement';
-import useAuthentication from './hooks/useAuthentication';
+import { useAuthentication } from './hooks/useAuthentication';
 import UserManagement from './layouts/UserManagement';
 import { MyTrainings } from './layouts/MyTrainings';
 import { UserTrainings } from './layouts/UserTrainings';

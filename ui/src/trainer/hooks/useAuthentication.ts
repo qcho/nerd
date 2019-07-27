@@ -91,4 +91,4 @@ function useAuthentication() {
   };
 }
 
-export default useAuthentication;
+export { useAuthentication };

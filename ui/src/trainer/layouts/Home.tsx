@@ -3,7 +3,7 @@ import { Theme, Grid, Card, CardContent, CardHeader, Typography, CardActions, Bu
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
-import useAuthentication from '../hooks/useAuthentication';
+import { useAuthentication } from '../hooks/useAuthentication';
 import { Routes } from '../helpers/routeHelper';
 import { TopContributors } from '../widgets/TopContributors';
 import { Scaffold } from '../widgets/Scaffold';

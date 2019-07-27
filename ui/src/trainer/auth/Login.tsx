@@ -12,7 +12,7 @@ import {
   InputLabel,
   Input,
 } from '@material-ui/core';
-import useAuthentication from '../hooks/useAuthentication';
+import { useAuthentication } from '../hooks/useAuthentication';
 import { Redirect } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import authStyles from './styles';

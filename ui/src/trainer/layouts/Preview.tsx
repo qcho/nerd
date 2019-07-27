@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { withStyles, Theme, createStyles, Grid, TextField, Button, Divider } from '@material-ui/core';
-import useAuthentication from '../hooks/useAuthentication';
+import { useAuthentication } from '../hooks/useAuthentication';
 import { useTranslation } from 'react-i18next';
 import { MaybeSpacyDocument } from '../types/optionals';
 import { SpacyDocument, Type, NerApi, CorpusApi } from '../apigen';
