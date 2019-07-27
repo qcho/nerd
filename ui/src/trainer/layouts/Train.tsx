@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { CorpusApi, SpacyDocument } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
 import { MaybeTrainText, MaybeSpacyDocument } from '../types/optionals';
-import TokenizedEditor from '../widgets/TokenizedEditor';
+import { TokenizedEditor } from '../widgets/TokenizedEditor';
 import { clone } from '../helpers/utils';
 import { Scaffold } from '../widgets/Scaffold';
 import { ErrorSnackbar } from '../widgets/Snackbars';

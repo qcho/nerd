@@ -4,7 +4,7 @@ import useAuthentication from '../hooks/useAuthentication';
 import { useTranslation } from 'react-i18next';
 import { MaybeSpacyDocument } from '../types/optionals';
 import { SpacyDocument, Type, NerApi, CorpusApi } from '../apigen';
-import TokenizedEditor from '../widgets/TokenizedEditor';
+import { TokenizedEditor } from '../widgets/TokenizedEditor';
 import Http from '../helpers/http';
 import { Scaffold } from '../widgets/Scaffold';
 import { apiConfig } from '../helpers/api-config';

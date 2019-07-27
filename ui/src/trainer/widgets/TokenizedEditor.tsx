@@ -258,4 +258,4 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, 
   );
 };
 
-export default TokenizedEditor;
+export { TokenizedEditor };

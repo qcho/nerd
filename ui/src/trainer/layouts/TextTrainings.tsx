@@ -7,7 +7,7 @@ import { Paper, Theme, CircularProgress, TableCell, Typography } from '@material
 import { makeStyles } from '@material-ui/styles';
 import { MaybeSnapshot, MaybeText } from '../types/optionals';
 import { useTranslation } from 'react-i18next';
-import TokenizedEditor from '../widgets/TokenizedEditor';
+import { TokenizedEditor } from '../widgets/TokenizedEditor';
 import { Scaffold } from '../widgets/Scaffold';
 
 const useStyles = makeStyles(
