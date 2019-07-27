@@ -6,37 +6,37 @@ import useCurrentSnapshot from '../hooks/useCurrentSnapshot';
 import { Type } from '../apigen';
 import { TypeAvatar } from '../widgets/TypeAvatar';
 import { TypeUpsertDialog } from '../widgets/TypeUpsertDialog';
-import { CompleteType, MaybeCompleteType } from '../types/CompleteType';
+import { EntityType, MaybeEntityType } from '../types/EntityType';
 
 const ManageSnapshot = () => {
   const [t] = useTranslation();
   const { currentSnapshot, loading, error, createSnapshot, updateCurrentSnapshot } = useCurrentSnapshot();
-  const [currentType, setCurrentType] = useState<MaybeCompleteType>(null);
-  const [typesToAdd, setTypesToAdd] = useState<CompleteType[]>([]);
-  const [typesToDelete, setTypesToDelete] = useState<CompleteType[]>([]);
+  const [currentType, setCurrentType] = useState<MaybeEntityType>(null);
+  const [typesToAdd, setTypesToAdd] = useState<EntityType[]>([]);
+  const [typesToDelete, setTypesToDelete] = useState<EntityType[]>([]);
 
   function mapTypesToChips(
-    types: CompleteType[],
-    onDelete?: (type: CompleteType) => void,
-    onClick?: (type: CompleteType) => void,
+    types: EntityType[],
+    onDelete?: (type: EntityType) => void,
+    onClick?: (type: EntityType) => void,
   ) {
-    return types.map(completeType => {
-      const { type, code } = completeType;
+    return types.map(entityType => {
+      const { type, code } = entityType;
       return (
         <Chip
-          onClick={(onClick && (() => onClick(completeType))) || undefined}
+          onClick={(onClick && (() => onClick(entityType))) || undefined}
           style={{ marginRight: '1em', marginTop: '0.3em', marginBottom: '0.2em' }}
           key={code}
           avatar={<TypeAvatar code={code} color={type.color} />}
           label={<Typography>{type.label}</Typography>}
           variant="outlined"
-          onDelete={(onDelete && (() => onDelete(completeType))) || undefined}
+          onDelete={(onDelete && (() => onDelete(entityType))) || undefined}
         />
       );
     });
   }
 
-  function onTypeDeleteClick(type: CompleteType) {
+  function onTypeDeleteClick(type: EntityType) {
     typesToDelete.push(type);
     setTypesToDelete([...typesToDelete]);
   }
@@ -46,7 +46,7 @@ const ManageSnapshot = () => {
     setTypesToDelete([]);
   }
 
-  async function onTypeUpsert(type: CompleteType, original: MaybeCompleteType) {
+  async function onTypeUpsert(type: EntityType, original: MaybeEntityType) {
     if (!currentSnapshot) return;
     if (original) {
       typesToDelete.push(original);
@@ -68,7 +68,7 @@ const ManageSnapshot = () => {
     location.reload();
   }
 
-  function onTypeClick(type: CompleteType) {
+  function onTypeClick(type: EntityType) {
     setCurrentType(type);
   }
 
@@ -81,19 +81,19 @@ const ManageSnapshot = () => {
   }
 
   function mapSnapshotTypes(types: { [key: string]: Type }, onDelete: any, onClick: any) {
-    const completeTypes = typesToArray(types);
+    const entityTypes = typesToArray(types);
     return mapTypesToChips(
-      completeTypes.filter(type => typesToDelete.findIndex(it => it.code == type.code) < 0),
+      entityTypes.filter(type => typesToDelete.findIndex(it => it.code == type.code) < 0),
       onDelete,
       onClick,
     );
   }
 
-  function onCancelDelete(type: CompleteType) {
+  function onCancelDelete(type: EntityType) {
     setTypesToDelete(typesToDelete.filter(it => it.code != type.code));
   }
 
-  function onCancelAdd(type: CompleteType) {
+  function onCancelAdd(type: EntityType) {
     setTypesToAdd(typesToAdd.filter(it => it.code != type.code));
   }
 
