@@ -34,7 +34,7 @@ main() {
             exec flask setup $@
             return;;
         *)
-            exec $@
+            exec $1 $@
             return;;
     esac
 }
