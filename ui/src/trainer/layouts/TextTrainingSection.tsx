@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import React, { useState, useMemo, useCallback } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Title } from '../widgets/Title';
+import { Title, Subtitle } from '../widgets/Title';
 import { Grid, Typography, Button } from '@material-ui/core';
 import useCurrentSnapshot from '../hooks/useCurrentSnapshot';
 import { Link } from 'react-router-dom';
 import { Routes } from '../helpers/routeHelper';
 import { TrainingStatus } from '../widgets/TrainingStatus';
-
-const Subtitle = (props: any) => <Typography variant="subtitle1">{props.children}</Typography>;
 
 const SubSection = ({ title, children }: { title: string; children?: React.ReactNode }) => (
   <Grid item>

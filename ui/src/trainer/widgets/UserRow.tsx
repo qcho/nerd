@@ -93,18 +93,18 @@ const UserRow = ({ user, availableRoles: roles }: Props) => {
   return (
     <>
       <TableCell>
-        <Typography>{user.name}</Typography>
+        <Typography>
+          <Link component={(props: any) => <RRDLink to={Routes.userProfile.buildRoute(user)} {...props} />}>
+            {user.name}
+          </Link>
+        </Typography>
       </TableCell>
       <TableCell>
         <Typography>{user.email}</Typography>
       </TableCell>
       <TableCell>{roles.roles !== undefined && <SelectRoles />}</TableCell>
       <TableCell>
-        <Typography>
-          <Link component={(props: any) => <RRDLink to={Routes.trainingsByUser.buildRoute(user)} {...props} />}>
-            {user.total_trainings || 0}
-          </Link>
-        </Typography>
+        <Typography>{user.total_trainings || 0}</Typography>
       </TableCell>
     </>
   );

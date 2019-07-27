@@ -49,7 +49,7 @@ interface Props {
   valueToId: (value: any) => string;
   datasource: ({ searchText, page, pageSize }: DatasourceParameters) => Promise<DatasourceResult | undefined | void>;
   rowBuilder: (data: any) => JSX.Element;
-  onDelete?: (rows: any[]) => Promise<void>;
+  onDelete?: ((rows: any[]) => Promise<void>) | undefined | false;
   emptyView?: JSX.Element;
 }
 

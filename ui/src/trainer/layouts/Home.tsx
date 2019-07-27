@@ -7,6 +7,7 @@ import { useAuthentication } from '../hooks/useAuthentication';
 import { Routes } from '../helpers/routeHelper';
 import { TopContributors } from '../widgets/TopContributors';
 import { Scaffold } from '../widgets/Scaffold';
+import { Subtitle } from '../widgets/Title';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -143,7 +144,7 @@ const Home = () => {
                       </Button>
                     </Grid>
                     <Grid item>
-                      <Typography variant="subtitle1">or</Typography>
+                      <Subtitle>or</Subtitle>
                     </Grid>
                     <Grid item>
                       <Button

@@ -5,14 +5,14 @@ const Routes = {
   preview: '/preview',
   login: '/login',
   register: '/register',
-  myTrainings: '/trainings/me',
+  myProfile: '/me',
   corpusAdmin: '/admin/corpus-admin',
   userAdmin: '/admin/users',
   train: '/train',
   corpus: '/admin/corpus',
-  trainingsByUser: {
-    route: '/admin/users/:id/trainings',
-    buildRoute: (user: User) => `/admin/users/${user.id}/trainings`,
+  userProfile: {
+    route: '/admin/users/:id',
+    buildRoute: (user: User) => `/admin/users/${user.id}`,
   },
   trainingsForText: {
     route: '/admin/corpus/:id/trainings',

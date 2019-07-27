@@ -11,14 +11,13 @@ const useStyles = makeStyles(
   { withTheme: true },
 );
 
-const ErrorMessage = ({ message, center = false }: { message: string; center?: boolean }) => {
+const ErrorMessage = ({ message, center = false, style }: { message: string; center?: boolean; style?: any }) => {
   const classes = useStyles();
+  if (style && center) {
+    style.textAlign = 'center';
+  }
   return (
-    <Typography
-      variant="subtitle2"
-      className={classes.errorMessage}
-      style={(center && { textAlign: 'center' }) || undefined}
-    >
+    <Typography variant="subtitle2" className={classes.errorMessage} style={style || undefined}>
       {message}
     </Typography>
   );

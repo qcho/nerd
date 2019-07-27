@@ -9,6 +9,7 @@ import { MaybeSnapshot, MaybeText } from '../types/optionals';
 import { useTranslation } from 'react-i18next';
 import { TokenizedEditor } from '../widgets/TokenizedEditor';
 import { Scaffold } from '../widgets/Scaffold';
+import { Subtitle } from '../widgets/Title';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -125,7 +126,7 @@ const TextTrainings = ({ match }: { match: any }) => {
                 emptyView={
                   <div style={{ padding: '2em' }}>
                     {/* TODO: Make a nice "empty" view */}
-                    <Typography variant="subtitle1">{'There are no trainings here'}</Typography>
+                    <Subtitle>{'There are no trainings here'}</Subtitle>
                   </div>
                 }
               />

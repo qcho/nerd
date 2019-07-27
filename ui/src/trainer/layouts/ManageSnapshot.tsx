@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Title } from '../widgets/Title';
+import { Title, Subtitle } from '../widgets/Title';
 import { Paper, Chip, Button, Typography, Grid, Tooltip } from '@material-ui/core';
 import useCurrentSnapshot from '../hooks/useCurrentSnapshot';
 import { Type } from '../apigen';
@@ -110,7 +110,7 @@ const ManageSnapshot = () => {
         <Paper style={{ padding: '1em', marginTop: '1em', marginBottom: '1em' }}>
           <Grid container direction="column" spacing={8}>
             <Grid item>
-              <Typography variant="subtitle1">{t('Types') + ':'}</Typography>
+              <Subtitle>{t('Types') + ':'}</Subtitle>
               {mapSnapshotTypes(currentSnapshot.snapshot.types || {}, onTypeDeleteClick, onTypeClick)}
               <Button color="primary" size="small" variant="outlined" onClick={onTypeCreateClick}>
                 {t('New')}
@@ -118,13 +118,13 @@ const ManageSnapshot = () => {
             </Grid>
             {typesToDelete.length > 0 && (
               <Grid item>
-                <Typography variant="subtitle1">{t('To delete') + ':'}</Typography>
+                <Subtitle>{t('To delete') + ':'}</Subtitle>
                 {mapTypesToChips(typesToDelete, onCancelDelete)}
               </Grid>
             )}
             {typesToAdd.length > 0 && (
               <Grid item>
-                <Typography variant="subtitle1">{t('To add') + ':'}</Typography>
+                <Subtitle>{t('To add') + ':'}</Subtitle>
                 {mapTypesToChips(typesToAdd, onCancelAdd)}
               </Grid>
             )}

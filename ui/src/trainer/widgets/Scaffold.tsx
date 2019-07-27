@@ -7,6 +7,7 @@ interface Props {
   children: React.ReactNode;
   loading?: boolean;
   title?: string;
+  subtitle?: string;
   errorMessage?: string;
 }
 
@@ -32,11 +33,11 @@ const useStyles = makeStyles(
   { withTheme: true },
 );
 
-const Scaffold = ({ children, loading, title }: Props) => {
+const Scaffold = ({ children, loading, title, subtitle }: Props) => {
   const classes = useStyles();
   return (
     <div className={classes.grow}>
-      <NavigationBar title={title} loading={loading} />
+      <NavigationBar title={title} loading={loading} subtitle={subtitle} />
       <div className={classes.content}>{children}</div>
     </div>
   );

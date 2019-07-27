@@ -11,8 +11,8 @@ import FourOhFour from './layouts/FourOhFour';
 import CorpusManagement from './layouts/CorpusManagement';
 import { useAuthentication } from './hooks/useAuthentication';
 import UserManagement from './layouts/UserManagement';
-import { MyTrainings } from './layouts/MyTrainings';
-import { UserTrainings } from './layouts/UserTrainings';
+import { MyProfile } from './profile/MyProfile';
+import { UserProfile } from './profile/UserProfile';
 import { TextTrainings } from './layouts/TextTrainings';
 import { CorpusView } from './layouts/CorpusView';
 import Train from './layouts/Train';
@@ -32,10 +32,10 @@ const Navigation = () => {
       <Route exact path={Routes.preview} component={Preview} />
       <Route exact path={Routes.login} component={Login} />
       <Route exact path={Routes.register} component={Register} />
-      <Route exact path={Routes.myTrainings} component={MyTrainings} />
+      <Route exact path={Routes.myProfile} component={MyProfile} />
       {isAdmin && <Route exact path={Routes.corpusAdmin} component={CorpusManagement} />}
       {isAdmin && <Route exact path={Routes.userAdmin} component={UserManagement} />}
-      {isAdmin && <Route exact path={Routes.trainingsByUser.route} component={UserTrainings} />}
+      {isAdmin && <Route exact path={Routes.userProfile.route} component={UserProfile} />}
       {isAdmin && <Route exact path={Routes.trainingsForText.route} component={TextTrainings} />}
       {isAdmin && <Route exact path={Routes.corpus} component={CorpusView} />}
       {isUser && <Route exact path={Routes.train} component={Train} />}

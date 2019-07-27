@@ -30,6 +30,7 @@ const link = (to: string) =>
 interface NavigationBarProps {
   loading?: boolean;
   title?: string;
+  subtitle?: string;
 }
 
 const Separator = () => {
@@ -46,7 +47,7 @@ const Separator = () => {
   );
 };
 
-const NavigationBar = ({ loading, title }: NavigationBarProps) => {
+const NavigationBar = ({ loading, title, subtitle }: NavigationBarProps) => {
   const { location } = useRouter();
   const classes = useStyles();
   const [t] = useTranslation();
@@ -61,13 +62,20 @@ const NavigationBar = ({ loading, title }: NavigationBarProps) => {
               <Home />
             </IconButton>
           )}
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            {title}
-          </Typography>
+          <div className={classes.grow}>
+            <Typography variant="h6" color="inherit">
+              {title}
+            </Typography>
+            {subtitle && (
+              <Typography variant="body1" color="inherit">
+                {subtitle}
+              </Typography>
+            )}
+          </div>
           {isUser && (
             <>
-              <Button color="inherit" component={link(Routes.myTrainings)}>
-                {t('My trainings')}
+              <Button color="inherit" component={link(Routes.myProfile)}>
+                {t('Profile')}
               </Button>
               <Separator />
             </>

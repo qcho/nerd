@@ -100,11 +100,11 @@ const Register = ({ classes }: { classes: any }) => {
             {t('Register')}
           </Button>
         </form>
-        {errorMessage.length > 0 ? (
+        {errorMessage.length > 0 && (
           <div className={classes.errorMessageContainer}>
             <ErrorMessage message={errorMessage} center />
           </div>
-        ) : null}
+        )}
       </Paper>
     </div>
   );
