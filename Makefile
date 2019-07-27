@@ -12,6 +12,7 @@ up:
 	cd ui && yarn install && yarn build
 	docker-compose up --build --scale worker=2 -d
 	docker-compose exec app flask setup
+	docker-compose restart worker
 down:
 	docker-compose down --volumes --rmi local --remove-orphans
 
