@@ -15,7 +15,7 @@ import {
 import useAuthentication from '../hooks/useAuthentication';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
-import authStyles from '../styles/auth';
+import authStyles from './styles';
 import { ErrorMessage } from '../widgets/ErrorMessage';
 
 const styles = (theme: Theme) =>
