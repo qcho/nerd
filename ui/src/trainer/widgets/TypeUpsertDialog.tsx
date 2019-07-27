@@ -12,8 +12,7 @@ import {
   Divider,
 } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
-import { Type } from '../apigen';
-import { CompleteType, MaybeCompleteType } from '../types/CompleteType';
+import { EntityType, MaybeEntityType } from '../types/EntityType';
 
 const TypeUpsertDialog = ({
   startingType,
@@ -21,9 +20,9 @@ const TypeUpsertDialog = ({
   onSave,
   onClose,
 }: {
-  startingType: CompleteType;
+  startingType: EntityType;
   open: boolean;
-  onSave: (newType: CompleteType, originalType: MaybeCompleteType) => void;
+  onSave: (newType: EntityType, originalType: MaybeEntityType) => void;
   onClose: () => void;
 }) => {
   const [t] = useTranslation();
