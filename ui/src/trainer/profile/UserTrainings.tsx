@@ -5,7 +5,7 @@ import { MaybeSnapshot } from '../types/optionals';
 import { SnapshotsApi, SnapshotInfo, UsersApi, User, Training, TrainingsApi } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
 import Http from '../helpers/http';
-import { TableCell, CircularProgress } from '@material-ui/core';
+import { TableCell, CircularProgress, Typography } from '@material-ui/core';
 import { TokenizedEditor } from '../widgets/TokenizedEditor';
 import { useAuthentication } from '../hooks/useAuthentication';
 
@@ -102,6 +102,7 @@ const UserTrainings = ({ user }: Props) => {
             datasource={datasource}
             onDelete={isAdmin && onDelete}
             paginatable
+            emptyView={<Typography variant="subtitle1">{t('No trainings yet')}</Typography>}
           />
         </div>
       ) : (
