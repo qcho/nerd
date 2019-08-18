@@ -5,10 +5,10 @@ from flask_rest_api import Blueprint
 from marshmallow import fields, post_load
 from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
-from werkzeug.exceptions import Conflict, Unauthorized
+from werkzeug.exceptions import Conflict, Unauthorized, Forbidden
 
 from nerd.apis import BaseSchema, response_error
-from nerd.core.document.user import User
+from nerd.core.document.user import User, Role
 
 blp = Blueprint('auth', 'auth', description='Authentication')
 
@@ -45,6 +45,7 @@ class RegisterResource(MethodView):
 
     @blp.arguments(RegisterSchema)
     @response_error(Conflict('Email exists'))
+    @response_error(Forbidden("Can't register a user"))
     @blp.response(UserCredentialsSchema, code=200, description='Registration successful')
     @blp.doc(operationId="registerUser")
     def post(self, register_payload: User):
@@ -54,6 +55,17 @@ class RegisterResource(MethodView):
         """
         if User.objects(email=register_payload.email):
             raise Conflict('Email exists')
+
+        # TODO: Check if the next conditions are correct
+        current_user_email = get_jwt_identity()
+        if current_user_email:
+            current_user = User.objects(email=current_user_email)
+            if not Role.ADMIN in current_user.roles:
+                raise Forbidden("Can't perform action")
+        else:
+            if len(register_payload.roles) > 0:
+                raise Forbidden("Can't assign roles")
+
         return UserCredentialsSchema.create(register_payload.save())
 
 
