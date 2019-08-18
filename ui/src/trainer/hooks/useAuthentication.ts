@@ -3,9 +3,11 @@ import { AuthApi } from '../apigen/api';
 import useAuthStorage from './useAuthStorage';
 import Http from '../helpers/http';
 import { useTranslation } from 'react-i18next';
+import useReactRouter from 'use-react-router';
 
 function useAuthentication() {
   const { credentials, updateCredentials, clearCredentials } = useAuthStorage();
+  const { history } = useReactRouter();
   let [loggedIn, setLoggedIn] = useState<boolean>(false);
   let [isAdmin, setIsAdmin] = useState<boolean>(false);
   let [isUser, setIsUser] = useState<boolean>(false);
@@ -78,6 +80,7 @@ function useAuthentication() {
 
   function logout() {
     clearCredentials();
+    history.replace('/');
   }
 
   return {
