@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
 import { useAuthentication } from '../hooks/useAuthentication';
 import { Routes } from '../helpers/routeHelper';
-import { TopContributors } from '../widgets/TopContributors';
-import { Scaffold } from '../widgets/Scaffold';
+import { TopContributors } from './TopContributors';
+import { Scaffold } from '../scaffold/Scaffold';
 import { Subtitle } from '../widgets/Title';
 
 const useStyles = makeStyles(

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Scaffold } from '../widgets/Scaffold';
+import { Scaffold } from '../scaffold/Scaffold';
 import { makeStyles } from '@material-ui/styles';
 import { Theme, CircularProgress } from '@material-ui/core';
 import { MaybeUser } from '../types/optionals';

@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { DatasourceParameters, RichTable } from '../widgets/RichTable';
+import { DatasourceParameters, RichTable } from '../rich_table/RichTable';
 import { useTranslation } from 'react-i18next';
 import { MaybeSnapshot } from '../types/optionals';
 import { SnapshotsApi, SnapshotInfo, UsersApi, User, Training, TrainingsApi } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
 import Http from '../helpers/http';
 import { TableCell, CircularProgress, Typography } from '@material-ui/core';
-import { TokenizedEditor } from '../widgets/TokenizedEditor';
+import { TokenizedEditor } from '../token_editor/TokenizedEditor';
 import { useAuthentication } from '../hooks/useAuthentication';
 import { Role } from '../types/role';
 

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Scaffold } from '../widgets/Scaffold';
+import { Scaffold } from '../scaffold/Scaffold';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
 import { Theme, TableCell, Button, Paper, Link, Typography } from '@material-ui/core';
-import { RichTable, DatasourceParameters } from '../widgets/RichTable';
+import { RichTable, DatasourceParameters } from '../rich_table/RichTable';
 import { apiConfig } from '../helpers/api-config';
 import { CorpusApi } from '../apigen';
 import { Text } from '../apigen/api';
@@ -11,7 +11,7 @@ import { moment } from '../helpers/utils';
 import { Title } from '../widgets/Title';
 import Http from '../helpers/http';
 import { SuccessSnackbar, ErrorSnackbar } from '../widgets/Snackbars';
-import { FileUploadDialog } from '../widgets/FileUploadDialog';
+import { FileUploadDialog } from './FileUploadDialog';
 import { Link as RRDLink } from 'react-router-dom';
 import { Routes } from '../helpers/routeHelper';
 

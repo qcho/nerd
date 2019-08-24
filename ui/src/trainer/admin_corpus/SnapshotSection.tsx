@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { DatasourceParameters, RichTable } from '../widgets/RichTable';
+import { DatasourceParameters, RichTable } from '../rich_table/RichTable';
 import { useTranslation } from 'react-i18next';
-import { SnapshotsApi, Snapshot, WorkersApi, Worker } from '../apigen';
+import { SnapshotsApi, Snapshot, WorkersApi } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
-import { SnapshotRow } from '../widgets/SnapshotRow';
+import { SnapshotRow } from './SnapshotRow';
 import { Title } from '../widgets/Title';
 import { Paper } from '@material-ui/core';
 

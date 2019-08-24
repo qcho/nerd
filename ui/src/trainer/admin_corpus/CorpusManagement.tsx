@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
-import { Scaffold } from '../widgets/Scaffold';
+import { Scaffold } from '../scaffold/Scaffold';
 import { SnapshotSection } from './SnapshotSection';
 import { TextTrainingSection } from './TextTrainingSection';
 import { ManageSnapshot } from './ManageSnapshot';

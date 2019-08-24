@@ -6,7 +6,7 @@ import { Theme, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { MaybeUser } from '../types/optionals';
 import { useTranslation } from 'react-i18next';
-import { Scaffold } from '../widgets/Scaffold';
+import { Scaffold } from '../scaffold/Scaffold';
 import { UserProfileView } from './ProfileView';
 import { ConfirmActionDialog } from '../widgets/ConfirmActionDialog';
 

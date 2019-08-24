@@ -4,8 +4,8 @@ import { Title, Subtitle } from '../widgets/Title';
 import { Paper, Chip, Button, Typography, Grid, Tooltip } from '@material-ui/core';
 import useCurrentSnapshot from '../hooks/useCurrentSnapshot';
 import { Type } from '../apigen';
-import { TypeAvatar } from '../widgets/TypeAvatar';
-import { TypeUpsertDialog } from '../widgets/TypeUpsertDialog';
+import { TypeAvatar } from './TypeAvatar';
+import { TypeUpsertDialog } from './TypeUpsertDialog';
 import { EntityType, MaybeEntityType } from '../types/EntityType';
 
 const ManageSnapshot = () => {

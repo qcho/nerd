@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { UsersApi, Training, SnapshotsApi, User, SnapshotInfo, TrainingsApi, CorpusApi, Text } from '../apigen';
+import React, { useEffect, useState } from 'react';
+import { Training, SnapshotsApi, SnapshotInfo, TrainingsApi, CorpusApi, Text } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
-import { DatasourceParameters, RichTable } from '../widgets/RichTable';
+import { DatasourceParameters, RichTable } from '../rich_table/RichTable';
 import Http from '../helpers/http';
-import { Paper, Theme, CircularProgress, TableCell, Typography } from '@material-ui/core';
+import { Paper, Theme, CircularProgress, TableCell } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { MaybeSnapshot, MaybeText } from '../types/optionals';
 import { useTranslation } from 'react-i18next';
-import { TokenizedEditor } from '../widgets/TokenizedEditor';
-import { Scaffold } from '../widgets/Scaffold';
+import { TokenizedEditor } from '../token_editor/TokenizedEditor';
+import { Scaffold } from '../scaffold/Scaffold';
 import { Subtitle } from '../widgets/Title';
 
 const useStyles = makeStyles(

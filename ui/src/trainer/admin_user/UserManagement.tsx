@@ -5,9 +5,9 @@ import { UsersApi, User, RoleList, RolesApi } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
 import Http from '../helpers/http';
 import { makeStyles } from '@material-ui/styles';
-import { RichTable, DatasourceParameters } from '../widgets/RichTable';
-import UserRow from '../widgets/UserRow';
-import { Scaffold } from '../widgets/Scaffold';
+import { RichTable, DatasourceParameters } from '../rich_table/RichTable';
+import UserRow from './UserRow';
+import { Scaffold } from '../scaffold/Scaffold';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({

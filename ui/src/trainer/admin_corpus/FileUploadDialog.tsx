@@ -7,7 +7,6 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import { Theme, createStyles, WithStyles, withStyles, Typography, IconButton, Button } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { DropzoneArea } from 'material-ui-dropzone';
-import classes from '*.module.css';
 import { makeStyles } from '@material-ui/styles';
 
 const styles = (theme: Theme) =>

@@ -6,7 +6,7 @@ import { Grid, Typography, Button } from '@material-ui/core';
 import useCurrentSnapshot from '../hooks/useCurrentSnapshot';
 import { Link } from 'react-router-dom';
 import { Routes } from '../helpers/routeHelper';
-import { TrainingStatus } from '../widgets/TrainingStatus';
+import { TrainingStatus } from './TrainingStatus';
 
 const SubSection = ({ title, children }: { title: string; children?: React.ReactNode }) => (
   <Grid item>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { RichTable } from './RichTable';
+import { RichTable } from '../rich_table/RichTable';
 import { useTranslation } from 'react-i18next';
 import { UsersApi, TopContributor } from '../apigen';
 import { TableCell, Typography } from '@material-ui/core';
