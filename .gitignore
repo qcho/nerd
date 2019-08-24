@@ -4,3 +4,5 @@ models/
 .scannerwork/
 .venv/
 app/src
+.env.development
+.env.production

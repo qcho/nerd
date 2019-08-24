@@ -8,6 +8,8 @@ services:
     tty: true
     env_file:
       - .env
+    ports:
+      - "${NERD_WEB_HTTP_PORT}:${NERD_WEB_HTTP_PORT}"
     volumes:
       - ./ui/build:/app
       - ./docker/nginx/nerd.conf:/opt/bitnami/nginx/conf/server_blocks/nerd.conf:ro

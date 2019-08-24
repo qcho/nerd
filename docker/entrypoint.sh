@@ -4,12 +4,13 @@ set -e
 case "$ENV_PIPENV_ARGS" in
   "--dev"*)
     HUPPER="hupper -m"
+    # WEB_CMD="$HUPPER gunicorn.app.wsgiapp -k egg:meinheld#gunicorn_worker -c /gunicorn_conf.py nerd:app"
     WEB_CMD="$HUPPER flask run --host ${NERD_APP_HOST} --port ${NERD_APP_HTTP_PORT}"
   ;;
   *)
     HUPPER=""
     export GUNICORN_CONF=""
-    WEB_CMD="gunicorn.app.wsgiapp -k egg:meinheld#gunicorn_worker -c '/gunicorn_conf.py' 'nerd:app'"
+    WEB_CMD="gunicorn -k egg:meinheld#gunicorn_worker -c /gunicorn_conf.py nerd:app"
   ;;
 esac
 
