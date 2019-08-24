@@ -17,6 +17,7 @@ import { TextTrainings } from './layouts/TextTrainings';
 import { CorpusView } from './layouts/CorpusView';
 import Train from './layouts/Train';
 import { Routes } from './helpers/routeHelper';
+import { Role } from './types/role';
 
 const theme = createMuiTheme({
   typography: {
@@ -25,20 +26,23 @@ const theme = createMuiTheme({
 });
 
 const Navigation = () => {
-  const { isAdmin, isUser } = useAuthentication();
+  const { hasRole, loggedIn } = useAuthentication();
+  const isAdmin = hasRole(Role.ADMIN);
+  const isUser = hasRole(Role.USER);
+  const isTrainer = hasRole(Role.TRAINER);
   return (
     <Switch>
       <Route exact path={Routes.home} component={Home} />
-      <Route exact path={Routes.preview} component={Preview} />
-      <Route exact path={Routes.login} component={Login} />
-      <Route exact path={Routes.register} component={Register} />
-      <Route exact path={Routes.myProfile} component={MyProfile} />
+      {isUser && <Route exact path={Routes.preview} component={Preview} />}
+      {!loggedIn && <Route exact path={Routes.login} component={Login} />}
+      {!loggedIn && <Route exact path={Routes.register} component={Register} />}
+      {loggedIn && <Route exact path={Routes.myProfile} component={MyProfile} />}
       {isAdmin && <Route exact path={Routes.corpusAdmin} component={CorpusManagement} />}
       {isAdmin && <Route exact path={Routes.userAdmin} component={UserManagement} />}
       {isAdmin && <Route exact path={Routes.userProfile.route} component={UserProfile} />}
       {isAdmin && <Route exact path={Routes.trainingsForText.route} component={TextTrainings} />}
       {isAdmin && <Route exact path={Routes.corpus} component={CorpusView} />}
-      {isUser && <Route exact path={Routes.train} component={Train} />}
+      {isTrainer && <Route exact path={Routes.train} component={Train} />}
       <Route component={FourOhFour} />
     </Switch>
   );

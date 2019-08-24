@@ -7,6 +7,7 @@ import Home from '@material-ui/icons/Home';
 import useRouter from 'use-react-router';
 import { makeStyles } from '@material-ui/styles';
 import { Routes } from '../helpers/routeHelper';
+import { Role } from '../types/role';
 
 const useStyles = makeStyles(() => ({
   menuButton: {
@@ -51,7 +52,8 @@ const NavigationBar = ({ loading, title, subtitle }: NavigationBarProps) => {
   const { location } = useRouter();
   const classes = useStyles();
   const [t] = useTranslation();
-  const { loggedIn, logout, isAdmin, isUser } = useAuthentication();
+  const { loggedIn, logout, hasRole } = useAuthentication();
+  const isAdmin = hasRole(Role.ADMIN);
 
   return (
     <>
@@ -72,7 +74,7 @@ const NavigationBar = ({ loading, title, subtitle }: NavigationBarProps) => {
               </Typography>
             )}
           </div>
-          {isUser && (
+          {loggedIn && (
             <>
               <Button color="inherit" component={link(Routes.myProfile)}>
                 {t('Profile')}

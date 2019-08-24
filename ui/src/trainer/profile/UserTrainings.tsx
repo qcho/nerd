@@ -8,6 +8,7 @@ import Http from '../helpers/http';
 import { TableCell, CircularProgress, Typography } from '@material-ui/core';
 import { TokenizedEditor } from '../widgets/TokenizedEditor';
 import { useAuthentication } from '../hooks/useAuthentication';
+import { Role } from '../types/role';
 
 interface Props {
   user: User;
@@ -17,7 +18,7 @@ const UserTrainings = ({ user }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [snapshot, setSnapshot] = useState<MaybeSnapshot>(null);
   const [error, setError] = useState<string>('');
-  const { isAdmin } = useAuthentication();
+  const { hasRole } = useAuthentication();
   const [t] = useTranslation();
 
   const fetchSnapshot = useCallback(async () => {
@@ -100,7 +101,7 @@ const UserTrainings = ({ user }: Props) => {
             valueToId={(value: Training) => value.id || ''}
             rowBuilder={buildRow}
             datasource={datasource}
-            onDelete={isAdmin && onDelete}
+            onDelete={hasRole(Role.ADMIN) && onDelete}
             paginatable
             emptyView={<Typography variant="subtitle1">{t('No trainings yet')}</Typography>}
           />

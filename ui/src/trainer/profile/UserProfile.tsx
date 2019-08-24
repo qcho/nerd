@@ -65,9 +65,14 @@ const UserProfile = ({ match }: { match: any }) => {
     if (!user.id) return;
 
     const userApi = new UsersApi(apiConfig());
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    await userApi.updateUser(user.id, { plain_password: newPassword });
-    setNewPassword('');
+    try {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      await userApi.updateUser(user.id, { plain_password: newPassword });
+    } catch (e) {
+      // TODO
+    } finally {
+      setNewPassword('');
+    }
     // TODO: Should we do something after updating the password?
   }
 

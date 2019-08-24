@@ -9,6 +9,7 @@ import Http from '../helpers/http';
 import { Scaffold } from '../widgets/Scaffold';
 import { apiConfig } from '../helpers/api-config';
 import { SuccessSnackbar, ErrorSnackbar, WarningSnackbar } from '../widgets/Snackbars';
+import { Role } from '../types/role';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -31,7 +32,7 @@ const PreviewLayout = ({ classes }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [saveEnabled, setSaveEnabled] = useState<boolean>(false);
   const [t] = useTranslation();
-  const { isUser } = useAuthentication();
+  const { hasRole } = useAuthentication();
   const nerApi = new NerApi(apiConfig());
 
   async function onParseClick() {
@@ -123,13 +124,13 @@ const PreviewLayout = ({ classes }: Props) => {
             <Grid container direction="row" spacing={24} justify="space-between">
               <Grid item xs={10}>
                 <TokenizedEditor
-                  readOnly={!isUser}
+                  readOnly={!hasRole(Role.TRAINER)}
                   spacyDocument={{ ...document }}
                   onUpdate={onDocumentUpdate}
                   entityTypes={entityTypes}
                 />
               </Grid>
-              {isUser ? (
+              {hasRole(Role.TRAINER) ? (
                 <div>
                   <Grid
                     item

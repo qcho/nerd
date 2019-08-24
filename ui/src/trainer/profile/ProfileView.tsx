@@ -5,6 +5,8 @@ import { Title } from '../widgets/Title';
 import { Grid, Typography } from '@material-ui/core';
 import { UserTrainings } from './UserTrainings';
 import { ChangePasswordForm } from './ChangePasswordForm';
+import { useAuthentication } from '../hooks/useAuthentication';
+import { Role } from '../types/role';
 
 interface Props {
   user: User;
@@ -13,6 +15,8 @@ interface Props {
 
 const UserProfileView = ({ user, onChangePassword }: Props) => {
   const [t] = useTranslation();
+  const { hasRole } = useAuthentication();
+  const isTrainer = hasRole(Role.TRAINER);
   return (
     <Grid container direction="column">
       <Grid item>
@@ -29,12 +33,16 @@ const UserProfileView = ({ user, onChangePassword }: Props) => {
           )}
         </Grid>
       </Grid>
-      <Grid item style={{ marginTop: '2em' }}>
-        <Title>{t('Trainings')}</Title>
-      </Grid>
-      <Grid item>
-        <UserTrainings user={user} />
-      </Grid>
+      {isTrainer && (
+        <>
+          <Grid item style={{ marginTop: '2em' }}>
+            <Title>{t('Trainings')}</Title>
+          </Grid>
+          <Grid item>
+            <UserTrainings user={user} />
+          </Grid>
+        </>
+      )}
     </Grid>
   );
 };

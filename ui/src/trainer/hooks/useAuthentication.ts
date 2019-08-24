@@ -4,13 +4,13 @@ import useAuthStorage from './useAuthStorage';
 import Http from '../helpers/http';
 import { useTranslation } from 'react-i18next';
 import useReactRouter from 'use-react-router';
+import { Role, roleFromString } from '../types/role';
 
 function useAuthentication() {
   const { credentials, updateCredentials, clearCredentials } = useAuthStorage();
   const { history } = useReactRouter();
   let [loggedIn, setLoggedIn] = useState<boolean>(false);
-  let [isAdmin, setIsAdmin] = useState<boolean>(false);
-  let [isUser, setIsUser] = useState<boolean>(false);
+  let [roles, setRoles] = useState<Role[]>([]);
   const [t] = useTranslation();
   const api = new AuthApi();
 
@@ -47,12 +47,10 @@ function useAuthentication() {
   useEffect(() => {
     setLoggedIn(credentials != null);
     if (credentials != null) {
-      const roles = credentials.roles || [];
-      setIsAdmin(roles.includes('admin'));
-      setIsUser(roles.includes('user'));
+      const roles: string[] = credentials.roles || [];
+      setRoles(roles.map(roleFromString));
     } else {
-      setIsAdmin(false);
-      setIsUser(false);
+      setRoles([]);
     }
   }, [credentials]);
 
@@ -83,12 +81,15 @@ function useAuthentication() {
     history.replace('/');
   }
 
+  function hasRole(role: Role): boolean {
+    return roles.indexOf(role) > -1;
+  }
+
   return {
     login,
     logout,
     loggedIn,
-    isAdmin,
-    isUser,
+    hasRole,
     register,
     credentials,
   };
