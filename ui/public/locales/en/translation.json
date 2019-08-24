@@ -1,4 +1,8 @@
 {
+  "There was an error while retrieving a text to train.": "There was an error while retrieving a text to train.",
+  "You're about to change {{userName}}'s password. Are you sure?": "You're about to change {{userName}}'s password. Are you sure?",
+  "Change user password": "Change user password",
+  "My profile": "My profile",
   "No trainings yet": "No trainings yet",
   "Select a .txt file": "Select a .txt file",
   "Passwords should match": "Passwords should match",

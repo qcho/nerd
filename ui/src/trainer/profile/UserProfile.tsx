@@ -8,6 +8,7 @@ import { MaybeUser } from '../types/optionals';
 import { useTranslation } from 'react-i18next';
 import { Scaffold } from '../widgets/Scaffold';
 import { UserProfileView } from './ProfileView';
+import { ConfirmActionDialog } from '../widgets/ConfirmActionDialog';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -26,6 +27,7 @@ const UserProfile = ({ match }: { match: any }) => {
   const [error, setError] = useState<string>('');
   const [user, setUser] = useState<MaybeUser>(null);
   const [t] = useTranslation();
+  const [newPassword, setNewPassword] = useState<string>('');
 
   const fetchUser = useCallback(async () => {
     const { id } = match.params;
@@ -58,8 +60,15 @@ const UserProfile = ({ match }: { match: any }) => {
     loadUser();
   }, [fetchUser]);
 
-  async function onChangePassword(password: string) {
-    // TODO
+  async function onChangePassword() {
+    if (!user) return;
+    if (!user.id) return;
+
+    const userApi = new UsersApi(apiConfig());
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    await userApi.updateUser(user.id, { plain_password: newPassword });
+    setNewPassword('');
+    // TODO: Should we do something after updating the password?
   }
 
   return (
@@ -71,7 +80,16 @@ const UserProfile = ({ match }: { match: any }) => {
     >
       {!loading && error.length == 0 && user ? (
         <div className={classes.content}>
-          <UserProfileView user={user} onChangePassword={onChangePassword} isSelf={false} />
+          <UserProfileView user={user} onChangePassword={password => setNewPassword(password)} />
+          <ConfirmActionDialog
+            title={t('Change user password')}
+            content={
+              t("You're about to change {{userName}}'s password. Are you sure?", { userName: user.name }) as string
+            }
+            open={newPassword.length > 0}
+            onAccept={onChangePassword}
+            onClose={() => setNewPassword('')}
+          />
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>

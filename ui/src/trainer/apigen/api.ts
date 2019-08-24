@@ -29,13 +29,13 @@ export interface ChangeSnapshot {
      * @type {string}
      * @memberof ChangeSnapshot
      */
-    from_version: string;
+    to_version: string;
     /**
      * 
      * @type {string}
      * @memberof ChangeSnapshot
      */
-    to_version: string;
+    from_version: string;
 }
 
 /**
@@ -44,12 +44,6 @@ export interface ChangeSnapshot {
  * @interface EntityList
  */
 export interface EntityList {
-    /**
-     * 
-     * @type {Snapshot}
-     * @memberof EntityList
-     */
-    snapshot: Snapshot;
     /**
      * 
      * @type {string}
@@ -62,6 +56,12 @@ export interface EntityList {
      * @memberof EntityList
      */
     entities: Array<SpacyEntity2>;
+    /**
+     * 
+     * @type {Snapshot}
+     * @memberof EntityList
+     */
+    snapshot: Snapshot;
 }
 
 /**
@@ -126,18 +126,6 @@ export interface Register {
     email: string;
     /**
      * 
-     * @type {Array<string>}
-     * @memberof Register
-     */
-    trainings?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
-    id?: string;
-    /**
-     * 
      * @type {string}
      * @memberof Register
      */
@@ -166,16 +154,22 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
+     * @type {Date}
+     * @memberof Snapshot
+     */
+    trained_at?: Date;
+    /**
+     * 
      * @type {number}
      * @memberof Snapshot
      */
     semaphore?: number;
     /**
      * 
-     * @type {Date}
+     * @type {number}
      * @memberof Snapshot
      */
-    trained_at?: Date;
+    id: number;
     /**
      * 
      * @type {Date}
@@ -188,12 +182,6 @@ export interface Snapshot {
      * @memberof Snapshot
      */
     types?: { [key: string]: Type; };
-    /**
-     * 
-     * @type {number}
-     * @memberof Snapshot
-     */
-    id: number;
 }
 
 /**
@@ -248,16 +236,16 @@ export interface SnapshotInfo {
 export interface SpacyDocument {
     /**
      * 
+     * @type {Date}
+     * @memberof SpacyDocument
+     */
+    _created_at?: Date;
+    /**
+     * 
      * @type {Array<SpacyEntity>}
      * @memberof SpacyDocument
      */
     ents?: Array<SpacyEntity>;
-    /**
-     * 
-     * @type {Array<SpacySentence>}
-     * @memberof SpacyDocument
-     */
-    sents?: Array<SpacySentence>;
     /**
      * 
      * @type {string}
@@ -266,16 +254,16 @@ export interface SpacyDocument {
     text: string;
     /**
      * 
+     * @type {Array<SpacySentence>}
+     * @memberof SpacyDocument
+     */
+    sents?: Array<SpacySentence>;
+    /**
+     * 
      * @type {Array<SpacyToken>}
      * @memberof SpacyDocument
      */
     tokens?: Array<SpacyToken>;
-    /**
-     * 
-     * @type {Date}
-     * @memberof SpacyDocument
-     */
-    _created_at?: Date;
 }
 
 /**
@@ -286,16 +274,16 @@ export interface SpacyDocument {
 export interface SpacyDocument1 {
     /**
      * 
+     * @type {Date}
+     * @memberof SpacyDocument1
+     */
+    _created_at?: Date;
+    /**
+     * 
      * @type {Array<SpacyEntity1>}
      * @memberof SpacyDocument1
      */
     ents?: Array<SpacyEntity1>;
-    /**
-     * 
-     * @type {Array<SpacySentence1>}
-     * @memberof SpacyDocument1
-     */
-    sents?: Array<SpacySentence1>;
     /**
      * 
      * @type {string}
@@ -304,16 +292,16 @@ export interface SpacyDocument1 {
     text: string;
     /**
      * 
+     * @type {Array<SpacySentence1>}
+     * @memberof SpacyDocument1
+     */
+    sents?: Array<SpacySentence1>;
+    /**
+     * 
      * @type {Array<SpacyToken1>}
      * @memberof SpacyDocument1
      */
     tokens?: Array<SpacyToken1>;
-    /**
-     * 
-     * @type {Date}
-     * @memberof SpacyDocument1
-     */
-    _created_at?: Date;
 }
 
 /**
@@ -324,12 +312,6 @@ export interface SpacyDocument1 {
 export interface SpacyEntity {
     /**
      * 
-     * @type {number}
-     * @memberof SpacyEntity
-     */
-    end: number;
-    /**
-     * 
      * @type {string}
      * @memberof SpacyEntity
      */
@@ -340,6 +322,12 @@ export interface SpacyEntity {
      * @memberof SpacyEntity
      */
     start: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity
+     */
+    end: number;
 }
 
 /**
@@ -350,12 +338,6 @@ export interface SpacyEntity {
 export interface SpacyEntity1 {
     /**
      * 
-     * @type {number}
-     * @memberof SpacyEntity1
-     */
-    end: number;
-    /**
-     * 
      * @type {string}
      * @memberof SpacyEntity1
      */
@@ -366,6 +348,12 @@ export interface SpacyEntity1 {
      * @memberof SpacyEntity1
      */
     start: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity1
+     */
+    end: number;
 }
 
 /**
@@ -376,12 +364,6 @@ export interface SpacyEntity1 {
 export interface SpacyEntity2 {
     /**
      * 
-     * @type {number}
-     * @memberof SpacyEntity2
-     */
-    end: number;
-    /**
-     * 
      * @type {string}
      * @memberof SpacyEntity2
      */
@@ -392,6 +374,12 @@ export interface SpacyEntity2 {
      * @memberof SpacyEntity2
      */
     start: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity2
+     */
+    end: number;
 }
 
 /**
@@ -405,13 +393,13 @@ export interface SpacySentence {
      * @type {number}
      * @memberof SpacySentence
      */
-    end: number;
+    start: number;
     /**
      * 
      * @type {number}
      * @memberof SpacySentence
      */
-    start: number;
+    end: number;
 }
 
 /**
@@ -425,13 +413,13 @@ export interface SpacySentence1 {
      * @type {number}
      * @memberof SpacySentence1
      */
-    end: number;
+    start: number;
     /**
      * 
      * @type {number}
      * @memberof SpacySentence1
      */
-    start: number;
+    end: number;
 }
 
 /**
@@ -442,6 +430,18 @@ export interface SpacySentence1 {
 export interface SpacyToken {
     /**
      * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    dep?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
+    end: number;
+    /**
+     * 
      * @type {number}
      * @memberof SpacyToken
      */
@@ -451,19 +451,13 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
-    end: number;
+    id: number;
     /**
      * 
      * @type {string}
      * @memberof SpacyToken
      */
     pos?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    tag?: string;
     /**
      * 
      * @type {number}
@@ -475,13 +469,7 @@ export interface SpacyToken {
      * @type {string}
      * @memberof SpacyToken
      */
-    dep?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    id: number;
+    tag?: string;
 }
 
 /**
@@ -492,6 +480,18 @@ export interface SpacyToken {
 export interface SpacyToken1 {
     /**
      * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    dep?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken1
+     */
+    end: number;
+    /**
+     * 
      * @type {number}
      * @memberof SpacyToken1
      */
@@ -501,19 +501,13 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
-    end: number;
+    id: number;
     /**
      * 
      * @type {string}
      * @memberof SpacyToken1
      */
     pos?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
-    tag?: string;
     /**
      * 
      * @type {number}
@@ -525,13 +519,7 @@ export interface SpacyToken1 {
      * @type {string}
      * @memberof SpacyToken1
      */
-    dep?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken1
-     */
-    id: number;
+    tag?: string;
 }
 
 /**
@@ -600,16 +588,16 @@ export interface Token {
 export interface TopContributor {
     /**
      * 
-     * @type {string}
-     * @memberof TopContributor
-     */
-    name: string;
-    /**
-     * 
      * @type {number}
      * @memberof TopContributor
      */
     total_trainings: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof TopContributor
+     */
+    name: string;
 }
 
 /**
@@ -618,12 +606,6 @@ export interface TopContributor {
  * @interface TrainText
  */
 export interface TrainText {
-    /**
-     * 
-     * @type {string}
-     * @memberof TrainText
-     */
-    text_id: string;
     /**
      * 
      * @type {SpacyDocument1}
@@ -636,6 +618,12 @@ export interface TrainText {
      * @memberof TrainText
      */
     snapshot: Snapshot;
+    /**
+     * 
+     * @type {string}
+     * @memberof TrainText
+     */
+    text_id: string;
 }
 
 /**
@@ -649,18 +637,6 @@ export interface Training {
      * @type {string}
      * @memberof Training
      */
-    user_id: string;
-    /**
-     * 
-     * @type {Date}
-     * @memberof Training
-     */
-    created_at?: Date;
-    /**
-     * 
-     * @type {string}
-     * @memberof Training
-     */
     id?: string;
     /**
      * 
@@ -668,6 +644,18 @@ export interface Training {
      * @memberof Training
      */
     text_id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Training
+     */
+    user_id: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof Training
+     */
+    created_at?: Date;
     /**
      * 
      * @type {SpacyDocument}
@@ -687,13 +675,13 @@ export interface Type {
      * @type {string}
      * @memberof Type
      */
-    color: string;
+    label: string;
     /**
      * 
      * @type {string}
      * @memberof Type
      */
-    label: string;
+    color: string;
 }
 
 /**
@@ -702,6 +690,18 @@ export interface Type {
  * @interface User
  */
 export interface User {
+    /**
+     * 
+     * @type {number}
+     * @memberof User
+     */
+    total_trainings?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    id?: string;
     /**
      * 
      * @type {string}
@@ -719,19 +719,7 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
     name: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof User
-     */
-    total_trainings?: number;
 }
 
 /**
@@ -774,6 +762,12 @@ export interface UserPayload {
     plain_password?: string;
     /**
      * 
+     * @type {string}
+     * @memberof UserPayload
+     */
+    id?: string;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof UserPayload
      */
@@ -784,12 +778,6 @@ export interface UserPayload {
      * @memberof UserPayload
      */
     trainings?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserPayload
-     */
-    id?: string;
     /**
      * 
      * @type {string}
@@ -1120,7 +1108,7 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -1171,7 +1159,7 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -1213,7 +1201,7 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -1263,7 +1251,7 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -1305,7 +1293,7 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -1341,7 +1329,7 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -1385,7 +1373,7 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -1431,7 +1419,7 @@ export const CorpusApiAxiosParamCreator = function (configuration?: Configuratio
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -1788,7 +1776,7 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -1833,7 +1821,7 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -1884,7 +1872,7 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -1935,7 +1923,7 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -2151,7 +2139,7 @@ export const RolesApiAxiosParamCreator = function (configuration?: Configuration
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -2262,7 +2250,7 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -2308,7 +2296,7 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -2350,7 +2338,7 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -2392,7 +2380,7 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -2428,7 +2416,7 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -2470,7 +2458,7 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -2509,7 +2497,7 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -2830,7 +2818,7 @@ export const TrainingsApiAxiosParamCreator = function (configuration?: Configura
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -2943,7 +2931,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -2983,7 +2971,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -2998,6 +2986,43 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
 
             if (query !== undefined) {
                 localVarQueryParameter['query'] = query;
+            }
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Gets currently logged user's account details
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        loggedUserDetails(options: any = {}): RequestArgs {
+            const localVarPath = `/api/users/me`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication oAuth2Password required
+            // oauth required
+            if (configuration && configuration.accessToken) {
+                const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
+                    : configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
 
 
@@ -3033,7 +3058,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -3116,7 +3141,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -3138,7 +3163,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
-         * @summary Gets user entity by email
+         * @summary Gets specific user account details by a given id
          * @param {string} user_id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3163,7 +3188,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -3207,7 +3232,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -3272,6 +3297,19 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Gets currently logged user's account details
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        loggedUserDetails(options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User> {
+            const localVarAxiosArgs = UsersApiAxiosParamCreator(configuration).loggedUserDetails(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @param {number} [page] 
          * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
@@ -3313,7 +3351,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Gets user entity by email
+         * @summary Gets specific user account details by a given id
          * @param {string} user_id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3373,6 +3411,15 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
+         * @summary Gets currently logged user's account details
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        loggedUserDetails(options?: any) {
+            return UsersApiFp(configuration).loggedUserDetails(options)(axios, basePath);
+        },
+        /**
+         * 
          * @param {number} [page] 
          * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
@@ -3402,7 +3449,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
-         * @summary Gets user entity by email
+         * @summary Gets specific user account details by a given id
          * @param {string} user_id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3459,6 +3506,17 @@ export class UsersApi extends BaseAPI {
 
     /**
      * 
+     * @summary Gets currently logged user's account details
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public loggedUserDetails(options?: any) {
+        return UsersApiFp(this.configuration).loggedUserDetails(options)(this.axios, this.basePath);
+    }
+
+    /**
+     * 
      * @param {number} [page] 
      * @param {number} [page_size] 
      * @param {*} [options] Override http request option.
@@ -3494,7 +3552,7 @@ export class UsersApi extends BaseAPI {
 
     /**
      * 
-     * @summary Gets user entity by email
+     * @summary Gets specific user account details by a given id
      * @param {string} user_id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3546,7 +3604,7 @@ export const WorkersApiAxiosParamCreator = function (configuration?: Configurati
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }
@@ -3587,7 +3645,7 @@ export const WorkersApiAxiosParamCreator = function (configuration?: Configurati
             // oauth required
             if (configuration && configuration.accessToken) {
                 const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
-                    ? configuration.accessToken("oAuth2Password", ["user", "admin"])
+                    ? configuration.accessToken("oAuth2Password", ["user", "trainer", "admin"])
                     : configuration.accessToken;
                 localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
             }

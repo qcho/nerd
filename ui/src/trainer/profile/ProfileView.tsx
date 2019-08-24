@@ -9,7 +9,6 @@ import { ChangePasswordForm } from './ChangePasswordForm';
 interface Props {
   user: User;
   onChangePassword?: (newPassword: string) => void;
-  isSelf: boolean;
 }
 
 const UserProfileView = ({ user, onChangePassword }: Props) => {
