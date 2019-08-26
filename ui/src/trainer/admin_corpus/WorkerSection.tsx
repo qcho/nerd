@@ -1,49 +1,110 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Title } from '../widgets/Title';
-import { Paper, Typography, Button } from '@material-ui/core';
+import { Paper, Typography, Button, InputBase, MenuItem } from '@material-ui/core';
 import { WorkersApi, SnapshotsApi, Worker } from '../apigen';
-import AsyncSelect from 'react-select/async';
 import { apiConfig } from '../helpers/api-config';
-import Select from 'react-select';
+import Select from '@material-ui/core/Select';
 import { SuccessSnackbar, WarningSnackbar, ErrorSnackbar } from '../widgets/Snackbars';
 import Http from '../helpers/http';
+
+const WorkerMigrate = ({
+  relocatableWorkers,
+  onRelocateWorker,
+}: {
+  relocatableWorkers: string[];
+  onRelocateWorker: (fromSnapshot: string, toSnapshot: string) => any;
+}) => {
+  const [t] = useTranslation();
+  const [fromSnapshot, setFromSnapshot] = useState<string>('vCURRENT');
+  const [toSnapshot, setToSnapshot] = useState<string>('vCURRENT');
+  const [availableSnapshots, setAvailableSnapshots] = useState<string[]>([]);
+  const [targetSnapshots, setTargetSnapshots] = useState<string[]>([]);
+
+  useEffect(() => {
+    async function loadAvailableSnapshots() {
+      const snapshotApi = new SnapshotsApi(apiConfig());
+      const snapshots = (await snapshotApi.listCorpusSnapshots(1, 100)).data;
+      setAvailableSnapshots(
+        snapshots.map(snapshot => {
+          const value = `v${snapshot.id == 0 ? 'CURRENT' : snapshot.id}`;
+          return value;
+        }),
+      );
+    }
+    loadAvailableSnapshots();
+  }, []);
+
+  useEffect(() => {
+    const filteredSnapshots = availableSnapshots.filter(it => it != fromSnapshot);
+    setTargetSnapshots(availableSnapshots.filter(it => it != fromSnapshot));
+    setToSnapshot(filteredSnapshots.length > 0 ? filteredSnapshots[0] : '');
+  }, [availableSnapshots, fromSnapshot]);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'row', width: '100%', alignItems: 'center' }}>
+      <Typography style={{ marginRight: '1em' }}>{t('From')}</Typography>
+      <div style={{ width: 160 }}>
+        <Select
+          value={relocatableWorkers.length > 0 ? relocatableWorkers[0] : ''}
+          input={<InputBase style={{ position: 'relative', width: 'auto', paddingLeft: '5px' }} />}
+          onChange={event => {
+            setFromSnapshot((event.target.value as unknown) as string);
+          }}
+        >
+          {relocatableWorkers.map(value => (
+            <MenuItem value={value} key={value}>
+              {value}
+            </MenuItem>
+          ))}
+        </Select>
+      </div>
+      <Typography style={{ marginLeft: '1em', marginRight: '1em' }}>{t('to')}</Typography>
+      <div style={{ width: 160 }}>
+        <Select
+          displayEmpty
+          value={toSnapshot}
+          input={<InputBase style={{ position: 'relative', width: 'auto', paddingLeft: '5px' }} />}
+          onChange={event => {
+            setToSnapshot((event.target.value as unknown) as string);
+          }}
+        >
+          {targetSnapshots.map(value => (
+            <MenuItem value={value} key={value}>
+              {value}
+            </MenuItem>
+          ))}
+        </Select>
+      </div>
+      <div>
+        <Button
+          style={{ marginLeft: '1em' }}
+          onClick={() => {
+            onRelocateWorker(fromSnapshot, toSnapshot);
+          }}
+        >
+          {t('Apply')}
+        </Button>
+      </div>
+    </div>
+  );
+};
 
 const WorkerSection = () => {
   const [t] = useTranslation();
   const workerApi = new WorkersApi(apiConfig());
-  const [fromSnapshot, setFromSnapshot] = useState<string>('');
-  const [toSnapshot, setToSnapshot] = useState<string>('');
-  const snapshotApi = new SnapshotsApi(apiConfig());
   const [workers, setWorkers] = useState<Worker[]>([]);
+  const [relocatableWorkers, setRelocatableWorkers] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [warningMessage, setWarningMessage] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
 
-  const loadOptions = async (inputValue: string) => {
-    try {
-      const snapshots = (await snapshotApi.listCorpusSnapshots(1, 100)).data;
-      return snapshots
-        .map(snapshot => {
-          const value = `v${snapshot.id == 0 ? 'CURRENT' : snapshot.id}`;
-          return { value: value, label: value };
-        })
-        .filter(value => value.value != fromSnapshot);
-    } catch (e) {
-      setWarningMessage(
-        Http.handleRequestError(e, (status, data) => {
-          return t('Error while retrieving snapshots');
-        }),
-      );
-    } finally {
-      // TODO
-    }
-  };
-
   useEffect(() => {
     async function loadWorkers() {
       try {
-        setWorkers((await workerApi.listWorkers()).data);
+        const workers = (await workerApi.listWorkers()).data;
+        setWorkers(workers);
+        let workerSet = new Set(workers.map(worker => worker.snapshot));
+        setRelocatableWorkers(Array.from(workerSet.values()));
       } catch (e) {
         setWarningMessage(
           Http.handleRequestError(e, (status, data) => {
@@ -56,13 +117,13 @@ const WorkerSection = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onReassingWorker = async () => {
+  const onReassingWorker = async (fromSnapshot: string, toSnapshot: string) => {
     try {
       // eslint-disable-next-line @typescript-eslint/camelcase
       const response = await workerApi.reassignWorker({ from_version: fromSnapshot, to_version: toSnapshot });
       if (response.status == 200) {
         setSuccessMessage(
-          t('Reassignment from snapshot {{from}} to {{to}} sent to server.', { from: fromSnapshot, to: toSnapshot }),
+          t('Reassignment from snapshot {{from}} to {{to}} requested.', { from: fromSnapshot, to: toSnapshot }),
         );
       }
     } catch (e) {
@@ -87,42 +148,7 @@ const WorkerSection = () => {
           </div>
         )}
         {workers.length > 0 && (
-          <div style={{ display: 'flex', flexDirection: 'row', width: '100%', alignItems: 'center' }}>
-            <Typography style={{ marginRight: '1em' }}>{t('From')}</Typography>
-            <div style={{ width: 160 }}>
-              <Select
-                isSearchable={false}
-                onChange={(value: any, action: any) => setFromSnapshot(value.value)}
-                options={Object.keys(
-                  workers.reduce(
-                    (result, item) => ({
-                      ...result,
-                      [item.snapshot]: 1,
-                    }),
-                    {},
-                  ),
-                ).map(snapshot => ({
-                  value: snapshot,
-                  label: snapshot,
-                }))}
-              />
-            </div>
-            <Typography style={{ marginLeft: '1em', marginRight: '1em' }}>{t('to')}</Typography>
-            <div style={{ width: 160 }}>
-              <AsyncSelect
-                isSearchable={false}
-                loadOptions={loadOptions}
-                onChange={(value: any, action: any) => setToSnapshot(value.value)}
-                cacheOptions={fromSnapshot}
-                defaultOptions
-              />
-            </div>
-            <div>
-              <Button style={{ marginLeft: '1em' }} onClick={onReassingWorker}>
-                {t('Apply')}
-              </Button>
-            </div>
-          </div>
+          <WorkerMigrate relocatableWorkers={relocatableWorkers} onRelocateWorker={onReassingWorker} />
         )}
       </Paper>
       <SuccessSnackbar message={successMessage} onClose={() => window.location.reload()} />
