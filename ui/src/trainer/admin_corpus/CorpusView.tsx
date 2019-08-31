@@ -74,7 +74,9 @@ const CorpusView = () => {
     try {
       setDropzoneOpen(false);
       setLoading(true);
-      await Promise.all(files.map(file => api.uploadFile(file)));
+      for (let file of files) {
+        await api.uploadFile(file);
+      }
       window.location.reload();
     } catch (e) {
       setErrorMessage(
