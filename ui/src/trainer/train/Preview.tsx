@@ -99,9 +99,15 @@ const PreviewLayout = ({ classes }: Props) => {
                 type="search"
                 margin="normal"
                 variant="outlined"
+                rowsMax={10}
+                rows={10}
                 multiline
                 fullWidth
-                value={text}
+                autoFocus
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                placeholder={t('Write the text you want to extract entities from...')}
                 onChange={event => {
                   let text = event.target.value;
                   if (!text || !text.length) {
@@ -113,7 +119,7 @@ const PreviewLayout = ({ classes }: Props) => {
             </Grid>
             <Grid item xs={2}>
               <Button fullWidth color="primary" onClick={onParseClick}>
-                {t('Parse')}
+                {t('Find entities')}
               </Button>
             </Grid>
           </Grid>
