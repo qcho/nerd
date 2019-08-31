@@ -1,9 +1,9 @@
 {
+  "Reassignment from snapshot {{from}} to {{to}} requested.": "Reassignment from snapshot {{from}} to {{to}} requested.",
   "ACCEPT": "ACCEPT",
   "Write the text you want to extract entities from...": "Write the text you want to extract entities from...",
   "Select a .txt file": "Select a .txt file",
   "Find entities": "Find entities",
-  "Reassignment from snapshot {{from}} to {{to}} requested.": "Reassignment from snapshot {{from}} to {{to}} requested.",
   "There was an error while retrieving a text to train.": "There was an error while retrieving a text to train.",
   "You're about to change {{userName}}'s password. Are you sure?": "You're about to change {{userName}}'s password. Are you sure?",
   "Change user password": "Change user password",
