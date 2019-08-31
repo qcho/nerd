@@ -91,6 +91,7 @@ const FileUploadDialog = ({ open, onSave, onClose }: Props) => {
         <DropzoneArea
           acceptedFiles={['text/plain']}
           dropzoneText={t('Select a .txt file')}
+          filesLimit={20}
           onChange={onDropzoneChange}
           dropzoneClass={classes.dropzoneText}
         />
