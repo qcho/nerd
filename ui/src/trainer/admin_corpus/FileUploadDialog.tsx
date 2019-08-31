@@ -79,7 +79,6 @@ const FileUploadDialog = ({ open, onSave, onClose }: Props) => {
   const classes = useStyles();
 
   function onDropzoneChange(files: any[]) {
-    console.log(files);
     setFiles(files);
   }
 
@@ -91,7 +90,6 @@ const FileUploadDialog = ({ open, onSave, onClose }: Props) => {
       <MuiDialogContent style={{ width: '600px' }}>
         <DropzoneArea
           acceptedFiles={['text/plain']}
-          filesLimit={1}
           dropzoneText={t('Select a .txt file')}
           onChange={onDropzoneChange}
           dropzoneClass={classes.dropzoneText}
