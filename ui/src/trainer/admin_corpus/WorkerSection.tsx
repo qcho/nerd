@@ -45,7 +45,7 @@ const WorkerMigrate = ({
       <Typography style={{ marginRight: '1em' }}>{t('From')}</Typography>
       <div style={{ width: 160 }}>
         <Select
-          value={relocatableWorkers.length > 0 ? relocatableWorkers[0] : ''}
+          value={relocatableWorkers.length > 0 ? fromSnapshot : ''}
           input={<InputBase style={{ position: 'relative', width: 'auto', paddingLeft: '5px' }} />}
           onChange={event => {
             setFromSnapshot((event.target.value as unknown) as string);
