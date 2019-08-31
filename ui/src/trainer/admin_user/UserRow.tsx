@@ -41,7 +41,8 @@ const UserRow = ({ user, availableRoles: roles }: Props) => {
     setUserRoles(values);
     setLoading(true);
     try {
-      let result = await userApi.updateUser(user.email, {
+      if (!user.id) return;
+      let result = await userApi.updateUser(user.id, {
         roles: values,
       });
       setUserRoles(result.data.roles || []);

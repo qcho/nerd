@@ -39,7 +39,12 @@ const UserManagement = () => {
   const onDelete = async (rows: User[]) => {
     try {
       setLoading(true);
-      await Promise.all(rows.map(user => userApi.deleteUser(user.email)));
+      await Promise.all(
+        rows.map(user => {
+          if (!user.id) return;
+          userApi.deleteUser(user.id);
+        }),
+      );
     } catch (e) {
       // TODO: Handle errors
     } finally {
