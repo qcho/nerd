@@ -46,12 +46,6 @@ export interface ChangeSnapshot {
 export interface EntityList {
     /**
      * 
-     * @type {string}
-     * @memberof EntityList
-     */
-    text: string;
-    /**
-     * 
      * @type {Array<SpacyEntity2>}
      * @memberof EntityList
      */
@@ -62,6 +56,12 @@ export interface EntityList {
      * @memberof EntityList
      */
     snapshot: Snapshot;
+    /**
+     * 
+     * @type {string}
+     * @memberof EntityList
+     */
+    text: string;
 }
 
 /**
@@ -117,12 +117,6 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    plain_password?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Register
-     */
     email: string;
     /**
      * 
@@ -130,6 +124,12 @@ export interface Register {
      * @memberof Register
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Register
+     */
+    plain_password?: string;
 }
 
 /**
@@ -154,10 +154,10 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
-     * @type {Date}
+     * @type {{ [key: string]: Type; }}
      * @memberof Snapshot
      */
-    trained_at?: Date;
+    types?: { [key: string]: Type; };
     /**
      * 
      * @type {number}
@@ -166,10 +166,10 @@ export interface Snapshot {
     semaphore?: number;
     /**
      * 
-     * @type {number}
+     * @type {Date}
      * @memberof Snapshot
      */
-    id: number;
+    trained_at?: Date;
     /**
      * 
      * @type {Date}
@@ -178,10 +178,10 @@ export interface Snapshot {
     created_at?: Date;
     /**
      * 
-     * @type {{ [key: string]: Type; }}
+     * @type {number}
      * @memberof Snapshot
      */
-    types?: { [key: string]: Type; };
+    id: number;
 }
 
 /**
@@ -236,12 +236,6 @@ export interface SnapshotInfo {
 export interface SpacyDocument {
     /**
      * 
-     * @type {Date}
-     * @memberof SpacyDocument
-     */
-    _created_at?: Date;
-    /**
-     * 
      * @type {Array<SpacyEntity>}
      * @memberof SpacyDocument
      */
@@ -252,6 +246,12 @@ export interface SpacyDocument {
      * @memberof SpacyDocument
      */
     text: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof SpacyDocument
+     */
+    _created_at?: Date;
     /**
      * 
      * @type {Array<SpacySentence>}
@@ -274,12 +274,6 @@ export interface SpacyDocument {
 export interface SpacyDocument1 {
     /**
      * 
-     * @type {Date}
-     * @memberof SpacyDocument1
-     */
-    _created_at?: Date;
-    /**
-     * 
      * @type {Array<SpacyEntity1>}
      * @memberof SpacyDocument1
      */
@@ -290,6 +284,12 @@ export interface SpacyDocument1 {
      * @memberof SpacyDocument1
      */
     text: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof SpacyDocument1
+     */
+    _created_at?: Date;
     /**
      * 
      * @type {Array<SpacySentence1>}
@@ -312,16 +312,16 @@ export interface SpacyDocument1 {
 export interface SpacyEntity {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyEntity
-     */
-    label: string;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyEntity
      */
     start: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyEntity
+     */
+    label: string;
     /**
      * 
      * @type {number}
@@ -338,16 +338,16 @@ export interface SpacyEntity {
 export interface SpacyEntity1 {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyEntity1
-     */
-    label: string;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyEntity1
      */
     start: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyEntity1
+     */
+    label: string;
     /**
      * 
      * @type {number}
@@ -364,16 +364,16 @@ export interface SpacyEntity1 {
 export interface SpacyEntity2 {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyEntity2
-     */
-    label: string;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyEntity2
      */
     start: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyEntity2
+     */
+    label: string;
     /**
      * 
      * @type {number}
@@ -430,18 +430,6 @@ export interface SpacySentence1 {
 export interface SpacyToken {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    dep?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    end: number;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyToken
      */
@@ -451,7 +439,7 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
-    id: number;
+    head?: number;
     /**
      * 
      * @type {string}
@@ -463,7 +451,19 @@ export interface SpacyToken {
      * @type {number}
      * @memberof SpacyToken
      */
-    head?: number;
+    end: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
+    id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    dep?: string;
     /**
      * 
      * @type {string}
@@ -480,18 +480,6 @@ export interface SpacyToken {
 export interface SpacyToken1 {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
-    dep?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken1
-     */
-    end: number;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyToken1
      */
@@ -501,7 +489,7 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
-    id: number;
+    head?: number;
     /**
      * 
      * @type {string}
@@ -513,7 +501,19 @@ export interface SpacyToken1 {
      * @type {number}
      * @memberof SpacyToken1
      */
-    head?: number;
+    end: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken1
+     */
+    id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    dep?: string;
     /**
      * 
      * @type {string}
@@ -542,16 +542,16 @@ export interface Text {
     value: string;
     /**
      * 
-     * @type {string}
-     * @memberof Text
-     */
-    id?: string;
-    /**
-     * 
      * @type {Date}
      * @memberof Text
      */
     created_at?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof Text
+     */
+    id?: string;
 }
 
 /**
@@ -588,16 +588,16 @@ export interface Token {
 export interface TopContributor {
     /**
      * 
-     * @type {number}
-     * @memberof TopContributor
-     */
-    total_trainings: number;
-    /**
-     * 
      * @type {string}
      * @memberof TopContributor
      */
     name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TopContributor
+     */
+    total_trainings: number;
 }
 
 /**
@@ -606,6 +606,12 @@ export interface TopContributor {
  * @interface TrainText
  */
 export interface TrainText {
+    /**
+     * 
+     * @type {string}
+     * @memberof TrainText
+     */
+    text_id: string;
     /**
      * 
      * @type {SpacyDocument1}
@@ -618,12 +624,6 @@ export interface TrainText {
      * @memberof TrainText
      */
     snapshot: Snapshot;
-    /**
-     * 
-     * @type {string}
-     * @memberof TrainText
-     */
-    text_id: string;
 }
 
 /**
@@ -637,19 +637,13 @@ export interface Training {
      * @type {string}
      * @memberof Training
      */
-    id?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Training
-     */
     text_id: string;
     /**
      * 
-     * @type {string}
+     * @type {SpacyDocument}
      * @memberof Training
      */
-    user_id: string;
+    document: SpacyDocument;
     /**
      * 
      * @type {Date}
@@ -658,10 +652,16 @@ export interface Training {
     created_at?: Date;
     /**
      * 
-     * @type {SpacyDocument}
+     * @type {string}
      * @memberof Training
      */
-    document: SpacyDocument;
+    user_id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Training
+     */
+    id?: string;
 }
 
 /**
@@ -692,22 +692,16 @@ export interface Type {
 export interface User {
     /**
      * 
-     * @type {number}
-     * @memberof User
-     */
-    total_trainings?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    id?: string;
-    /**
-     * 
      * @type {string}
      * @memberof User
      */
     email: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    name: string;
     /**
      * 
      * @type {Array<string>}
@@ -719,7 +713,13 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    name: string;
+    id?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof User
+     */
+    total_trainings?: number;
 }
 
 /**
@@ -756,24 +756,6 @@ export interface UserCredentials {
 export interface UserPayload {
     /**
      * 
-     * @type {string}
-     * @memberof UserPayload
-     */
-    plain_password?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserPayload
-     */
-    id?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof UserPayload
-     */
-    roles?: Array<string>;
-    /**
-     * 
      * @type {Array<string>}
      * @memberof UserPayload
      */
@@ -784,6 +766,24 @@ export interface UserPayload {
      * @memberof UserPayload
      */
     name?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof UserPayload
+     */
+    roles?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPayload
+     */
+    plain_password?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPayload
+     */
+    id?: string;
 }
 
 /**
@@ -811,13 +811,13 @@ export interface Worker {
      * @type {string}
      * @memberof Worker
      */
-    snapshot: string;
+    name: string;
     /**
      * 
      * @type {string}
      * @memberof Worker
      */
-    name: string;
+    snapshot: string;
 }
 
 
@@ -2906,6 +2906,34 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
     return {
         /**
          * 
+         * @summary Patches the user entity
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiUsersMePatch(options: any = {}): RequestArgs {
+            const localVarPath = `/api/users/me`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+                localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...options.headers};
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Delete user by id
          * @param {string} user_id 
          * @param {*} [options] Override http request option.
@@ -3267,6 +3295,19 @@ export const UsersApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @summary Patches the user entity
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiUsersMePatch(options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Response> {
+            const localVarAxiosArgs = UsersApiAxiosParamCreator(configuration).apiUsersMePatch(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @summary Delete user by id
          * @param {string} user_id 
          * @param {*} [options] Override http request option.
@@ -3389,6 +3430,15 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
     return {
         /**
          * 
+         * @summary Patches the user entity
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiUsersMePatch(options?: any) {
+            return UsersApiFp(configuration).apiUsersMePatch(options)(axios, basePath);
+        },
+        /**
+         * 
          * @summary Delete user by id
          * @param {string} user_id 
          * @param {*} [options] Override http request option.
@@ -3478,6 +3528,17 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
  * @extends {BaseAPI}
  */
 export class UsersApi extends BaseAPI {
+    /**
+     * 
+     * @summary Patches the user entity
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public apiUsersMePatch(options?: any) {
+        return UsersApiFp(this.configuration).apiUsersMePatch(options)(this.axios, this.basePath);
+    }
+
     /**
      * 
      * @summary Delete user by id
