@@ -8,6 +8,7 @@ const borderStyle = '1px solid black';
 const borderRadius = '20px';
 const entityMargin = '2px';
 const entityPadding = '10px';
+const backgroundColor = '#F8EA8C';
 
 const useEntityNodeStyles = makeStyles(() => ({
   borderComplete: {
@@ -17,6 +18,7 @@ const useEntityNodeStyles = makeStyles(() => ({
     marginRight: entityMargin,
     border: borderStyle,
     borderRadius: borderRadius,
+    backgroundColor: backgroundColor,
   },
   borderStart: {
     paddingLeft: entityPadding,
@@ -26,10 +28,12 @@ const useEntityNodeStyles = makeStyles(() => ({
     borderLeft: borderStyle,
     borderTopLeftRadius: borderRadius,
     borderBottomLeftRadius: borderRadius,
+    backgroundColor: backgroundColor,
   },
   borderMiddle: {
     borderTop: borderStyle,
     borderBottom: borderStyle,
+    backgroundColor: backgroundColor,
   },
   borderEnd: {
     paddingRight: entityPadding,
@@ -39,6 +43,7 @@ const useEntityNodeStyles = makeStyles(() => ({
     borderRight: borderStyle,
     borderTopRightRadius: borderRadius,
     borderBottomRightRadius: borderRadius,
+    backgroundColor: backgroundColor,
   },
 }));
 
