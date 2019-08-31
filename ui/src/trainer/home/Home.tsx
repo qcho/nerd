@@ -8,6 +8,7 @@ import { Routes } from '../helpers/routeHelper';
 import { TopContributors } from './TopContributors';
 import { Scaffold } from '../scaffold/Scaffold';
 import { Subtitle } from '../widgets/Title';
+import { Role } from '../types/role';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -59,24 +60,24 @@ const useStyles = makeStyles(
 const Home = () => {
   const [t] = useTranslation();
   const classes = useStyles();
-  const { loggedIn } = useAuthentication();
+  const { loggedIn, hasRole } = useAuthentication();
+  const isTrainer = hasRole(Role.TRAINER);
 
-  const services: ApiService[] = [
-    {
-      name: 'Train',
+  var services: ApiService[] = [];
+  if (isTrainer) {
+    services.push({
+      name: 'Help me become smarter!',
       actionPath: Routes.train,
-      action: 'Go',
-      description: t(
-        "Help me become smarter! I'll show you a text with some tags and you can then decide if it's correct or fix it!",
-      ),
-    },
-    {
-      name: 'Find',
-      actionPath: Routes.preview,
-      action: 'Go',
-      description: 'Want to try and see what entities I find for a given text? Then this is the way to go!',
-    },
-  ];
+      action: 'Train now',
+      description: t("I'll show you a text with some tags and you can then decide if it's correct or fix it!"),
+    });
+  }
+  services.push({
+    name: 'Check your text',
+    actionPath: Routes.preview,
+    action: 'Find entities',
+    description: 'Want to try and see what entities I find for a given text? Then this is the way to go!',
+  });
 
   return (
     <Scaffold title={'Home'}>
