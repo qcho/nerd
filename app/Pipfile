@@ -10,7 +10,7 @@ marshmallow-mongoengine = {editable = true,git = "https://github.com/MongoEngine
 blinker = "*"
 flask-jwt-extended = "*"
 spacy = "~=2.1"
-celery = "*"
+celery = "~=4.1.1"
 flower = "*"
 meinheld = "*"
 gunicorn = "*"
