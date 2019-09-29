@@ -6,3 +6,4 @@ models/
 app/src
 .env.development
 .env.production
+.history/
