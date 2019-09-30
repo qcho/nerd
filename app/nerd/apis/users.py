@@ -2,8 +2,8 @@ import json
 
 from flask.views import MethodView
 from flask_jwt_extended import get_jwt_identity
-from flask_rest_api import Blueprint
-from flask_rest_api.pagination import PaginationParameters
+from flask_smorest import Blueprint
+from flask_smorest.pagination import PaginationParameters
 from marshmallow import Schema
 from marshmallow import fields
 from marshmallow_mongoengine import ModelSchema
@@ -53,7 +53,7 @@ class FilterUsersSchema(Schema):
 class UserListView(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(UserSchema(many=True))
+    @blp.response(UserSchema(many=True), code=200, description='List of users')
     @blp.arguments(FilterUsersSchema, location='query')
     @blp.doc(operationId="listUsers")
     @blp.paginate()
@@ -92,7 +92,7 @@ class UserListView(MethodView):
 
 @blp.route('/top5')
 class TopTrainers(MethodView):
-    @blp.response(TopContributorSchema(many=True), code=200)
+    @blp.response(TopContributorSchema(many=True), code=200, description='Top 5 contributors')
     @blp.doc(operationId='top5')
     def get(self):
         return User.objects.aggregate(*[
@@ -150,7 +150,7 @@ class LoggedUserView(MethodView):
 
     @jwt_and_role_required(Role.USER)
     @response_error(NotFound('User does not exist'))
-    @blp.response(UserSchema)
+    @blp.response(UserSchema, code=200, description='Logged user details')
     @blp.doc(operationId="loggedUserDetails")
     def get(self):
         """Gets currently logged user's account details"""
@@ -159,6 +159,10 @@ class LoggedUserView(MethodView):
         except (DoesNotExist, ValidationError):
             raise NotFound()
 
+    @jwt_and_role_required(Role.USER)
+    @response_error(NotFound('User does not exist'))
+    @blp.response(UserSchema, code=200, description='Logged user details patched')
+    @blp.doc(operationId="patchLoggedUserDetails")
     def patch(self, payload: UserPayloadSchema):
         """Patches the user entity"""
         try:
@@ -173,7 +177,7 @@ class MyTrainings(MethodView):
     @jwt_and_role_required(Role.USER)
     @blp.paginate()
     @blp.doc(operationId="myTrainings")
-    @blp.response(TrainingSchema(many=True), code=200)
+    @blp.response(TrainingSchema(many=True), code=200, description='Own trainings')
     @response_error(NotFound('User does not exist'))
     def get(self, pagination_parameters: PaginationParameters):
         try:
@@ -188,7 +192,7 @@ class UserView(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
     @response_error(NotFound('User does not exist'))
-    @blp.response(UserSchema)
+    @blp.response(UserSchema, code=200, description='User details')
     @blp.doc(operationId="userDetails")
     def get(self, user_id: str):
         """Gets specific user account details by a given id
@@ -200,7 +204,7 @@ class UserView(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
     @response_error(NotFound('User does not exist'))
-    @blp.response(UserSchema)
+    @blp.response(UserSchema, code=200, description='User deleted')
     @blp.doc(operationId="deleteUser")
     def delete(self, user_id: str):
         """Delete user by id"""
@@ -215,7 +219,7 @@ class UserView(MethodView):
     @blp.arguments(UserPayloadSchema(partial=True))
     @response_error(NotFound('User does not exist'))
     @response_error(UnprocessableEntity('There was an error processing the payload'))
-    @blp.response(UserSchema)
+    @blp.response(UserSchema, code=200, description='User patched')
     @blp.doc(operationId="updateUser")
     def patch(self, user_payload: UserPayloadSchema, user_id: str):
         """Patches the user entity
@@ -230,7 +234,7 @@ class UserView(MethodView):
 class UserTrainings(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="userTrainings")
-    @blp.response(TrainingSchema(many=True), code=200)
+    @blp.response(TrainingSchema(many=True), code=200, description='User\'s trainings')
     @response_error(NotFound('User does not exist'))
     @blp.paginate()
     def get(self, user_id, pagination_parameters: PaginationParameters):

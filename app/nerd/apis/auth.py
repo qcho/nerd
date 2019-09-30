@@ -1,7 +1,7 @@
 from flask.views import MethodView
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 get_jwt_identity, jwt_refresh_token_required)
-from flask_rest_api import Blueprint
+from flask_smorest import Blueprint
 from marshmallow import fields, post_load
 from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
@@ -20,7 +20,7 @@ class RegisterSchema(ModelSchema):
         exclude = ['id', 'roles', 'password', 'trainings']
 
     @post_load
-    def sanitize_fields(self, item):
+    def sanitize_fields(self, item, many, **kwargs):
         item['name'] = item['name'].strip()
         item['email'] = item['email'].lower().strip()
         return item
@@ -77,7 +77,7 @@ class TokenResource(MethodView):
         password = fields.String(required=True)
 
         @post_load
-        def sanitize_fields(self, item):
+        def sanitize_fields(self, item, many, **kwargs):
             item['username'] = item['username'].lower().strip()
             return item
 
@@ -87,7 +87,7 @@ class TokenResource(MethodView):
     # @blp.arguments(TokenSchema, location='form')
     @blp.arguments(TokenSchema, location='json')
     @response_error(Unauthorized('Invalid credentials'))
-    @blp.response(UserCredentialsSchema, code=200)
+    @blp.response(UserCredentialsSchema, code=200, description='Login successful')
     @blp.doc(operationId="createAccessToken")
     def post(self, login_payload):
         """Generate new access and refresh tokens with password grant_type"""

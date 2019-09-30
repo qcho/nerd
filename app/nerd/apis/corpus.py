@@ -4,8 +4,8 @@ from io import TextIOWrapper
 from flask.views import MethodView
 from flask_jwt_extended import get_jwt_identity
 import flask
-from flask_rest_api import Blueprint
-from flask_rest_api.pagination import PaginationParameters
+from flask_smorest import Blueprint
+from flask_smorest.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
 from mongoengine import DoesNotExist
 from werkzeug.exceptions import BadRequest, FailedDependency, NotFound
@@ -66,7 +66,7 @@ class CorpusTextResource(MethodView):
 class TrainingView(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="trainingsForText")
-    @blp.response(TrainingSchema(many=True), code=200)
+    @blp.response(TrainingSchema(many=True), code=200, description='Get trainings')
     @blp.paginate()
     def get(self, text_id, pagination_parameters: PaginationParameters):
         trainings = Training.objects.filter(text_id=text_id)
@@ -78,7 +78,7 @@ class TrainingView(MethodView):
     @jwt_and_role_required(Role.TRAINER)
     @blp.arguments(SpacyDocumentSchema)
     @blp.doc(operationId="addTextTraining")
-    @blp.response(code=200)
+    @blp.response(code=200, description='Add text training')
     def put(self, payload, text_id):
         user = User.objects.get(email=get_jwt_identity())
         text = Text.objects.get(id=text_id)

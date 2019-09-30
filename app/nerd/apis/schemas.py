@@ -2,25 +2,20 @@ from marshmallow import Schema, fields
 from marshmallow_mongoengine import ModelSchema
 
 from nerd.core.document.corpus import Training
-from nerd.core.document.snapshot import SnapshotSchema, Type
-from nerd.core.document.spacy import SpacyDocumentSchema, SpacyEntity
-
-
-class SpacyEntitySchema(ModelSchema):
-    class Meta:
-        model = SpacyEntity
+from nerd.core.document.snapshot import SnapshotSchemaRequired, Type
+from nerd.core.document.spacy import SpacyDocumentSchemaRequired, SpacyEntity
 
 
 class EntityListSchema(Schema):
     text = fields.String(required=True)
-    snapshot = fields.Nested(SnapshotSchema, required=True)
-    entities = fields.List(fields.Nested(SpacyEntitySchema), required=True)
+    snapshot = SnapshotSchemaRequired
+    entities = SpacyDocumentSchemaRequired
 
 
 class TrainTextSchema(Schema):
     text_id = fields.String(required=True)
-    snapshot = fields.Nested(SnapshotSchema, required=True)
-    spacy_document = fields.Nested(SpacyDocumentSchema, required=True)
+    snapshot = SnapshotSchemaRequired
+    spacy_document = SpacyDocumentSchemaRequired
 
 
 class TrainingSchema(ModelSchema):

@@ -7,7 +7,7 @@ class BaseConfig(object):
     DEBUG = False
     TESTING = False
     PREFERRED_URL_SCHEME = os.environ.get('NERD_URL_SCHEME', 'http')
-    SERVER_NAME = "{}:{}".format(
+    NERD_WEB_NAME = "{}:{}".format(
         os.environ.get('NERD_WEB_HOST'),
         os.environ.get('NERD_WEB_HTTP_PORT'),
     )
@@ -30,7 +30,7 @@ class BaseConfig(object):
             {
                 'url': '{}://{}'.format(
                     PREFERRED_URL_SCHEME,
-                    SERVER_NAME,
+                    NERD_WEB_NAME,
                 ),
                 'description': 'UI endpoint'
             }

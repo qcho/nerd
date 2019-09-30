@@ -86,6 +86,11 @@ class SnapshotSchema(ModelSchema):
         }
 
 
+class SnapshotSchemaRequired(SnapshotSchema):
+    class Meta(SnapshotSchema.Meta):
+        required = True
+
+
 class TrainingLockAcquireError(Exception):
     pass
 

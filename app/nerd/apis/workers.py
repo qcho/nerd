@@ -1,5 +1,5 @@
 from flask.views import MethodView
-from flask_rest_api import Blueprint
+from flask_smorest import Blueprint
 from nerd.tasks import celery
 from nerd.tasks.corpus import change_snapshot as change_snapshot_task
 from marshmallow import Schema, fields
@@ -45,7 +45,7 @@ class Workers(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="listWorkers")
-    @blp.response(WorkerSchema(many=True))
+    @blp.response(WorkerSchema(many=True), code=200, description='Workers list')
     def get(self):
         return get_worker_snapshots()
 

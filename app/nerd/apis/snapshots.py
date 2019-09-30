@@ -2,15 +2,15 @@ from datetime import datetime
 
 from celery import chain
 from flask.views import MethodView
-from flask_rest_api import Blueprint
-from flask_rest_api.pagination import PaginationParameters
+from flask_smorest import Blueprint
+from flask_smorest.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema, fields
 from mongoengine import DoesNotExist, ValidationError
 from werkzeug.exceptions import NotFound
 
 from nerd.apis import jwt_and_role_required, response_error, BaseSchema
 from nerd.core.document.corpus import Text, Training
-from nerd.core.document.snapshot import CURRENT_ID, Snapshot, SnapshotSchema
+from nerd.core.document.snapshot import CURRENT_ID, Snapshot, SnapshotSchema, SnapshotSchemaRequired
 from nerd.core.document.user import Role
 from werkzeug.exceptions import Forbidden
 
@@ -22,7 +22,7 @@ blp = Blueprint("snapshots", "snapshots",
 
 
 class SnapshotInfoSchema(BaseSchema):
-    snapshot = fields.Nested(SnapshotSchema, required=True)
+    snapshot = SnapshotSchemaRequired
     corpus_size = fields.Integer(required=True)
     trained = fields.Integer(required=True)
     trained_distinct = fields.Integer(required=True)
@@ -40,7 +40,7 @@ class CreateCorpusSnapshotSchema(ModelSchema):
 class IndexResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(SnapshotSchema(many=True))
+    @blp.response(SnapshotSchema(many=True), code=200, description='List of corpus snapshots')
     @blp.doc(operationId="listCorpusSnapshots")
     @blp.paginate()
     def get(self, pagination_parameters: PaginationParameters):
@@ -76,7 +76,7 @@ def snapshot_info(snapshot_id):
 class SnapshotResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(SnapshotInfoSchema, code=200)
+    @blp.response(SnapshotInfoSchema, code=200, description='Get snapshot')
     @response_error(NotFound("Could not find snapshot with given id"))
     @blp.doc(operationId="getSnapshot")
     def get(self, snapshot_id: int):
@@ -86,7 +86,7 @@ class SnapshotResource(MethodView):
             raise NotFound()
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(SnapshotInfoSchema, code=200)
+    @blp.response(SnapshotInfoSchema, code=200, description='Snapshot information')
     @response_error(NotFound("Could not find snapshot with given id"))
     @blp.doc(operationId="deleteSnapshot")
     def delete(self, snapshot_id: int):
@@ -113,7 +113,7 @@ class SnapshotResource(MethodView):
 class ForceTrainingResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(code=204)
+    @blp.response(code=204, description='Trained')
     @blp.doc(operationId="forceTrain")
     def post(self, snapshot_id: int):
         snapshot = Snapshot.objects.get(id=snapshot_id)
@@ -125,7 +125,7 @@ class ForceTrainingResource(MethodView):
 class ForceUntrainResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(code=204)
+    @blp.response(code=204, description='Untrained')
     @response_error(Forbidden("Can't untrain current snapshot"))
     @blp.doc(operationId="forceUntrain")
     def post(self, snapshot_id: int):
@@ -139,7 +139,7 @@ class ForceUntrainResource(MethodView):
 class SnapshotCurrentResource(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(SnapshotInfoSchema)
+    @blp.response(SnapshotInfoSchema, code=200, description='Current snapshot')
     @blp.doc(operationId="getCurrentSnapshot")
     def get(self):
         return snapshot_info(CURRENT_ID)
@@ -147,7 +147,7 @@ class SnapshotCurrentResource(MethodView):
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="createCorpusSnapshot")
     @blp.arguments(SnapshotSchema)
-    @blp.response(SnapshotSchema)
+    @blp.response(SnapshotSchema, code=200, description='Snapshot created')
     def put(self, payload):
         current_snapshot = Snapshot.current()
         new_snapshot = Snapshot(types=current_snapshot.types)

@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 flask = "*"
-flask-rest-api = "*"
 marshmallow-mongoengine = {editable = true,git = "https://github.com/MongoEngine/marshmallow-mongoengine"}
 blinker = "*"
 flask-jwt-extended = "*"
@@ -16,6 +15,7 @@ meinheld = "*"
 gunicorn = "*"
 marshmallow-enum = "*"
 newsapi-python = "*"
+flask-smorest = "*"
 
 [dev-packages]
 faker = "*"

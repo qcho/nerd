@@ -1,5 +1,5 @@
 from flask.views import MethodView
-from flask_rest_api import Blueprint
+from flask_smorest import Blueprint
 from marshmallow import fields
 
 from nerd.apis import BaseSchema, jwt_and_role_required
@@ -16,7 +16,7 @@ class RoleListSchema(BaseSchema):
 class RoleListView(MethodView):
 
     @jwt_and_role_required(Role.ADMIN)
-    @blp.response(RoleListSchema)
+    @blp.response(RoleListSchema, code=200, description='List of roles')
     @blp.doc(operationId="listRoles")
     def get(self):
         """Returns a list of available roles"""

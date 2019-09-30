@@ -42,7 +42,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "gen-api": "yarn run openapi-generator generate -i http://localhost:8080/api/openapi.json -g typescript-axios -o src/trainer/apigen -c openapi_config.json --skip-validate-spec"
+    "gen-api": "yarn run openapi-generator generate -i http://localhost:8080/api/openapi.json -g typescript-axios -o src/trainer/apigen -c openapi_config.json"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -54,7 +54,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^0.0.9-4.0.0-beta3",
+    "@openapitools/openapi-generator-cli": "^4.1.2",
     "@types/http-proxy-middleware": "^0.19.2",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",

@@ -2,7 +2,7 @@ from functools import wraps
 
 from apispec.utils import deepupdate
 from flask_jwt_extended import (get_jwt_claims, verify_jwt_in_request)
-from flask_rest_api import Api
+from flask_smorest import Api
 from marshmallow import Schema, fields
 from werkzeug.exceptions import HTTPException, Unauthorized
 from werkzeug.http import HTTP_STATUS_CODES

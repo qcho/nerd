@@ -36,3 +36,19 @@ class SpacyDocument(me.EmbeddedDocument):
 class SpacyDocumentSchema(ModelSchema):
     class Meta:
         model = SpacyDocument
+
+
+class SpacyEntitySchema(ModelSchema):
+    class Meta:
+        model = SpacyEntity
+
+
+class SpacySentenceSchema(ModelSchema):
+    class Meta:
+        model = SpacySentence
+
+
+class SpacyDocumentSchemaRequired(ModelSchema):
+    class Meta:
+        model = SpacyToken
+        required = True
