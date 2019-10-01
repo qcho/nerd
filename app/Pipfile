@@ -5,11 +5,11 @@ name = "pypi"
 
 [packages]
 flask = "*"
-marshmallow-mongoengine = {editable = true,git = "https://github.com/MongoEngine/marshmallow-mongoengine"}
+marshmallow-mongoengine = {editable = true, ref = "marshmallow-v3", git = "https://github.com/qcho/marshmallow-mongoengine"}
 blinker = "*"
 flask-jwt-extended = "*"
 spacy = "~=2.1"
-celery = "~=4.1.1"
+celery = "~=4.3.0"
 flower = "*"
 meinheld = "*"
 gunicorn = "*"
