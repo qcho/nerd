@@ -1017,7 +1017,7 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@openapitools/openapi-generator-cli@^4.1.2":
+"@openapitools/openapi-generator-cli@^0.0.21-4.1.2":
   version "0.0.21-4.1.2"
   resolved "https://registry.yarnpkg.com/@openapitools/openapi-generator-cli/-/openapi-generator-cli-0.0.21-4.1.2.tgz#b33666ab2f3e91fca994098939a35f2612726aae"
   integrity sha512-kNIqujx+ol/w6fQPRs8u7CVfUJbi4gbPuAunkpKtmLrz3WWyXduNS23VCBr12M8c9ZZoip8bdfIhvdLM09FwNQ==

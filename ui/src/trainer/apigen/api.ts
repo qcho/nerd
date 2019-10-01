@@ -31,13 +31,13 @@ export interface ChangeSnapshot {
      * @type {string}
      * @memberof ChangeSnapshot
      */
-    from_version: string;
+    to_version: string;
     /**
      * 
      * @type {string}
      * @memberof ChangeSnapshot
      */
-    to_version: string;
+    from_version: string;
 }
 /**
  * 
@@ -51,6 +51,18 @@ export interface EntityList {
      * @memberof EntityList
      */
     text: string;
+    /**
+     * 
+     * @type {Array<SpacyEntity2>}
+     * @memberof EntityList
+     */
+    entities: Array<SpacyEntity2>;
+    /**
+     * 
+     * @type {Snapshot}
+     * @memberof EntityList
+     */
+    snapshot: Snapshot;
 }
 /**
  * 
@@ -102,7 +114,7 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    email: string;
+    plain_password?: string;
     /**
      * 
      * @type {string}
@@ -114,7 +126,7 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    plain_password?: string;
+    email: string;
 }
 /**
  * 
@@ -137,16 +149,16 @@ export interface RoleList {
 export interface Snapshot {
     /**
      * 
-     * @type {{ [key: string]: Type; }}
+     * @type {Date}
      * @memberof Snapshot
      */
-    types?: { [key: string]: Type; };
+    trained_at?: Date;
     /**
      * 
      * @type {Date}
      * @memberof Snapshot
      */
-    trained_at?: Date;
+    created_at?: Date;
     /**
      * 
      * @type {number}
@@ -155,10 +167,10 @@ export interface Snapshot {
     id: number;
     /**
      * 
-     * @type {Date}
+     * @type {{ [key: string]: Type; }}
      * @memberof Snapshot
      */
-    created_at?: Date;
+    types?: { [key: string]: Type; };
     /**
      * 
      * @type {number}
@@ -172,6 +184,12 @@ export interface Snapshot {
  * @interface SnapshotInfo
  */
 export interface SnapshotInfo {
+    /**
+     * 
+     * @type {Snapshot}
+     * @memberof SnapshotInfo
+     */
+    snapshot: Snapshot;
     /**
      * 
      * @type {number}
@@ -217,28 +235,28 @@ export interface SpacyDocument {
     _created_at?: Date;
     /**
      * 
-     * @type {Array<SpacyToken>}
-     * @memberof SpacyDocument
-     */
-    tokens?: Array<SpacyToken>;
-    /**
-     * 
      * @type {Array<SpacyEntity>}
      * @memberof SpacyDocument
      */
     ents?: Array<SpacyEntity>;
     /**
      * 
-     * @type {Array<SpacySentence>}
+     * @type {Array<SpacyToken>}
      * @memberof SpacyDocument
      */
-    sents?: Array<SpacySentence>;
+    tokens?: Array<SpacyToken>;
     /**
      * 
      * @type {string}
      * @memberof SpacyDocument
      */
     text: string;
+    /**
+     * 
+     * @type {Array<SpacySentence>}
+     * @memberof SpacyDocument
+     */
+    sents?: Array<SpacySentence>;
 }
 /**
  * 
@@ -254,28 +272,28 @@ export interface SpacyDocument1 {
     _created_at?: Date;
     /**
      * 
-     * @type {Array<SpacyToken1>}
-     * @memberof SpacyDocument1
-     */
-    tokens?: Array<SpacyToken1>;
-    /**
-     * 
      * @type {Array<SpacyEntity1>}
      * @memberof SpacyDocument1
      */
     ents?: Array<SpacyEntity1>;
     /**
      * 
-     * @type {Array<SpacySentence1>}
+     * @type {Array<SpacyToken1>}
      * @memberof SpacyDocument1
      */
-    sents?: Array<SpacySentence1>;
+    tokens?: Array<SpacyToken1>;
     /**
      * 
      * @type {string}
      * @memberof SpacyDocument1
      */
     text: string;
+    /**
+     * 
+     * @type {Array<SpacySentence1>}
+     * @memberof SpacyDocument1
+     */
+    sents?: Array<SpacySentence1>;
 }
 /**
  * 
@@ -291,16 +309,16 @@ export interface SpacyEntity {
     end: number;
     /**
      * 
-     * @type {number}
-     * @memberof SpacyEntity
-     */
-    start: number;
-    /**
-     * 
      * @type {string}
      * @memberof SpacyEntity
      */
     label: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity
+     */
+    start: number;
 }
 /**
  * 
@@ -316,16 +334,41 @@ export interface SpacyEntity1 {
     end: number;
     /**
      * 
-     * @type {number}
-     * @memberof SpacyEntity1
-     */
-    start: number;
-    /**
-     * 
      * @type {string}
      * @memberof SpacyEntity1
      */
     label: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity1
+     */
+    start: number;
+}
+/**
+ * 
+ * @export
+ * @interface SpacyEntity2
+ */
+export interface SpacyEntity2 {
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity2
+     */
+    end: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyEntity2
+     */
+    label: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyEntity2
+     */
+    start: number;
 }
 /**
  * 
@@ -373,28 +416,10 @@ export interface SpacySentence1 {
 export interface SpacyToken {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyToken
-     */
-    dep?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    id: number;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyToken
      */
     head?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    start: number;
     /**
      * 
      * @type {string}
@@ -407,6 +432,24 @@ export interface SpacyToken {
      * @memberof SpacyToken
      */
     end: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
+    start: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken
+     */
+    id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    dep?: string;
     /**
      * 
      * @type {string}
@@ -422,28 +465,10 @@ export interface SpacyToken {
 export interface SpacyToken1 {
     /**
      * 
-     * @type {string}
-     * @memberof SpacyToken1
-     */
-    dep?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken1
-     */
-    id: number;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyToken1
      */
     head?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken1
-     */
-    start: number;
     /**
      * 
      * @type {string}
@@ -456,6 +481,24 @@ export interface SpacyToken1 {
      * @memberof SpacyToken1
      */
     end: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken1
+     */
+    start: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SpacyToken1
+     */
+    id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    dep?: string;
     /**
      * 
      * @type {string}
@@ -477,22 +520,22 @@ export interface Text {
     trainings?: Array<object>;
     /**
      * 
-     * @type {Date}
-     * @memberof Text
-     */
-    created_at?: Date;
-    /**
-     * 
      * @type {string}
      * @memberof Text
      */
     value: string;
     /**
      * 
-     * @type {object}
+     * @type {string}
      * @memberof Text
      */
-    id?: object;
+    id?: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof Text
+     */
+    created_at?: Date;
 }
 /**
  * 
@@ -502,10 +545,10 @@ export interface Text {
 export interface Token {
     /**
      * 
-     * @type {object}
+     * @type {string}
      * @memberof Token
      */
-    grant_type?: object;
+    grant_type?: string;
     /**
      * 
      * @type {string}
@@ -527,16 +570,16 @@ export interface Token {
 export interface TopContributor {
     /**
      * 
-     * @type {number}
-     * @memberof TopContributor
-     */
-    total_trainings: number;
-    /**
-     * 
      * @type {string}
      * @memberof TopContributor
      */
     name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TopContributor
+     */
+    total_trainings: number;
 }
 /**
  * 
@@ -544,6 +587,18 @@ export interface TopContributor {
  * @interface TrainText
  */
 export interface TrainText {
+    /**
+     * 
+     * @type {Snapshot}
+     * @memberof TrainText
+     */
+    snapshot: Snapshot;
+    /**
+     * 
+     * @type {SpacyDocument1}
+     * @memberof TrainText
+     */
+    spacy_document: SpacyDocument1;
     /**
      * 
      * @type {string}
@@ -559,12 +614,6 @@ export interface TrainText {
 export interface Training {
     /**
      * 
-     * @type {object}
-     * @memberof Training
-     */
-    id?: object;
-    /**
-     * 
      * @type {Date}
      * @memberof Training
      */
@@ -574,19 +623,25 @@ export interface Training {
      * @type {object}
      * @memberof Training
      */
+    text_id: object;
+    /**
+     * 
+     * @type {object}
+     * @memberof Training
+     */
     user_id: object;
+    /**
+     * 
+     * @type {string}
+     * @memberof Training
+     */
+    id?: string;
     /**
      * 
      * @type {SpacyDocument}
      * @memberof Training
      */
     document: SpacyDocument;
-    /**
-     * 
-     * @type {object}
-     * @memberof Training
-     */
-    text_id: object;
 }
 /**
  * 
@@ -618,13 +673,7 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    email: string;
-    /**
-     * 
-     * @type {object}
-     * @memberof User
-     */
-    id?: object;
+    name: string;
     /**
      * 
      * @type {Array<string>}
@@ -633,16 +682,22 @@ export interface User {
     roles?: Array<string>;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof User
      */
-    total_trainings?: number;
+    id?: string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    name: string;
+    email: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof User
+     */
+    total_trainings?: number;
 }
 /**
  * 
@@ -686,13 +741,7 @@ export interface UserPayload {
      * @type {string}
      * @memberof UserPayload
      */
-    plain_password?: string;
-    /**
-     * 
-     * @type {object}
-     * @memberof UserPayload
-     */
-    id?: object;
+    name?: string;
     /**
      * 
      * @type {Array<string>}
@@ -704,7 +753,13 @@ export interface UserPayload {
      * @type {string}
      * @memberof UserPayload
      */
-    name?: string;
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPayload
+     */
+    plain_password?: string;
 }
 /**
  * 
@@ -786,11 +841,11 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Refresh access token
-         * @param {object} grant_type 
+         * @param {string} grant_type 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        refreshAccessToken(grant_type: object, options: any = {}): RequestArgs {
+        refreshAccessToken(grant_type: string, options: any = {}): RequestArgs {
             // verify required parameter 'grant_type' is not null or undefined
             if (grant_type === null || grant_type === undefined) {
                 throw new RequiredError('grant_type','Required parameter grant_type was null or undefined when calling refreshAccessToken.');
@@ -885,11 +940,11 @@ export const AuthApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Refresh access token
-         * @param {object} grant_type 
+         * @param {string} grant_type 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        refreshAccessToken(grant_type: object, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserCredentials> {
+        refreshAccessToken(grant_type: string, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserCredentials> {
             const localVarAxiosArgs = AuthApiAxiosParamCreator(configuration).refreshAccessToken(grant_type, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -932,11 +987,11 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Refresh access token
-         * @param {object} grant_type 
+         * @param {string} grant_type 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        refreshAccessToken(grant_type: object, options?: any) {
+        refreshAccessToken(grant_type: string, options?: any) {
             return AuthApiFp(configuration).refreshAccessToken(grant_type, options)(axios, basePath);
         },
         /**
@@ -974,12 +1029,12 @@ export class AuthApi extends BaseAPI {
     /**
      * 
      * @summary Refresh access token
-     * @param {object} grant_type 
+     * @param {string} grant_type 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public refreshAccessToken(grant_type: object, options?: any) {
+    public refreshAccessToken(grant_type: string, options?: any) {
         return AuthApiFp(this.configuration).refreshAccessToken(grant_type, options)(this.axios, this.basePath);
     }
 

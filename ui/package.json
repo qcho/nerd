@@ -54,7 +54,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^4.1.2",
+    "@openapitools/openapi-generator-cli": "^0.0.21-4.1.2",
     "@types/http-proxy-middleware": "^0.19.2",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
