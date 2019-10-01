@@ -92,7 +92,7 @@ const PreviewLayout = ({ classes }: Props) => {
     <Scaffold title={t('NER sandbox')} loading={loading}>
       <Grid container className={classes.content} direction="column" justify="space-around">
         <Grid item>
-          <Grid container direction="row" spacing={24} alignItems="center">
+          <Grid container direction="row" spacing={24} alignItems="stretch">
             <Grid item xs={10}>
               <TextField
                 label={t('Text')}
@@ -118,7 +118,7 @@ const PreviewLayout = ({ classes }: Props) => {
               />
             </Grid>
             <Grid item xs={2}>
-              <Button fullWidth color="primary" onClick={onParseClick}>
+              <Button fullWidth color="primary" style={{ height: '100%' }} onClick={onParseClick}>
                 {t('Find entities')}
               </Button>
             </Grid>
