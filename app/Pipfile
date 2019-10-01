@@ -4,27 +4,27 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "*"
-marshmallow-mongoengine = {editable = true, ref = "marshmallow-v3", git = "https://github.com/qcho/marshmallow-mongoengine"}
-blinker = "*"
-flask-jwt-extended = "*"
-spacy = "~=2.1"
 celery = "~=4.3.0"
-flower = "*"
-meinheld = "*"
-gunicorn = "*"
-marshmallow-enum = "*"
-newsapi-python = "*"
-flask-smorest = "*"
+flask = "==1.1.1"
+blinker = "==1.4"
+flask-jwt-extended = "==3.23.0"
+spacy = "==2.1"
+flower = "==0.9.3"
+meinheld = "==1.0.1"
+gunicorn = "==19.9.0"
+marshmallow-enum = "==1.5.1"
+newsapi-python = "==0.2.5"
+flask-smorest = "==0.18.0"
+marshmallow-mongoengine = {editable = true,ref = "marshmallow-v3",git = "https://github.com/qcho/marshmallow-mongoengine"}
 
 [dev-packages]
-faker = "*"
-hupper = "*"
-python-dotenv = "*"
-pytest = "*"
-pytest-cov = "*"
-pylint = "*"
-autopep8 = "*"
+faker = "==2.0.2"
+hupper = "==1.8.1"
+python-dotenv = "==0.10.3"
+pytest = "==5.2.0"
+pytest-cov = "==2.7.1"
+pylint = "==2.4.2"
+autopep8 = "==1.4.4"
 
 [requires]
 python_version = "3.7"
