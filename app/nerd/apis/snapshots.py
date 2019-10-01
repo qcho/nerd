@@ -22,7 +22,7 @@ blp = Blueprint("snapshots", "snapshots",
 
 
 class SnapshotInfoSchema(BaseSchema):
-    snapshot = SnapshotSchemaRequired
+    snapshot = fields.Nested(SnapshotSchema, required=True)
     corpus_size = fields.Integer(required=True)
     trained = fields.Integer(required=True)
     trained_distinct = fields.Integer(required=True)
