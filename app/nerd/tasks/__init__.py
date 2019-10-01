@@ -21,7 +21,7 @@ celery = Celery(
 def init_app(self, app: Flask):
     self.conf.task_result_expires = 18000  # 5 hours.
     self.conf.task_default_queue = 'nerd'
-    self.conf.task_queues = (Broadcast('nerd_broadcast'), )
+    self.conf.task_queues = (Broadcast('nerd_broadcast'),)
     self.conf.task_routes = {'nerd.tasks.corpus.reload': {'queue': 'nerd_broadcast'}}
     self.conf.update(app.config)
 

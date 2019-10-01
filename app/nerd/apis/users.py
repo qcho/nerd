@@ -64,7 +64,7 @@ class UserListView(MethodView):
             Q(email__icontains=query_filter['query']) | Q(name__icontains=query_filter['query']))
         pagination_parameters.item_count = results.count()
         skip_elements = (pagination_parameters.page - 1) * \
-            pagination_parameters.page_size
+                        pagination_parameters.page_size
         return results.aggregate(*[
             {
                 '$skip': skip_elements

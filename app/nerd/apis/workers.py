@@ -1,13 +1,13 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from nerd.tasks import celery
-from nerd.tasks.corpus import change_snapshot as change_snapshot_task
 from marshmallow import Schema, fields
 from werkzeug.exceptions import Forbidden
+
 from nerd.apis import jwt_and_role_required, response_error
 from nerd.core.document.user import Role
-
 from nerd.core.util import get_logger
+from nerd.tasks import celery
+from nerd.tasks.corpus import change_snapshot as change_snapshot_task
 
 blp = Blueprint('workers', 'workers', description='Worker management')
 logger = get_logger(__name__)

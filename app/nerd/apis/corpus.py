@@ -1,9 +1,9 @@
 from datetime import datetime
 from io import TextIOWrapper
 
+import flask
 from flask.views import MethodView
 from flask_jwt_extended import get_jwt_identity
-import flask
 from flask_smorest import Blueprint
 from flask_smorest.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema
@@ -18,7 +18,6 @@ from nerd.core.document.spacy import SpacyDocumentSchema
 from nerd.core.document.user import Role, User
 from nerd.core.importer.text_importer import TextImporter
 from nerd.tasks.corpus import nlp as nlp_task
-
 from .roles import jwt_and_role_required
 
 blp = Blueprint("corpus", "corpus", description="Corpus operations")
@@ -72,7 +71,7 @@ class TrainingView(MethodView):
         trainings = Training.objects.filter(text_id=text_id)
         pagination_parameters.item_count = trainings.count()
         skip_elements = (pagination_parameters.page - 1) * \
-            pagination_parameters.page_size
+                        pagination_parameters.page_size
         return trainings.skip(skip_elements).limit(pagination_parameters.page_size)
 
     @jwt_and_role_required(Role.TRAINER)
@@ -119,7 +118,7 @@ class UploadFileResource(MethodView):
         imported = 0
         for f in flask.request.files.getlist('file'):
             imported = imported + \
-                TextImporter(TextIOWrapper(f, encoding='utf-8')).run()
+                       TextImporter(TextIOWrapper(f, encoding='utf-8')).run()
         return '', 200
 
 
@@ -202,7 +201,7 @@ class IndexResource(MethodView):
         results = Text.objects
         pagination_parameters.item_count = results.count()
         skip_elements = (pagination_parameters.page - 1) * \
-            pagination_parameters.page_size
+                        pagination_parameters.page_size
         return results.skip(skip_elements).limit(pagination_parameters.page_size)
 
     @jwt_and_role_required(Role.ADMIN)

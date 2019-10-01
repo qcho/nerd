@@ -6,14 +6,13 @@ from flask_smorest import Blueprint
 from flask_smorest.pagination import PaginationParameters
 from marshmallow_mongoengine import ModelSchema, fields
 from mongoengine import DoesNotExist, ValidationError
+from werkzeug.exceptions import Forbidden
 from werkzeug.exceptions import NotFound
 
 from nerd.apis import jwt_and_role_required, response_error, BaseSchema
 from nerd.core.document.corpus import Text, Training
-from nerd.core.document.snapshot import CURRENT_ID, Snapshot, SnapshotSchema, SnapshotSchemaRequired
+from nerd.core.document.snapshot import CURRENT_ID, Snapshot, SnapshotSchema
 from nerd.core.document.user import Role
-from werkzeug.exceptions import Forbidden
-
 from nerd.core.model import Model
 from nerd.tasks import corpus as corpus_tasks
 
@@ -48,7 +47,7 @@ class IndexResource(MethodView):
         snapshots = Snapshot.objects
         pagination_parameters.item_count = snapshots.count()
         skip_elements = (pagination_parameters.page - 1) * \
-            pagination_parameters.page_size
+                        pagination_parameters.page_size
         return snapshots.skip(skip_elements).limit(pagination_parameters.page_size)
 
 

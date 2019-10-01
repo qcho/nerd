@@ -1,6 +1,7 @@
 import mongoengine
 from apispec.ext.marshmallow import MarshmallowPlugin
 from flask import Flask
+from marshmallow_mongoengine.fields import ObjectId, Constant
 
 from nerd.core.schema_registry import register_custom_schemas
 from nerd.core.schema_resolver import resolver
@@ -10,15 +11,14 @@ from .apis.corpus import blp as corpus
 from .apis.ner import blp as ner
 from .apis.roles import blp as roles
 from .apis.snapshots import blp as snapshots
-from .apis.users import blp as users
 from .apis.trainings import blp as trainings
+from .apis.users import blp as users
 from .apis.workers import blp as workers
 from .core.cli import setup_cli
 from .core.security import jwt
 from .core.util import get_logger
 from .settings import MONGO_CONFIG, setup_settings
 from .tasks import celery
-from marshmallow_mongoengine.fields import ObjectId, Constant, String
 
 logger = get_logger(__name__)
 

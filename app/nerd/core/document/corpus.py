@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import mongoengine as me
+
 from nerd.core.document.spacy import SpacyDocument
 
 

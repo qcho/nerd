@@ -2,17 +2,17 @@ import os
 import pathlib
 import random
 import shutil
-from typing import Set, Generator
+from typing import Generator
 
 import spacy
 from spacy.language import Language
 from spacy.tokens import Doc
 from spacy.util import minibatch, compounding
 
-from nerd.core.document.corpus import Text, Training
+from nerd.core.document.corpus import Training
+from nerd.core.document.snapshot import Snapshot
 from nerd.core.document.spacy import SpacyDocument
 from nerd.core.util import log_perf, get_logger
-from nerd.core.document.snapshot import Snapshot
 
 FS_PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__))) / '..' / '..' / 'models'
 logger = get_logger(__name__)

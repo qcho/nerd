@@ -1,7 +1,6 @@
-from typing import Optional
-
 import gc
 from abc import ABC
+from typing import Optional
 
 from celery import Task
 from celery.signals import celeryd_after_setup
@@ -92,4 +91,4 @@ def change_snapshot(self, snapshot_code: str):
         queue=str(snapshot), destination=[self.request.hostname])
     snapshot = new_snapshot
     celery.control.add_consumer(queue=str(new_snapshot), destination=[
-                                self.request.hostname])
+        self.request.hostname])
