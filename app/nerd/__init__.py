@@ -18,6 +18,7 @@ from .core.security import jwt
 from .core.util import get_logger
 from .settings import MONGO_CONFIG, setup_settings
 from .tasks import celery
+from marshmallow_mongoengine.fields import ObjectId, Constant, String
 
 logger = get_logger(__name__)
 
@@ -30,6 +31,8 @@ celery.init_app(app)
 api.init_app(app, spec_kwargs={
     'marshmallow_plugin': MarshmallowPlugin(resolver)
 })
+api.register_field(ObjectId, 'string', 'UUID')
+api.register_field(Constant, 'string', '')
 register_custom_schemas(api.spec)
 api.register_blueprint(auth, url_prefix='/api/auth')
 api.register_blueprint(users, url_prefix='/api/users')
