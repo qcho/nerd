@@ -8,6 +8,7 @@ import spacy
 from spacy.language import Language
 from spacy.tokens import Doc
 from spacy.util import minibatch, compounding
+from spacy.cli.download import download as spacy_download
 
 from nerd.core.document.corpus import Training
 from nerd.core.document.snapshot import Snapshot
@@ -78,8 +79,14 @@ class Model:
 
     def train(self):
         with self.snapshot.training_lock():
+            spacy_model_name=os.environ.get('NERD_SPACY_MODEL')
             with log_perf(f'{self.snapshot} TRAINING'):
-                self._nlp = spacy.load(os.environ.get('NERD_SPACY_MODEL'))
+                try:
+                    self._nlp = spacy.load(spacy_model_name)
+                except OSError:
+                    logger.warning(f"Spacy model '{spacy_model_name}' not found.  Downloading and installing.")
+                    spacy_download(spacy_model_name)
+                    self._nlp = spacy.load(spacy_model_name)
                 self._add_types()
                 self._train_snapshot_texts()
                 """ Only locking when saving to disk after training is done in memory """

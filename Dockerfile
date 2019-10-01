@@ -1,7 +1,5 @@
-FROM bitnami/python:3.7
+FROM bitnami/python:3.7 as release
 
-ARG PIPENV_ARGS
-ENV ENV_PIPENV_ARGS=$PIPENV_ARGS
 ARG NERD_SPACY_MODEL
 
 COPY ./docker/entrypoint.sh /entrypoint.sh
@@ -18,7 +16,11 @@ RUN pip install --no-cache-dir --upgrade pip \
     && rm -r /opt/bitnami/python/lib/python3.7/site-packages/setuptools* \
     && pip install --no-cache-dir --upgrade setuptools \
     && pip install --no-cache-dir pipenv \
-    && pipenv install --deploy --system --ignore-pipfile $PIPENV_ARGS \
-    && spacy download $NERD_SPACY_MODEL
+    && pipenv install --deploy --system --ignore-pipfile
 
 ENTRYPOINT ["/entrypoint.sh"]
+
+FROM release as development
+    RUN pipenv install --deploy --system --ignore-pipfile --dev
+
+FROM release

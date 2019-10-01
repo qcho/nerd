@@ -35,8 +35,6 @@ services:
     image: nerd/app:latest
     build:
       context: .
-      args:
-        NERD_SPACY_MODEL: "${NERD_SPACY_MODEL}"
     restart: on-failure
     init: true
     stdin_open: true

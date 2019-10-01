@@ -11,8 +11,7 @@ services:
   app:
     image: nerd/app:dev
     build:
-      args:
-        PIPENV_ARGS: --dev
+      target: development
     volumes:
       - ./app:/app
     ports:
@@ -21,12 +20,12 @@ services:
   worker:
     build:
       args:
-        PIPENV_ARGS: --dev
+        target: development
     volumes:
       - ./app:/app
   flower:
     build:
       args:
-        PIPENV_ARGS: --dev
+        target: development
     ports:
       - "${FLOWER_PORT}:${FLOWER_PORT}"
