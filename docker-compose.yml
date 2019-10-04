@@ -1,7 +1,9 @@
 version: "3.7"
 services:
-  nginx:
-    image: bitnami/nginx:1.16
+  ui:
+    image: nerd/ui:latest
+    build:
+      context: ./ui
     restart: on-failure
     init: true
     stdin_open: true
@@ -10,9 +12,6 @@ services:
       - .env
     ports:
       - "${NERD_WEB_HTTP_PORT}:${NERD_WEB_HTTP_PORT}"
-    volumes:
-      - ./ui/build:/app
-      - ./docker/nginx/nerd.conf:/opt/bitnami/nginx/conf/server_blocks/nerd.conf:ro
   mongodb:
     image: bitnami/mongodb:4.0
     restart: on-failure
@@ -34,7 +33,9 @@ services:
   app: &app
     image: nerd/app:latest
     build:
-      context: .
+      context: ./app
+      args:
+        NERD_SPACY_MODEL: "${NERD_SPACY_MODEL}"
     restart: on-failure
     init: true
     stdin_open: true

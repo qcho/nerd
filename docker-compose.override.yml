@@ -17,15 +17,17 @@ services:
     ports:
       - "${NERD_APP_HTTP_PORT}:${NERD_APP_HTTP_PORT}"
       - "3000:3000"
+    command: ["web-dev"]
   worker:
     build:
-      args:
         target: development
     volumes:
       - ./app:/app
+  ui:
+    volumes:
+      - ./ui/build:/app
   flower:
     build:
-      args:
         target: development
     ports:
       - "${FLOWER_PORT}:${FLOWER_PORT}"
