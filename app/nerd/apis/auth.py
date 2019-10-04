@@ -63,7 +63,7 @@ class RegisterResource(MethodView):
             if not Role.ADMIN in current_user.roles:
                 raise Forbidden("Can't perform action")
         else:
-            if len(register_payload.roles) > 0:
+            if register_payload.roles != ['user']:
                 raise Forbidden("Can't assign roles")
 
         return UserCredentialsSchema.create(register_payload.save())
