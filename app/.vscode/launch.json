@@ -1,78 +1,78 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Flask",
-            "type": "python",
-            "request": "launch",
-            "module": "flask",
-            "env": {
-                "FLASK_APP": "main.py",
-                //"FLASK_ENV": "development",
-                //"FLASK_DEBUG": "0"
-            },
-            "args": [
-                "run",
-                "--no-debugger",
-                "--no-reload"
-            ],
-            "jinja": true
-        },
-        // celery worker -A nerd:celery -l info -E --pool solo -n cli -Q nerd,vCURRENT
-        {
-            "name": "Worker vCURRENT",
-            "type": "python",
-            "request": "launch",
-            "module": "celery",
-            "console": "externalTerminal",
-            "args": [
-                "worker",
-                "-A",
-                "nerd:celery",
-                "-l",
-                "info",
-                "-E",
-                "--pool",
-                "solo",
-                "-n",
-                "cli",
-                "-Q",
-                "nerd,vCURRENT"
-            ]
-        },
-        {
-            "name": "Worker v1",
-            "type": "python",
-            "request": "launch",
-            "module": "celery",
-            "console": "externalTerminal",
-            "args": [
-                "worker",
-                "-A",
-                "nerd:celery",
-                "-l",
-                "info",
-                "-E",
-                "--pool",
-                "solo",
-                "-n",
-                "cli",
-                "-Q",
-                "nerd,v1"
-            ]
-        }
-    ],
-    "compounds": [
-        {
-            "name": "API",
-            "configurations": [
-                "Flask",
-                "Worker vCURRENT",
-                "Worker v1"
-            ]
-        }
-    ]
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Flask",
+      "type": "python",
+      "request": "launch",
+      "module": "flask",
+      "env": {
+        "FLASK_APP": "main.py"
+        //"FLASK_ENV": "development",
+        //"FLASK_DEBUG": "0"
+      },
+      "args": [
+        "run",
+        "--no-debugger",
+        "--no-reload"
+      ],
+      "jinja": true
+    },
+    // celery worker -A nerd:celery -l info -E --pool solo -n cli -Q nerd,vCURRENT
+    {
+      "name": "Worker vCURRENT",
+      "type": "python",
+      "request": "launch",
+      "module": "celery",
+      "console": "externalTerminal",
+      "args": [
+        "worker",
+        "-A",
+        "nerd:celery",
+        "-l",
+        "info",
+        "-E",
+        "--pool",
+        "solo",
+        "-n",
+        "cli",
+        "-Q",
+        "nerd,vCURRENT"
+      ]
+    },
+    {
+      "name": "Worker v1",
+      "type": "python",
+      "request": "launch",
+      "module": "celery",
+      "console": "externalTerminal",
+      "args": [
+        "worker",
+        "-A",
+        "nerd:celery",
+        "-l",
+        "info",
+        "-E",
+        "--pool",
+        "solo",
+        "-n",
+        "cli",
+        "-Q",
+        "nerd,v1"
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "API",
+      "configurations": [
+        "Flask",
+        "Worker vCURRENT",
+        "Worker v1"
+      ]
+    }
+  ]
 }
