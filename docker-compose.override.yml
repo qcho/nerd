@@ -23,11 +23,13 @@ services:
         target: development
     volumes:
       - ./app:/app
-  ui:
-    volumes:
-      - ./ui/build:/app
   flower:
     build:
         target: development
+    volumes:
+      - ./app:/app
     ports:
       - "${FLOWER_PORT}:${FLOWER_PORT}"
+  ui:
+    volumes:
+      - ./ui/build:/app

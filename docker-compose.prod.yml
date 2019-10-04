@@ -1,5 +1,0 @@
-version: "3.7"
-volumes:
-  mongodb-data:
-    # Set mongodb volume to external to avoid unwanted deletions on docker-compose down
-    external: true

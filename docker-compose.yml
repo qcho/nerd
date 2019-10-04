@@ -42,6 +42,8 @@ services:
     tty: true
     env_file:
       - .env
+    volumes:
+      - models-dir:/app/models
     depends_on:
       - mongodb
       - rabbitmq
@@ -58,3 +60,7 @@ services:
     command: ["flower"]
 volumes:
   mongodb-data:
+    external: true # external to avoid deletion on docker-compose down
+  # Models dir to share models between app & workers
+  models-dir:
+    external: true # external to avoid deletion on docker-compose down
