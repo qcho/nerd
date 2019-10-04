@@ -9,32 +9,33 @@ start:
 	docker-compose start
 stop:
 	docker-compose stop
-nerd-setup-force:
+dev-reset:
 	docker-compose exec app flask setup --drop
-up:
+dev:
 	docker-compose up --scale worker=2 -d
 	docker-compose exec app flask setup
 	docker-compose restart worker
-
-
-up-prod: .env.production
-	mv .env .env.development
-	cp .env.production .env
-	docker volume create --name=mongodb-data
-	cd ui && yarn install && yarn build
-	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build --scale worker=2 -d
-	docker-compose -f docker-compose.yml -f docker-compose.prod.yml exec app flask setup
-	docker-compose -f docker-compose.yml -f docker-compose.prod.yml restart worker
+dev-shell:
+	docker-compose exec app bash
+prod: .env.production
 	rm .env
-	mv .env.development .env
+	ln -s .env.production .env
+	docker volume create --name=mongodb-data
+	docker volume create --name=models-dir
+	docker-compose -f docker-compose.yml up --build --scale worker=2 -d
+	docker-compose -f docker-compose.yml exec app flask setup
+	docker-compose -f docker-compose.yml restart worker
+	rm .env
+	ln -s ./app/.env
+prod-shell:
+	docker-compose -f docker-compose.yml exec app bash
 down:
 	docker-compose down --volumes --rmi local --remove-orphans
 scale-up:
 	docker-compose up --scale worker=$(MORE_WORKERS) --no-recreate -d worker
 scale-down:
 	docker-compose up --scale worker=$(LESS_WORKERS) --no-recreate -d worker
-bash-prod:
-	docker-compose -f docker-compose.yml -f docker-compose.prod.yml exec app bash
+
 
 .env.production:
 	cp .env .env.production
