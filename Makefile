@@ -12,10 +12,11 @@ stop:
 nerd-setup-force:
 	docker-compose exec app flask setup --drop
 up:
-	cd ui && yarn install && yarn build
 	docker-compose up --scale worker=2 -d
 	docker-compose exec app flask setup
 	docker-compose restart worker
+
+
 up-prod: .env.production
 	mv .env .env.development
 	cp .env.production .env
