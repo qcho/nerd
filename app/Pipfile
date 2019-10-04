@@ -15,7 +15,7 @@ gunicorn = "==19.9.0"
 marshmallow-enum = "==1.5.1"
 newsapi-python = "==0.2.5"
 flask-smorest = "==0.18.0"
-marshmallow-mongoengine = {editable = true,ref = "marshmallow-v3",git = "https://github.com/qcho/marshmallow-mongoengine"}
+marshmallow-mongoengine = {ref = "marshmallow-v3", git = "https://github.com/qcho/marshmallow-mongoengine"}
 
 [dev-packages]
 faker = "==2.0.2"
