@@ -2,11 +2,6 @@ FROM bitnami/python:3.7 as release
 
 ARG NERD_SPACY_MODEL
 
-COPY ./docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-COPY ./docker/gunicorn_conf.py /gunicorn_conf.py
-
 COPY . /app
 WORKDIR /app
 
@@ -18,6 +13,11 @@ RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir pipenv \
     && pipenv install --deploy --system --ignore-pipfile \
     && spacy download ${NERD_SPACY_MODEL}
+
+COPY ./docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+COPY ./docker/gunicorn_conf.py /gunicorn_conf.py
 
 ENTRYPOINT ["/entrypoint.sh"]
 
