@@ -11,6 +11,7 @@ dev-stop:
 	docker-compose stop
 dev-reset:
 	docker-compose exec app flask setup --drop
+	docker-compose restart worker
 dev-mongo:
 	docker-compose exec mongodb bash -c 'mongo -u root -p$${MONGODB_ROOT_PASSWORD}'
 dev:
