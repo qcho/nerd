@@ -5,13 +5,18 @@ define set_random_password
     sed -i.bak 's/$(2)/$(shell echo $$(openssl rand -hex 24))/' $(1)
 endef
 
-start:
+dev-start:
 	docker-compose start
-stop:
+dev-stop:
 	docker-compose stop
 dev-reset:
 	docker-compose exec app flask setup --drop
+dev-mongo:
+	docker-compose exec mongodb bash -c 'mongo -u root -p$${MONGODB_ROOT_PASSWORD}'
 dev:
+	rm -Rf -- .docker/*/
+	mkdir .docker/mongodb-data
+	mkdir .docker/models-dir
 	docker-compose up --scale worker=2 -d
 	docker-compose exec app flask setup
 	docker-compose restart worker
@@ -35,8 +40,6 @@ scale-up:
 	docker-compose up --scale worker=$(MORE_WORKERS) --no-recreate -d worker
 scale-down:
 	docker-compose up --scale worker=$(LESS_WORKERS) --no-recreate -d worker
-
-
 .env.production:
 	cp .env .env.production
 	$(call set_random_password,.env.production,change_me_MONGODB_ROOT_PASSWORD)
@@ -47,4 +50,5 @@ scale-down:
 	sed -i.bak 's/RELOAD=True/RELOAD=False/' .env.production
 	sed -i.bak 's/FLASK_DEBUG=1/FLASK_DEBUG=0/' .env.production
 	rm .env.production.bak
-.PHONY: start stop nerd-setup nerd-setup-force up down
+
+.PHONY: dev-start dev-stop dev-reset dev-mongo dev dev-shell prod prod-shell down scale-up scale-down

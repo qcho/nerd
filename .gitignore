@@ -1,9 +1,4 @@
 .ds_store
 .DS_Store
-models/
-.scannerwork/
-.venv/
-app/src
-.env.development
 .env.production
-.history/
+.docker/

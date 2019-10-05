@@ -33,3 +33,16 @@ services:
   ui:
     volumes:
       - ./ui/build:/app
+volumes:
+  mongodb-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: '$PWD/.docker/mongodb-data'
+      o: bind
+  models-dir:
+    driver: local
+    driver_opts:
+      type: none
+      device: '$PWD/.docker/models-dir'
+      o: bind
