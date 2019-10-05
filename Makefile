@@ -15,8 +15,8 @@ dev-mongo:
 	docker-compose exec mongodb bash -c 'mongo -u root -p$${MONGODB_ROOT_PASSWORD}'
 dev:
 	rm -Rf -- .docker/*/
-	mkdir .docker/mongodb-data
-	mkdir .docker/models-dir
+	mkdir -p .docker/mongodb-data
+	mkdir -p .docker/models-dir
 	docker-compose up --scale worker=2 -d
 	docker-compose exec app flask setup
 	docker-compose restart worker
