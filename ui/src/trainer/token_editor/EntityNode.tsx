@@ -8,7 +8,7 @@ const borderStyle = '1px solid black';
 const borderRadius = '20px';
 const entityMargin = '2px';
 const entityPadding = '10px';
-const backgroundColor = '#F8EA8C';
+const backgroundColor = '#CFD9DF';
 
 const useEntityNodeStyles = makeStyles(() => ({
   borderComplete: {

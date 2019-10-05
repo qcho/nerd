@@ -25,7 +25,7 @@ const ManageSnapshot = () => {
       return (
         <Chip
           onClick={(onClick && (() => onClick(entityType))) || undefined}
-          style={{ marginRight: '1em', marginTop: '0.3em', marginBottom: '0.2em' }}
+          style={{ marginRight: '1em', marginTop: '0.3em', marginBottom: '0.2em', background: '#CFD9DF' }}
           key={code}
           avatar={<TypeAvatar code={code} color={type.color} />}
           label={<Typography>{type.label}</Typography>}
