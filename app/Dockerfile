@@ -2,10 +2,9 @@ FROM bitnami/python:3.7 as release
 
 ARG NERD_SPACY_MODEL
 
-COPY . /app
-WORKDIR /app
-
 ENV PYTHONPATH=/app
+
+COPY Pipfile Pipfile.lock /app/
 
 RUN pip install --no-cache-dir --upgrade pip \
     && rm -r /opt/bitnami/python/lib/python3.7/site-packages/setuptools* \
@@ -16,8 +15,9 @@ RUN pip install --no-cache-dir --upgrade pip \
 
 COPY ./docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-
 COPY ./docker/gunicorn_conf.py /gunicorn_conf.py
+COPY . /app
+WORKDIR /app
 
 ENTRYPOINT ["/entrypoint.sh"]
 

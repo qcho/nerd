@@ -2,14 +2,15 @@
 
 # Copies in our code and runs NPM Install
 FROM bitnami/node:10 as installer
-COPY . /app
+COPY package.json yarn.lock /app/
 WORKDIR /app
 # limit network-concurrency until https://github.com/yarnpkg/yarn/issues/2629 is fixed
 RUN ["yarn", "install", "--production", "--network-concurrency=1"]
 
-# Lints Code
+# Build Code
 FROM bitnami/node:10 as builder
 COPY --from=installer /app /app
+COPY . /app
 WORKDIR /app
 RUN ["yarn", "build"]
 
