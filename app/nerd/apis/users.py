@@ -132,14 +132,14 @@ def _get_user_trainings(user: User, pagination_params: PaginationParameters):
 
 
 def _patch_user(user: User, payload: UserPayloadSchema):
-    result = UserPayloadSchema().update(
-        user,
-        json.loads(payload.to_json())
-    )
-    if result.errors:
-        raise UnprocessableEntity(
-            "There was an error processing the payload")
-    return result.data.save()
+    try:
+        result = UserPayloadSchema().update(
+            user,
+            json.loads(payload.to_json())
+        )
+    except ValidationError:
+        raise UnprocessableEntity("There was an error processing the payload")
+    return result.save()
 
 
 @blp.route('/me')
