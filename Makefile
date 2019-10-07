@@ -40,6 +40,13 @@ mongo-backup:
 prod-setup: ./production/.env ./production/docker-compose.yml
 	echo scp -rp ./production pf-nerd:/nerd
 
+prod-publish-new-version:
+	docker login docker.pkg.github.com
+	docker tag nerd/app:latest docker.pkg.github.com/qcho/nerd/app:latest
+	docker tag nerd/ui:latest docker.pkg.github.com/qcho/nerd/ui:latest
+	docker push docker.pkg.github.com/qcho/nerd/app:latest
+	docker push docker.pkg.github.com/qcho/nerd/ui:latest
+
 ./production:
 	mkdir ./production
 

@@ -9,6 +9,7 @@ services:
       - "${RABBITMQ_NODE_PORT_NUMBER}:${RABBITMQ_NODE_PORT_NUMBER}"
       - "${RABBITMQ_MANAGER_PORT_NUMBER}:${RABBITMQ_MANAGER_PORT_NUMBER}"
   app:
+    image: nerd/app:latest
     build:
       context: ./app
       args:
@@ -20,14 +21,17 @@ services:
       - ./app:/app
     command: ["web-dev"]
   worker:
+    image: nerd/app:latest
     volumes:
       - ./app:/app
   flower:
+    image: nerd/app:latest
     ports:
       - "${FLOWER_PORT}:${FLOWER_PORT}"
     volumes:
       - ./app:/app
   ui:
+    image: nerd/ui:latest
     build:
       context: ./ui
     volumes:
