@@ -21,9 +21,9 @@ class BaseConfig(object):
     OPENAPI_URL_PREFIX = 'api'
     OPENAPI_VERSION = '3.0.2'
     OPENAPI_REDOC_PATH = '/redoc'
-    OPENAPI_REDOC_VERSION = 'v2.0.0-rc.8'
+    OPENAPI_REDOC_VERSION = 'v2.0.0-rc.16'
     OPENAPI_SWAGGER_UI_PATH = '/doc'
-    OPENAPI_SWAGGER_UI_VERSION = '3.22.3'
+    OPENAPI_SWAGGER_UI_VERSION = '3.23.11'
     API_VERSION = '1.0.0'
     API_SPEC_OPTIONS = {
         'servers': [
