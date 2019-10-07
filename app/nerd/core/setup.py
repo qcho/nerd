@@ -2,11 +2,16 @@ from nerd.core.document.corpus import Text, Training
 from nerd.core.document.snapshot import Snapshot, Type, CURRENT_ID
 from nerd.core.document.user import User, Role
 from nerd.core.model import Model
+from .util import get_logger
 
+
+logger = get_logger(__name__)
 
 class NERdSetup:
     @staticmethod
     def setup(drop: bool):
+        if User.objects.count() and not drop:
+            return logger.warning('Instance already set-up. You may call setup again with "--drop" to force reset.')
         if drop:
             User.drop_collection()
         User(

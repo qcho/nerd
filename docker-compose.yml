@@ -2,8 +2,6 @@ version: "3.7"
 services:
   ui:
     image: nerd/ui:latest
-    build:
-      context: ./ui
     restart: on-failure
     init: true
     stdin_open: true
@@ -13,7 +11,7 @@ services:
     ports:
       - "${NERD_WEB_HTTP_PORT}:${NERD_WEB_HTTP_PORT}"
   mongodb:
-    image: bitnami/mongodb:4.0
+    image: bitnami/mongodb:4.2
     restart: on-failure
     init: true
     stdin_open: true
@@ -21,7 +19,7 @@ services:
     env_file:
       - .env
     volumes:
-      - mongodb-data:/bitnami
+      - nerd_mongodb-data:/bitnami
   rabbitmq:
     image: bitnami/rabbitmq:3.7
     restart: on-failure
@@ -32,10 +30,6 @@ services:
       - .env
   app: &app
     image: nerd/app:latest
-    build:
-      context: ./app
-      args:
-        NERD_SPACY_MODEL: "${NERD_SPACY_MODEL}"
     restart: on-failure
     init: true
     stdin_open: true
@@ -43,7 +37,7 @@ services:
     env_file:
       - .env
     volumes:
-      - models-dir:/app/models
+      - nerd_models-dir:/app/models
     depends_on:
       - mongodb
       - rabbitmq
@@ -59,8 +53,8 @@ services:
       - app
     command: ["flower"]
 volumes:
-  mongodb-data:
+  nerd_mongodb-data:
     external: true # external to avoid deletion on docker-compose down
   # Models dir to share models between app & workers
-  models-dir:
+  nerd_models-dir:
     external: true # external to avoid deletion on docker-compose down

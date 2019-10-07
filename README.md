@@ -33,3 +33,24 @@ How to import image in remote sever:
 ```sh
     zcat nerd_app.tar.gz | docker load
 ```
+
+# How to deploy
+
+
+## Make sure pf-ner host is well configured locally
+An example `~/.ssh/config` fragment (You need to replace `<VAR>`):
+
+```ssh
+Host pampero
+    Hostname pampero.itba.edu.ar
+    User <ITBA_USER>
+
+Host pf-ner
+    Hostname 10.16.1.131
+    User <MACHINE_USER>
+    ProxyCommand ssh pampero nc %h %p
+    ControlMaster auto
+    ControlPath ~/.ssh/sockets/%r@%h-%p
+    ControlPersist 600
+```
+## Run `make prod-setup`

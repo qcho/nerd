@@ -11,6 +11,9 @@ main() {
             exec gunicorn -k egg:meinheld#gunicorn_worker -c /gunicorn_conf.py ${FLASK_APP} $@
             return;;
         "web-dev")
+            # Install dev dependencies.
+            pipenv install --deploy --system --ignore-pipfile --dev
+            # Run flask dev server.
             exec flask run --host ${NERD_APP_HOST} --port ${NERD_APP_HTTP_PORT} --reload --debugger $@
             return;;
         "worker")
