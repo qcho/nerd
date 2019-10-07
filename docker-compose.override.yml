@@ -34,5 +34,7 @@ services:
     image: nerd/ui:latest
     build:
       context: ./ui
+    ports:
+      - "${NERD_WEB_HTTP_PORT}:${NERD_WEB_HTTP_PORT}"
     volumes:
       - ./ui/build:/app

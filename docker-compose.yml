@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     ports:
-      - "${NERD_WEB_HTTP_PORT}:${NERD_WEB_HTTP_PORT}"
+      - "8080:8080"
   mongodb:
     image: bitnami/mongodb:4.2
     restart: on-failure
