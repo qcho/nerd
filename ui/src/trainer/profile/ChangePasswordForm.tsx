@@ -25,7 +25,7 @@ const ChangePasswordForm = ({ onSubmit }: { onSubmit: (newPassword: string) => v
 
   return (
     <div>
-      <form onSubmit={onFormSubmit} style={{ width: '400px' }}>
+      <form onSubmit={onFormSubmit} style={{ width: '450px' }}>
         <FormControl required>
           <InputLabel htmlFor="password">{t('Password')}</InputLabel>
           <Input
