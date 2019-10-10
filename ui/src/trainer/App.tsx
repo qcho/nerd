@@ -18,6 +18,7 @@ import { CorpusView } from './admin_corpus/CorpusView';
 import Train from './train/Train';
 import { Routes } from './helpers/routeHelper';
 import { Role } from './types/role';
+import { CompareSnapshots } from './compare/Compare';
 
 const theme = createMuiTheme({
   typography: {
@@ -42,6 +43,7 @@ const Navigation = () => {
       {isAdmin && <Route exact path={Routes.userProfile.route} component={UserProfile} />}
       {isAdmin && <Route exact path={Routes.trainingsForText.route} component={TextTrainings} />}
       {isAdmin && <Route exact path={Routes.corpus} component={CorpusView} />}
+      {isAdmin && <Route exact path={Routes.compare} component={CompareSnapshots} />}
       {isTrainer && <Route exact path={Routes.train} component={Train} />}
       <Route component={FourOhFour} />
     </Switch>

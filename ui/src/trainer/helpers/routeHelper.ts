@@ -10,6 +10,7 @@ const Routes = {
   userAdmin: '/admin/users',
   train: '/train',
   corpus: '/admin/corpus',
+  compare: '/compare',
   userProfile: {
     route: '/admin/users/:id',
     buildRoute: (user: User) => `/admin/users/${user.id}`,
