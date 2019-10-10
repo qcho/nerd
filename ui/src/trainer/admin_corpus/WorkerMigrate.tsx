@@ -39,9 +39,10 @@ const WorkerMigrate = ({
   }, [availableSnapshots, fromSnapshot]);
   return (
     <div style={{ display: 'flex', flexDirection: 'row', width: '100%', alignItems: 'center' }}>
-      <Typography style={{ marginRight: '1em' }}>{t('From')}</Typography>
       <div style={{ width: 160 }}>
         <Select
+          fullWidth
+          style={{ display: 'block' }}
           value={relocatableWorkers.length > 0 ? fromSnapshot : ''}
           input={<InputBase style={{ position: 'relative', width: 'auto', paddingLeft: '5px' }} />}
           onChange={event => {
