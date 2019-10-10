@@ -9,7 +9,7 @@ from nerd.apis import BaseSchema
 from nerd.apis import response_error
 from nerd.apis.schemas import TrainTextSchema, EntityListSchema
 from nerd.core.document.snapshot import Snapshot
-from nerd.core.document.corpus import Text
+from nerd.core.document.corpus import Text, Training
 from nerd.core.document.user import Role, User
 from nerd.tasks.corpus import nlp as nlp_task
 from .roles import jwt_and_role_required
