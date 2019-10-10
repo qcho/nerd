@@ -21,12 +21,6 @@ export default function usePagination() {
   const recordsPerPageOptions = [20, 50, 100];
 
   useEffect(() => {
-    if (!shouldPaginate && location.hash.length > 0) {
-      history.replace(location.pathname);
-      return;
-    }
-  }, [history, location.hash.length, location.pathname, shouldPaginate]);
-  useEffect(() => {
     const newLocation = `${location.pathname}#${stringify(buildHash(page, pageSize))}`;
     if (location.hash.length == 0 && total > 0) {
       history.replace(newLocation);
