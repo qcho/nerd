@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Paper, Theme, Toolbar, Typography, AppBar, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { useTranslation } from 'react-i18next';
-import { CorpusApi, SpacyDocument } from '../apigen';
+import { CorpusApi, SpacyDocument, NerApi } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
 import { MaybeTrainText, MaybeSpacyDocument } from '../types/optionals';
 import { TokenizedEditor } from '../token_editor/TokenizedEditor';
@@ -63,6 +63,7 @@ const Train = () => {
   const [noMoreDocuments, setNoMoreDocuments] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const api = new CorpusApi(apiConfig());
+  const nerApi = new NerApi(apiConfig());
   let unmounted = false;
 
   const classes = useStyles();
@@ -71,7 +72,7 @@ const Train = () => {
   const loadNewDocument = async () => {
     setLoading(true);
     try {
-      const trainingInfoResult = await api.trainNew();
+      const trainingInfoResult = await nerApi.trainNer();
       if (unmounted) return;
       if (trainingInfoResult.status == 204) {
         setNoMoreDocuments(true);
