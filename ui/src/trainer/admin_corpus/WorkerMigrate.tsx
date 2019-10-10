@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, InputBase, MenuItem, Typography } from '@material-ui/core';
+import { Button, InputBase, MenuItem, Typography, Select } from '@material-ui/core';
 import { SnapshotsApi } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
-import Select from '@material-ui/core/Select';
 
 const WorkerMigrate = ({
   relocatableWorkers,
