@@ -150,7 +150,7 @@ const Train = () => {
                     </Typography>
                   </Button>
                   <div style={{ width: '1em' }} />
-                  <Button color="primary" variant="contained" onClick={onSave}>
+                  <Button color="primary" variant="contained" onClick={onSave} disabled={loading}>
                     <Typography
                       style={{ paddingLeft: 80, paddingRight: 80 }}
                       color="inherit"
