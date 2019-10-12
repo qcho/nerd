@@ -4,27 +4,26 @@ import { useTranslation } from 'react-i18next';
 import { ChooseSnapshots, ChooseResult } from './ChooseSnapshots';
 import { NerApi, NerCompare, NerCompareResult, SnapshotsApi } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
-import { RichTable, DatasourceParameters } from '../rich_table/RichTable';
+import { RichTable, DatasourceParameters, DatasourceResult } from '../rich_table/RichTable';
 import { TableCell, FormControlLabel, Switch } from '@material-ui/core';
 import { TokenizedEditor } from '../token_editor/TokenizedEditor';
 import { MaybeSnapshot } from '../types/optionals';
 
-const CompareSnapshots = () => {
-  const [t] = useTranslation();
-  const [snapshotsToCompare, setSnapshotsToCompare] = useState<ChooseResult | null>(null);
-  const [hideEqual, setHideEqual] = useState<boolean>(true);
+interface Props {
+  firstSnapshotVersion: string;
+  secondSnapshotVersion: string;
+  hideEqual: boolean;
+}
+
+const CompareTable = ({ firstSnapshotVersion, secondSnapshotVersion, hideEqual }: Props) => {
   const [firstSnapshot, setFirstSnapshot] = useState<MaybeSnapshot>(null);
   const [secondSnapshot, setSecondSnapshot] = useState<MaybeSnapshot>(null);
 
   const api = new NerApi(apiConfig());
-
-  const headers =
-    snapshotsToCompare == null
-      ? []
-      : [
-          { id: snapshotsToCompare.from, label: snapshotsToCompare.from },
-          { id: snapshotsToCompare.to, label: snapshotsToCompare.to },
-        ];
+  const headers = [
+    { id: firstSnapshotVersion, label: firstSnapshotVersion },
+    { id: secondSnapshotVersion, label: secondSnapshotVersion },
+  ];
 
   var id = 0;
   const valueToId = (value: any) => `${id++}`;
@@ -54,15 +53,21 @@ const CompareSnapshots = () => {
   };
 
   const datasource = async ({ page, pageSize }: DatasourceParameters) => {
-    if (snapshotsToCompare == null) return;
-    const response = await api.nerCompare(snapshotsToCompare.from, snapshotsToCompare.to, page, pageSize);
+    const response = await api.nerCompare(firstSnapshotVersion, secondSnapshotVersion, page, pageSize);
     const result: NerCompareResult = response.data;
     setFirstSnapshot(result.first_snapshot);
     setSecondSnapshot(result.second_snapshot);
-    var results = result.results;
-    console.log(hideEqual);
-    if (hideEqual) {
-      results.filter(value => {
+    return {
+      data: result.results,
+      headers: response.headers,
+    };
+  };
+
+  const filterResults = (datasource: (parameters: DatasourceParameters) => Promise<DatasourceResult>) => {
+    async function wrapper(params: DatasourceParameters) {
+      var result = await datasource(params);
+      var results = result.data;
+      results = results.filter(value => {
         const firstEnts = value.first.ents || [];
         const secondEnts = value.second.ents || [];
         if (firstEnts.length == 0 && secondEnts.length == 0) return false;
@@ -83,16 +88,32 @@ const CompareSnapshots = () => {
               break;
             }
           }
-          if (!found) return true;
+          if (!found) {
+            return true;
+          }
         }
-        return true;
+        return false;
       });
+      result.data = results;
+      return result;
     }
-    return {
-      data: results,
-      headers: response.headers,
-    };
+    return wrapper;
   };
+  return (
+    <RichTable
+      headers={headers}
+      valueToId={valueToId}
+      rowBuilder={buildRow}
+      datasource={hideEqual ? filterResults(datasource) : datasource}
+      paginatable
+    />
+  );
+};
+
+const CompareSnapshots = () => {
+  const [t] = useTranslation();
+  const [snapshotsToCompare, setSnapshotsToCompare] = useState<ChooseResult | null>(null);
+  const [hideEqual, setHideEqual] = useState<boolean>(true);
 
   const onHideSameChange = (event: ChangeEvent, checked: boolean) => {
     setHideEqual(checked);
@@ -104,19 +125,18 @@ const CompareSnapshots = () => {
         <div>
           <ChooseSnapshots onChange={setSnapshotsToCompare} />
           <FormControlLabel
-            label="Esconder iguales"
+            checked={hideEqual}
+            label={t('Show only differences')}
             labelPlacement="start"
             control={<Switch color="primary" onChange={onHideSameChange} />}
           />
         </div>
         <div>
           {snapshotsToCompare != null && (
-            <RichTable
-              headers={headers}
-              valueToId={valueToId}
-              rowBuilder={buildRow}
-              datasource={datasource}
-              paginatable
+            <CompareTable
+              firstSnapshotVersion={snapshotsToCompare.from}
+              secondSnapshotVersion={snapshotsToCompare.to}
+              hideEqual={hideEqual}
             />
           )}
         </div>
