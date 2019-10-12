@@ -47,6 +47,10 @@ prod-publish-new-version:
 	docker push docker.pkg.github.com/qcho/nerd/app:latest
 	docker push docker.pkg.github.com/qcho/nerd/ui:latest
 
+release-pull:
+	docker pull docker.pkg.github.com/qcho/nerd/app:latest
+	docker pull docker.pkg.github.com/qcho/nerd/ui:latest
+
 ./production:
 	mkdir ./production
 
