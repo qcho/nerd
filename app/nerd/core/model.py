@@ -78,7 +78,7 @@ class Model:
 
     def train(self):
         with self.snapshot.training_lock():
-            spacy_model_name=os.environ.get('NERD_SPACY_MODEL')
+            spacy_model_name = os.environ.get('NERD_SPACY_MODEL')
             with log_perf(f'{self.snapshot} TRAINING'):
                 try:
                     self._nlp = spacy.load(spacy_model_name)
