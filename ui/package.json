@@ -42,8 +42,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "gen-api": "yarn run openapi-generator generate -i http://localhost:8080/api/openapi.json -g typescript-axios -o src/trainer/apigen -c openapi_config.json",
-    "gen-api-prod": "yarn run openapi-generator generate -i http://nerd.it.itba.edu.ar/api/openapi.json -g typescript-axios -o src/trainer/apigen -c openapi_config.json"
+    "gen-api": "yarn run openapi-generator generate -i http://localhost:8080/api/openapi.json -g typescript-axios -o src/trainer/apigen -c openapi_config.json"
   },
   "eslintConfig": {
     "extends": "react-app"
