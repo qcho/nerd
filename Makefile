@@ -37,6 +37,11 @@ down:
 mongo-backup:
 	docker-compose exec mongodb mongodump --out /bitnami/mongodump-$$(date +'%Y-%m-%d')
 
+scale-up:
+	docker-compose up --scale worker=$(MORE_WORKERS) --no-recreate -d worker
+scale-down:
+	docker-compose up --scale worker=$(LESS_WORKERS) --no-recreate -d worker
+
 prod-setup: ./production/.env ./production/docker-compose.yml
 	echo scp -rp ./production pf-nerd:/nerd
 
