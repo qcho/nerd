@@ -11,7 +11,7 @@ from mongoengine import DoesNotExist
 from werkzeug.exceptions import BadRequest, FailedDependency, NotFound
 
 from nerd.apis import response_error
-from nerd.apis.schemas import TrainTextSchema, TrainingSchema
+from nerd.apis.schemas import TrainTextSchema, TrainingSchema, TextSchema
 from nerd.core.document.corpus import Text, Training
 from nerd.core.document.snapshot import Snapshot
 from nerd.core.document.spacy import SpacyDocumentSchema
@@ -21,13 +21,6 @@ from nerd.tasks.corpus import nlp as nlp_task
 from .roles import jwt_and_role_required
 
 blp = Blueprint("corpus", "corpus", description="Corpus operations")
-
-
-class TextSchema(ModelSchema):
-    class Meta:
-        strict = True
-        model = Text
-
 
 class ValueOnlyTextSchema(ModelSchema):
     class Meta:

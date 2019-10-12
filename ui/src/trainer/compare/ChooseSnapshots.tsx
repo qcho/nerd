@@ -1,5 +1,6 @@
 import React from 'react';
 import { DistinctValueChooser, Option } from '../widgets/DistinctValueChooser';
+import { useAvailableWorkers } from '../hooks/useWorkers';
 
 export interface ChooseResult {
   from: string;
@@ -11,14 +12,17 @@ interface Props {
 }
 
 const ChooseSnapshots = ({ onChange }: Props) => {
-  const options: Option[] = [{ label: 'Holis', value: 1 }];
+  const { availableSnapshots } = useAvailableWorkers();
 
   const onChoose = (leftValue: any, rightValue: any) => {
-    console.log([leftValue, rightValue]);
+    onChange({ from: leftValue, to: rightValue });
   };
+  const options = availableSnapshots.map(it => {
+    return { value: it, label: it };
+  });
   return (
     <div>
-      <DistinctValueChooser options={options} onChoose={onChoose} onlyDifferentValues />
+      {options.length > 0 && <DistinctValueChooser options={options} onChoose={onChoose} onlyDifferentValues />}
     </div>
   );
 };

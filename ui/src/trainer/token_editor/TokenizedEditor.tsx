@@ -11,6 +11,7 @@ interface Props {
   spacyDocument: SpacyDocument;
   onUpdate?: (document: SpacyDocument) => void;
   entityTypes: { [key: string]: Type };
+  smallText?: boolean;
 }
 
 const hasPreviousEntities = (token: SpacyToken, document: SpacyDocument) => {
@@ -29,7 +30,7 @@ const hasNextEntities = (token: SpacyToken, document: SpacyDocument) => {
   return false;
 };
 
-const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, readOnly }: Props) => {
+const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, readOnly, smallText }: Props) => {
   const [error, setError] = useState<MaybeString>(null);
   const [currentToken, setCurrentToken] = useState<MaybeCurrentToken>(null);
   const currentTokenEl = useRef<HTMLSpanElement | null>(null);
@@ -217,6 +218,7 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, 
           text={text}
           token={token}
           onClick={!readOnly && onTokenClick}
+          smallText={smallText}
         />
       );
     });

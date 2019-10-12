@@ -7,9 +7,10 @@ interface PlainNodeProps {
   text: string;
   token: SpacyToken;
   editable: boolean;
+  smallText?: boolean;
 }
 
-const PlainNode = ({ text, token, editable }: PlainNodeProps) => {
+const PlainNode = ({ text, token, editable, smallText }: PlainNodeProps) => {
   const nodeStyles = useNodeStyles();
 
   return (
@@ -21,7 +22,7 @@ const PlainNode = ({ text, token, editable }: PlainNodeProps) => {
         editable ? nodeStyles.hoverCursor : nodeStyles.arrowCursor,
         nodeStyles.leftMargin,
       )}
-      style={{ fontFamily: 'Roboto', fontSize: '2em', paddingTop: '10px' }}
+      style={{ fontFamily: 'Roboto', fontSize: smallText ? '1.5em' : '2em', paddingTop: '10px' }}
     >
       {text}
     </span>

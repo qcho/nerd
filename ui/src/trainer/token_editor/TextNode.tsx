@@ -10,11 +10,12 @@ interface TextNodeProps {
   onClick: ((token: SpacyToken, entity: MaybeSpacyEntity) => void) | null | false;
   entity?: SpacyEntity;
   entityType?: Type;
+  smallText?: boolean;
 }
 
 // eslint-disable-next-line react/display-name
 const TextNode = React.forwardRef(
-  ({ text, token, onClick, entity, entityType }: TextNodeProps, ref: Ref<HTMLSpanElement>) => {
+  ({ text, token, onClick, entity, entityType, smallText }: TextNodeProps, ref: Ref<HTMLSpanElement>) => {
     const editable = !!onClick;
     const _onClick = () => {
       if (onClick) {
@@ -24,9 +25,9 @@ const TextNode = React.forwardRef(
 
     var component =
       entity && entityType ? (
-        <EntityNode {...{ text, token, entity, entityType, editable }} />
+        <EntityNode {...{ text, token, entity, entityType, editable, smallText }} />
       ) : (
-        <PlainNode {...{ text, token, editable }} />
+        <PlainNode {...{ text, token, editable, smallText }} />
       );
 
     return (

@@ -7,12 +7,15 @@ from flask_jwt_extended import get_jwt_identity
 
 from nerd.apis import BaseSchema
 from nerd.apis import response_error
-from nerd.apis.schemas import TrainTextSchema, EntityListSchema
+from nerd.apis.schemas import TrainTextSchema, EntityListSchema, NerCompareResultSchema
 from nerd.core.document.snapshot import Snapshot
 from nerd.core.document.corpus import Text, Training
 from nerd.core.document.user import Role, User
 from nerd.tasks.corpus import nlp as nlp_task
 from .roles import jwt_and_role_required
+from nerd.core.util import get_logger
+
+logger = get_logger(__name__)
 
 blp = Blueprint("ner", "ner", description="NER operations")
 
@@ -25,6 +28,7 @@ def parse_text(snapshot_id, text: str):
     snapshot = Snapshot.current() if snapshot_id is None else Snapshot.objects.get(id=snapshot_id)
     document = nlp_task.apply_async([text], queue=str(snapshot)).wait()
     return [snapshot, document]
+
 
 @blp.route("/train")
 class TrainResource(MethodView):
@@ -92,6 +96,41 @@ class TrainResource(MethodView):
             }
         except TimeoutError:
             raise FailedDependency()
+
+@blp.route("/compare/<string:first_snapshot>/<string:second_snapshot>")
+class CompareResource(MethodView):
+
+    @jwt_and_role_required(Role.ADMIN)
+    @blp.doc(operationId="nerCompare")
+    @blp.paginate()
+    @blp.response(NerCompareResultSchema, code=200, description="NER'd texts to compare")
+    def get(self, first_snapshot, second_snapshot, pagination_parameters: PaginationParameters):
+
+        first_snapshot = Snapshot.from_string(first_snapshot)
+        second_snapshot = Snapshot.from_string(second_snapshot)
+        first_snapshot_id = first_snapshot.id
+        second_snapshot_id = second_snapshot.id
+
+        def map_text(text):
+            logger.debug(text)
+            raw_text = text['value']
+            _, first = parse_text(first_snapshot_id, raw_text)
+            _, second = parse_text(second_snapshot_id, raw_text)
+            return {
+                'first': first,
+                'second': second
+            }
+
+        results = Text.objects
+        pagination_parameters.item_count = results.count()
+        skip_elements = (pagination_parameters.page - 1) * pagination_parameters.page_size
+        texts = results.skip(skip_elements).limit(pagination_parameters.page_size)
+
+        return {
+            'first_snapshot': first_snapshot,
+            'second_snapshot': second_snapshot,
+            'results': map(map_text, texts)
+        }
 
 @blp.route("/current/parse")
 class NerParserResource(MethodView):
