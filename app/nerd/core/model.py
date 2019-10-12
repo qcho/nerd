@@ -8,7 +8,6 @@ import spacy
 from spacy.language import Language
 from spacy.tokens import Doc
 from spacy.util import minibatch, compounding
-from spacy.cli.download import download as spacy_download
 
 from nerd.core.document.corpus import Training
 from nerd.core.document.snapshot import Snapshot
@@ -85,7 +84,13 @@ class Model:
                     self._nlp = spacy.load(spacy_model_name)
                 except OSError:
                     logger.warning(f"Spacy model '{spacy_model_name}' not found.  Downloading and installing.")
+                    from spacy.cli.download import download as spacy_download
                     spacy_download(spacy_model_name)
+                    from spacy.cli import link
+                    from spacy.util import get_package_path
+
+                    package_path = get_package_path(spacy_model_name)
+                    link(spacy_model_name, spacy_model_name, force=True, package_path=package_path)
                     self._nlp = spacy.load(spacy_model_name)
                 self._add_types()
                 self._train_snapshot_texts()
