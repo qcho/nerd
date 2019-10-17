@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Button, InputBase, MenuItem, Typography, Select } from '@material-ui/core';
+import { Button, InputBase, MenuItem, Typography, Select, FormControl } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
 export interface Option {
@@ -16,7 +16,7 @@ interface Props {
   onlyDifferentValues?: boolean;
 }
 
-const DistinctValueChooser = ({
+const TwoValueChooser = ({
   options,
   onChoose,
   actionText = null,
@@ -24,17 +24,12 @@ const DistinctValueChooser = ({
   onlyDifferentValues = false,
 }: Props) => {
   const [t] = useTranslation();
-  const [leftValue, setLeftValue] = useState<any>(-1);
-  const [rightValue, setRightValue] = useState<any>(-1);
+  const [leftValue, setLeftValue] = useState<any>('');
+  const [rightValue, setRightValue] = useState<any>('');
   const [leftOptions, setLeftOptions] = useState<Option[]>([]);
   const [rightOptions, setRightOptions] = useState<Option[]>([]);
   actionText = actionText || (t('Select') as string);
   separatorText = separatorText || (t('and') as string);
-
-  const selectAnOption: Option = {
-    value: -1,
-    label: t('Select an option') as string,
-  };
 
   function optionsToWidgets(options: Option[]) {
     return options.map(option => (
@@ -44,27 +39,30 @@ const DistinctValueChooser = ({
     ));
   }
 
-  const allOptions = [selectAnOption];
-  allOptions.push(...options);
-
   useEffect(() => {
     if (!onlyDifferentValues) {
-      setLeftOptions(allOptions);
-      setRightOptions(allOptions);
+      setLeftOptions(options);
+      setRightOptions(options);
       return;
     }
-    setLeftOptions(allOptions.filter(it => it.value == -1 || it.value != rightValue));
-    setRightOptions(allOptions.filter(it => it.value == -1 || it.value != leftValue));
+    setLeftOptions(options.filter(it => it.value == -1 || it.value != rightValue));
+    setRightOptions(options.filter(it => it.value == -1 || it.value != leftValue));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [leftValue, rightValue]);
 
+  const renderSelectValue = (selected: any) => {
+    if (selected === '') return <Typography>{t('Select an option')}</Typography>;
+    return <Typography>{selected}</Typography>;
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'row', width: '100%', alignItems: 'center' }}>
-      <div>
+      <FormControl>
         <Select
-          fullWidth
-          style={{ display: 'block' }}
+          displayEmpty
           value={leftValue}
+          renderValue={selected => renderSelectValue(selected)}
+          style={{ display: 'block' }}
           input={<InputBase style={{ position: 'relative', width: 'auto', paddingLeft: '5px' }} />}
           onChange={event => {
             setLeftValue(event.target.value as unknown);
@@ -72,12 +70,13 @@ const DistinctValueChooser = ({
         >
           {optionsToWidgets(leftOptions)}
         </Select>
-      </div>
+      </FormControl>
       <Typography style={{ marginLeft: '1em', marginRight: '1em' }}>{separatorText}</Typography>
-      <div>
+      <FormControl>
         <Select
           displayEmpty
           value={rightValue}
+          renderValue={selected => renderSelectValue(selected)}
           input={<InputBase style={{ position: 'relative', width: 'auto', paddingLeft: '5px' }} />}
           onChange={event => {
             setRightValue(event.target.value as unknown);
@@ -85,7 +84,7 @@ const DistinctValueChooser = ({
         >
           {optionsToWidgets(rightOptions)}
         </Select>
-      </div>
+      </FormControl>
       <div>
         <Button
           style={{ marginLeft: '1em' }}
@@ -100,4 +99,4 @@ const DistinctValueChooser = ({
   );
 };
 
-export { DistinctValueChooser };
+export { TwoValueChooser };

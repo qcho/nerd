@@ -1,5 +1,5 @@
 import React from 'react';
-import { DistinctValueChooser, Option } from '../widgets/DistinctValueChooser';
+import { TwoValueChooser } from '../widgets/TwoValueChooser';
 import { useAvailableWorkers } from '../hooks/useWorkers';
 
 export interface ChooseResult {
@@ -20,7 +20,7 @@ const ChooseSnapshots = ({ onChange }: Props) => {
   const options = availableSnapshots.map(it => {
     return { value: it, label: it };
   });
-  return <div>{options.length > 0 && <DistinctValueChooser options={options} onChoose={onChoose} />}</div>;
+  return <div>{options.length > 0 && <TwoValueChooser options={options} onChoose={onChoose} />}</div>;
 };
 
 export { ChooseSnapshots };
