@@ -71,6 +71,7 @@ const Train = () => {
   const [t] = useTranslation();
 
   const asyncLoadNextDocument = async () => {
+    if (nextTrainText != null) return;
     const nextTrainingResponse = await nerApi.trainNer();
     const { data, status } = nextTrainingResponse;
     if (status == 204 || (trainText && data.text_id == trainText.text_id)) {
