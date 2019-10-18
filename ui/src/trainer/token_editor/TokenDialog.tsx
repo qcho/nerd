@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { MenuItem, DialogContent, Divider, Typography, Theme, Button } from '@material-ui/core';
+import React from 'react';
+import { DialogContent, Divider, Typography, Theme, Button } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { Type } from '../apigen';
 import { makeStyles } from '@material-ui/styles';
