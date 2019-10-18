@@ -112,7 +112,6 @@ class CompareResource(MethodView):
         second_snapshot_id = second_snapshot.id
 
         def map_text(text):
-            logger.debug(text)
             raw_text = text['value']
             _, first = parse_text(first_snapshot_id, raw_text)
             _, second = parse_text(second_snapshot_id, raw_text)
