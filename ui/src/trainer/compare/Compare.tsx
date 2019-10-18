@@ -21,7 +21,7 @@ const CompareSnapshots = () => {
           <ChooseSnapshots onChange={setSnapshotsToCompare} value={{ from: 'v1', to: 'vCURRENT' }} />
           <FormControlLabel
             checked={highlightDifferent}
-            label={t('Show only differences')}
+            label={t('Highlight different')}
             labelPlacement="start"
             control={<Switch color="primary" onChange={onHDSwitchChange} />}
           />
