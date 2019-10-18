@@ -14,6 +14,8 @@ interface Props {
   actionText?: string | null;
   separatorText?: string | null;
   onlyDifferentValues?: boolean;
+  leftDefaultValue?: string | null;
+  rightDefaultValue?: string | null;
 }
 
 const TwoValueChooser = ({
@@ -22,10 +24,12 @@ const TwoValueChooser = ({
   actionText = null,
   separatorText = null,
   onlyDifferentValues = false,
+  leftDefaultValue = null,
+  rightDefaultValue = null,
 }: Props) => {
   const [t] = useTranslation();
-  const [leftValue, setLeftValue] = useState<any>('');
-  const [rightValue, setRightValue] = useState<any>('');
+  const [leftValue, setLeftValue] = useState<any>(leftDefaultValue || '');
+  const [rightValue, setRightValue] = useState<any>(rightDefaultValue || '');
   const [leftOptions, setLeftOptions] = useState<Option[]>([]);
   const [rightOptions, setRightOptions] = useState<Option[]>([]);
   actionText = actionText || (t('Select') as string);
