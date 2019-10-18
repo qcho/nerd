@@ -41,6 +41,9 @@ class NerCompareSchema(Schema):
 
 
 class NerCompareResultSchema(Schema):
+    class Meta:
+        strict = True
+        ordered = True
     first_snapshot = fields.Nested(SnapshotSchema, required=True)
     second_snapshot = fields.Nested(SnapshotSchema, required=True)
     results = fields.List(fields.Nested(NerCompareSchema), required=True)
