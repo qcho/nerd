@@ -116,6 +116,7 @@ class CompareResource(MethodView):
             _, first = parse_text(first_snapshot_id, raw_text)
             _, second = parse_text(second_snapshot_id, raw_text)
             return {
+                'text_id': text.id,
                 'first': first,
                 'second': second
             }

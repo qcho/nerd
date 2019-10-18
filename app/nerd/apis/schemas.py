@@ -35,6 +35,7 @@ class TypeSchema(ModelSchema):
 
 
 class NerCompareSchema(Schema):
+    text_id = fields.String(required=True)
     first = fields.Nested(SpacyDocumentSchema, required=True)
     second = fields.Nested(SpacyDocumentSchema, required=True)
 

@@ -53,16 +53,16 @@ export interface EntityList {
     entities: Array<SpacyEntity2>;
     /**
      * 
-     * @type {Snapshot}
-     * @memberof EntityList
-     */
-    snapshot: Snapshot;
-    /**
-     * 
      * @type {string}
      * @memberof EntityList
      */
     text: string;
+    /**
+     * 
+     * @type {Snapshot}
+     * @memberof EntityList
+     */
+    snapshot: Snapshot;
 }
 /**
  * 
@@ -98,6 +98,12 @@ export interface InlineObject {
 export interface NerCompare {
     /**
      * 
+     * @type {string}
+     * @memberof NerCompare
+     */
+    text_id: string;
+    /**
+     * 
      * @type {SpacyDocument1}
      * @memberof NerCompare
      */
@@ -120,7 +126,7 @@ export interface NerCompareResult {
      * @type {Snapshot}
      * @memberof NerCompareResult
      */
-    first_snapshot: Snapshot;
+    second_snapshot: Snapshot;
     /**
      * 
      * @type {Array<NerCompare>}
@@ -132,7 +138,7 @@ export interface NerCompareResult {
      * @type {Snapshot}
      * @memberof NerCompareResult
      */
-    second_snapshot: Snapshot;
+    first_snapshot: Snapshot;
 }
 /**
  * 
@@ -164,13 +170,13 @@ export interface Register {
      * @type {string}
      * @memberof Register
      */
-    name: string;
+    email: string;
     /**
      * 
      * @type {string}
      * @memberof Register
      */
-    email: string;
+    name: string;
 }
 /**
  * 
@@ -199,6 +205,18 @@ export interface Snapshot {
     trained_at?: Date;
     /**
      * 
+     * @type {Date}
+     * @memberof Snapshot
+     */
+    created_at?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof Snapshot
+     */
+    id: number;
+    /**
+     * 
      * @type {{ [key: string]: Type; }}
      * @memberof Snapshot
      */
@@ -208,19 +226,7 @@ export interface Snapshot {
      * @type {number}
      * @memberof Snapshot
      */
-    id: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Snapshot
-     */
     semaphore?: number;
-    /**
-     * 
-     * @type {Date}
-     * @memberof Snapshot
-     */
-    created_at?: Date;
 }
 /**
  * 
@@ -273,6 +279,18 @@ export interface SnapshotInfo {
 export interface SpacyDocument {
     /**
      * 
+     * @type {Array<SpacySentence>}
+     * @memberof SpacyDocument
+     */
+    sents?: Array<SpacySentence>;
+    /**
+     * 
+     * @type {Array<SpacyEntity>}
+     * @memberof SpacyDocument
+     */
+    ents?: Array<SpacyEntity>;
+    /**
+     * 
      * @type {Date}
      * @memberof SpacyDocument
      */
@@ -285,22 +303,10 @@ export interface SpacyDocument {
     tokens?: Array<SpacyToken>;
     /**
      * 
-     * @type {Array<SpacySentence>}
-     * @memberof SpacyDocument
-     */
-    sents?: Array<SpacySentence>;
-    /**
-     * 
      * @type {string}
      * @memberof SpacyDocument
      */
     text: string;
-    /**
-     * 
-     * @type {Array<SpacyEntity>}
-     * @memberof SpacyDocument
-     */
-    ents?: Array<SpacyEntity>;
 }
 /**
  * 
@@ -308,6 +314,18 @@ export interface SpacyDocument {
  * @interface SpacyDocument1
  */
 export interface SpacyDocument1 {
+    /**
+     * 
+     * @type {Array<SpacySentence1>}
+     * @memberof SpacyDocument1
+     */
+    sents?: Array<SpacySentence1>;
+    /**
+     * 
+     * @type {Array<SpacyEntity1>}
+     * @memberof SpacyDocument1
+     */
+    ents?: Array<SpacyEntity1>;
     /**
      * 
      * @type {Date}
@@ -322,22 +340,10 @@ export interface SpacyDocument1 {
     tokens?: Array<SpacyToken1>;
     /**
      * 
-     * @type {Array<SpacySentence1>}
-     * @memberof SpacyDocument1
-     */
-    sents?: Array<SpacySentence1>;
-    /**
-     * 
      * @type {string}
      * @memberof SpacyDocument1
      */
     text: string;
-    /**
-     * 
-     * @type {Array<SpacyEntity1>}
-     * @memberof SpacyDocument1
-     */
-    ents?: Array<SpacyEntity1>;
 }
 /**
  * 
@@ -353,16 +359,16 @@ export interface SpacyEntity {
     end: number;
     /**
      * 
-     * @type {string}
-     * @memberof SpacyEntity
-     */
-    label: string;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyEntity
      */
     start: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyEntity
+     */
+    label: string;
 }
 /**
  * 
@@ -378,16 +384,16 @@ export interface SpacyEntity1 {
     end: number;
     /**
      * 
-     * @type {string}
-     * @memberof SpacyEntity1
-     */
-    label: string;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyEntity1
      */
     start: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyEntity1
+     */
+    label: string;
 }
 /**
  * 
@@ -403,16 +409,16 @@ export interface SpacyEntity2 {
     end: number;
     /**
      * 
-     * @type {string}
-     * @memberof SpacyEntity2
-     */
-    label: string;
-    /**
-     * 
      * @type {number}
      * @memberof SpacyEntity2
      */
     start: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyEntity2
+     */
+    label: string;
 }
 /**
  * 
@@ -460,10 +466,10 @@ export interface SpacySentence1 {
 export interface SpacyToken {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SpacyToken
      */
-    tag?: string;
+    end: number;
     /**
      * 
      * @type {string}
@@ -475,13 +481,19 @@ export interface SpacyToken {
      * @type {string}
      * @memberof SpacyToken
      */
-    pos?: string;
+    tag?: string;
     /**
      * 
      * @type {number}
      * @memberof SpacyToken
      */
-    end: number;
+    head?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken
+     */
+    pos?: string;
     /**
      * 
      * @type {number}
@@ -494,12 +506,6 @@ export interface SpacyToken {
      * @memberof SpacyToken
      */
     start: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken
-     */
-    head?: number;
 }
 /**
  * 
@@ -509,10 +515,10 @@ export interface SpacyToken {
 export interface SpacyToken1 {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SpacyToken1
      */
-    tag?: string;
+    end: number;
     /**
      * 
      * @type {string}
@@ -524,13 +530,19 @@ export interface SpacyToken1 {
      * @type {string}
      * @memberof SpacyToken1
      */
-    pos?: string;
+    tag?: string;
     /**
      * 
      * @type {number}
      * @memberof SpacyToken1
      */
-    end: number;
+    head?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpacyToken1
+     */
+    pos?: string;
     /**
      * 
      * @type {number}
@@ -543,12 +555,6 @@ export interface SpacyToken1 {
      * @memberof SpacyToken1
      */
     start: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SpacyToken1
-     */
-    head?: number;
 }
 /**
  * 
@@ -558,28 +564,28 @@ export interface SpacyToken1 {
 export interface Text {
     /**
      * 
-     * @type {string}
-     * @memberof Text
-     */
-    value: string;
-    /**
-     * 
      * @type {Array<object>}
      * @memberof Text
      */
     trainings?: Array<object>;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof Text
      */
-    created_at?: Date;
+    value: string;
     /**
      * 
      * @type {string}
      * @memberof Text
      */
     id?: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof Text
+     */
+    created_at?: Date;
 }
 /**
  * 
@@ -633,10 +639,10 @@ export interface TopContributor {
 export interface TrainText {
     /**
      * 
-     * @type {Snapshot}
+     * @type {string}
      * @memberof TrainText
      */
-    snapshot: Snapshot;
+    text_id: string;
     /**
      * 
      * @type {SpacyDocument1}
@@ -645,10 +651,10 @@ export interface TrainText {
     spacy_document: SpacyDocument1;
     /**
      * 
-     * @type {string}
+     * @type {Snapshot}
      * @memberof TrainText
      */
-    text_id: string;
+    snapshot: Snapshot;
 }
 /**
  * 
@@ -664,28 +670,28 @@ export interface Training {
     user_id: object;
     /**
      * 
-     * @type {string}
-     * @memberof Training
-     */
-    id?: string;
-    /**
-     * 
      * @type {SpacyDocument}
      * @memberof Training
      */
     document: SpacyDocument;
     /**
      * 
-     * @type {object}
-     * @memberof Training
-     */
-    text_id: object;
-    /**
-     * 
      * @type {Date}
      * @memberof Training
      */
     created_at?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof Training
+     */
+    id?: string;
+    /**
+     * 
+     * @type {object}
+     * @memberof Training
+     */
+    text_id: object;
 }
 /**
  * 
@@ -714,22 +720,22 @@ export interface Type {
 export interface User {
     /**
      * 
-     * @type {Array<string>}
-     * @memberof User
-     */
-    roles?: Array<string>;
-    /**
-     * 
      * @type {string}
      * @memberof User
      */
-    name: string;
+    email: string;
     /**
      * 
      * @type {number}
      * @memberof User
      */
     total_trainings?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof User
+     */
+    roles?: Array<string>;
     /**
      * 
      * @type {string}
@@ -741,7 +747,7 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    email: string;
+    name: string;
 }
 /**
  * 
@@ -776,6 +782,18 @@ export interface UserCredentials {
 export interface UserPayload {
     /**
      * 
+     * @type {Array<object>}
+     * @memberof UserPayload
+     */
+    trainings?: Array<object>;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPayload
+     */
+    plain_password?: string;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof UserPayload
      */
@@ -785,25 +803,13 @@ export interface UserPayload {
      * @type {string}
      * @memberof UserPayload
      */
-    plain_password?: string;
+    id?: string;
     /**
      * 
      * @type {string}
      * @memberof UserPayload
      */
     name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserPayload
-     */
-    id?: string;
-    /**
-     * 
-     * @type {Array<object>}
-     * @memberof UserPayload
-     */
-    trainings?: Array<object>;
 }
 /**
  * 
@@ -829,13 +835,13 @@ export interface Worker {
      * @type {string}
      * @memberof Worker
      */
-    snapshot: string;
+    name: string;
     /**
      * 
      * @type {string}
      * @memberof Worker
      */
-    name: string;
+    snapshot: string;
 }
 
 /**
@@ -1807,25 +1813,25 @@ export const NerApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} first_snapshot 
          * @param {string} second_snapshot 
+         * @param {string} first_snapshot 
          * @param {number} [page] 
          * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        nerCompare(first_snapshot: string, second_snapshot: string, page?: number, page_size?: number, options: any = {}): RequestArgs {
-            // verify required parameter 'first_snapshot' is not null or undefined
-            if (first_snapshot === null || first_snapshot === undefined) {
-                throw new RequiredError('first_snapshot','Required parameter first_snapshot was null or undefined when calling nerCompare.');
-            }
+        nerCompare(second_snapshot: string, first_snapshot: string, page?: number, page_size?: number, options: any = {}): RequestArgs {
             // verify required parameter 'second_snapshot' is not null or undefined
             if (second_snapshot === null || second_snapshot === undefined) {
                 throw new RequiredError('second_snapshot','Required parameter second_snapshot was null or undefined when calling nerCompare.');
             }
+            // verify required parameter 'first_snapshot' is not null or undefined
+            if (first_snapshot === null || first_snapshot === undefined) {
+                throw new RequiredError('first_snapshot','Required parameter first_snapshot was null or undefined when calling nerCompare.');
+            }
             const localVarPath = `/api/ner/compare/{first_snapshot}/{second_snapshot}`
-                .replace(`{${"first_snapshot"}}`, encodeURIComponent(String(first_snapshot)))
-                .replace(`{${"second_snapshot"}}`, encodeURIComponent(String(second_snapshot)));
+                .replace(`{${"second_snapshot"}}`, encodeURIComponent(String(second_snapshot)))
+                .replace(`{${"first_snapshot"}}`, encodeURIComponent(String(first_snapshot)));
             const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
             let baseOptions;
             if (configuration) {
@@ -2042,15 +2048,15 @@ export const NerApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} first_snapshot 
          * @param {string} second_snapshot 
+         * @param {string} first_snapshot 
          * @param {number} [page] 
          * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        nerCompare(first_snapshot: string, second_snapshot: string, page?: number, page_size?: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<NerCompareResult> {
-            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).nerCompare(first_snapshot, second_snapshot, page, page_size, options);
+        nerCompare(second_snapshot: string, first_snapshot: string, page?: number, page_size?: number, options?: any): (axios?: AxiosInstance, basePath?: string) => AxiosPromise<NerCompareResult> {
+            const localVarAxiosArgs = NerApiAxiosParamCreator(configuration).nerCompare(second_snapshot, first_snapshot, page, page_size, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -2125,15 +2131,15 @@ export const NerApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {string} first_snapshot 
          * @param {string} second_snapshot 
+         * @param {string} first_snapshot 
          * @param {number} [page] 
          * @param {number} [page_size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        nerCompare(first_snapshot: string, second_snapshot: string, page?: number, page_size?: number, options?: any) {
-            return NerApiFp(configuration).nerCompare(first_snapshot, second_snapshot, page, page_size, options)(axios, basePath);
+        nerCompare(second_snapshot: string, first_snapshot: string, page?: number, page_size?: number, options?: any) {
+            return NerApiFp(configuration).nerCompare(second_snapshot, first_snapshot, page, page_size, options)(axios, basePath);
         },
         /**
          * 
@@ -2197,16 +2203,16 @@ export class NerApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} first_snapshot 
      * @param {string} second_snapshot 
+     * @param {string} first_snapshot 
      * @param {number} [page] 
      * @param {number} [page_size] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NerApi
      */
-    public nerCompare(first_snapshot: string, second_snapshot: string, page?: number, page_size?: number, options?: any) {
-        return NerApiFp(this.configuration).nerCompare(first_snapshot, second_snapshot, page, page_size, options)(this.axios, this.basePath);
+    public nerCompare(second_snapshot: string, first_snapshot: string, page?: number, page_size?: number, options?: any) {
+        return NerApiFp(this.configuration).nerCompare(second_snapshot, first_snapshot, page, page_size, options)(this.axios, this.basePath);
     }
 
     /**
