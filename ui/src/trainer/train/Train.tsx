@@ -59,6 +59,7 @@ const Train = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [hasChanges, setHasChanges] = useState<boolean>(false);
   const [trainText, setTrainText] = useState<MaybeTrainText>(null);
+  const [nextTrainText, setNextTrainText] = useState<MaybeTrainText>(null);
   const [spacyDocument, setSpacyDocument] = useState<MaybeSpacyDocument>(null);
   const [noMoreDocuments, setNoMoreDocuments] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -69,20 +70,33 @@ const Train = () => {
   const classes = useStyles();
   const [t] = useTranslation();
 
+  const asyncLoadNextDocument = async () => {
+    const nextTrainingResponse = await nerApi.trainNer();
+    const { data, status } = nextTrainingResponse;
+    if (status == 204 || (trainText && data.text_id == trainText.text_id)) {
+      setNextTrainText(null);
+      return;
+    }
+    setNextTrainText(data);
+  };
+
   const loadNewDocument = async () => {
+    if (unmounted) return;
+    if (nextTrainText != null) {
+      setTrainText(nextTrainText);
+      setSpacyDocument(clone(nextTrainText.spacy_document));
+      setNextTrainText(null);
+      asyncLoadNextDocument();
+      return;
+    }
     setLoading(true);
     try {
       const trainingInfoResult = await nerApi.trainNer();
-      if (unmounted) return;
-      if (trainingInfoResult.status == 204) {
-        setNoMoreDocuments(true);
-        setTrainText(null);
-        setSpacyDocument(null);
-      } else {
-        setNoMoreDocuments(false);
-        setTrainText(trainingInfoResult.data);
-        setSpacyDocument(clone(trainingInfoResult.data.spacy_document));
-      }
+      const noDocumentsLeft = trainingInfoResult.status == 204;
+      setTrainText(noDocumentsLeft ? null : trainingInfoResult.data);
+      setSpacyDocument(noDocumentsLeft ? null : clone(trainingInfoResult.data.spacy_document));
+      setNoMoreDocuments(noDocumentsLeft);
+      asyncLoadNextDocument();
     } catch (e) {
       if (unmounted) return;
       setTrainText(null);
@@ -92,10 +106,10 @@ const Train = () => {
           return t('There was an error while retrieving a text to train.');
         }),
       );
+    } finally {
+      setHasChanges(false);
+      setLoading(false);
     }
-
-    setHasChanges(false);
-    setLoading(false);
   };
 
   const onDocumentUpdate = async (trainedDocument: SpacyDocument) => {
