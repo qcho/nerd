@@ -3,7 +3,7 @@ from flask_smorest import Blueprint
 from marshmallow import Schema, fields
 from werkzeug.exceptions import Forbidden
 
-from nerd.apis import jwt_and_role_required, response_error
+from nerd.apis import jwt_and_role_required, response_error, BaseSchema
 from nerd.core.document.user import Role
 from nerd.core.util import get_logger
 from nerd.tasks import celery
@@ -13,12 +13,12 @@ blp = Blueprint('workers', 'workers', description='Worker management')
 logger = get_logger(__name__)
 
 
-class WorkerSchema(Schema):
+class WorkerSchema(BaseSchema):
     name = fields.String(required=True)
     snapshot = fields.String(required=True)
 
 
-class ChangeSnapshotSchema(Schema):
+class ChangeSnapshotSchema(BaseSchema):
     from_version = fields.String(required=True)
     to_version = fields.String(required=True)
 

@@ -11,7 +11,7 @@ from mongoengine import DoesNotExist, ValidationError
 from mongoengine.queryset.visitor import Q
 from werkzeug.exceptions import NotFound, UnprocessableEntity
 
-from nerd.apis import jwt_and_role_required, response_error
+from nerd.apis import jwt_and_role_required, response_error, BaseSchema
 from nerd.apis.schemas import TrainingSchema
 from nerd.core.document.corpus import Training
 from nerd.core.document.user import User, Role
@@ -41,11 +41,7 @@ class UserPayloadSchema(ModelSchema):
         exclude = ['password', 'email']
 
 
-class FilterUsersSchema(Schema):
-    class Meta:
-        strict = True
-        ordered = True
-
+class FilterUsersSchema(BaseSchema):
     query = fields.String(required=False)
 
 

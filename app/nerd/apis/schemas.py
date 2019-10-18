@@ -4,19 +4,20 @@ from marshmallow_mongoengine import ModelSchema
 from nerd.core.document.corpus import Training, Text
 from nerd.core.document.snapshot import SnapshotSchema, Type
 from nerd.core.document.spacy import SpacyDocumentSchema, SpacyEntitySchema
+from nerd.apis import BaseSchema
 
 class TextSchema(ModelSchema):
     class Meta:
         strict = True
         model = Text
 
-class EntityListSchema(Schema):
+class EntityListSchema(BaseSchema):
     text = fields.String(required=True)
     snapshot = fields.Nested(SnapshotSchema, required=True)
     entities = fields.List(fields.Nested(SpacyEntitySchema), required=True)
 
 
-class TrainTextSchema(Schema):
+class TrainTextSchema(BaseSchema):
     text_id = fields.String(required=True)
     snapshot = fields.Nested(SnapshotSchema, required=True)
     spacy_document = fields.Nested(SpacyDocumentSchema, required=True)
@@ -34,19 +35,16 @@ class TypeSchema(ModelSchema):
         model = Type
 
 
-class NerCompareSchema(Schema):
+class NerCompareSchema(BaseSchema):
     text_id = fields.String(required=True)
     first = fields.Nested(SpacyDocumentSchema, required=True)
     second = fields.Nested(SpacyDocumentSchema, required=True)
 
 
-class NerCompareResultSchema(Schema):
-    class Meta:
-        strict = True
-        ordered = True
+class NerCompareResultSchema(BaseSchema):
     first_snapshot = fields.Nested(SnapshotSchema, required=True)
     second_snapshot = fields.Nested(SnapshotSchema, required=True)
     results = fields.List(fields.Nested(NerCompareSchema), required=True)
 
-class VersionSchema(Schema):
+class VersionSchema(BaseSchema):
     version = fields.String(required=True)
