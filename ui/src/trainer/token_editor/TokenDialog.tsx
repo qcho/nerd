@@ -12,7 +12,7 @@ interface ActionWidgetProps {
   label: string;
   color?: 'default' | 'secondary';
   style?: React.CSSProperties;
-  variant?: 'outlined' | 'raised';
+  variant?: 'outlined' | 'contained';
 }
 
 const useActionStyles = makeStyles(
@@ -81,7 +81,7 @@ const TokenDialog = ({
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', marginLeft: '2em' }}>
           {onRemove && <ActionWidget onClick={onRemove} label={t('Remove')} color="secondary" />}
-          {onDelete && <ActionWidget onClick={onDelete} label={t('Delete')} color="secondary" variant="raised" />}
+          {onDelete && <ActionWidget onClick={onDelete} label={t('Delete')} color="secondary" variant="contained" />}
         </div>
       </div>
     </DialogContent>
