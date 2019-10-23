@@ -54,9 +54,7 @@ const Register = ({ classes }: { classes: any }) => {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <Typography component="h1" variant="h3">
-          {t('Register')}
-        </Typography>
+        <Typography variant="h3">{t('Register')}</Typography>
         <form className={classes.form} onSubmit={onFormSubmit}>
           <FormControl margin="normal" required fullWidth>
             <InputLabel htmlFor="name">{t('Full Name')}</InputLabel>

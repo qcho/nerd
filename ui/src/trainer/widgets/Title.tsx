@@ -8,7 +8,7 @@ interface Props {
 
 const Title = ({ children, gutterBottom = true }: Props) => {
   return (
-    <Typography component="h2" variant="h5" gutterBottom={gutterBottom}>
+    <Typography variant="h5" gutterBottom={gutterBottom}>
       {children}
     </Typography>
   );

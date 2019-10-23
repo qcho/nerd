@@ -59,9 +59,7 @@ const Login = ({ classes }: { classes: any }) => {
   ) : (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <Typography component="h1" variant="h3">
-          {t('Login')}
-        </Typography>
+        <Typography variant="h3">{t('Login')}</Typography>
         <form className={classes.form} onSubmit={onFormSubmit}>
           <FormControl margin="normal" required fullWidth>
             <InputLabel htmlFor="email">{t('Email Address')}</InputLabel>

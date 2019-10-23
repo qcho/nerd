@@ -119,10 +119,10 @@ const Home = () => {
             ) : (
               <Grid container className={classes.cardContainer}>
                 <Grid item>
-                  <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+                  <Typography variant="h2" align="center" color="textPrimary" gutterBottom>
                     {t('Welcome')}
                   </Typography>
-                  <Typography variant="h6" align="center" color="textSecondary" component="p">
+                  <Typography variant="h6" align="center" color="textSecondary">
                     To continue please
                   </Typography>
                   <Grid
