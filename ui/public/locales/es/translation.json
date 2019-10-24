@@ -1,4 +1,9 @@
 {
+  "Training": "Entrenando",
+  "Ready": "Listo",
+  "Unknown": "Desconocido",
+  "Loading": "Cargando",
+  "Select a .txt file": "Elija un archivo .txt",
   "Corpus Management": "Administración del Corpus",
   "There was an error while removing texts": "Hubo un error al remover los textos",
   "There was a problem uploading the file": "Hubo un error al subir el archivo",
@@ -10,7 +15,6 @@
   "Text": "Texto",
   "Added": "Añadido",
   "Trainings": "Entrenamientos",
-  "Select a .txt file": "Elija un archivo .txt",
   "Create snapshot": "Crear snapshot",
   "Types": "Tipos",
   "New": "Nuevo",

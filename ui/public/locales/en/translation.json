@@ -1,4 +1,8 @@
 {
+  "Training": "Training",
+  "Ready": "Ready",
+  "Unknown": "Unknown",
+  "Loading": "Loading",
   "Corpus Management": "Corpus Management",
   "There was an error while removing texts": "There was an error while removing texts",
   "There was a problem uploading the file": "There was a problem uploading the file",

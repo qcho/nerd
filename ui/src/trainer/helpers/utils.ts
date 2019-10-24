@@ -27,16 +27,16 @@ function snapshotStatus(snapshot: Snapshot): SnapshotStatus {
   return SnapshotStatus.READY;
 }
 
-function snapshotStatusToText(status: SnapshotStatus) {
+function snapshotStatusToText(status: SnapshotStatus, t: any) {
   switch (status) {
     case SnapshotStatus.LOADING:
-      return 'Loading from disk';
+      return t('Loading');
     case SnapshotStatus.READY:
-      return 'Ready';
+      return t('Ready');
     case SnapshotStatus.UNKNOWN:
-      return 'Unknown';
+      return t('Unknown');
     case SnapshotStatus.TRAINING:
-      return 'Training';
+      return t('Training');
   }
 }
 

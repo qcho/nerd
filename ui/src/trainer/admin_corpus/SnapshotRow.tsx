@@ -49,7 +49,7 @@ const SnapshotRow = ({ snapshot, workers }: Props) => {
         <Typography>{(trained_at && moment(trained_at).fromNow()) || t('Never')}</Typography>
       </TableCell>
       <TableCell>
-        <Typography>{t(snapshotStatusToText(status))}</Typography>
+        <Typography>{snapshotStatusToText(status, t)}</Typography>
       </TableCell>
       <TableCell>
         <Typography>{workers[snapshotVersion] || t('None')}</Typography>
