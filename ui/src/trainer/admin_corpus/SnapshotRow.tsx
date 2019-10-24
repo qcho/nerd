@@ -21,18 +21,12 @@ const SnapshotRow = ({ snapshot, workers }: Props) => {
   const api = new SnapshotsApi(apiConfig());
 
   async function onUntrain() {
-    try {
-      await api.forceUntrain(id);
-    } catch (e) {
-      // TODO
-    }
+    await api.forceUntrain(id);
+    window.location.reload();
   }
   async function onTrain() {
-    try {
-      await api.forceTrain(id);
-    } catch (e) {
-      // TODO
-    }
+    await api.forceTrain(id);
+    window.location.reload();
   }
 
   const status = snapshotStatus(snapshot);
