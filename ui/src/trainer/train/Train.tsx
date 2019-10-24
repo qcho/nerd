@@ -144,7 +144,6 @@ const Train = () => {
       <div className={classes.container}>
         {noMoreDocuments && (
           <Paper className={classes.paper}>
-            {/* TODO: Show something nice here */}
             <Typography>{t('No more documents to train!')}</Typography>
           </Paper>
         )}

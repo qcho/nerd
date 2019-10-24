@@ -123,7 +123,6 @@ const TextTrainings = ({ match }: { match: any }) => {
                 paginatable
                 emptyView={
                   <div style={{ padding: '2em' }}>
-                    {/* TODO: Make a nice "empty" view */}
                     <Subtitle>{'There are no trainings here'}</Subtitle>
                   </div>
                 }
