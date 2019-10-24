@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { moment } from '../helpers/utils';
 
 import Backend from 'i18next-xhr-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
@@ -18,5 +19,7 @@ i18n
     saveMissing: isDev,
     debug: isDev,
   });
+
+i18n.on('languageChanged', lng => moment.locale(lng));
 
 export default i18n;

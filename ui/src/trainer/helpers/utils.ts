@@ -1,13 +1,12 @@
-import moment from 'moment';
+import moment from 'moment-timezone';
+import 'moment/locale/es';
 import { Snapshot } from '../apigen';
 
 const isString = (x: any): x is string => typeof x === 'string';
 
-const clone = (obj: any) => JSON.parse(JSON.stringify(obj));
-const momenttz = (value: any) => {
-  return moment(value);
-};
+moment.tz.setDefault('America/Argentina/Buenos_Aires');
 
+const clone = (obj: any) => JSON.parse(JSON.stringify(obj));
 enum SnapshotStatus {
   READY,
   LOADING,
@@ -40,4 +39,4 @@ function snapshotStatusToText(status: SnapshotStatus, t: any) {
   }
 }
 
-export { clone, momenttz as moment, snapshotStatus, snapshotStatusToText, SnapshotStatus };
+export { clone, moment, snapshotStatus, snapshotStatusToText, SnapshotStatus };
