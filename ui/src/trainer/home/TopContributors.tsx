@@ -20,7 +20,7 @@ const TopContributors = () => {
     try {
       return await api.top5();
     } catch (e) {
-      // TODO: Handle errors
+      console.error(e);
     }
   };
 

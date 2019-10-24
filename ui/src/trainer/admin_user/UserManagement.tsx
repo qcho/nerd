@@ -46,7 +46,7 @@ const UserManagement = () => {
         }),
       );
     } catch (e) {
-      // TODO: Handle errors
+      console.error(e);
     } finally {
       setLoading(false);
     }
@@ -64,9 +64,8 @@ const UserManagement = () => {
       return users;
     } catch (e) {
       if (unmounted) return;
-      // TODO: Set error
-      const errorMessage = Http.handleRequestError(e, (status, data) => {
-        console.log('Error loading users', data);
+      Http.handleRequestError(e, (status, data) => {
+        console.error('Error loading users', data);
         return '';
       });
     } finally {

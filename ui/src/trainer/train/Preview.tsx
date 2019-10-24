@@ -81,7 +81,7 @@ const PreviewLayout = ({ classes }: Props) => {
     } catch (e) {
       setErrorMessage(
         Http.handleRequestError(e, (status, data) => {
-          // TODO: Handle specific error codes
+          console.error(e);
           return '';
         }),
       );

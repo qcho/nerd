@@ -47,7 +47,7 @@ const UserRow = ({ user, availableRoles: roles }: Props) => {
       });
       setUserRoles(result.data.roles || []);
     } catch (e) {
-      // TODO: Display error
+      console.error('Error while updating roles', e);
     } finally {
       setLoading(false);
     }

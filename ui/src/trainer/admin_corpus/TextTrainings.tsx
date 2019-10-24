@@ -43,9 +43,7 @@ const TextTrainings = ({ match }: { match: any }) => {
         ]);
         return [textResponse.data, snapshotResponse.data];
       } catch (e) {
-        // TODO: Correct error message
         const errorMessage = Http.handleRequestError(e, (status, data) => {
-          console.log('Error loading text', data);
           if (status === 404) {
             return t("Text doesn't exist");
           }
@@ -72,8 +70,8 @@ const TextTrainings = ({ match }: { match: any }) => {
       const { id } = match.params;
       return await corpusApi.trainingsForText(id, params.page, params.pageSize);
     } catch (e) {
-      // TODO: Handle errors
       const errorMessage = Http.handleRequestError(e, (status, data) => {
+        console.error('Error when loading trainings', e);
         if (status === 404) {
           return t("Text doesn't exist");
         }
@@ -104,7 +102,7 @@ const TextTrainings = ({ match }: { match: any }) => {
       setLoading(true);
       await Promise.all((rows.map(training => training.id) as (string)[]).map(id => api.deleteTraining(id)));
     } catch (e) {
-      // TODO: Handle errors
+      console.error(e);
     } finally {
       setLoading(false);
     }

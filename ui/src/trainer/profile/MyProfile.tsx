@@ -8,6 +8,7 @@ import { UsersApi, User } from '../apigen';
 import { apiConfig } from '../helpers/api-config';
 import Http from '../helpers/http';
 import { UserProfileView } from './ProfileView';
+import { SuccessSnackbar } from '../widgets/Snackbars';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -26,6 +27,7 @@ const MyProfile = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [user, setUser] = useState<MaybeUser>(null);
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const fetchCurrentUser = useCallback(async () => {
     const userApi = new UsersApi(apiConfig());
@@ -34,9 +36,8 @@ const MyProfile = () => {
       const userResponse = await userApi.loggedUserDetails();
       return userResponse.data;
     } catch (e) {
-      // TODO: Correct error message
       const errorMessage = Http.handleRequestError(e, (status, data) => {
-        console.log('Error loading user', data);
+        console.error('Error loading user', data);
         if (status === 404) {
           return t("User doesn't exist");
         }
@@ -57,13 +58,13 @@ const MyProfile = () => {
     loadUser();
   }, [fetchCurrentUser]);
 
-  function onChangePassword(password: string) {
+  async function onChangePassword(password: string) {
     if (!user) return;
     if (!user.id) return;
     const userApi = new UsersApi(apiConfig());
     // eslint-disable-next-line @typescript-eslint/camelcase
-    userApi.updateUser(user.id, { plain_password: password });
-    // TODO: Should we do something after updating the password?
+    await userApi.updateUser(user.id, { plain_password: password });
+    setSuccessMessage(t('Password updated'));
   }
 
   return (
@@ -77,6 +78,7 @@ const MyProfile = () => {
           <CircularProgress />
         </div>
       )}
+      <SuccessSnackbar message={successMessage} onClose={() => setSuccessMessage('')} />
     </Scaffold>
   );
 };

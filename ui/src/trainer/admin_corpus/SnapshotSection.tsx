@@ -14,7 +14,9 @@ const SnapshotSection = () => {
   const snapshotDatasource = async (params: DatasourceParameters) => {
     try {
       return await api.listCorpusSnapshots(params.page, params.pageSize);
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {
@@ -32,7 +34,7 @@ const SnapshotSection = () => {
           ),
         );
       } catch (e) {
-        // TODO: Error management
+        console.error(e);
       }
     }
     loadWorkers();
@@ -70,7 +72,7 @@ const SnapshotSection = () => {
     try {
       await Promise.all(rows.map((snapshot: Snapshot) => api.deleteSnapshot(snapshot.id)));
     } catch (e) {
-      // TODO: Handle error
+      console.error(e);
     }
   };
 

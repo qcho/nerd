@@ -119,7 +119,7 @@ const TableToolbar = ({
       <div className={classes.title}>
         {numSelected > 0 ? (
           <Typography color="inherit" variant="subtitle1">
-            {numSelected} selected {/* TODO: Translate this */}
+            {t('{{numSelected}} selected')}
           </Typography>
         ) : (
           title && (

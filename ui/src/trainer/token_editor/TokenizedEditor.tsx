@@ -53,8 +53,7 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, 
     let startContainer = range.startContainer;
     let endContainer = range.endContainer;
     if (startContainer.parentElement == null || endContainer.parentElement == null) {
-      // TODO: Shouldn't happen
-      return;
+      return; // Shouldn't happen
     }
     let startPosition = Number(startContainer.parentElement.id.split('-')[0]);
     let endPosition = Number(endContainer.parentElement.id.split('-')[1]);
@@ -73,7 +72,6 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, 
         .reduce((prev: boolean, curr: boolean) => prev || curr);
       if (hasOverlap) {
         selection.removeAllRanges();
-        // TODO: Set error
         return;
       }
     }

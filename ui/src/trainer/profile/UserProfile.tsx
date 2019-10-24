@@ -37,9 +37,8 @@ const UserProfile = ({ match }: { match: any }) => {
       const userResponse = await userApi.userDetails(id);
       return userResponse.data;
     } catch (e) {
-      // TODO: Correct error message
       const errorMessage = Http.handleRequestError(e, (status, data) => {
-        console.log('Error loading user', data);
+        console.error('Error loading user', data);
         if (status === 404) {
           return t("User doesn't exist");
         }
@@ -69,11 +68,10 @@ const UserProfile = ({ match }: { match: any }) => {
       // eslint-disable-next-line @typescript-eslint/camelcase
       await userApi.updateUser(user.id, { plain_password: newPassword });
     } catch (e) {
-      // TODO
+      console.error(e);
     } finally {
       setNewPassword('');
     }
-    // TODO: Should we do something after updating the password?
   }
 
   return (

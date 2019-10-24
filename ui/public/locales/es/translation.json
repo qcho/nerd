@@ -1,4 +1,6 @@
 {
+  "{{numSelected}} selected": "{{numSelected}} seleccionados",
+  "Contraseña actualizada": "Contraseña actualizada",
   "Training": "Entrenando",
   "Ready": "Listo",
   "Unknown": "Desconocido",

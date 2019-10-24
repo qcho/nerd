@@ -28,8 +28,8 @@ const UserTrainings = ({ user }: Props) => {
       const snapshotResponse = await snapshotApi.getCurrentSnapshot();
       return snapshotResponse.data;
     } catch (e) {
-      // TODO: Correct error message
       const errorMessage = Http.handleRequestError(e, (status, data) => {
+        console.error('Error when getting snapshot', e);
         return t('Unknown error');
       });
       setError(errorMessage);
@@ -54,8 +54,8 @@ const UserTrainings = ({ user }: Props) => {
       const userApi = new UsersApi(apiConfig());
       return await userApi.userTrainings(id, params.page, params.pageSize);
     } catch (e) {
-      // TODO: Handle errors
       const errorMessage = Http.handleRequestError(e, (status, data) => {
+        console.error(e);
         if (status === 404) {
           return t("User doesn't exist");
         }
@@ -79,7 +79,7 @@ const UserTrainings = ({ user }: Props) => {
       setLoading(true);
       await Promise.all((rows.map(training => training.id) as (string)[]).map(id => api.deleteTraining(id)));
     } catch (e) {
-      // TODO: Handle errors
+      console.error('Error when deleting training', e);
     } finally {
       setLoading(false);
     }

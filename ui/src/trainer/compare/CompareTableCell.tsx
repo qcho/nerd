@@ -35,7 +35,7 @@ const CompareTableCell = ({ highlightStyle, id, document, snapshot }: Props) => 
       await corpusApi.addTextTraining(id, innerDocument);
       setFixed(true);
     } catch (e) {
-      // TODO: Handle error
+      console.error('Error when posting training fix', e);
     } finally {
       setDirty(false);
     }
