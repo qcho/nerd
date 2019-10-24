@@ -8,6 +8,7 @@ import useRouter from 'use-react-router';
 import { makeStyles } from '@material-ui/styles';
 import { Routes } from '../helpers/routeHelper';
 import { Role } from '../types/role';
+import { LanguageSelect } from './LanguageSelect';
 
 const useStyles = makeStyles(() => ({
   menuButton: {
@@ -96,6 +97,8 @@ const NavigationBar = ({ loading, title, subtitle }: NavigationBarProps) => {
               <Separator />
             </>
           )}
+          <LanguageSelect />
+          <Separator />
           {loggedIn ? (
             <Button color="inherit" onClick={logout}>
               {t('Logout')}

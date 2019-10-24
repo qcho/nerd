@@ -1,4 +1,6 @@
 {
+  "Spanish": "Spanish",
+  "English": "English",
   "Reassignment from snapshot {{from}} to {{to}} requested.": "Reassignment from snapshot {{from}} to {{to}} requested.",
   "Show only differences": "Show only differences",
   "Select a .txt file": "Select a .txt file",
