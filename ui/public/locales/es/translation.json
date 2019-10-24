@@ -1,4 +1,5 @@
 {
+  "Delete types": "Borrar tipos",
   "{{numSelected}} selected": "{{numSelected}} seleccionados",
   "Contraseña actualizada": "Contraseña actualizada",
   "Training": "Entrenando",
@@ -25,8 +26,6 @@
   "Save": "Guardar",
   "Create": "Crear",
   "Reset": "Resetear",
-  "Delete type?": "¿Borrar tipo?",
-  "Are you sure you want to delete the following types: {{typeCode}}?": "¿Está seguro de borrar los siguientes tipos: {{typeCode}}?",
   "Current": "Actual",
   "Never": "Nunca",
   "None": "Ninguno",
@@ -51,7 +50,7 @@
   "Label": "Nombre",
   "Colour": "Color",
   "Close": "Cerrar",
-  "Ok": "Ok",
+  "Ok": "Aceptar",
   "to": "a",
   "Apply": "Aplicar",
   "Error while retrieving workers": "Error buscando los trabajadores",

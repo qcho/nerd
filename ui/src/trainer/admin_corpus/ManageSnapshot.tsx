@@ -7,6 +7,7 @@ import { Type } from '../apigen';
 import { TypeAvatar } from './TypeAvatar';
 import { TypeUpsertDialog } from './TypeUpsertDialog';
 import { EntityType, MaybeEntityType } from '../types/EntityType';
+import { ConfirmActionDialog } from '../widgets/ConfirmActionDialog';
 
 const ManageSnapshot = () => {
   const [t] = useTranslation();
@@ -14,6 +15,7 @@ const ManageSnapshot = () => {
   const [currentType, setCurrentType] = useState<MaybeEntityType>(null);
   const [typesToAdd, setTypesToAdd] = useState<EntityType[]>([]);
   const [typesToDelete, setTypesToDelete] = useState<EntityType[]>([]);
+  const [deleteTypeDialogOpen, setDeleteTypeDialogOpen] = useState<boolean>(false);
 
   function mapTypesToChips(
     types: EntityType[],
@@ -56,6 +58,8 @@ const ManageSnapshot = () => {
     setTypesToAdd([...typesToAdd]);
     setCurrentType(null);
   }
+
+  function onConfirmDeleteClick() {}
 
   async function onUpsertSnapshotClick() {
     if (!currentSnapshot) return;
@@ -142,7 +146,11 @@ const ManageSnapshot = () => {
                 </Typography>
               }
             >
-              <Button color="primary" variant="outlined" onClick={onUpsertSnapshotClick}>
+              <Button
+                color="primary"
+                variant="outlined"
+                onClick={typesToDelete.length > 0 ? () => setDeleteTypeDialogOpen(true) : onUpsertSnapshotClick}
+              >
                 {hasChanges ? t('Save') : t('Create')}
                 {hasChanges && <sup>{'*'}</sup>}
               </Button>
@@ -165,19 +173,18 @@ const ManageSnapshot = () => {
           onClose={() => setCurrentType(null)}
         />
       )}
-      {/* TODO: {typesToDelete.length > 0 && (
+      {deleteTypeDialogOpen && (
         <ConfirmActionDialog
-          title={t('Delete type?')}
-          content={
-            t('Are you sure you want to delete the following types: {{typeCode}}?', {
-              typeCode: typesToDelete.join(', '),
-            }) as string
-          }
-          onClose={() => setTypesToDelete([])}
-          open={typesToDelete.length > 0}
-          onAccept={() => doDelete(codeToDelete)}
+          title={t('Delete types')}
+          content={typesToDelete.map(it => it.type.label).join(', ')}
+          onClose={() => {
+            setTypesToDelete([]);
+            setDeleteTypeDialogOpen(false);
+          }}
+          open={deleteTypeDialogOpen}
+          onAccept={onUpsertSnapshotClick}
         />
-      )} */}
+      )}
     </div>
   );
 };
