@@ -58,14 +58,16 @@ const SnapshotRow = ({ snapshot, workers }: Props) => {
         <Grid container alignContent="space-between">
           <Grid item>
             <Tooltip title={<Typography color="inherit">{t('Train')}</Typography>} placement="left">
-              <IconButton
-                aria-label={t('Train')}
-                onClick={onTrain}
-                color="primary"
-                disabled={status == SnapshotStatus.TRAINING}
-              >
-                <UpdateIcon />
-              </IconButton>
+              <div>
+                <IconButton
+                  aria-label={t('Train')}
+                  onClick={onTrain}
+                  color="primary"
+                  disabled={status == SnapshotStatus.TRAINING}
+                >
+                  <UpdateIcon />
+                </IconButton>
+              </div>
             </Tooltip>
           </Grid>
           {trained_at && id > 0 && (
