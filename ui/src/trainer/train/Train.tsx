@@ -70,8 +70,8 @@ const Train = () => {
   const classes = useStyles();
   const [t] = useTranslation();
 
-  const asyncLoadNextDocument = async () => {
-    if (nextTrainText != null) return;
+  const asyncLoadNextDocument = async (force: boolean = false) => {
+    if (nextTrainText != null && !force) return;
     const nextTrainingResponse = await nerApi.trainNer();
     const { data, status } = nextTrainingResponse;
     if (status == 204 || (trainText && data.text_id == trainText.text_id)) {
@@ -87,7 +87,7 @@ const Train = () => {
       setTrainText(nextTrainText);
       setSpacyDocument(clone(nextTrainText.spacy_document));
       setNextTrainText(null);
-      asyncLoadNextDocument();
+      asyncLoadNextDocument(true);
       return;
     }
     setLoading(true);
