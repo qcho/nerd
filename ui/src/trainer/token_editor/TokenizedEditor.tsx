@@ -24,7 +24,7 @@ const TokenizedEditor = ({ spacyDocument: spacyDocument, onUpdate, entityTypes, 
   }
 
   const onMouseUp = () => {
-    if (!onUpdate) return;
+    if (!onUpdate || readOnly) return;
     var selection = window.getSelection();
     if (selection === null) {
       return;
