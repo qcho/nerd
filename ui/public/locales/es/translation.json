@@ -1,8 +1,9 @@
 {
+  "Select a .txt file": "Elija un archivo .txt",
+  "Reassignment from snapshot {{from}} to {{to}} requested.": "Reasignamiento del snapshot desde {{from}} hacia {{to}} en proceso.",
   "Write the text you want to extract entities from...": "Ingrese el texto del cual quiere extraer entidades...",
   "No one has contributed yet!": "¡Se el primero en contribuir!",
   "Contact admin": "Contacta al administrador",
-  "Select a .txt file": "Elija un archivo .txt",
   "Description": "Description",
   "Join with {{nextEntityText}} >": "Unir con \"{{nextEntityText}}\" >",
   "< Join with {{previousEntityText}}": "< Unir con \"{{previousEntityText}}\"",
@@ -65,7 +66,6 @@
   "to": "a",
   "Apply": "Aplicar",
   "Error while retrieving workers": "Error buscando los trabajadores",
-  "Reassignment from snapshot {{from}} to {{to}} requested.": "Reasignamiento del snapshot desde {{from}} hacia {{to}} en proceso.",
   "Can't reassign last worker for current": "No se puede reasignar el último trabajador para la versión actual",
   "Reassign worker": "Reasignar trabajador",
   "No available workers": "No hay trabajadores disponibles",
