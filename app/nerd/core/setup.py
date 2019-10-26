@@ -29,7 +29,7 @@ class NERdSetup:
             Snapshot.drop_collection()
             Snapshot.id.set_next_value(0)
         types = {
-            "PER": Type(label="Person", color="#f44336", description="Nombres propios, incluyendo: personajes ficticios, nombres, apellidos y apodos"),
+            "PER": Type(label="Person", color="#f44336", description="Nombres propios, incluyendo: personajes ficticios, nombres, apellidos y apodos."),
             "LOC": Type(label="Location", color="#9c27b0", description="Paises, ciudades, estados, provincias, municipios, etc."),
             "ORG": Type(label="Organization", color="#3f51b5", description="Empresas, agencias de gobierno, instituciones educacionales, equipos de fútbol, hospitales, museos, bibliotecas, etc."),
             "MISC": Type(label="Miscellaneous", color="#00bcd4", description="Palabras claves o términos importantes."),
