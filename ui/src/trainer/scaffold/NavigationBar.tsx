@@ -91,6 +91,9 @@ const NavigationBar = ({ loading, title, subtitle }: NavigationBarProps) => {
               <Button color="inherit" component={link(Routes.corpus)}>
                 {t('Corpus')}
               </Button>
+              <Button color="inherit" component={link(Routes.compare)}>
+                {t('Compare')}
+              </Button>
               <Button color="inherit" component={link(Routes.corpusAdmin)}>
                 {t('Status')}
               </Button>
