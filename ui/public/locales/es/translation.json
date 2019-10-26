@@ -1,8 +1,8 @@
 {
+  "Select a .txt file": "Elija un archivo .txt",
   "Join with {{nextEntityText}} >": "Join with {{nextEntityText}} >",
   "< Join with {{previousEntityText}}": "< Join with {{previousEntityText}}",
   "NERd": "NERd",
-  "Select a .txt file": "Elija un archivo .txt",
   "Want to try and see what entities I find for a given text? Then this is the way to go!": "¿Querés ver que encuentro? ¡Vení por acá entonces!",
   "Train now": "Entrenar",
   "Help me become smarter!": "¡Ayudame a ser más inteligente!",
