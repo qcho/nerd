@@ -27,6 +27,7 @@ const TypeUpsertDialog = ({
 }) => {
   const [t] = useTranslation();
   const [label, setLabel] = useState<string>(startingType.type.label);
+  const [description, setDescription] = useState<string>(startingType.type.description);
   const [typeCode, setTypeCode] = useState<string>(startingType.code);
   const [color, setColour] = useState<string>(startingType.type.color);
   const isCreating = startingType.code == '';
@@ -57,6 +58,19 @@ const TypeUpsertDialog = ({
             />
           </Grid>
           <Grid item>
+            <TextField
+              required
+              label={t('Description')}
+              id="type-description"
+              multiline
+              rows={3}
+              rowsMax={3}
+              defaultValue={description}
+              margin="none"
+              onChange={event => setDescription(event.target.value)}
+            />
+          </Grid>
+          <Grid item>
             <Typography variant="subtitle1">{t('Colour')}</Typography>
             <CirclePicker color={color} onChangeComplete={selected => setColour(selected.hex)} />
           </Grid>
@@ -66,7 +80,10 @@ const TypeUpsertDialog = ({
         <Button onClick={onClose}>{t('Close')}</Button>
         <Button
           onClick={() =>
-            onSave({ code: typeCode.toUpperCase(), type: { label, color } }, isCreating ? null : startingType)
+            onSave(
+              { code: typeCode.toUpperCase(), type: { label, color, description } },
+              isCreating ? null : startingType,
+            )
           }
           color="primary"
         >

@@ -77,7 +77,7 @@ const ManageSnapshot = () => {
   }
 
   function onTypeCreateClick() {
-    setCurrentType({ type: { label: '', color: '' }, code: '' });
+    setCurrentType({ type: { label: '', color: '', description: '' }, code: '' });
   }
 
   function typesToArray(types: { [key: string]: Type }) {
