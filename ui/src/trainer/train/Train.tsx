@@ -147,7 +147,7 @@ const Train = () => {
             <Typography>{t('No more documents to train!')}</Typography>
           </Paper>
         )}
-        {loading && !spacyDocument && <Typography>Loading...</Typography>}
+        {loading && !spacyDocument && <Typography>{t('Loading')}</Typography>}
         {spacyDocument && trainText && (
           <Paper className={classes.paper}>
             <AppBar color="default" position="relative" className={classes.actionBar}>

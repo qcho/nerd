@@ -66,21 +66,21 @@ const Home = () => {
   var services: ApiService[] = [];
   if (isTrainer) {
     services.push({
-      name: 'Help me become smarter!',
+      name: t('Help me become smarter!'),
       actionPath: Routes.train,
-      action: 'Train now',
+      action: t('Train now'),
       description: t("I'll show you a text with some tags and you can then decide if it's correct or fix it!"),
     });
   }
   services.push({
-    name: 'Check your text',
+    name: t('Check your text'),
     actionPath: Routes.preview,
-    action: 'Find entities',
-    description: 'Want to try and see what entities I find for a given text? Then this is the way to go!',
+    action: t('Find entities'),
+    description: t('Want to try and see what entities I find for a given text? Then this is the way to go!'),
   });
 
   return (
-    <Scaffold title={'Home'}>
+    <Scaffold title={t('NERd')}>
       <div className={classes.container}>
         <div className={classes.content}>
           <div>

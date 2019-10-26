@@ -1,4 +1,9 @@
 {
+  "NERd": "NERd",
+  "Want to try and see what entities I find for a given text? Then this is the way to go!": "Want to try and see what entities I find for a given text? Then this is the way to go!",
+  "Train now": "Train now",
+  "Help me become smarter!": "Help me become smarter!",
+  "Check your text": "Check your text",
   "{{numSelected}} selected": "{{numSelected}} selected",
   "Password updated": "Password updated",
   "Training": "Training",
