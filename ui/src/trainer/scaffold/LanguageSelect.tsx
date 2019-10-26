@@ -36,7 +36,6 @@ const LanguageSelect = () => {
   };
 
   return (
-    // <FormControl color="inherit">
     <Select
       value={i18n.languages[0]}
       onChange={onChange}
@@ -52,7 +51,6 @@ const LanguageSelect = () => {
       <MenuItem value={'en'}>{t('English')}</MenuItem>
       <MenuItem value={'es'}>{t('Spanish')}</MenuItem>
     </Select>
-    // </FormControl>
   );
 };
 
