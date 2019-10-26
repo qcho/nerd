@@ -114,8 +114,8 @@ const NavigationBar = ({ loading, title, subtitle }: NavigationBarProps) => {
             </>
           )}
         </Toolbar>
+        {loading && <LinearProgress />}
       </AppBar>
-      {loading && <LinearProgress />}
     </>
   );
 };

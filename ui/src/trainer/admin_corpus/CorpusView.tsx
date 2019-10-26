@@ -18,7 +18,7 @@ import { Routes } from '../helpers/routeHelper';
 const useStyles = makeStyles(
   (theme: Theme) => ({
     content: {
-      marginTop: theme.spacing.unit * 2,
+      marginTop: theme.spacing.unit * 20,
       marginLeft: theme.spacing.unit * 10,
       marginRight: theme.spacing.unit * 10,
       padding: theme.spacing.unit * 2,
