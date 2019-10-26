@@ -14,6 +14,7 @@ CURRENT_ID = 0
 class Type(me.EmbeddedDocument):
     label = me.StringField(required=True)
     color = me.StringField(required=True)
+    description = me.StringField(required=True)
 
 
 class Snapshot(me.Document):
