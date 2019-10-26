@@ -59,8 +59,6 @@ const ManageSnapshot = () => {
     setCurrentType(null);
   }
 
-  function onConfirmDeleteClick() {}
-
   async function onUpsertSnapshotClick() {
     if (!currentSnapshot) return;
     const currentTypes = currentSnapshot.snapshot.types || {};
@@ -102,6 +100,23 @@ const ManageSnapshot = () => {
   }
 
   const hasChanges = typesToAdd.length > 0 || typesToDelete.length > 0;
+
+  function onCreateClick() {
+    if (typesToDelete.length == 0) {
+      onUpsertSnapshotClick();
+      return;
+    }
+    var found = 0;
+    for (var i = 0; i < typesToDelete.length; ++i) {
+      const type = typesToDelete[i];
+      found += typesToAdd.filter(it => it.code == type.code).length;
+    }
+    if (typesToDelete.length != found) {
+      setDeleteTypeDialogOpen(true);
+    } else {
+      onUpsertSnapshotClick();
+    }
+  }
 
   return (
     <div>
@@ -146,11 +161,7 @@ const ManageSnapshot = () => {
                 </Typography>
               }
             >
-              <Button
-                color="primary"
-                variant="outlined"
-                onClick={typesToDelete.length > 0 ? () => setDeleteTypeDialogOpen(true) : onUpsertSnapshotClick}
-              >
+              <Button color="primary" variant="outlined" onClick={onCreateClick}>
                 {hasChanges ? t('Save') : t('Create')}
                 {hasChanges && <sup>{'*'}</sup>}
               </Button>
@@ -176,7 +187,10 @@ const ManageSnapshot = () => {
       {deleteTypeDialogOpen && (
         <ConfirmActionDialog
           title={t('Delete types')}
-          content={typesToDelete.map(it => it.type.label).join(', ')}
+          content={typesToDelete
+            .filter(it => typesToAdd.findIndex(val => val.code == it.code) == -1)
+            .map(it => it.type.label)
+            .join(', ')}
           onClose={() => {
             setTypesToDelete([]);
             setDeleteTypeDialogOpen(false);
