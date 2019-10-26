@@ -1,9 +1,11 @@
 {
   "NERd": "NERd",
+  "No one has contributed yet!": "No one has contributed yet!",
+  "Contact admin": "Contact admin",
   "Want to try and see what entities I find for a given text? Then this is the way to go!": "Want to try and see what entities I find for a given text? Then this is the way to go!",
   "Train now": "Train now",
-  "Join with {{nextEntityText}} >": "Join with {{nextEntityText}} >",
-  "< Join with {{previousEntityText}}": "< Join with {{previousEntityText}}",
+  "Join with {{nextEntityText}} >": "Join with \"{{nextEntityText}}\" >",
+  "< Join with {{previousEntityText}}": "< Join with \"{{previousEntityText}}\"",
   "Help me become smarter!": "Help me become smarter!",
   "Check your text": "Check your text",
   "{{numSelected}} selected": "{{numSelected}} selected",

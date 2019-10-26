@@ -32,7 +32,7 @@ const TopContributors = () => {
       rowBuilder={buildRow}
       emptyView={
         <div>
-          <Typography>{'No one has contributed yet!'}</Typography>
+          <Typography>{t('No one has contributed yet!')}</Typography>
         </div>
       }
     />

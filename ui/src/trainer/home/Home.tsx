@@ -64,14 +64,14 @@ const Home = () => {
   const isTrainer = hasRole(Role.TRAINER);
 
   var services: ApiService[] = [];
-  if (isTrainer) {
-    services.push({
-      name: t('Help me become smarter!'),
-      actionPath: Routes.train,
-      action: t('Train now'),
-      description: t("I'll show you a text with some tags and you can then decide if it's correct or fix it!"),
-    });
-  }
+  services.push({
+    name: t('Help me become smarter!'),
+    actionPath: isTrainer
+      ? Routes.train
+      : 'mailto:aaizemberg@itba.edu.ar?subject=Quisiera%20ser%20un%20entrenador%20NERd&body=Hola%21%0AMe%20gustar%C3%ADa%20ayudar%20a%20entrenar.%0A%0A%C2%BFPodr%C3%ADan%20agregarme%20el%20permiso%20de%20entrenador%3F%0A%0AGracias%21',
+    action: isTrainer ? t('Train now') : t('Contact admin'),
+    description: t("I'll show you a text with some tags and you can then decide if it's correct or fix it!"),
+  });
   services.push({
     name: t('Check your text'),
     actionPath: Routes.preview,
@@ -102,14 +102,11 @@ const Home = () => {
                             </Typography>
                           </CardContent>
                           <CardActions className={classes.cardActions}>
-                            <Button
-                              component={(props: any) => <Link to={service.actionPath} {...props} />}
-                              fullWidth
-                              variant="outlined"
-                              color="primary"
-                            >
-                              {service.action}
-                            </Button>
+                            <a href={service.actionPath} style={{ width: '100%' }}>
+                              <Button fullWidth variant="outlined" color="primary">
+                                {service.action}
+                              </Button>
+                            </a>
                           </CardActions>
                         </Card>
                       </Grid>
