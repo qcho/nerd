@@ -1,4 +1,11 @@
 {
+  "Click or drag the words to start fixing!": "Click or drag the words to start fixing!",
+  "Once there are no more changes to make, click the ACCEPT button to submit the text": "Once there are no more changes to make, click the ACCEPT button to submit the text.",
+  "If you want to add a label, click on any word or drag through a group of words to create a new word group and assign it a type": "If you want to add a label, click on any word or drag through a group of words to create a new word group and assign it a type.",
+  "If you spot something that's mis-labeled, click it and choose the label that better fits it": "If you spot something that's mis-labeled, click it and choose the label that better fits it.",
+  "If you spot something wrong, you can remove what the program detected by clicking it and pressing the delete button": "If you spot something wrong, you can remove what the program detected by clicking it and pressing the DELETE button.",
+  "The objective is to supervise a program that will try to extract information from a given text": "The objective is to supervise a program that will try to extract information from a given text.",
+  "How to train": "How to train",
   "NERd": "NERd",
   "No one has contributed yet!": "No one has contributed yet!",
   "Contact admin": "Contact admin",

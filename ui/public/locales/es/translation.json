@@ -1,4 +1,11 @@
 {
+  "Click or drag the words to start fixing!": "¡Hacé click o arrastrá las palabras para corregir!",
+  "Once there are no more changes to make, click the ACCEPT button to submit the text": "Cuando no haya más cambios para hacer, hacé click en el botón ACEPTAR.",
+  "If you want to add a label, click on any word or drag through a group of words to create a new word group and assign it a type": "Si querés agregar una etiqueta, hacé clic o seleccioná un grupo de palabras para crear un nuevo grupo y asígnele una etiqueta",
+  "If you spot something that's mis-labeled, click it and choose the label that better fits it": "Si ves algo que esté mal etiquetado, hacé clic en ello y corregí la etiqueta con la que se adecue mejor.",
+  "If you spot something wrong, you can remove what the program detected by clicking it and pressing the delete button": "Si ves algo que esté de más, podés removerlo haciendo clic en ello y apretando el botón BORRAR.",
+  "The objective is to supervise a program that will try to extract information from a given text": "El objetivo es supervisar a un programa que intenta extraer información de textos.",
+  "How to train": "Como entrenar",
   "Select a .txt file": "Elija un archivo .txt",
   "Reassignment from snapshot {{from}} to {{to}} requested.": "Reasignamiento del snapshot desde {{from}} hacia {{to}} en proceso.",
   "Write the text you want to extract entities from...": "Ingrese el texto del cual quiere extraer entidades...",
