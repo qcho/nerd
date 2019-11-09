@@ -3,7 +3,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import Home from './home/Home';
-import Preview from './train/Preview';
+import Sandbox from './train/Sandbox';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import Loading from './widgets/Loading';
@@ -34,7 +34,7 @@ const Navigation = () => {
   return (
     <Switch>
       <Route exact path={Routes.home} component={Home} />
-      {isUser && <Route exact path={Routes.preview} component={Preview} />}
+      {isUser && <Route exact path={Routes.sandbox} component={Sandbox} />}
       <Route exact path={Routes.login} component={Login} />
       <Route exact path={Routes.register} component={Register} />
       {loggedIn && <Route exact path={Routes.myProfile} component={MyProfile} />}

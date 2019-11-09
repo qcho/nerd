@@ -74,7 +74,7 @@ const Home = () => {
   });
   services.push({
     name: t('Check your text'),
-    actionPath: Routes.preview,
+    actionPath: Routes.sandbox,
     action: t('Find entities'),
     description: t('Want to try and see what entities I find for a given text? Then this is the way to go!'),
   });

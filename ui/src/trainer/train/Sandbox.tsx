@@ -22,7 +22,7 @@ interface Props {
   classes: any;
 }
 
-const PreviewLayout = ({ classes }: Props) => {
+const SandboxLayout = ({ classes }: Props) => {
   const [text, setText] = useState<string>('');
   const [entityTypes, setEntityTypes] = useState<{ [key: string]: Type }>({});
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -164,4 +164,4 @@ const PreviewLayout = ({ classes }: Props) => {
   );
 };
 
-export default withStyles(styles)(PreviewLayout);
+export default withStyles(styles)(SandboxLayout);

@@ -2,7 +2,7 @@ import { User, Text } from '../apigen/api';
 
 const Routes = {
   home: '/',
-  preview: '/preview',
+  sandbox: '/sandbox',
   login: '/login',
   register: '/register',
   myProfile: '/me',
