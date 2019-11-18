@@ -120,7 +120,7 @@ const Home = () => {
                     {t('Welcome')}
                   </Typography>
                   <Typography variant="h6" align="center" color="textSecondary">
-                    To continue please
+                    {t('To continue please')}
                   </Typography>
                   <Grid
                     container
@@ -142,7 +142,7 @@ const Home = () => {
                       </Button>
                     </Grid>
                     <Grid item>
-                      <Subtitle>or</Subtitle>
+                      <Subtitle>{t('or')}</Subtitle>
                     </Grid>
                     <Grid item>
                       <Button

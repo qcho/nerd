@@ -1,4 +1,6 @@
 {
+  "or": "o",
+  "To continue please": "Para continuar",
   "Write the text you want to extract entities from...": "Ingrese el texto del cual quiere extraer entidades...",
   "Select a .txt file": "Elija un archivo .txt",
   "You're about to change {{userName}}'s password. Are you sure?": "Estás por cambiarle la contraseña a {{userName}}. ¿Estás seguro?",
@@ -82,7 +84,7 @@
   "Roles": "Roles",
   "User management": "Administración de usuarios",
   "Users": "Usuarios",
-  "Login": "Login",
+  "Login": "Ingresar",
   "Email Address": "Dirección de email",
   "Password": "Contraseña",
   "Remember me": "Recordarme",
