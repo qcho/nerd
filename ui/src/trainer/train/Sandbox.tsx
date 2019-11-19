@@ -147,7 +147,7 @@ const SandboxLayout = ({ classes }: Props) => {
                       padding: '0.5em',
                     }}
                   >
-                    <Button variant="contained" fullWidth color="primary" onClick={onSaveClick} disabled={!saveEnabled}>
+                    <Button variant="contained" color="primary" onClick={onSaveClick} disabled={!saveEnabled}>
                       {t('Save')}
                     </Button>
                   </Grid>
