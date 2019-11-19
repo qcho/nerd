@@ -87,47 +87,43 @@ dev-backup:
 	mongodump --out /bitnami/mongodump-${TODAY}
 
 dev-restore:
-	cd app && tar xvzf mongodump-${RESTORE_DATE}.tar.gz
-	cd app && docker cp mongodump-${RESTORE_DATE} nerd_mongodb_1:/bitnami/
-	cd app && docker-compose exec mongodb bash -c 'mongorestore --host $${NERD_MONGO_DB_HOST} --db $${MONGODB_DATABASE} --port $${MONGODB_PORT_NUMBER} --username $${MONGODB_USERNAME} --password $${MONGODB_PASSWORD} /bitnami/mongodump-${RESTORE_DATE}/nerd'
+	tar xvzf mongodump-${RESTORE_DATE}.tar.gz
+	docker cp mongodump-${RESTORE_DATE} nerd_mongodb_1:/bitnami/
+	docker-compose exec mongodb bash -c 'mongorestore --host $${NERD_MONGO_DB_HOST} --db $${MONGODB_DATABASE} --port $${MONGODB_PORT_NUMBER} --username $${MONGODB_USERNAME} --password $${MONGODB_PASSWORD} /bitnami/mongodump-${RESTORE_DATE}/nerd'
 
-train-with-results: trainings/.clean
-	cd trainings && rm .clean
-	cd trainings && docker-compose exec mongodb bash -c 'mongoexport --collection=training --host $${NERD_MONGO_DB_HOST} --db $${MONGODB_DATABASE} --port $${MONGODB_PORT_NUMBER} --username $${MONGODB_USERNAME} --password $${MONGODB_PASSWORD} --out=/bitnami/trainings.json'
-	cd trainings && docker cp nerd_mongodb_1:/bitnami/trainings.json trainings_from_db.jsonl
-	cd trainings && sort -R trainings_from_db.jsonl | jq -c '.document | .+{"entities": .ents} | del(.ents)' > trainings_to_convert.jsonl
-	cd trainings && python -m spacy convert --lang es trainings_to_convert.jsonl - > trainings_for_spacy.json
-	cd trainings && jq -c '.[0:0]'       trainings_for_spacy.json > trainings_for_spacy_000_train.json
-	cd trainings && jq -c '.[0:4000]'    trainings_for_spacy.json > trainings_for_spacy_000_dev.json
-	cd trainings && jq -c '.[0:3000]'    trainings_for_spacy.json > trainings_for_spacy_075_train.json
-	cd trainings && jq -c '.[3000:4000]' trainings_for_spacy.json > trainings_for_spacy_075_dev.json
-	cd trainings && jq -c '.[0:3200]'    trainings_for_spacy.json > trainings_for_spacy_080_train.json
-	cd trainings && jq -c '.[3200:4000]' trainings_for_spacy.json > trainings_for_spacy_080_dev.json
-	cd trainings && jq -c '.[0:3400]'    trainings_for_spacy.json > trainings_for_spacy_085_train.json
-	cd trainings && jq -c '.[3400:4000]' trainings_for_spacy.json > trainings_for_spacy_085_dev.json
-	cd trainings && jq -c '.[0:3600]'    trainings_for_spacy.json > trainings_for_spacy_090_train.json
-	cd trainings && jq -c '.[3600:4000]' trainings_for_spacy.json > trainings_for_spacy_090_dev.json
-	cd trainings && jq -c '.[0:4000]'    trainings_for_spacy.json > trainings_for_spacy_100_train.json
-	cd trainings && jq -c '.[4000:4000]' trainings_for_spacy.json > trainings_for_spacy_100_dev.json
-	cd trainings && python -m spacy debug-data es --pipeline 'ner' -b 'es_core_news_md' trainings_for_spacy_000_train.json trainings_for_spacy_000_dev.json > train_000.log
-	cd trainings && python -m spacy debug-data es --pipeline 'ner' -b 'es_core_news_md' trainings_for_spacy_075_train.json trainings_for_spacy_075_dev.json > train_075.log
-	cd trainings && python -m spacy debug-data es --pipeline 'ner' -b 'es_core_news_md' trainings_for_spacy_080_train.json trainings_for_spacy_080_dev.json > train_080.log
-	cd trainings && python -m spacy debug-data es --pipeline 'ner' -b 'es_core_news_md' trainings_for_spacy_085_train.json trainings_for_spacy_085_dev.json > train_085.log
-	cd trainings && python -m spacy debug-data es --pipeline 'ner' -b 'es_core_news_md' trainings_for_spacy_090_train.json trainings_for_spacy_090_dev.json > train_090.log
-	cd trainings && python -m spacy debug-data es --pipeline 'ner' -b 'es_core_news_md' trainings_for_spacy_100_train.json trainings_for_spacy_100_dev.json > train_100.log
-	cd trainings && time python -m spacy train es model000 --pipeline 'ner' -b 'es_core_news_md' -g0 trainings_for_spacy_000_train.json trainings_for_spacy_000_dev.json >> train_000.log
-	cd trainings && time python -m spacy train es model075 --pipeline 'ner' -v 'es_core_news_md' -g0 trainings_for_spacy_075_train.json trainings_for_spacy_075_dev.json >> train_075.log
-	cd trainings && time python -m spacy train es model080 --pipeline 'ner' -v 'es_core_news_md' -g0 trainings_for_spacy_080_train.json trainings_for_spacy_080_dev.json >> train_080.log
-	cd trainings && time python -m spacy train es model085 --pipeline 'ner' -v 'es_core_news_md' -g0 trainings_for_spacy_085_train.json trainings_for_spacy_085_dev.json >> train_085.log
-	cd trainings && time python -m spacy train es model090 --pipeline 'ner' -v 'es_core_news_md' -g0 trainings_for_spacy_090_train.json trainings_for_spacy_090_dev.json >> train_090.log
-	cd trainings && time python -m spacy train es model100 --pipeline 'ner' -v 'es_core_news_md' -g0 trainings_for_spacy_100_train.json trainings_for_spacy_100_dev.json >> train_100.log
+train-with-results: results/.clean
+	cd results && rm .clean
+	cd results && docker-compose exec mongodb bash -c 'mongoexport --collection=training --host $${NERD_MONGO_DB_HOST} --db $${MONGODB_DATABASE} --port $${MONGODB_PORT_NUMBER} --username $${MONGODB_USERNAME} --password $${MONGODB_PASSWORD} --out=/bitnami/results.json'
+	cd results && docker cp nerd_mongodb_1:/bitnami/results.json results_from_db.jsonl
+	cd results && sort -R results_from_db.jsonl | jq -c '.document | .+{"entities": .ents} | del(.ents)' > results_to_convert.jsonl
+	cd results && python -m spacy convert --lang es results_to_convert.jsonl - > results_for_spacy.json
+	cd results && jq -c '.[0:0]'       results_for_spacy.json > results_for_spacy_000_train.json
+	cd results && jq -c '.[0:4000]'    results_for_spacy.json > results_for_spacy_000_dev.json
+	cd results && jq -c '.[0:3000]'    results_for_spacy.json > results_for_spacy_075_train.json
+	cd results && jq -c '.[3000:4000]' results_for_spacy.json > results_for_spacy_075_dev.json
+	cd results && jq -c '.[0:3200]'    results_for_spacy.json > results_for_spacy_080_train.json
+	cd results && jq -c '.[3200:4000]' results_for_spacy.json > results_for_spacy_080_dev.json
+	cd results && jq -c '.[0:3400]'    results_for_spacy.json > results_for_spacy_085_train.json
+	cd results && jq -c '.[3400:4000]' results_for_spacy.json > results_for_spacy_085_dev.json
+	cd results && jq -c '.[0:3600]'    results_for_spacy.json > results_for_spacy_090_train.json
+	cd results && jq -c '.[3600:4000]' results_for_spacy.json > results_for_spacy_090_dev.json
+	cd results && jq -c '.[0:4000]'    results_for_spacy.json > results_for_spacy_100_train.json
+	cd results && jq -c '.[4000:4000]' results_for_spacy.json > results_for_spacy_100_dev.json
+	cd results && python -m spacy debug-data es --pipeline 'ner' -b 'es_core_news_md' results_for_spacy_000_train.json results_for_spacy_000_dev.json > train_000.log
+	cd results && python -m spacy debug-data es --pipeline 'ner' -b 'es_core_news_md' results_for_spacy_075_train.json results_for_spacy_075_dev.json > train_075.log
+	cd results && python -m spacy debug-data es --pipeline 'ner' -b 'es_core_news_md' results_for_spacy_080_train.json results_for_spacy_080_dev.json > train_080.log
+	cd results && python -m spacy debug-data es --pipeline 'ner' -b 'es_core_news_md' results_for_spacy_085_train.json results_for_spacy_085_dev.json > train_085.log
+	cd results && python -m spacy debug-data es --pipeline 'ner' -b 'es_core_news_md' results_for_spacy_090_train.json results_for_spacy_090_dev.json > train_090.log
+	cd results && python -m spacy debug-data es --pipeline 'ner' -b 'es_core_news_md' results_for_spacy_100_train.json results_for_spacy_100_dev.json > train_100.log
+	cd results && time python -m spacy train es model000 --pipeline 'ner' -b 'es_core_news_md' -g0 results_for_spacy_000_train.json results_for_spacy_000_dev.json >> train_000.log
+	cd results && time python -m spacy train es model075 --pipeline 'ner' -v 'es_core_news_md' -g0 results_for_spacy_075_train.json results_for_spacy_075_dev.json >> train_075.log
+	cd results && time python -m spacy train es model080 --pipeline 'ner' -v 'es_core_news_md' -g0 results_for_spacy_080_train.json results_for_spacy_080_dev.json >> train_080.log
+	cd results && time python -m spacy train es model085 --pipeline 'ner' -v 'es_core_news_md' -g0 results_for_spacy_085_train.json results_for_spacy_085_dev.json >> train_085.log
+	cd results && time python -m spacy train es model090 --pipeline 'ner' -v 'es_core_news_md' -g0 results_for_spacy_090_train.json results_for_spacy_090_dev.json >> train_090.log
+	cd results && time python -m spacy train es model100 --pipeline 'ner' -v 'es_core_news_md' -g0 results_for_spacy_100_train.json results_for_spacy_100_dev.json >> train_100.log
 
-trainings/.clean: trainings/
-	rm -r trainings/
-	mkdir trainings/
-	touch trainings/.clean
-
-trainings/:
-	mkdir trainings
+results/.clean:
+	cd results && rm -r model*/ results_*.json results_*.jsonl
+	touch results/.clean
 
 .PHONY: dev-status dev-start dev-stop dev-reset dev-mongo dev dev-shell prod prod-shell down scale-up scale-down
