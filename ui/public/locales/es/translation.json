@@ -1,4 +1,5 @@
 {
+  "vCURRENT": "vACTUAL",
   "You're about to change {{userName}}'s password. Are you sure?": "Estás por cambiarle la contraseña a {{userName}}. ¿Estás seguro?",
   "Select a txt file": "Elija un archivo .txt",
   "Write the text you want to extract entities from": "Ingrese el texto del cual quiere extraer entidades...",

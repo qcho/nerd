@@ -50,7 +50,7 @@ const WorkerMigrate = ({
         >
           {relocatableWorkers.map(value => (
             <MenuItem value={value} key={value}>
-              {value}
+              {value == 'vCURRENT' ? t('vCURRENT') : value}
             </MenuItem>
           ))}
         </Select>
