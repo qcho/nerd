@@ -107,7 +107,7 @@ const SandboxLayout = ({ classes }: Props) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                placeholder={t('Write the text you want to extract entities from...')}
+                placeholder={t('Write the text you want to extract entities from')}
                 onChange={event => {
                   let text = event.target.value;
                   if (!text || !text.length) {

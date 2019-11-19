@@ -1,9 +1,9 @@
 {
+  "You're about to change {{userName}}'s password. Are you sure?": "Estás por cambiarle la contraseña a {{userName}}. ¿Estás seguro?",
+  "Select a txt file": "Elija un archivo .txt",
+  "Write the text you want to extract entities from": "Ingrese el texto del cual quiere extraer entidades...",
   "or": "o",
   "To continue please": "Para continuar",
-  "Write the text you want to extract entities from...": "Ingrese el texto del cual quiere extraer entidades...",
-  "Select a .txt file": "Elija un archivo .txt",
-  "You're about to change {{userName}}'s password. Are you sure?": "Estás por cambiarle la contraseña a {{userName}}. ¿Estás seguro?",
   "Click or drag the words to start fixing!": "¡Hacé click o arrastrá las palabras para corregir!",
   "Once there are no more changes to make, click the ACCEPT button to submit the text": "Cuando no haya más cambios para hacer, hacé click en el botón ACEPTAR.",
   "If you want to add a label, click on any word or drag through a group of words to create a new word group and assign it a type": "Si querés agregar una etiqueta, hacé clic o seleccioná un grupo de palabras para crear un nuevo grupo y asígnele una etiqueta",
