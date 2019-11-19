@@ -18,13 +18,17 @@ const CompareSnapshots = () => {
     <Scaffold title={t('Compare snapshots')}>
       <div>
         <div>
-          <ChooseSnapshots onChange={setSnapshotsToCompare} value={{ from: 'v1', to: 'vCURRENT' }} />
-          <FormControlLabel
-            checked={highlightDifferent}
-            label={t('Highlight different')}
-            labelPlacement="start"
-            control={<Switch color="primary" onChange={onHDSwitchChange} />}
-          />
+          <div style={{ display: 'inline-flex' }}>
+            <ChooseSnapshots onChange={setSnapshotsToCompare} value={{ from: 'v1', to: 'vCURRENT' }} />
+          </div>
+          <div style={{ display: 'inline-flex', float: 'right' }}>
+            <FormControlLabel
+              checked={highlightDifferent}
+              label={t('Highlight different')}
+              labelPlacement="start"
+              control={<Switch color="primary" onChange={onHDSwitchChange} />}
+            />
+          </div>
         </div>
         <div>
           {snapshotsToCompare != null && (
