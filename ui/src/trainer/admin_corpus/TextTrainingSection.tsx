@@ -44,9 +44,6 @@ const TextTrainingSection = () => {
           <SubSection title={t('Total trained')}>
             <Typography variant="body1">{currentSnapshot.trained}</Typography>
           </SubSection>
-          <SubSection title={t('Untrained')}>
-            <Typography variant="body1">{currentSnapshot.available - currentSnapshot.trained}</Typography>
-          </SubSection>
           <Grid item />
         </Grid>
       )}
