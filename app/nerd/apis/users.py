@@ -54,8 +54,7 @@ class UserListView(MethodView):
     @blp.doc(operationId="listUsers")
     @blp.paginate()
     def get(self, query_filter: FilterUsersSchema, pagination_parameters: PaginationParameters):
-        """Returns a list of existing users
-        """
+        """Returns a list of existing users"""
         results = User.objects if 'query' not in query_filter else User.objects(
             Q(email__icontains=query_filter['query']) | Q(name__icontains=query_filter['query']))
         pagination_parameters.item_count = results.count()
@@ -91,6 +90,7 @@ class TopTrainers(MethodView):
     @blp.response(TopContributorSchema(many=True), code=200, description='Top 5 contributors')
     @blp.doc(operationId='top5')
     def get(self):
+        """Returns top 5 trainers"""
         return User.objects.aggregate(*[
             {
                 '$project': {
@@ -160,7 +160,7 @@ class LoggedUserView(MethodView):
     @blp.response(UserSchema, code=200, description='Logged user details patched')
     @blp.doc(operationId="patchLoggedUserDetails")
     def patch(self, payload: UserPayloadSchema):
-        """Patches the user entity"""
+        """Updates current logged user information"""
         try:
             return _patch_user(self._logged_user(), payload)
         except DoesNotExist:
@@ -176,6 +176,7 @@ class MyTrainings(MethodView):
     @blp.response(TrainingSchema(many=True), code=200, description='Own trainings')
     @response_error(NotFound('User does not exist'))
     def get(self, pagination_parameters: PaginationParameters):
+        """Returns logged user's trainings"""
         try:
             user = User.objects.get(email=get_jwt_identity())
             return _get_user_trainings(user, pagination_parameters)
@@ -191,8 +192,7 @@ class UserView(MethodView):
     @blp.response(UserSchema, code=200, description='User details')
     @blp.doc(operationId="userDetails")
     def get(self, user_id: str):
-        """Gets specific user account details by a given id
-        """
+        """Gets specific user account details by a given id"""
         try:
             return User.objects.get(id=user_id)
         except (DoesNotExist, ValidationError):
@@ -218,8 +218,7 @@ class UserView(MethodView):
     @blp.response(UserSchema, code=200, description='User patched')
     @blp.doc(operationId="updateUser")
     def patch(self, user_payload: UserPayloadSchema, user_id: str):
-        """Patches the user entity
-        """
+        """Updates specified user's information"""
         try:
             return _patch_user(User.objects.get(id=user_id), user_payload)
         except DoesNotExist:
@@ -234,6 +233,7 @@ class UserTrainings(MethodView):
     @response_error(NotFound('User does not exist'))
     @blp.paginate()
     def get(self, user_id, pagination_parameters: PaginationParameters):
+        """Gets the specified user's trainings"""
         try:
             user = User.objects.get(id=user_id)
             return _get_user_trainings(user, pagination_parameters)

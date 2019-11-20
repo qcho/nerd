@@ -42,6 +42,9 @@ class TrainResource(MethodView):
     @response_error(NotFound("Corpus not found"))
     @response_error(FailedDependency("Failed to infer entities"))
     def get(self):
+        """Return text to use for training
+
+        Returns a random text from the training corpus that doesn't have a training by the logged user"""
         try:
             user = User.objects.get(email=get_jwt_identity())
             texts = list(
@@ -105,7 +108,7 @@ class CompareResource(MethodView):
     @blp.paginate()
     @blp.response(NerCompareResultSchema, code=200, description="NER'd texts to compare")
     def get(self, first_snapshot, second_snapshot, pagination_parameters: PaginationParameters):
-
+        """Compare NER between two snapshots"""
         first_snapshot = Snapshot.from_string(first_snapshot)
         second_snapshot = Snapshot.from_string(second_snapshot)
         first_snapshot_id = first_snapshot.id
@@ -139,6 +142,7 @@ class NerParserResource(MethodView):
     @blp.arguments(RawText)
     @blp.response(TrainTextSchema, code=200, description="Ner")
     def post(self, raw_text: RawText):
+        """Return a Spacy document from a text using the current snapshot"""
         snapshot, document = parse_text(None, raw_text['text'])
         return {'text_id': None, 'snapshot': snapshot, 'spacy_document': document}
 
@@ -150,6 +154,7 @@ class NerParserResource(MethodView):
     @blp.arguments(RawText)
     @blp.response(TrainTextSchema, code=200, description="Ner")
     def post(self, raw_text: RawText, snapshot_id: int):
+        """Return a Spacy document from a text using the specified snapshot"""
         snapshot, document = parse_text(snapshot_id, raw_text['text'])
         return {'text_id': None, 'snapshot': snapshot, 'spacy_document': document}
 
@@ -161,6 +166,7 @@ class NerEntitiesResource(MethodView):
     @blp.arguments(RawText)
     @blp.response(EntityListSchema, code=200, description="Ner")
     def post(self, raw_text: RawText):
+        """Return the list of entities recognized using the current snapshot"""
         snapshot, document = parse_text(None, raw_text['text'])
         return {'text': raw_text, 'entities': document['ents'], 'snapshot': snapshot}
 
@@ -172,5 +178,6 @@ class NerEntitiesResource(MethodView):
     @blp.arguments(RawText)
     @blp.response(EntityListSchema, code=200, description="Ner")
     def post(self, raw_text: RawText, snapshot_id: int):
+        """Return the list of entities recognized using the specified snapshot"""
         snapshot, document = parse_text(snapshot_id, raw_text['text'])
         return {'text': raw_text, 'entities': document['ents'], 'snapshot': snapshot}

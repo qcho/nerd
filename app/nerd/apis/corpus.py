@@ -37,6 +37,9 @@ class CorpusTextResource(MethodView):
     @response_error(NotFound("Corpus text does not exist"))
     @blp.response(TextSchema, code=200, description="Model")
     def get(self, text_id):
+        """
+        Gets text details for the given id
+        """
         try:
             return Text.objects.get(id=text_id)
         except DoesNotExist:
@@ -46,6 +49,7 @@ class CorpusTextResource(MethodView):
     @blp.doc(operationId="removeCorpusText")
     @response_error(BadRequest("There was a problem deleting the corpus text"))
     def delete(self, text_id):
+        """Delete a text from the corpus"""
         try:
             text = Text.objects.get(id=text_id)
             text.delete()
@@ -61,6 +65,7 @@ class TrainingView(MethodView):
     @blp.response(TrainingSchema(many=True), code=200, description='Get trainings')
     @blp.paginate()
     def get(self, text_id, pagination_parameters: PaginationParameters):
+        """Trainings for a given text"""
         trainings = Training.objects.filter(text_id=text_id)
         pagination_parameters.item_count = trainings.count()
         skip_elements = (pagination_parameters.page - 1) * \
@@ -72,6 +77,7 @@ class TrainingView(MethodView):
     @blp.doc(operationId="addTextTraining")
     @blp.response(code=200, description='Add text training')
     def put(self, payload, text_id):
+        """Adds a new training to the given text"""
         user = User.objects.get(email=get_jwt_identity())
         text = Text.objects.get(id=text_id)
         training = Training.objects(user_id=user.pk, text_id=text.pk).update_one(
@@ -89,8 +95,6 @@ class TrainingView(MethodView):
 
 @blp.route("/upload")
 class UploadFileResource(MethodView):
-    """Upload text file"""
-
     @jwt_and_role_required(Role.ADMIN)
     @blp.doc(operationId="uploadFile", requestBody={
         "content": {
@@ -108,6 +112,9 @@ class UploadFileResource(MethodView):
         }
     })
     def post(self):
+        """Upload text files
+
+        Upload UTF-8 .txt files where each line is a text to add to the training corpus"""
         imported = 0
         for f in flask.request.files.getlist('file'):
             imported = imported + \
@@ -123,6 +130,7 @@ class IndexResource(MethodView):
     @blp.response(TextSchema(many=True), code=200, description="Corpus")
     @blp.paginate()
     def get(self, pagination_parameters: PaginationParameters):
+        """List of texts part of the training corpus"""
         results = Text.objects
         pagination_parameters.item_count = results.count()
         skip_elements = (pagination_parameters.page - 1) * \
@@ -134,5 +142,6 @@ class IndexResource(MethodView):
     @blp.arguments(ValueOnlyTextSchema)
     @blp.response(TextSchema, code=200, description="Ok")
     def post(self, payload: ValueOnlyTextSchema):
+        """Add text to the training corpus"""
         text = Text(value=payload.value.strip()).save()
         return text

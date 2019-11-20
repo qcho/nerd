@@ -19,6 +19,7 @@ class TrainingView(MethodView):
     @blp.response(TrainingSchema, code=200, description="Model")
     @blp.doc(operationId="deleteTraining")
     def delete(self, training_id):
+        """Delete a training"""
         try:
             training = Training.objects.get(id=training_id)
             Text.objects.get(id=training.text_id.id).update(pull__trainings=training_id)

@@ -79,6 +79,7 @@ class SnapshotResource(MethodView):
     @response_error(NotFound("Could not find snapshot with given id"))
     @blp.doc(operationId="getSnapshot")
     def get(self, snapshot_id: int):
+        """Returns snapshot information"""
         try:
             return snapshot_info(snapshot_id)
         except (ValidationError, DoesNotExist):
@@ -89,6 +90,7 @@ class SnapshotResource(MethodView):
     @response_error(NotFound("Could not find snapshot with given id"))
     @blp.doc(operationId="deleteSnapshot")
     def delete(self, snapshot_id: int):
+        """Deletes a snapshot"""
         try:
             snapshot = Snapshot.objects.get(id=snapshot_id)
             model = Model(snapshot=snapshot)
@@ -115,6 +117,7 @@ class ForceTrainingResource(MethodView):
     @blp.response(code=204, description='Trained')
     @blp.doc(operationId="forceTrain")
     def post(self, snapshot_id: int):
+        """Launches the train task for specified snapshot"""
         snapshot = Snapshot.objects.get(id=snapshot_id)
         corpus_tasks.train.apply_async(queue=str(snapshot))
         return "", 204
@@ -128,6 +131,7 @@ class ForceUntrainResource(MethodView):
     @response_error(Forbidden("Can't untrain current snapshot"))
     @blp.doc(operationId="forceUntrain")
     def post(self, snapshot_id: int):
+        """Launches the untrain task for specified snapshot"""
         if snapshot_id == CURRENT_ID:
             raise Forbidden("Can't untrain current snapshot")
         corpus_tasks.un_train.apply_async([snapshot_id])
@@ -141,6 +145,7 @@ class SnapshotCurrentResource(MethodView):
     @blp.response(SnapshotInfoSchema, code=200, description='Current snapshot')
     @blp.doc(operationId="getCurrentSnapshot")
     def get(self):
+        """Returns current snapshot information"""
         return snapshot_info(CURRENT_ID)
 
     @jwt_and_role_required(Role.ADMIN)
@@ -148,6 +153,7 @@ class SnapshotCurrentResource(MethodView):
     @blp.arguments(SnapshotSchema)
     @blp.response(SnapshotSchema, code=200, description='Snapshot created')
     def put(self, payload):
+        """Creates a new snapshot"""
         current_snapshot = Snapshot.current()
         new_snapshot = Snapshot(types=current_snapshot.types)
         new_snapshot.save()

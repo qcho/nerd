@@ -47,6 +47,7 @@ class Workers(MethodView):
     @blp.doc(operationId="listWorkers")
     @blp.response(WorkerSchema(many=True), code=200, description='Workers list')
     def get(self):
+        """Lists all available workers"""
         return get_worker_snapshots()
 
 
@@ -58,6 +59,10 @@ class Worker(MethodView):
     @response_error(Forbidden("Cant reassign last worker for current version"))
     @blp.arguments(ChangeSnapshotSchema)
     def post(self, reassign_info: ChangeSnapshotSchema):
+        """Reassigns a worker
+
+        Reasigns a worker that has from_version snapshot loaded to use the to_version
+        """
         logger.error(reassign_info)
         if reassign_info['from_version'] == reassign_info['to_version']:
             # return

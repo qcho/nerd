@@ -42,7 +42,6 @@ class UserCredentialsSchema(BaseSchema):
 
 @blp.route('/register')
 class RegisterResource(MethodView):
-
     @blp.arguments(RegisterSchema)
     @response_error(Conflict('Email exists'))
     @response_error(Forbidden("Can't register a user"))
@@ -90,7 +89,10 @@ class TokenResource(MethodView):
     @blp.response(UserCredentialsSchema, code=200, description='Login successful')
     @blp.doc(operationId="createAccessToken")
     def post(self, login_payload):
-        """Generate new access and refresh tokens with password grant_type"""
+        """Generate new access and refresh tokens with password grant_type
+
+        Login a user with a given set of credentials
+        """
         try:
             user = User.objects.get(email=login_payload.get('username'))
             if user.password_matches(login_payload.get('password')):
@@ -114,6 +116,8 @@ class RefreshResource(MethodView):
     @blp.doc(operationId="refreshAccessToken")
     def post(self, schema):
         """Refresh access token
+
+        Endpoint to create a new access token after the current has expired
         """
         try:
             user = User.objects.get(email=get_jwt_identity())
