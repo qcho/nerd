@@ -45,7 +45,8 @@ scale-down:
 	docker-compose up --scale worker=$(LESS_WORKERS) --no-recreate -d worker
 
 prod-setup: ./production/.env ./production/docker-compose.yml
-	echo scp -rp ./production pf-nerd:/nerd
+        scp -rp ./production pf-nerd:/nerd
+        ssh pf-nerd -- cd nerd && make release-pull setup
 
 prod-publish-new-version:
 	docker login docker.pkg.github.com
@@ -55,6 +56,7 @@ prod-publish-new-version:
 	docker push docker.pkg.github.com/qcho/nerd/ui:latest
 
 release-pull:
+	docker login docker.pkg.github.com
 	docker pull docker.pkg.github.com/qcho/nerd/app:latest
 	docker pull docker.pkg.github.com/qcho/nerd/ui:latest
 
