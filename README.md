@@ -1,6 +1,26 @@
 # Named Entity Recognition as a service
 
-[TOC]
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Requirements](#requirements)
+- [Development environment](#development-environment)
+  - [Making changes](#making-changes)
+    - [API & Workers](#api-workers)
+    - [UI](#ui)
+      - [React Build](#react-build)
+      - [Development server](#development-server)
+- [Deployment](#deployment)
+  - [Make sure _pf-nerd_ host is well configured locally](#make-sure-_pf-nerd_-host-is-well-configured-locally)
+  - [Docker image creation](#docker-image-creation)
+  - [Docker image upload](#docker-image-upload)
+  - [Production deployment](#production-deployment)
+  - [One-command deploy](#one-command-deploy)
+
+<!-- /code_chunk_output -->
+
 
 ## Requirements
 
