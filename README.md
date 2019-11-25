@@ -1,5 +1,7 @@
 # Named Entity Recognition as a service
 
+[TOC]
+
 ## Requirements
 
 - [docker](https://www.docker.com/)
