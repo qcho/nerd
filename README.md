@@ -1,6 +1,9 @@
 # Named Entity Recognition as a service
 
 
+![ITBA logo](assets/logoItba.png)
+
+
 <!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
 
 <!-- code_chunk_output -->
