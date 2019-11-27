@@ -4,10 +4,14 @@
 ![ITBA logo](assets/logoItba.png)
 
 
+## Table of contents
+
 <!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
+- [Table of contents](#table-of-contents)
+- [Members](#members)
 - [Requirements](#requirements)
 - [Development environment](#development-environment)
   - [Making changes](#making-changes)
@@ -24,6 +28,11 @@
 
 <!-- /code_chunk_output -->
 
+## Team Members
+
+- [Juan Pablo Orsay](https://twitter.com/jporsay) (Developer)
+- [Horacio Miguel Gómez](https://twitter.com/qcho86) (Developer)
+- [Ariel Aizemberg](https://twitter.com/aaizemberg) (Tutor)
 
 ## Requirements
 
