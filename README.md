@@ -1,8 +1,6 @@
-# Named Entity Recognition as a service
-
-
 ![ITBA logo](assets/logoItba.png)
 
+# Named Entity Recognition as a service
 
 ## Table of contents
 
