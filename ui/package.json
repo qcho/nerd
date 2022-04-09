@@ -24,7 +24,7 @@
     "i18next-browser-languagedetector": "^4.0.0",
     "i18next-xhr-backend": "^2.0.1",
     "material-ui-dropzone": "https://github.com/jporsay/material-ui-dropzone",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.25",
     "prop-types": "^15.7.2",
     "query-string": "^6.4.2",
